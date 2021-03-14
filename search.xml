@@ -223,39 +223,6 @@
       </tags>
   </entry>
   <entry>
-    <title>leetCode_1_Two_Sum</title>
-    <url>/2018/07/13/leetCode-1-Two-Sum/</url>
-    <content><![CDATA[<h2 id="题目描述-（简单难度）"><a href="#题目描述-（简单难度）" class="headerlink" title="题目描述    （简单难度）"></a>题目描述    （简单难度）</h2><p><img src="http://windliang.oss-cn-beijing.aliyuncs.com/1_two_sum.jpg" alt=""></p>
-<p>给定一个数组和一个目标和，从数组中找两个数字相加等于目标和，输出这两个数字的下标。</p>
-<h2 id="解法一"><a href="#解法一" class="headerlink" title="解法一"></a>解法一</h2><p>简单粗暴些，两重循环，遍历所有情况看相加是否等于目标和，如果符合直接输出。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] twoSum1(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">		<span class="keyword">int</span> []ans=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=(i+<span class="number">1</span>);j&lt;nums.length;j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(nums[i]+nums[j]==target)&#123;</span><br><span class="line">					ans[<span class="number">0</span>]=i;</span><br><span class="line">					ans[<span class="number">1</span>]=j;</span><br><span class="line">					<span class="keyword">return</span> ans;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>时间复杂度：两层 for 循环，O（n²）</p>
-<p>空间复杂度：O（1）</p>
-<h2 id="解法二"><a href="#解法二" class="headerlink" title="解法二"></a>解法二</h2><p>在上边的解法中看下第二个 for 循环步骤。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> j=(i+<span class="number">1</span>);j&lt;nums.length;j++)&#123;</span><br><span class="line">	<span class="keyword">if</span>(nums[i]+nums[j]==target)&#123;</span><br></pre></td></tr></table></figure>
-<p>我们换个理解方式：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> j=(i+<span class="number">1</span>);j&lt;nums.length;j++)&#123; </span><br><span class="line">	sub=target-nums[i]</span><br><span class="line"> 	<span class="keyword">if</span>(nums[j]==sub)&#123;</span><br></pre></td></tr></table></figure>
-<p>第二层 for 循环无非是遍历所有的元素，看哪个元素等于 sub ，时间复杂度为 O（n）。</p>
-<p>有没有一种方法，不用遍历就可以找到元素里有没有等于 sub 的？</p>
-<p>hash table ！！！</p>
-<p>我们可以把数组的每个元素保存为 hash 的 key，下标保存为 hash 的 value 。</p>
-<p>这样只需判断 sub 在不在 hash 的 key 里就可以了，而此时的时间复杂度仅为 O（1）！</p>
-<p>需要注意的地方是，还需判断找到的元素不是当前元素，因为题目里讲一个元素只能用一次。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] twoSum2(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">		Map&lt;Integer,Integer&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">			map.put(nums[i],i);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">			<span class="keyword">int</span> sub=target-nums[i];</span><br><span class="line">			<span class="keyword">if</span>(map.containsKey(sub)&amp;&amp;map.get(sub)!=i)&#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;i,map.get(sub)&#125;;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"No two sum solution"</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<p>时间复杂度：比解法一少了一个 for 循环，降为 O（n）</p>
-<p>空间复杂度：所谓的空间换时间，这里就能体现出来， 开辟了一个 hash table ，空间复杂度变为 O（n）</p>
-<h2 id="解法三"><a href="#解法三" class="headerlink" title="解法三"></a>解法三</h2><p>看解法二中，两个 for 循环，他们长的一样，我们当然可以把它合起来。复杂度上不会带来什么变化，变化仅仅是不需要判断是不是当前元素了，因为当前元素还没有添加进 hash 里。    </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] twoSum3(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">		Map&lt;Integer,Integer&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">	    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">		    <span class="keyword">int</span> sub=target-nums[i];</span><br><span class="line">		    <span class="keyword">if</span>(map.containsKey(sub))&#123;</span><br><span class="line">			    <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;i,map.get(sub)&#125;;</span><br><span class="line">		&#125;</span><br><span class="line">		map.put(nums[i], i);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"No two sum solution"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>题目比较简单，毕竟暴力的方法也可以解决。唯一闪亮的点就是，时间复杂度从 O（n²）降为 O（n） 的时候，对 hash 的应用，有眼前一亮的感觉。</p>
-]]></content>
-      <categories>
-        <category>LeetCode</category>
-      </categories>
-      <tags>
-        <tag>LeetCode</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>leetCode_2_Add_Two_Numbers</title>
     <url>/2018/07/14/leetCode-2-Add-Two-Numbers/</url>
     <content><![CDATA[<h2 id="题目描述（中等难度）"><a href="#题目描述（中等难度）" class="headerlink" title="题目描述（中等难度）"></a>题目描述（中等难度）</h2><p><img src="http://windliang.oss-cn-beijing.aliyuncs.com/TIM%E6%88%AA%E5%9B%BE20180714105005.jpg" alt=""></p>
@@ -339,6 +306,39 @@
 <h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2></li>
 </ul>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ListNode <span class="title">reverseListRecursion</span><span class="params">(ListNode head)</span></span>&#123; </span><br><span class="line">    	ListNode newHead;</span><br><span class="line">    	<span class="keyword">if</span>(head==<span class="keyword">null</span>||head.next==<span class="keyword">null</span> )&#123;</span><br><span class="line">    		<span class="keyword">return</span> head;</span><br><span class="line">    	&#125;</span><br><span class="line">    	newHead=reverseListRecursion(head.next); <span class="comment">//head.next 作为剩余部分的头指针</span></span><br><span class="line">    	head.next.next=head; <span class="comment">//head.next 代表新链表的尾，将它的 next 置为 head，就是将 head 加到最后了。</span></span><br><span class="line">    	head.next=<span class="keyword">null</span>;</span><br><span class="line">    	<span class="keyword">return</span> newHead;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>leetCode_1_Two_Sum</title>
+    <url>/2018/07/13/leetCode-1-Two-Sum/</url>
+    <content><![CDATA[<h2 id="题目描述-（简单难度）"><a href="#题目描述-（简单难度）" class="headerlink" title="题目描述    （简单难度）"></a>题目描述    （简单难度）</h2><p><img src="http://windliang.oss-cn-beijing.aliyuncs.com/1_two_sum.jpg" alt=""></p>
+<p>给定一个数组和一个目标和，从数组中找两个数字相加等于目标和，输出这两个数字的下标。</p>
+<h2 id="解法一"><a href="#解法一" class="headerlink" title="解法一"></a>解法一</h2><p>简单粗暴些，两重循环，遍历所有情况看相加是否等于目标和，如果符合直接输出。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] twoSum1(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">		<span class="keyword">int</span> []ans=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=(i+<span class="number">1</span>);j&lt;nums.length;j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(nums[i]+nums[j]==target)&#123;</span><br><span class="line">					ans[<span class="number">0</span>]=i;</span><br><span class="line">					ans[<span class="number">1</span>]=j;</span><br><span class="line">					<span class="keyword">return</span> ans;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>时间复杂度：两层 for 循环，O（n²）</p>
+<p>空间复杂度：O（1）</p>
+<h2 id="解法二"><a href="#解法二" class="headerlink" title="解法二"></a>解法二</h2><p>在上边的解法中看下第二个 for 循环步骤。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> j=(i+<span class="number">1</span>);j&lt;nums.length;j++)&#123;</span><br><span class="line">	<span class="keyword">if</span>(nums[i]+nums[j]==target)&#123;</span><br></pre></td></tr></table></figure>
+<p>我们换个理解方式：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> j=(i+<span class="number">1</span>);j&lt;nums.length;j++)&#123; </span><br><span class="line">	sub=target-nums[i]</span><br><span class="line"> 	<span class="keyword">if</span>(nums[j]==sub)&#123;</span><br></pre></td></tr></table></figure>
+<p>第二层 for 循环无非是遍历所有的元素，看哪个元素等于 sub ，时间复杂度为 O（n）。</p>
+<p>有没有一种方法，不用遍历就可以找到元素里有没有等于 sub 的？</p>
+<p>hash table ！！！</p>
+<p>我们可以把数组的每个元素保存为 hash 的 key，下标保存为 hash 的 value 。</p>
+<p>这样只需判断 sub 在不在 hash 的 key 里就可以了，而此时的时间复杂度仅为 O（1）！</p>
+<p>需要注意的地方是，还需判断找到的元素不是当前元素，因为题目里讲一个元素只能用一次。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] twoSum2(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">		Map&lt;Integer,Integer&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">			map.put(nums[i],i);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">			<span class="keyword">int</span> sub=target-nums[i];</span><br><span class="line">			<span class="keyword">if</span>(map.containsKey(sub)&amp;&amp;map.get(sub)!=i)&#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;i,map.get(sub)&#125;;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"No two sum solution"</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>时间复杂度：比解法一少了一个 for 循环，降为 O（n）</p>
+<p>空间复杂度：所谓的空间换时间，这里就能体现出来， 开辟了一个 hash table ，空间复杂度变为 O（n）</p>
+<h2 id="解法三"><a href="#解法三" class="headerlink" title="解法三"></a>解法三</h2><p>看解法二中，两个 for 循环，他们长的一样，我们当然可以把它合起来。复杂度上不会带来什么变化，变化仅仅是不需要判断是不是当前元素了，因为当前元素还没有添加进 hash 里。    </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] twoSum3(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">		Map&lt;Integer,Integer&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">	    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">		    <span class="keyword">int</span> sub=target-nums[i];</span><br><span class="line">		    <span class="keyword">if</span>(map.containsKey(sub))&#123;</span><br><span class="line">			    <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;i,map.get(sub)&#125;;</span><br><span class="line">		&#125;</span><br><span class="line">		map.put(nums[i], i);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"No two sum solution"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>题目比较简单，毕竟暴力的方法也可以解决。唯一闪亮的点就是，时间复杂度从 O（n²）降为 O（n） 的时候，对 hash 的应用，有眼前一亮的感觉。</p>
 ]]></content>
       <categories>
         <category>LeetCode</category>
@@ -1075,36 +1075,6 @@
       </tags>
   </entry>
   <entry>
-    <title>建立博客系列（四）：Next主题相关配置</title>
-    <url>/2017/01/28/%E5%BB%BA%E7%AB%8B%E5%8D%9A%E5%AE%A2%E7%B3%BB%E5%88%97%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9ANext%E4%B8%BB%E9%A2%98%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE/</url>
-    <content><![CDATA[<h2 id="Hexo的目录结构，-详细介绍"><a href="#Hexo的目录结构，-详细介绍" class="headerlink" title="Hexo的目录结构， 详细介绍"></a>Hexo的目录结构， <a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">详细介绍</a></h2><blockquote>
-<p>.<br>|– _config.yml  &ensp;&ensp;//<strong>hexo的配置文件</strong><br>&ensp;– package.json<br>&ensp;– public&ensp;&ensp;//根据md文件生成html文件<br>&ensp;– source<br>&ensp;&ensp;&ensp;|– _drafts<br>&ensp;&ensp;&ensp;|– _posts  &ensp;&ensp;//写文章的时候md所在目录<br>&ensp;– themes<br>&ensp;&ensp;&ensp;|– landscape<br>&ensp;&ensp;&ensp;|– next<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;|– _config.yml&ensp;&ensp;//<strong>主题的配置文件</strong></p>
-</blockquote>
-<p>配置主题的时候要分清hexo的配置文件和next主题的配置文件,以下均是用Notepad++打开编辑,<strong>所有的操作后记得保存</strong>，<strong>冒号后边有空格</strong></p>
-<h2 id="next主题安装配置"><a href="#next主题安装配置" class="headerlink" title="next主题安装配置,"></a>next主题安装配置,</h2><p>next主题在github上的star数已经是6503了，非常受欢迎，<a href="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">官网</a>也有详细的配置教程，这里介绍些基本的配置过程。</p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>打开github，cd 到blog目录，执行下边的命令<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure></p>
-<p>如果下载速度很慢，可以到百度云下载，链接：<a href="http://pan.baidu.com/s/1hsOacYw" target="_blank" rel="noopener">http://pan.baidu.com/s/1hsOacYw</a> 密码：v2fm，解压后将next文件夹放到themes文件夹中。<br>然后打开hexo的配置文件，将theme: 项改为next,记住之后所有的配置中冒号<strong>后边都先有空格</strong><br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/next.png" alt=" "><br>运行hexo g（生成静态文件)，hexo s(运行到本地)<br>打开 localhost:4000 ,观察是否更改成功<br>如果成功，然后执行 hexo d（部署到coding），打开自己的域名，观察是否成功。<br>如果没有变化,<strong>先执行hexo clean（以后如果本地和服务器上的不一致，均先执行这步重试</strong>,再执行 hexo g,hexo d</p>
-<h3 id="选择next的风格"><a href="#选择next的风格" class="headerlink" title="选择next的风格"></a>选择next的风格</h3><p>next提供了，三种风格供选择，打开next的配置文件（next文件夹下的_config.yml）<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/style.png" alt=" "><br><em>#是注销本行，自己分别试一下，然后hexo s在本地看效果。</em></p>
-<h3 id="菜单设置"><a href="#菜单设置" class="headerlink" title="菜单设置"></a>菜单设置</h3><p>打开主题的配置文件<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/menu.png" alt=" "><br>home是主页，categories是分类，archives是归档，即按时间显示文章，tags是标签，将以上几项的#取消。<br>打开git bash到blog目录，<br>hexo new page categories,<br>hexo new page tags<br>打开blog\source\categories\index.md文件，添加comments: false,即把评论关掉,添加type<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/categories.png" alt=" "><br>打开blog\source\tags\index.md文件，添加comments: false,即把评论关掉，添加type<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/tags.png" alt=" "></p>
-<h3 id="404公益界面"><a href="#404公益界面" class="headerlink" title="404公益界面"></a>404公益界面</h3><p>在source 目录新建404.html，将格式改为utf-8无BOM格式，内容如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE HTML&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">  &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html;charset=utf-8;&quot;/&gt;</span><br><span class="line">  &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge,chrome=1&quot; /&gt;</span><br><span class="line">  &lt;meta name=&quot;robots&quot; content=&quot;all&quot; /&gt;</span><br><span class="line">  &lt;meta name=&quot;robots&quot; content=&quot;index,follow&quot;/&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;http://www.qq.com/404/search_children.js&quot;</span><br><span class="line">        charset=&quot;utf-8&quot; homePageUrl=&quot;/&quot;</span><br><span class="line">        homePageName=&quot;回到主页&quot;&gt;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
-<p>测试是否成功，hexo g,hexo d,将代码部署到服务器，然后访问自己的域名，后边随便写点东西，例如我的 windliang.cc/123121231，然后便可以看到公益界面。</p>
-<h3 id="设置头像"><a href="#设置头像" class="headerlink" title="设置头像"></a>设置头像</h3><p>将头像放到 source/images/ 目录下<br>在hexo的配置文件 新增avatar 字段添加路径<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/head.png" alt=" "></p>
-<h3 id="百度统计"><a href="#百度统计" class="headerlink" title="百度统计"></a>百度统计</h3><p>进入<a href="http://tongji.baidu.com/" target="_blank" rel="noopener">百度统计</a>,注册百度统计站长版账号，然后添加自己的网站，并点击获取代码<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/b.png" alt=" "><br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/baidu.png" alt=" "><br>将问号后边的代码复制<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/bcode.png" alt=" "><br>打开hexo的配置文件, 新增字段 baidu_analytics 字段，值设置成刚刚复制的<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/ana.png" alt=" "></p>
-<h3 id="搜索服务"><a href="#搜索服务" class="headerlink" title="搜索服务"></a>搜索服务</h3><p>执行命令<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure></p>
-<p>在next的配置文件任意位置添加<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">search:</span><br><span class="line">  path: search.xml</span><br><span class="line">  field: post</span><br><span class="line">  format: html</span><br><span class="line">  limit: 10000</span><br></pre></td></tr></table></figure></p>
-<h3 id="不蒜子统计"><a href="#不蒜子统计" class="headerlink" title="不蒜子统计"></a>不蒜子统计</h3><p>打开Next主题的配置文件，进行相关的设置<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/busuan.png" alt=" "><br>因为不蒜子的文章统计在文章标题不显示次数，所以设置成了false，用了下边的leancloud.如果觉得不重要的话也可以将其直接设置成true,但文章阅读量点开文章后才会看到。</p>
-<h3 id="leancloud-阅读次数统计"><a href="#leancloud-阅读次数统计" class="headerlink" title="leancloud 阅读次数统计"></a>leancloud 阅读次数统计</h3><p>详见 <a href="https://notes.wanghao.work/2015-10-21-%E4%B8%BANexT%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E9%87%8F%E7%BB%9F%E8%AE%A1%E5%8A%9F%E8%83%BD.html#%E9%85%8D%E7%BD%AELeanCloud" target="_blank" rel="noopener">leancloud</a></p>
-<p>这里介绍这么多，更多配置见<a href="http://theme-next.iissnan.com/theme-settings.html" target="_blank" rel="noopener">官网</a><br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/guanwang.png" alt=" "></p>
-<p>配置过程中hexo g,hexo s进行本地预览<br>(hexo clean),hexo g,hexo d,进行部署到服务器</p>
-]]></content>
-      <categories>
-        <category>建立博客</category>
-      </categories>
-      <tags>
-        <tag>Next主题</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>情人节快乐</title>
     <url>/2020/02/14/%E6%83%85%E4%BA%BA%E8%8A%82%E5%BF%AB%E4%B9%90/</url>
     <content><![CDATA[<p>今天就是情人节了，祝我的小可爱情人节快乐！</p>
@@ -1133,6 +1103,36 @@
       </categories>
       <tags>
         <tag>随想</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>建立博客系列（四）：Next主题相关配置</title>
+    <url>/2017/01/28/%E5%BB%BA%E7%AB%8B%E5%8D%9A%E5%AE%A2%E7%B3%BB%E5%88%97%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9ANext%E4%B8%BB%E9%A2%98%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<h2 id="Hexo的目录结构，-详细介绍"><a href="#Hexo的目录结构，-详细介绍" class="headerlink" title="Hexo的目录结构， 详细介绍"></a>Hexo的目录结构， <a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">详细介绍</a></h2><blockquote>
+<p>.<br>|– _config.yml  &ensp;&ensp;//<strong>hexo的配置文件</strong><br>&ensp;– package.json<br>&ensp;– public&ensp;&ensp;//根据md文件生成html文件<br>&ensp;– source<br>&ensp;&ensp;&ensp;|– _drafts<br>&ensp;&ensp;&ensp;|– _posts  &ensp;&ensp;//写文章的时候md所在目录<br>&ensp;– themes<br>&ensp;&ensp;&ensp;|– landscape<br>&ensp;&ensp;&ensp;|– next<br>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;|– _config.yml&ensp;&ensp;//<strong>主题的配置文件</strong></p>
+</blockquote>
+<p>配置主题的时候要分清hexo的配置文件和next主题的配置文件,以下均是用Notepad++打开编辑,<strong>所有的操作后记得保存</strong>，<strong>冒号后边有空格</strong></p>
+<h2 id="next主题安装配置"><a href="#next主题安装配置" class="headerlink" title="next主题安装配置,"></a>next主题安装配置,</h2><p>next主题在github上的star数已经是6503了，非常受欢迎，<a href="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">官网</a>也有详细的配置教程，这里介绍些基本的配置过程。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>打开github，cd 到blog目录，执行下边的命令<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure></p>
+<p>如果下载速度很慢，可以到百度云下载，链接：<a href="http://pan.baidu.com/s/1hsOacYw" target="_blank" rel="noopener">http://pan.baidu.com/s/1hsOacYw</a> 密码：v2fm，解压后将next文件夹放到themes文件夹中。<br>然后打开hexo的配置文件，将theme: 项改为next,记住之后所有的配置中冒号<strong>后边都先有空格</strong><br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/next.png" alt=" "><br>运行hexo g（生成静态文件)，hexo s(运行到本地)<br>打开 localhost:4000 ,观察是否更改成功<br>如果成功，然后执行 hexo d（部署到coding），打开自己的域名，观察是否成功。<br>如果没有变化,<strong>先执行hexo clean（以后如果本地和服务器上的不一致，均先执行这步重试</strong>,再执行 hexo g,hexo d</p>
+<h3 id="选择next的风格"><a href="#选择next的风格" class="headerlink" title="选择next的风格"></a>选择next的风格</h3><p>next提供了，三种风格供选择，打开next的配置文件（next文件夹下的_config.yml）<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/style.png" alt=" "><br><em>#是注销本行，自己分别试一下，然后hexo s在本地看效果。</em></p>
+<h3 id="菜单设置"><a href="#菜单设置" class="headerlink" title="菜单设置"></a>菜单设置</h3><p>打开主题的配置文件<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/menu.png" alt=" "><br>home是主页，categories是分类，archives是归档，即按时间显示文章，tags是标签，将以上几项的#取消。<br>打开git bash到blog目录，<br>hexo new page categories,<br>hexo new page tags<br>打开blog\source\categories\index.md文件，添加comments: false,即把评论关掉,添加type<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/categories.png" alt=" "><br>打开blog\source\tags\index.md文件，添加comments: false,即把评论关掉，添加type<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/tags.png" alt=" "></p>
+<h3 id="404公益界面"><a href="#404公益界面" class="headerlink" title="404公益界面"></a>404公益界面</h3><p>在source 目录新建404.html，将格式改为utf-8无BOM格式，内容如下：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!DOCTYPE HTML&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">  &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html;charset=utf-8;&quot;/&gt;</span><br><span class="line">  &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge,chrome=1&quot; /&gt;</span><br><span class="line">  &lt;meta name=&quot;robots&quot; content=&quot;all&quot; /&gt;</span><br><span class="line">  &lt;meta name=&quot;robots&quot; content=&quot;index,follow&quot;/&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;http://www.qq.com/404/search_children.js&quot;</span><br><span class="line">        charset=&quot;utf-8&quot; homePageUrl=&quot;/&quot;</span><br><span class="line">        homePageName=&quot;回到主页&quot;&gt;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p>测试是否成功，hexo g,hexo d,将代码部署到服务器，然后访问自己的域名，后边随便写点东西，例如我的 windliang.cc/123121231，然后便可以看到公益界面。</p>
+<h3 id="设置头像"><a href="#设置头像" class="headerlink" title="设置头像"></a>设置头像</h3><p>将头像放到 source/images/ 目录下<br>在hexo的配置文件 新增avatar 字段添加路径<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/head.png" alt=" "></p>
+<h3 id="百度统计"><a href="#百度统计" class="headerlink" title="百度统计"></a>百度统计</h3><p>进入<a href="http://tongji.baidu.com/" target="_blank" rel="noopener">百度统计</a>,注册百度统计站长版账号，然后添加自己的网站，并点击获取代码<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/b.png" alt=" "><br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/baidu.png" alt=" "><br>将问号后边的代码复制<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/bcode.png" alt=" "><br>打开hexo的配置文件, 新增字段 baidu_analytics 字段，值设置成刚刚复制的<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/ana.png" alt=" "></p>
+<h3 id="搜索服务"><a href="#搜索服务" class="headerlink" title="搜索服务"></a>搜索服务</h3><p>执行命令<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cnpm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure></p>
+<p>在next的配置文件任意位置添加<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">search:</span><br><span class="line">  path: search.xml</span><br><span class="line">  field: post</span><br><span class="line">  format: html</span><br><span class="line">  limit: 10000</span><br></pre></td></tr></table></figure></p>
+<h3 id="不蒜子统计"><a href="#不蒜子统计" class="headerlink" title="不蒜子统计"></a>不蒜子统计</h3><p>打开Next主题的配置文件，进行相关的设置<br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/busuan.png" alt=" "><br>因为不蒜子的文章统计在文章标题不显示次数，所以设置成了false，用了下边的leancloud.如果觉得不重要的话也可以将其直接设置成true,但文章阅读量点开文章后才会看到。</p>
+<h3 id="leancloud-阅读次数统计"><a href="#leancloud-阅读次数统计" class="headerlink" title="leancloud 阅读次数统计"></a>leancloud 阅读次数统计</h3><p>详见 <a href="https://notes.wanghao.work/2015-10-21-%E4%B8%BANexT%E4%B8%BB%E9%A2%98%E6%B7%BB%E5%8A%A0%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E9%87%8F%E7%BB%9F%E8%AE%A1%E5%8A%9F%E8%83%BD.html#%E9%85%8D%E7%BD%AELeanCloud" target="_blank" rel="noopener">leancloud</a></p>
+<p>这里介绍这么多，更多配置见<a href="http://theme-next.iissnan.com/theme-settings.html" target="_blank" rel="noopener">官网</a><br><img src="/2017/01/28/建立博客系列（四）：Next主题相关配置/guanwang.png" alt=" "></p>
+<p>配置过程中hexo g,hexo s进行本地预览<br>(hexo clean),hexo g,hexo d,进行部署到服务器</p>
+]]></content>
+      <categories>
+        <category>建立博客</category>
+      </categories>
+      <tags>
+        <tag>Next主题</tag>
       </tags>
   </entry>
   <entry>
@@ -1305,6 +1305,54 @@
       </tags>
   </entry>
   <entry>
+    <title>机器学习理论系列零</title>
+    <url>/2018/01/01/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%90%86%E8%AE%BA%E7%B3%BB%E5%88%97%E9%9B%B6/</url>
+    <content><![CDATA[<p>毕业设计是和深度学习相关，之前零零碎碎的学习了一些相关知识，这里开个系列文章总结一些，以免又看了忘，再看又不方便。</p>
+<p>深度学习目前可以说是非常火了，而深度学习是机器学习的一个分支，机器学习也只是人工智能的一个分支。</p>
+<p><img src="/2018/01/01/机器学习理论系列零/ai.png" alt=" "></p>
+<p>我是跟着李宏毅教授的上课视频一起学，这是地址 <a href="http://speech.ee.ntu.edu.tw/~tlkagk/courses.html" target="_blank" rel="noopener">http://speech.ee.ntu.edu.tw/~tlkagk/courses.html</a> ，我看的是里边的 Machine Learning ( 2017 Spring )。他的 PPT 和 video 比较齐全，也是从比较基础的讲起，老师也比较幽默，非常推荐。</p>
+<p>这里再推荐下央视新推的综艺节目「机智过人」，里边许多项目也是基于深度学习的，嘉宾还有图灵奖获得者姚期智。</p>
+<p><img src="/2018/01/01/机器学习理论系列零/jivi.jpg" alt=" "><br>里边的做对联，作诗，写歌的机器人不得不让人惊叹。</p>
+]]></content>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>深度学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>极客时间优惠红包返现</title>
+    <url>/2020/05/31/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4%E4%BC%98%E6%83%A0%E7%BA%A2%E5%8C%85%E8%BF%94%E7%8E%B0/</url>
+    <content><![CDATA[<h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>极客时间目前主要是互联网方面的一些课，自己一直在用，下边是自己目前买过的一些课。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/geek1.jpg" alt=""></p>
+<p>说一下自己的感受吧。</p>
+<p>「技术与商业案例解读」每天会在路上听一听，了解了很多商业公司的历史，国外的微软、苹果、亚马逊等，国内的 BAT，还有很多不是很出名的公司，看着企业浮浮沉沉，很开阔眼界。</p>
+<p>自己第一门买的课是目前极客时间销量最高的课，王争大佬的「数据结构与算法之美」，自己刚上研究生时候买的，有一说一，绝对是超值的，自己也一直给身边的人安利。下边是两年前的朋友圈，哈哈。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/geek2.jpg" alt=""></p>
+<p>因为本科的时候也学过一些数据结构和算法，所以这门课更多的起了查漏补缺的作用，但很多知识点都是自己没有接触过的，还有一些工业上的应用，可以更加明白数据结构的作用，对自己去年找工作面试的帮助很大，能让自己的知识点更加成体系。</p>
+<p>然后就是 <a href="https://www.zhihu.com/people/ec03b8e839a6fb763e1b8113455362db" target="_blank" rel="noopener">@winter</a> 大神的「重学前端」 的课程，因为我找的是前端岗的工作，看完以后对前端整体有了更深的理解。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/geek3.jpg" alt=""></p>
+<p>上边的图印象深刻，整个课程学完以后对自己未来学习的方向也更加明确了。</p>
+<p>还有刘超老师的「网络协议」和「<code>linux</code> 系统」的课，自己是因为研究生期间做的项目设计到这些，就毫不犹豫的从极客时间买了课，自己主要对 <code>linux</code> 网络协议栈那块感兴趣，所以课程只看了一部分，但帮助真的很大很大，对于刚刚入门不知从何入手的时候，可以更好的指引自己。</p>
+<p>前段时间来美团提前实习，项目设计到 <code>vue</code>，自己把极客时间上 <code>vue</code> 的课和 <code>webpack</code> 的课的基础部分看了之后，然后公司的项目很快就上手了。当然这些课只是很快的带你入门，让你能很快的开始做项目， <code>vue</code> 或者 <code>webpack</code> 原理的部分还需要花更多的时间去学。</p>
+<p>最近自己又买了陈皓老师的「左耳听风」专栏，这是买的课里最贵的了，但只能说相见恨晚，专栏里分享很多陈浩老师多年程序员的经验，不管是编程范式、还是程序员练级等等一些部分，都大大的扩宽了自己的认识。</p>
+<h1 id="优惠"><a href="#优惠" class="headerlink" title="优惠"></a>优惠</h1><p>机缘巧合下自己就做了公众号「课程减减」，买课可以帮大家省一些钱。目前是所有课程都返现 16 元，我收到的返现会全部还给大家，具体价格还是以官方的返现价格为准。</p>
+<p>如果是学生的话，可以在「极客时间」 APP 认证学生，之后所有课程都可以半价买，并且上边的优惠依旧有效。</p>
+<p>如果实际支付价格（使用了券或者赠币后的价格）少于返现的红包价格，就没有返现红包。</p>
+<p>在「极客时间」选好课后，在下边的公众号进行搜索买课。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/geektimemp.png" alt=""></p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>现在知识付费比较火，很多人都调侃说是被割韭菜，但我觉得极客时间上的课真真切切的帮助到了自己很多，虽然网上也很多免费的文章，但是极客时间的话都是一些大佬们多年的经验总结出来的课程，会更加有体系，深度也会更强一些，虽然花了些钱，但其实隐形中帮自己省下了很多时间。</p>
+<p>当然，买课和买书一样，不能是光屯着，买完一定是得看，不然真的就变成绿油油的韭菜了，给人家白白送钱。如果认认真真的把买的课程都看完、学懂，我相信一定不会后悔买这个课的。</p>
+<p>最后，一起加油吧，越努力，越幸运，共勉。</p>
+]]></content>
+      <categories>
+        <category>随想</category>
+      </categories>
+      <tags>
+        <tag>极客时间</tag>
+        <tag>优惠</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>机器学习理论系列四 : Generative Model</title>
     <url>/2018/01/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%90%86%E8%AE%BA%E7%B3%BB%E5%88%97%E5%9B%9B-Probabilistic-Generative-Model/</url>
     <content><![CDATA[<blockquote>
@@ -1365,54 +1413,6 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
         <tag>机器学习</tag>
         <tag>分类</tag>
         <tag>概率生成模型</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>机器学习理论系列零</title>
-    <url>/2018/01/01/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%90%86%E8%AE%BA%E7%B3%BB%E5%88%97%E9%9B%B6/</url>
-    <content><![CDATA[<p>毕业设计是和深度学习相关，之前零零碎碎的学习了一些相关知识，这里开个系列文章总结一些，以免又看了忘，再看又不方便。</p>
-<p>深度学习目前可以说是非常火了，而深度学习是机器学习的一个分支，机器学习也只是人工智能的一个分支。</p>
-<p><img src="/2018/01/01/机器学习理论系列零/ai.png" alt=" "></p>
-<p>我是跟着李宏毅教授的上课视频一起学，这是地址 <a href="http://speech.ee.ntu.edu.tw/~tlkagk/courses.html" target="_blank" rel="noopener">http://speech.ee.ntu.edu.tw/~tlkagk/courses.html</a> ，我看的是里边的 Machine Learning ( 2017 Spring )。他的 PPT 和 video 比较齐全，也是从比较基础的讲起，老师也比较幽默，非常推荐。</p>
-<p>这里再推荐下央视新推的综艺节目「机智过人」，里边许多项目也是基于深度学习的，嘉宾还有图灵奖获得者姚期智。</p>
-<p><img src="/2018/01/01/机器学习理论系列零/jivi.jpg" alt=" "><br>里边的做对联，作诗，写歌的机器人不得不让人惊叹。</p>
-]]></content>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>深度学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>极客时间优惠红包返现</title>
-    <url>/2020/05/31/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4%E4%BC%98%E6%83%A0%E7%BA%A2%E5%8C%85%E8%BF%94%E7%8E%B0/</url>
-    <content><![CDATA[<h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>极客时间目前主要是互联网方面的一些课，自己一直在用，下边是自己目前买过的一些课。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/geek1.jpg" alt=""></p>
-<p>说一下自己的感受吧。</p>
-<p>「技术与商业案例解读」每天会在路上听一听，了解了很多商业公司的历史，国外的微软、苹果、亚马逊等，国内的 BAT，还有很多不是很出名的公司，看着企业浮浮沉沉，很开阔眼界。</p>
-<p>自己第一门买的课是目前极客时间销量最高的课，王争大佬的「数据结构与算法之美」，自己刚上研究生时候买的，有一说一，绝对是超值的，自己也一直给身边的人安利。下边是两年前的朋友圈，哈哈。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/geek2.jpg" alt=""></p>
-<p>因为本科的时候也学过一些数据结构和算法，所以这门课更多的起了查漏补缺的作用，但很多知识点都是自己没有接触过的，还有一些工业上的应用，可以更加明白数据结构的作用，对自己去年找工作面试的帮助很大，能让自己的知识点更加成体系。</p>
-<p>然后就是 <a href="https://www.zhihu.com/people/ec03b8e839a6fb763e1b8113455362db" target="_blank" rel="noopener">@winter</a> 大神的「重学前端」 的课程，因为我找的是前端岗的工作，看完以后对前端整体有了更深的理解。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/geek3.jpg" alt=""></p>
-<p>上边的图印象深刻，整个课程学完以后对自己未来学习的方向也更加明确了。</p>
-<p>还有刘超老师的「网络协议」和「<code>linux</code> 系统」的课，自己是因为研究生期间做的项目设计到这些，就毫不犹豫的从极客时间买了课，自己主要对 <code>linux</code> 网络协议栈那块感兴趣，所以课程只看了一部分，但帮助真的很大很大，对于刚刚入门不知从何入手的时候，可以更好的指引自己。</p>
-<p>前段时间来美团提前实习，项目设计到 <code>vue</code>，自己把极客时间上 <code>vue</code> 的课和 <code>webpack</code> 的课的基础部分看了之后，然后公司的项目很快就上手了。当然这些课只是很快的带你入门，让你能很快的开始做项目， <code>vue</code> 或者 <code>webpack</code> 原理的部分还需要花更多的时间去学。</p>
-<p>最近自己又买了陈皓老师的「左耳听风」专栏，这是买的课里最贵的了，但只能说相见恨晚，专栏里分享很多陈浩老师多年程序员的经验，不管是编程范式、还是程序员练级等等一些部分，都大大的扩宽了自己的认识。</p>
-<h1 id="优惠"><a href="#优惠" class="headerlink" title="优惠"></a>优惠</h1><p>机缘巧合下自己就做了公众号「课程减减」，买课可以帮大家省一些钱。目前是所有课程都返现 16 元，我收到的返现会全部还给大家，具体价格还是以官方的返现价格为准。</p>
-<p>如果是学生的话，可以在「极客时间」 APP 认证学生，之后所有课程都可以半价买，并且上边的优惠依旧有效。</p>
-<p>如果实际支付价格（使用了券或者赠币后的价格）少于返现的红包价格，就没有返现红包。</p>
-<p>在「极客时间」选好课后，在下边的公众号进行搜索买课。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/geektimemp.png" alt=""></p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>现在知识付费比较火，很多人都调侃说是被割韭菜，但我觉得极客时间上的课真真切切的帮助到了自己很多，虽然网上也很多免费的文章，但是极客时间的话都是一些大佬们多年的经验总结出来的课程，会更加有体系，深度也会更强一些，虽然花了些钱，但其实隐形中帮自己省下了很多时间。</p>
-<p>当然，买课和买书一样，不能是光屯着，买完一定是得看，不然真的就变成绿油油的韭菜了，给人家白白送钱。如果认认真真的把买的课程都看完、学懂，我相信一定不会后悔买这个课的。</p>
-<p>最后，一起加油吧，越努力，越幸运，共勉。</p>
-]]></content>
-      <categories>
-        <category>随想</category>
-      </categories>
-      <tags>
-        <tag>极客时间</tag>
-        <tag>优惠</tag>
       </tags>
   </entry>
   <entry>
@@ -3271,79 +3271,6 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
       </tags>
   </entry>
   <entry>
-    <title>通过js或者nginx实现域名重定向</title>
-    <url>/2020/04/11/%E9%80%9A%E8%BF%87js%E6%88%96%E8%80%85nginx%E5%AE%9E%E7%8E%B0%E5%9F%9F%E5%90%8D%E9%87%8D%E5%AE%9A%E5%90%91/</url>
-    <content><![CDATA[<p>大学的时候买了 <a href="http://windliang.cc/" target="_blank" rel="noopener">windliang.cc</a> 的域名当做自己的博客，然后一直使用的是 <code>github</code> 的 <code>pages</code> 服务。最近国内访问 <code>github</code> 有些慢，想把博客迁移到阿里云的服务器上。</p>
-<p>之前已经把刷题博客 <a href="https://leetcode.wang/" target="_blank" rel="noopener">leetcode.wang</a> 通过 <code>nginx</code> 成功放到阿里云上了，参考 <a href="https://windliang.wang/2020/02/23/云服务器搭建网站全过程/">云服务器搭建网站全过程</a>。</p>
-<p>但是大学买的 <code>.cc</code> 域名有一个最大的问题，现在不能备案了，不能备案的话就不能放到国内服务器上。于是前段时间又买了一个 <a href="https://windliang.wang/">windliang.wang</a> 域名，备案成功后，按照之前的总结，很快就放到了阿里云上。</p>
-<p>现在需要做的是当访问 <code>.cc</code> 域名的时候，重新定向到 <code>.wang</code> 域名上。</p>
-<p>有两种方式，一种是在前端通过 <code>js</code> 进行重定向，另一种就是在后端通过 <code>nginx</code> 。</p>
-<h1 id="通过-js"><a href="#通过-js" class="headerlink" title="通过 js"></a>通过 js</h1><p>因为 <code>.cc</code> 域名没有备案，所以我们需要在国外的服务器上放一个 <code>html</code> 来实现重定向。</p>
-<p>最简单的方法，就是依旧使用 <code>github</code> 的 <code>pages</code> 服务。需要的<code>index.html</code> 写法如下。</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> domain = <span class="string">"windliang.wang"</span>;</span></span><br><span class="line"><span class="javascript">    <span class="comment">//得到 https://windliang.cc/XXXXX</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> src = <span class="built_in">window</span>.location.href;</span></span><br><span class="line"><span class="undefined">    </span></span><br><span class="line"><span class="javascript">    <span class="comment">//得到 https</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> prtc = src.substring(<span class="number">0</span>, src.indexOf(<span class="string">':'</span>));</span></span><br><span class="line"><span class="undefined">    </span></span><br><span class="line"><span class="javascript">    <span class="comment">//得到 /XXXXX</span></span></span><br><span class="line"><span class="javascript">    <span class="comment">//indexOf 的第二个参数是开始查找的位置</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> target = src.substring(src.indexOf(<span class="string">'/'</span>, src.indexOf(<span class="string">':'</span>) + <span class="number">3</span>));</span></span><br><span class="line"><span class="undefined">    </span></span><br><span class="line"><span class="javascript">    <span class="comment">//组合在一起</span></span></span><br><span class="line"><span class="javascript">    <span class="comment">//https://windliang.wang/XXXXX</span></span></span><br><span class="line"><span class="javascript">    <span class="built_in">window</span>.location.href = prtc + <span class="string">"://"</span> + domain + target;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>比较好理解，上边也都注释了。</p>
-<p>我们只需要把它保存为 <code>index.html</code> 然后放到 <code>github</code> 仓库里。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect1.jpg" alt=""></p>
-<p>在 <code>Settings</code> 里开启 <code>pages</code> 服务，并且绑定我们的域名。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect2.jpg" alt=""></p>
-<p>并且在自己的 <code>DNS</code> 里面添加一个 <code>CNAME</code> 记录，将域名解析到 <code>wind-liang.github.io</code>。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect3.jpg" alt=""></p>
-<p>然后再去打开 <code>windliang.cc</code> 的任意地址，就会自动跳转到 <code>windliang.wang</code> 了。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect4.gif" alt=""></p>
-<p>这样就成功实现域名的重定向了。但这样做的话，可能对搜索引擎不是很友好，我也没研究过 SEO，仅仅是我的猜测。下边再介绍通过 <code>nginx</code> 方式的重定向。</p>
-<p>但是这里有一点我不能理解的是，访问 <code>windliang.cc</code> 的时候会有一个 <code>404</code> 的状态码，这里我也不知道是为什么，如果谁知道的话可以告诉我。</p>
-<h1 id="通过-nginx"><a href="#通过-nginx" class="headerlink" title="通过 nginx"></a>通过 nginx</h1><p>因为原来的域名没有备案，所以你需要一个国外的服务器，我的服务器操作系统是 <code>Debian</code> 。</p>
-<p>对于 <code>http</code> 的重定向很简单，只需要在 <code>/etc/nginx/conf.d</code> 文件夹下新建一个配置文件。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">vim /etc/nginx/conf.d/windliang.cc.conf</span><br></pre></td></tr></table></figure>
-<p>然后添加下边的内容。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen <span class="number">80</span>;</span><br><span class="line">        server_name  windliang.cc;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">301</span> https:<span class="comment">//windliang.wang$request_uri;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样的话就可以了。但因为监听的是 <code>80</code> 端口，所以只会对 <code>http://windliang.cc</code> 进行重定向，对于 <code>https</code> 的链接就无能为力了。</p>
-<p>所以我们还需要为 <code>windliang.cc</code> 申请一个 <code>SSL</code> 证书，从而完成 <code>https</code> 的跳转。</p>
-<p>需要知道两个东西。</p>
-<p><strong>Let’s Encrypt</strong></p>
-<blockquote>
-<p>Let’s Encrypt由<a href="https://zh.wikipedia.org/w/index.php?title=互联网安全研究小组&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">互联网安全研究小组</a>（缩写ISRG）提供服务。主要赞助商包括<a href="https://zh.wikipedia.org/wiki/电子前哨基金会" target="_blank" rel="noopener">电子前哨基金会</a>、<a href="https://zh.wikipedia.org/wiki/Mozilla基金会" target="_blank" rel="noopener">Mozilla基金会</a>、<a href="https://zh.wikipedia.org/wiki/Akamai" target="_blank" rel="noopener">Akamai</a>以及<a href="https://zh.wikipedia.org/wiki/思科" target="_blank" rel="noopener">思科</a>。2015年4月9日，ISRG与<a href="https://zh.wikipedia.org/wiki/Linux基金會" target="_blank" rel="noopener">Linux基金会</a>宣布合作。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-5" target="_blank" rel="noopener">[5]</a></p>
-<p>用以实现新的数字证书认证机构的协议被称为自动证书管理环境（ACME）。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-le-getinvolved-6" target="_blank" rel="noopener">[6]</a><a href="https://zh.wikipedia.org/wiki/GitHub" target="_blank" rel="noopener">GitHub</a>上有这一规范的草案，<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-le-getinvolved-6" target="_blank" rel="noopener">[6]</a><a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-7" target="_blank" rel="noopener">[7]</a>且提案的一个版本已作为一个<a href="https://zh.wikipedia.org/wiki/RFC" target="_blank" rel="noopener">Internet草案</a>发布。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-8" target="_blank" rel="noopener">[8]</a></p>
-<p>Let’s Encrypt宣称这一过程将十分简单、自动化并且免费。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-9" target="_blank" rel="noopener">[9]</a></p>
-</blockquote>
-<p><strong>Certbot</strong></p>
-<blockquote>
-<p>Certbot is a free, open source software tool for automatically using <a href="https://letsencrypt.org/" target="_blank" rel="noopener">Let’s Encrypt</a> certificates on manually-administrated websites to enable HTTPS.</p>
-<p>Certbot is made by the <a href="https://www.eff.org/" target="_blank" rel="noopener">Electronic Frontier Foundation (EFF)</a>, a 501(c)3 nonprofit based in San Francisco, CA, that defends digital privacy, free speech, and innovation.</p>
-</blockquote>
-<p>是一个可以帮我们自动获取证书的软件。我们可以在 <a href="https://certbot.eff.org/instructions" target="_blank" rel="noopener">官网</a> 选择自己的后端软件以及操作系统，它会列出我们需要操作的步骤。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect4.jpg" alt=""></p>
-<p>然后就会出现下边的步骤，我只截了一部分图。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect5.jpg" alt=""></p>
-<p>首先是安装 <code>Certbot</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">sudo apt-get install certbot python-certbot-nginx</span><br></pre></td></tr></table></figure>
-<p>有两种获得证书的方式，一种是自动获取证书并且配置 <code>nginx</code> ，一种是仅获取证书。因为我的网站是在阿里云上，不在这个服务器上，所以我采用仅获取证书的方式。</p>
-<p>运行之前，要把之前的 <code>CNAME</code> 记录删除，添加一个 <code>A</code> 记录，将域名指向当前服务器的 <code>ip</code>。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect6.jpg" alt=""></p>
-<p>然后执行下边的命令。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">sudo certbot certonly --nginx</span><br></pre></td></tr></table></figure>
-<p>执行过程中会让你填邮箱，选择域名，然后等几秒钟就生成成功了，记住最后输出的证书的地址和密钥的地址。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect7.jpg" alt=""></p>
-<p>更改之前的配置文件。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">vim /etc/nginx/conf.d/windliang.cc.conf</span><br></pre></td></tr></table></figure>
-<p>把 <code>80</code> 端口和 <code>443</code> 端口合在一起，然后将上边保存的证书和密钥地址填上。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen <span class="number">80</span>;</span><br><span class="line">    listen <span class="number">443</span> ssl;</span><br><span class="line">    server_name windliang.cc;</span><br><span class="line">    ssl_certificate   /etc/letsencrypt/live/windliang.cc/fullchain.pem;</span><br><span class="line">    ssl_certificate_key  /etc/letsencrypt/live/windliang.cc/privkey.pem;</span><br><span class="line">    ssl_session_timeout <span class="number">5</span>m;</span><br><span class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;</span><br><span class="line">    ssl_prefer_server_ciphers on;</span><br><span class="line">    # 将80端口的http请求 301 重定向到新域名</span><br><span class="line">    <span class="keyword">if</span> ( $scheme = <span class="string">"http"</span> ) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">301</span> https:<span class="comment">//windliang.wang$request_uri;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    # 将443端口的https请求 rewrite 重定向到新域名</span><br><span class="line">    location / &#123;</span><br><span class="line">        rewrite ^(.*)$ https:<span class="comment">//windliang.wang$1 permanent;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后，就会发现可以得到 <code>301</code> 的状态码了。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect8.jpg" alt=""></p>
-<p>最后一步，仔细看之前得到证书的截图，会发现证书的有效期是 <code>3</code> 个月。但没有关系，教程说如果通过上边的步骤走的话，到期前它会自动帮我们更新。</p>
-<p>我也不敢确定，只能到时候看它有没有更新了，哈哈。</p>
-<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>以上就是域名重定向的过程了，主要是前端通过 <code>js</code> 和后端通过 <code>nginx</code>。</p>
-<p>上边流程看起来很流畅，但今天用 <code>nginx</code> 做重定向的过程相当曲折了。因为一开始我只对 <code>80</code> 端口做了重定向，当我在浏览器输入 <code>windliang.cc</code> 的时候，因为之前是通过 <code>https</code> 访问的，所以浏览器会自动在前边加上 <code>https://</code> ，所以导致一直不能成功跳转。</p>
-<p>最神奇的是不知道为什么中午吃饭前有一次跳转成功了，然后吃完饭回来心想再放个网站到服务器，毕竟国外服务器的话，域名就不需要备案了，但是突然发现 <code>windliang.cc</code> 不能跳转了。</p>
-<p>然后自己就各种尝试，一直以为是 <code>nginx</code> 的原因，各种看日志，重启 <code>nginx</code>，但始终没找到问题，把 <code>nginx</code> 重装了两遍，甚至想把服务器重装了，最最后，终于意识到了这个 <code>https</code> 的问题，才想到了上边的解决方案。</p>
-]]></content>
-      <tags>
-        <tag>网站</tag>
-        <tag>云服务器</tag>
-        <tag>nginx</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>追本溯源：字符串及编码</title>
     <url>/2019/07/15/%E8%BF%BD%E6%9C%AC%E6%BA%AF%E6%BA%90-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8F%8A%E7%BC%96%E7%A0%81/</url>
     <content><![CDATA[<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><p> 先考虑下边的问题。</p>
@@ -3442,6 +3369,79 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
         <tag>编码</tag>
         <tag>utf-8</tag>
         <tag>unicode</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>通过js或者nginx实现域名重定向</title>
+    <url>/2020/04/11/%E9%80%9A%E8%BF%87js%E6%88%96%E8%80%85nginx%E5%AE%9E%E7%8E%B0%E5%9F%9F%E5%90%8D%E9%87%8D%E5%AE%9A%E5%90%91/</url>
+    <content><![CDATA[<p>大学的时候买了 <a href="http://windliang.cc/" target="_blank" rel="noopener">windliang.cc</a> 的域名当做自己的博客，然后一直使用的是 <code>github</code> 的 <code>pages</code> 服务。最近国内访问 <code>github</code> 有些慢，想把博客迁移到阿里云的服务器上。</p>
+<p>之前已经把刷题博客 <a href="https://leetcode.wang/" target="_blank" rel="noopener">leetcode.wang</a> 通过 <code>nginx</code> 成功放到阿里云上了，参考 <a href="https://windliang.wang/2020/02/23/云服务器搭建网站全过程/">云服务器搭建网站全过程</a>。</p>
+<p>但是大学买的 <code>.cc</code> 域名有一个最大的问题，现在不能备案了，不能备案的话就不能放到国内服务器上。于是前段时间又买了一个 <a href="https://windliang.wang/">windliang.wang</a> 域名，备案成功后，按照之前的总结，很快就放到了阿里云上。</p>
+<p>现在需要做的是当访问 <code>.cc</code> 域名的时候，重新定向到 <code>.wang</code> 域名上。</p>
+<p>有两种方式，一种是在前端通过 <code>js</code> 进行重定向，另一种就是在后端通过 <code>nginx</code> 。</p>
+<h1 id="通过-js"><a href="#通过-js" class="headerlink" title="通过 js"></a>通过 js</h1><p>因为 <code>.cc</code> 域名没有备案，所以我们需要在国外的服务器上放一个 <code>html</code> 来实现重定向。</p>
+<p>最简单的方法，就是依旧使用 <code>github</code> 的 <code>pages</code> 服务。需要的<code>index.html</code> 写法如下。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> domain = <span class="string">"windliang.wang"</span>;</span></span><br><span class="line"><span class="javascript">    <span class="comment">//得到 https://windliang.cc/XXXXX</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> src = <span class="built_in">window</span>.location.href;</span></span><br><span class="line"><span class="undefined">    </span></span><br><span class="line"><span class="javascript">    <span class="comment">//得到 https</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> prtc = src.substring(<span class="number">0</span>, src.indexOf(<span class="string">':'</span>));</span></span><br><span class="line"><span class="undefined">    </span></span><br><span class="line"><span class="javascript">    <span class="comment">//得到 /XXXXX</span></span></span><br><span class="line"><span class="javascript">    <span class="comment">//indexOf 的第二个参数是开始查找的位置</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> target = src.substring(src.indexOf(<span class="string">'/'</span>, src.indexOf(<span class="string">':'</span>) + <span class="number">3</span>));</span></span><br><span class="line"><span class="undefined">    </span></span><br><span class="line"><span class="javascript">    <span class="comment">//组合在一起</span></span></span><br><span class="line"><span class="javascript">    <span class="comment">//https://windliang.wang/XXXXX</span></span></span><br><span class="line"><span class="javascript">    <span class="built_in">window</span>.location.href = prtc + <span class="string">"://"</span> + domain + target;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>比较好理解，上边也都注释了。</p>
+<p>我们只需要把它保存为 <code>index.html</code> 然后放到 <code>github</code> 仓库里。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect1.jpg" alt=""></p>
+<p>在 <code>Settings</code> 里开启 <code>pages</code> 服务，并且绑定我们的域名。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect2.jpg" alt=""></p>
+<p>并且在自己的 <code>DNS</code> 里面添加一个 <code>CNAME</code> 记录，将域名解析到 <code>wind-liang.github.io</code>。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect3.jpg" alt=""></p>
+<p>然后再去打开 <code>windliang.cc</code> 的任意地址，就会自动跳转到 <code>windliang.wang</code> 了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect4.gif" alt=""></p>
+<p>这样就成功实现域名的重定向了。但这样做的话，可能对搜索引擎不是很友好，我也没研究过 SEO，仅仅是我的猜测。下边再介绍通过 <code>nginx</code> 方式的重定向。</p>
+<p>但是这里有一点我不能理解的是，访问 <code>windliang.cc</code> 的时候会有一个 <code>404</code> 的状态码，这里我也不知道是为什么，如果谁知道的话可以告诉我。</p>
+<h1 id="通过-nginx"><a href="#通过-nginx" class="headerlink" title="通过 nginx"></a>通过 nginx</h1><p>因为原来的域名没有备案，所以你需要一个国外的服务器，我的服务器操作系统是 <code>Debian</code> 。</p>
+<p>对于 <code>http</code> 的重定向很简单，只需要在 <code>/etc/nginx/conf.d</code> 文件夹下新建一个配置文件。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">vim /etc/nginx/conf.d/windliang.cc.conf</span><br></pre></td></tr></table></figure>
+<p>然后添加下边的内容。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen <span class="number">80</span>;</span><br><span class="line">        server_name  windliang.cc;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">301</span> https:<span class="comment">//windliang.wang$request_uri;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的话就可以了。但因为监听的是 <code>80</code> 端口，所以只会对 <code>http://windliang.cc</code> 进行重定向，对于 <code>https</code> 的链接就无能为力了。</p>
+<p>所以我们还需要为 <code>windliang.cc</code> 申请一个 <code>SSL</code> 证书，从而完成 <code>https</code> 的跳转。</p>
+<p>需要知道两个东西。</p>
+<p><strong>Let’s Encrypt</strong></p>
+<blockquote>
+<p>Let’s Encrypt由<a href="https://zh.wikipedia.org/w/index.php?title=互联网安全研究小组&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">互联网安全研究小组</a>（缩写ISRG）提供服务。主要赞助商包括<a href="https://zh.wikipedia.org/wiki/电子前哨基金会" target="_blank" rel="noopener">电子前哨基金会</a>、<a href="https://zh.wikipedia.org/wiki/Mozilla基金会" target="_blank" rel="noopener">Mozilla基金会</a>、<a href="https://zh.wikipedia.org/wiki/Akamai" target="_blank" rel="noopener">Akamai</a>以及<a href="https://zh.wikipedia.org/wiki/思科" target="_blank" rel="noopener">思科</a>。2015年4月9日，ISRG与<a href="https://zh.wikipedia.org/wiki/Linux基金會" target="_blank" rel="noopener">Linux基金会</a>宣布合作。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-5" target="_blank" rel="noopener">[5]</a></p>
+<p>用以实现新的数字证书认证机构的协议被称为自动证书管理环境（ACME）。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-le-getinvolved-6" target="_blank" rel="noopener">[6]</a><a href="https://zh.wikipedia.org/wiki/GitHub" target="_blank" rel="noopener">GitHub</a>上有这一规范的草案，<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-le-getinvolved-6" target="_blank" rel="noopener">[6]</a><a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-7" target="_blank" rel="noopener">[7]</a>且提案的一个版本已作为一个<a href="https://zh.wikipedia.org/wiki/RFC" target="_blank" rel="noopener">Internet草案</a>发布。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-8" target="_blank" rel="noopener">[8]</a></p>
+<p>Let’s Encrypt宣称这一过程将十分简单、自动化并且免费。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-9" target="_blank" rel="noopener">[9]</a></p>
+</blockquote>
+<p><strong>Certbot</strong></p>
+<blockquote>
+<p>Certbot is a free, open source software tool for automatically using <a href="https://letsencrypt.org/" target="_blank" rel="noopener">Let’s Encrypt</a> certificates on manually-administrated websites to enable HTTPS.</p>
+<p>Certbot is made by the <a href="https://www.eff.org/" target="_blank" rel="noopener">Electronic Frontier Foundation (EFF)</a>, a 501(c)3 nonprofit based in San Francisco, CA, that defends digital privacy, free speech, and innovation.</p>
+</blockquote>
+<p>是一个可以帮我们自动获取证书的软件。我们可以在 <a href="https://certbot.eff.org/instructions" target="_blank" rel="noopener">官网</a> 选择自己的后端软件以及操作系统，它会列出我们需要操作的步骤。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect4.jpg" alt=""></p>
+<p>然后就会出现下边的步骤，我只截了一部分图。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect5.jpg" alt=""></p>
+<p>首先是安装 <code>Certbot</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">sudo apt-get install certbot python-certbot-nginx</span><br></pre></td></tr></table></figure>
+<p>有两种获得证书的方式，一种是自动获取证书并且配置 <code>nginx</code> ，一种是仅获取证书。因为我的网站是在阿里云上，不在这个服务器上，所以我采用仅获取证书的方式。</p>
+<p>运行之前，要把之前的 <code>CNAME</code> 记录删除，添加一个 <code>A</code> 记录，将域名指向当前服务器的 <code>ip</code>。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect6.jpg" alt=""></p>
+<p>然后执行下边的命令。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">sudo certbot certonly --nginx</span><br></pre></td></tr></table></figure>
+<p>执行过程中会让你填邮箱，选择域名，然后等几秒钟就生成成功了，记住最后输出的证书的地址和密钥的地址。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect7.jpg" alt=""></p>
+<p>更改之前的配置文件。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">vim /etc/nginx/conf.d/windliang.cc.conf</span><br></pre></td></tr></table></figure>
+<p>把 <code>80</code> 端口和 <code>443</code> 端口合在一起，然后将上边保存的证书和密钥地址填上。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen <span class="number">80</span>;</span><br><span class="line">    listen <span class="number">443</span> ssl;</span><br><span class="line">    server_name windliang.cc;</span><br><span class="line">    ssl_certificate   /etc/letsencrypt/live/windliang.cc/fullchain.pem;</span><br><span class="line">    ssl_certificate_key  /etc/letsencrypt/live/windliang.cc/privkey.pem;</span><br><span class="line">    ssl_session_timeout <span class="number">5</span>m;</span><br><span class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;</span><br><span class="line">    ssl_prefer_server_ciphers on;</span><br><span class="line">    # 将80端口的http请求 301 重定向到新域名</span><br><span class="line">    <span class="keyword">if</span> ( $scheme = <span class="string">"http"</span> ) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">301</span> https:<span class="comment">//windliang.wang$request_uri;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    # 将443端口的https请求 rewrite 重定向到新域名</span><br><span class="line">    location / &#123;</span><br><span class="line">        rewrite ^(.*)$ https:<span class="comment">//windliang.wang$1 permanent;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后，就会发现可以得到 <code>301</code> 的状态码了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect8.jpg" alt=""></p>
+<p>最后一步，仔细看之前得到证书的截图，会发现证书的有效期是 <code>3</code> 个月。但没有关系，教程说如果通过上边的步骤走的话，到期前它会自动帮我们更新。</p>
+<p>我也不敢确定，只能到时候看它有没有更新了，哈哈。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>以上就是域名重定向的过程了，主要是前端通过 <code>js</code> 和后端通过 <code>nginx</code>。</p>
+<p>上边流程看起来很流畅，但今天用 <code>nginx</code> 做重定向的过程相当曲折了。因为一开始我只对 <code>80</code> 端口做了重定向，当我在浏览器输入 <code>windliang.cc</code> 的时候，因为之前是通过 <code>https</code> 访问的，所以浏览器会自动在前边加上 <code>https://</code> ，所以导致一直不能成功跳转。</p>
+<p>最神奇的是不知道为什么中午吃饭前有一次跳转成功了，然后吃完饭回来心想再放个网站到服务器，毕竟国外服务器的话，域名就不需要备案了，但是突然发现 <code>windliang.cc</code> 不能跳转了。</p>
+<p>然后自己就各种尝试，一直以为是 <code>nginx</code> 的原因，各种看日志，重启 <code>nginx</code>，但始终没找到问题，把 <code>nginx</code> 重装了两遍，甚至想把服务器重装了，最最后，终于意识到了这个 <code>https</code> 的问题，才想到了上边的解决方案。</p>
+]]></content>
+      <tags>
+        <tag>网站</tag>
+        <tag>云服务器</tag>
+        <tag>nginx</tag>
       </tags>
   </entry>
   <entry>
