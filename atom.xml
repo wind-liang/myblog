@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://windliang.wang/"/>
-  <updated>2021-05-29T13:44:24.781Z</updated>
+  <updated>2021-06-22T05:48:36.096Z</updated>
   <id>https://windliang.wang/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>油猴脚本制作微信公众号批量添加全局可转载账号脚本</title>
+    <link href="https://windliang.wang/2021/06/21/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E6%89%B9%E9%87%8F%E6%B7%BB%E5%8A%A0%E5%85%A8%E5%B1%80%E5%8F%AF%E8%BD%AC%E8%BD%BD%E8%B4%A6%E5%8F%B7/"/>
+    <id>https://windliang.wang/2021/06/21/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E6%89%B9%E9%87%8F%E6%B7%BB%E5%8A%A0%E5%85%A8%E5%B1%80%E5%8F%AF%E8%BD%AC%E8%BD%BD%E8%B4%A6%E5%8F%B7/</id>
+    <published>2021-06-20T16:42:37.000Z</published>
+    <updated>2021-06-22T05:48:36.096Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="想法来源"><a href="#想法来源" class="headerlink" title="想法来源"></a>想法来源</h1><p>在一个公众号号主群里，有新人进来的时候就会甩出这样的一个列表。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp4.jpg" alt=""></p><p>这如果一个一个加到公众号转载白名单里，可能就想退群了[旺柴]。于是就有了做一个批量添加公众号转载白名单的想法。</p><h1 id="必备神器"><a href="#必备神器" class="headerlink" title="必备神器"></a>必备神器</h1><p>我立刻就想到了用油猴脚本（<code>Tampermonkey</code>）来实现。</p><blockquote><p><strong>Tampermonkey</strong> 是一款免费的浏览器扩展和最为流行的用户脚本管理器，它适用于 <a href="https://www.tampermonkey.net/#" target="_blank" rel="noopener"><strong>Chrome</strong></a>, <a href="https://www.tampermonkey.net/#" target="_blank" rel="noopener"><strong>Microsoft Edge</strong></a>, <a href="https://www.tampermonkey.net/#" target="_blank" rel="noopener"><strong>Safari</strong></a>, <a href="https://www.tampermonkey.net/#" target="_blank" rel="noopener"><strong>Opera Next</strong></a>, 和 <a href="https://www.tampermonkey.net/#" target="_blank" rel="noopener"><strong>Firefox</strong></a>。</p><p>虽然有些受支持的浏览器拥有原生的用户脚本支持，但 Tampermonkey 将在您的用户脚本管理方面提供更多的便利。 它提供了诸如便捷脚本安装、自动更新检查、标签中的脚本运行状况速览、内置的编辑器等众多功能， 同时Tampermonkey还有可能正常运行原本并不兼容的脚本。</p></blockquote><p>简单的说，在控制台执行的任何 <code>js</code> 操作，处理 <code>dom</code> 、发送网络请求等，都可以通过油猴脚本在某个网站打开的时候去自动执行。</p><p>之所以可以想到油猴脚本，是因为前段时间我已经写过了一个油猴脚本，主要是可以<a href="https://greasyfork.org/zh-CN/scripts/424169-%E7%BE%8E%E5%9B%A2%E8%AF%84%E8%AE%BA%E8%BF%87%E6%BB%A41" target="_blank" rel="noopener">过滤美团一些内部网站的评论区</a>中的 <code>1</code>（我也不知道为什么会有评论区刷 <code>1</code> 的习惯），甚至在美团内部得到了各个官方号的推荐。主要原理就是重写了全局的 <code>fetch</code> 函数，拿到数据后将评论区内容进行一遍过滤，然后再 <code>return</code>  出去，通过这个脚本对油猴有了一个初步的认识。</p><h1 id="MVP-验证"><a href="#MVP-验证" class="headerlink" title="MVP 验证"></a>MVP 验证</h1><p>走一遍添加转载白名单的过程，抓一抓接口然后在控制台执行一下，看是否能成功。</p><p>首先搜索会发一个请求。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp5.jpg" alt=""></p><p>选择搜索出来的公众号，添加也会发一次请求。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp6.jpg" alt=""></p><p>将刚刚添加的 <code>小甜文</code> 公众号删除，然后将请求导出 <code>fetch</code> 代码，在控制台执行。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp7.jpg" alt=""></p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp8.jpg" alt=""></p><p>完美！如下图，执行完上边的网络请求后成功添加了「小甜文」。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp9.jpg" alt=""></p><p>有了上边的实验基本可以确定这个功能肯定是可以做的，我们只需要传入一个公众号数组进行遍历，首先发送 <code>search</code> 请求得到相关信息，最后将信息传入到 <code>add</code> 请求中即可。</p><h1 id="关键代码"><a href="#关键代码" class="headerlink" title="关键代码"></a>关键代码</h1><h2 id="dom-操作"><a href="#dom-操作" class="headerlink" title="dom 操作"></a>dom 操作</h2><p>为了方便用户操作，我们需要加一些 <code>dom</code> 元素，比如 <code>批量添加</code> 这个 <code>button</code>，因为之前没在油猴脚本写过 <code>dom</code> ，所以同样先在控制台试了一下。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fatherNode = <span class="built_in">document</span>.getElementsByClassName(</span><br><span class="line">      <span class="string">"global-article__add-button"</span></span><br><span class="line">)[<span class="number">0</span>]; <span class="comment">//得到包含「添加」 button 的父元素，如下图</span></span><br><span class="line"><span class="keyword">const</span> addNode = fatherNode.firstElementChild.cloneNode(<span class="literal">true</span>); <span class="comment">//复制原有的「添加」 button</span></span><br><span class="line">addNode.innerText = <span class="string">"批量添加"</span>;</span><br><span class="line">addNode.style = <span class="string">"margin-left:10px"</span>;</span><br><span class="line">fatherNode.appendChild(addNode); <span class="comment">//添加到原有的「添加」button 后边</span></span><br></pre></td></tr></table></figure><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp10.jpg" alt=""></p><p>上边的代码在控制台执行，成功添加了 <code>button</code>。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp11.jpg" alt=""></p><p>之后就是再写一个对话框，用来让用户输入公众号，这个过程慢慢调样式就可以了。</p><h2 id="token"><a href="#token" class="headerlink" title="token"></a>token</h2><p>还有一个关键的地方就是发送请求的参数有一个 <code>token</code> 参数。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp12.jpg" alt=""></p><p>这个 <code>token</code> 参数从哪里来呢？因为大学的时候写过一些爬虫，所以对这个参数很敏感，第一反应就是去网页的源代码中拿。</p><p>下边验证了一下，打开源代码搜索 <code>token</code>。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp13.jpg" alt=""></p><p>会发现 <code>html</code> 中有很多 <code>token</code> ，我们随便从一个 <code>dom</code> 元素中去拿即可。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> getToken = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> url = <span class="built_in">document</span>.getElementsByClassName(</span><br><span class="line">      <span class="string">"weui-desktop-account__nickname"</span></span><br><span class="line">    )[<span class="number">0</span>].href;</span><br><span class="line">    <span class="keyword">return</span> url.match(<span class="regexp">/.*token=(\d+)&amp;.*/</span>)[<span class="number">1</span>];</span><br><span class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>Ps:</p><p>原本以为上边就足够了，文章写完测试全部名单的时候没想到翻了车，由于调用的过快，微信把<strong>搜索公众号的接口</strong>给我封了，而且不是封的 <code>token</code> ，是按照账号封的，重新登录获取新的 <code>token</code> 也不行了。<strong>无法通过公众号名称搜了，只能通过公众号的微信号来搜</strong>。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp16.jpg" alt=""></p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp17.jpg" alt="">为了防止上边的问题出现，代码里需要停顿一下，模拟一个 <code>sleep</code> 函数。</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sleep = <span class="keyword">async</span> (time) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> resolve(), time);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>调用完搜索接口停顿 <code>2</code> 秒，调用完添加接口停顿 <code>1</code>秒 <code>sleep(1000)</code> 。</p><p>Pps:</p><p>又找了一个号测试了一下，发现事情并不简单。虽然限制了速度，但另一个号测试的时候发现搜索接口调用到大概 <code>100</code> 次的时候，出现了同样的问题，<strong>不能通过公众号名称搜索，只能通过微信号搜索</strong>。我猜测，公众号的名称搜索接口的每日调用量做了限制，会在第二天某个时间点恢复。</p><p>第二天的时候，果然搜索接口正常了，然后我又重复了几次批量调用，果然又不能正常搜索了。。。</p><h1 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h1><p>使用方法：</p><p>在浏览器插件市场安装 Tampermonkey，Chrome 的安装地址如下</p><p><a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo" target="_blank" rel="noopener">https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo</a></p><p><img src="https://p0.meituan.net/voice/28ce63ca15877276ee8cc5fa5d0be03a37166.png" alt="img"></p><p>打不开的话我下了一个油猴脚本离线的包，可以从百度网盘下，链接: <a href="https://pan.baidu.com/s/1S0KmVvuoYGjul3l1XCh-mA" target="_blank" rel="noopener">https://pan.baidu.com/s/1S0KmVvuoYGjul3l1XCh-mA</a> 密码: 6bfd ，下载好后把文件拖到 Chrome 的扩展程序页面就自动安装了</p><p>然后通过下边的链接安装公众号脚本：</p><p><a href="https://greasyfork.org/zh-CN/scripts/428231-%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E6%89%B9%E9%87%8F%E6%B7%BB%E5%8A%A0%E5%85%A8%E5%B1%80%E5%8F%AF%E8%BD%AC%E8%BD%BD%E8%B4%A6%E5%8F%B7" target="_blank" rel="noopener">https://greasyfork.org/zh-CN/scripts/428231-%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E6%89%B9%E9%87%8F%E6%B7%BB%E5%8A%A0%E5%85%A8%E5%B1%80%E5%8F%AF%E8%BD%AC%E8%BD%BD%E8%B4%A6%E5%8F%B7</a></p><p>安装成功后进入微信公众号 -&gt; 原创 -&gt; 全局可转载账号，会发现多了一个「批量添加」的 <code>button</code>，输入所有的公众号然后添加即可。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp14.jpg" alt=""></p><h1 id="感受"><a href="#感受" class="headerlink" title="感受"></a>感受</h1><p>很久没有写过原生的 <code>dom</code> 操作了，有种奇妙的感觉。再次感叹下油猴脚本的强大，大家浏览器上有什么痛点的话也可以试一试。另外还见识到了微信的风控能力。。。应该就是为了防止用户去爬公众号的信息。</p><p>文章本来周一早上就该发出来了，没想到逻辑都好了却遇到了微信这一出。用几个公众号做了几次实验，得出的结论大概是：公众号<strong>搜索接口</strong>调用频率太快以及调用次数超过某个值的时候，就无法通过公众号名称搜索公众号了，只能通过微信号进行搜索。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;想法来源&quot;&gt;&lt;a href=&quot;#想法来源&quot; class=&quot;headerlink&quot; title=&quot;想法来源&quot;&gt;&lt;/a&gt;想法来源&lt;/h1&gt;&lt;p&gt;在一个公众号号主群里，有新人进来的时候就会甩出这样的一个列表。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://windl
+      
+    
+    </summary>
+    
+    
+      <category term="前端" scheme="https://windliang.wang/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="工具" scheme="https://windliang.wang/tags/%E5%B7%A5%E5%85%B7/"/>
+    
+      <category term="油猴脚本" scheme="https://windliang.wang/tags/%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC/"/>
+    
+  </entry>
   
   <entry>
     <title>在美团工作的第一年</title>
@@ -533,33 +562,6 @@
       
         &lt;p&gt;&lt;img src=&quot;https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 &lt;p&gt;秋招差不多以上海美团的签约结束了，在此记录一下秋招自己的时间线，以及秋招需要准备的东西吧。&lt;/p&gt;
-      
-    
-    </summary>
-    
-    
-      <category term="随想" scheme="https://windliang.wang/categories/%E9%9A%8F%E6%83%B3/"/>
-    
-    
-      <category term="随想" scheme="https://windliang.wang/tags/%E9%9A%8F%E6%83%B3/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>面完腾讯阿里后对人生的思考</title>
-    <link href="https://windliang.wang/2019/08/16/%E9%9D%A2%E5%AE%8C%E8%85%BE%E8%AE%AF%E9%98%BF%E9%87%8C%E5%90%8E%E5%AF%B9%E4%BA%BA%E7%94%9F%E7%9A%84%E6%80%9D%E8%80%83/"/>
-    <id>https://windliang.wang/2019/08/16/%E9%9D%A2%E5%AE%8C%E8%85%BE%E8%AE%AF%E9%98%BF%E9%87%8C%E5%90%8E%E5%AF%B9%E4%BA%BA%E7%94%9F%E7%9A%84%E6%80%9D%E8%80%83/</id>
-    <published>2019-08-16T15:26:04.000Z</published>
-    <updated>2020-11-17T15:51:18.730Z</updated>
-    
-    <content type="html"><![CDATA[<p>从大学入门计算机，陆陆续续接触了很多东西。</p><p>最开始的时候学 MFC ，做了 PC 端的个性化的贪吃蛇，后来和同学又做了一个校园安卓 APP。自己又去搞爬虫，给团队提供充校园卡的接口，又用 python 搭到服务器。为了怀念童年，做过一个 web 版的 <a href="https://zhuanlan.zhihu.com/p/71165578" target="_blank" rel="noopener">狼吃羊</a>，最近又做过微信小程序 <a href="https://zhuanlan.zhihu.com/p/64866114" target="_blank" rel="noopener">神奇字体</a>。</p><p>然后算法方面也做过些，本科做演化算法方面的，也有了一篇 <a href="https://link.springer.com/chapter/10.1007/978-981-10-3614-9_9" target="_blank" rel="noopener">论文</a> 。然后本科毕设，又做了深度学习，用 DBN 去做高分辨率的遥感图像分类。上了研究生，上深度学习的课，也结合前端做了个 <a href="https://zhuanlan.zhihu.com/p/71647786" target="_blank" rel="noopener">打砖块</a> 的游戏。一直也在 <a href="https://zhuanlan.zhihu.com/p/73146252" target="_blank" rel="noopener">刷 leetcode</a>，每道题都详细总结。</p><p>上边做的东西都也是兴趣驱动的，就和玩游戏一样，会有满足感，愉悦感。</p><p>成功做完一个又一个项目，开始可能会觉得难一些，慢慢的觉得只是做一个应用，完成一个任务，不管接没接触过，自己认为只要有一定的时间什么都可以做出来，先去了解需要的语言的基础语法，然后再根据需要选一些轮子，实在找不到就去找一些类似的项目模仿着做，比如最近做的 <a href="https://zhuanlan.zhihu.com/p/77414095" target="_blank" rel="noopener">windows 批处理</a>，还有自己对 <a href="https://www.zhihu.com/people/wang-liang-61-22/answers?page=2" target="_blank" rel="noopener">不同编程语言的看法</a> 也验证了自己的想法。</p><p>但慢慢觉得这些不够，由于现在轮子太多了，无论是搞前端开发，还是搞安卓开发，亦或是跑深度学习，都太方便了，方便到只要理清自己的逻辑，调几行 API 就够了，如果说某一块去深挖的话，就完全不行了。如果未来找工作肯定是不够的，于是在去年的时候决定以后就主要学习前端吧。</p><p>当时选择前端最直接的理由就是，跨平台呀，一个浏览器，PC、安卓、苹果都可以用，发布到网页，任何人都可以直接体验。现在各种小程序的使用，甚至觉得未来可能都不会有原生程序了，全部云服务器，用户只是需要一个显示的界面，桌面也好，一张纸也好，用前端 BS 的模式显示即可。</p><p>然后自己开始看各种书了，从 head first html 补充基础，然后 js 权威指南， Dom 编程艺术等等，看着看着开始迷茫了，因为看完并不知道自己会不会，这不像做一个应用，会有一个明确的目标，然后在网上找了找其他人怎么学前端，看了 <a href="https://www.zhihu.com/people/winter-25" target="_blank" rel="noopener">@winter</a> 大神在极客时间上的课，还有 <a href="https://www.zhihu.com/people/qing-feng-yi-yang" target="_blank" rel="noopener">@冴羽</a> 大神 github 上总结的笔记，渐渐的似乎有了方向，也理解了一入前端深似海的含义，比如 winter 大神总结的前端进阶路径。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/life.png" alt="img"></p><p>自己的水平也最多可能就是个前端工程师，但看完整个课程也理清了很多东西，也总结了几篇文章，<a href="https://zhuanlan.zhihu.com/p/73917931" target="_blank" rel="noopener">字符串及编码</a>，<a href="https://zhuanlan.zhihu.com/p/71780882" target="_blank" rel="noopener">访问器属性</a>，也在研究 underscore 的源码实现，想着就这样一步一步走吧，直到之前面试了头条二面被拒，昨天又面试了腾讯阿里，表现也不是很好，让我思考开了人生的意义。。。</p><p>首先面试自己觉得太应试了，就像从小到大的考试一样，比如最近的大学、研究生的考试，一些课都不用听，然后只要在考试前把历年的的题从打印店买过来，把题型总结出来，多刷几套，然后基本上就 80、90 + 了，甚至嘲讽的是你会发现题目一年比一年简单，就是为了挂科人数少一些。。。本以为以后可能不会有什么考试了，谁又曾想，工作的面试也是这么应试，网上的各种面经，一些题目被面试官问了一遍又一遍，this 指针、防抖节流、HTTPS、跨域问题… </p><p>而自己的态度一直是遇到问题就去学，就去总结解决，或者别人遇到问题，自己去一起探究，一味的背知识点又有什么用呢？而所谓的各种框架，之所以出现不是因为有需求，然后才出现的吗，现在却成了面试时候的必考知识点了，你用过 VUE 吗，那你说下它的双向绑定吧。</p><p>自己理想的面试，应该是抛出一个问题，网上没有现成答案的那种，然后去提出解决的方案，然后一步一步去解决，一步一步探究，当然这真的也许就是理想而已了，就像高考一样，就是那么应试，但你又不能否认应试就是一种能力。甚至自己都在想，自己身边的同学，都具备解决一个之前没有遇到的问题的能力，现在面试的作用真的能选择出「更好」的人吗，或者说选出的人的效果其实和在自己身边随机选几个人的效果是一样的。</p><p>所以昨天面试完，我真的迷茫了，一直被同学叫学霸，学神，被老师夸不错，被网上加的好友叫大佬，夸博客总结的不错，但现在似乎是找不到工作了，真的迷茫了。</p><p>开始思考，我们从出生，上了一年又一年的学到底为了什么，为了赚钱吗？为了找工作吗？赚钱以后呢，找工作以后呢，为了吃喝玩吗？写了一个又一个程序又是为了什么呢，写前端无非也就是写个普通用户的应用程序，写个程序员的框架、组件，但其实世界也并不会有什么变化，一切又有什么意义呢？再上升一级，人生的意义到底是什么，一切又都是为了什么呢？</p><p>然后昨天睡了一觉，今天似乎找到答案了，人生是没有意义的，我们需要做的只是去体验这一切，开心也好、纠结也罢，亦或是伤心，一个又一个的感受其实哪里有好坏之分。我们能真切的感受到，感受到自己的存在，这种感觉其实足够令自己满足，做一切是没有意义的，那又怎么样，至少我体验过了。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/life2.png" alt="img"></p><p>所以现在自己找工作也没有那么纠结了，一切都看开了，遇到面试问到的不会的问题就去研究研究，平时多逛逛 github 看看别人的源码，学学怎么造一个轮子，多留意一些生活中的细节，有需求了就写个程序给大家用一用，每天刷刷 LeetCode，出去跑跑步，看个电影，和女朋友聊聊天，是的，生活这么美好，有什么可以纠结的呢？</p><p>最后找不到工作，没有收入呢？赚钱这件事其实也不用那么刻意追求，我们从出生到现在做的一切真的是为了赚钱吗？如果告诉你一种赚钱方法，但每天就是固定机械的做一些事情，我想也很少有人愿意去做。所以我们应该追求的是做一些喜欢做的事情，令自己舒适的事情，顺便把钱赚了。</p><p>以上，越努力，越幸运，共勉。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;从大学入门计算机，陆陆续续接触了很多东西。&lt;/p&gt;
-&lt;p&gt;最开始的时候学 MFC ，做了 PC 端的个性化的贪吃蛇，后来和同学又做了一个校园安卓 APP。自己又去搞爬虫，给团队提供充校园卡的接口，又用 python 搭到服务器。为了怀念童年，做过一个 web 版的 &lt;a h
       
     
     </summary>
