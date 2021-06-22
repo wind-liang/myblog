@@ -130,7 +130,7 @@
 <meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp17.jpg">
 <meta property="og:image" content="https://p0.meituan.net/voice/28ce63ca15877276ee8cc5fa5d0be03a37166.png">
 <meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp14.jpg">
-<meta property="og:updated_time" content="2021-06-22T05:48:36.096Z">
+<meta property="og:updated_time" content="2021-06-22T13:23:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="油猴脚本制作微信公众号批量添加全局可转载账号脚本">
 <meta name="twitter:description" content="想法来源在一个公众号号主群里，有新人进来的时候就会甩出这样的一个列表。  这如果一个一个加到公众号转载白名单里，可能就想退群了[旺柴]。于是就有了做一个批量添加公众号转载白名单的想法。 必备神器我立刻就想到了用油猴脚本（Tampermonkey）来实现。  Tampermonkey 是一款免费的浏览器扩展和最为流行的用户脚本管理器，它适用于 Chrome, Microsoft Edge, Safa">
@@ -451,7 +451,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-06-22 13:48:36" itemprop="dateModified" datetime="2021-06-22T13:48:36+08:00">2021-06-22</time>
+                <time title="修改时间：2021-06-22 21:23:02" itemprop="dateModified" datetime="2021-06-22T21:23:02+08:00">2021-06-22</time>
               
             
           </span>
@@ -548,12 +548,14 @@
 <p>会发现 <code>html</code> 中有很多 <code>token</code> ，我们随便从一个 <code>dom</code> 元素中去拿即可。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> getToken = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> url = <span class="built_in">document</span>.getElementsByClassName(</span><br><span class="line">      <span class="string">"weui-desktop-account__nickname"</span></span><br><span class="line">    )[<span class="number">0</span>].href;</span><br><span class="line">    <span class="keyword">return</span> url.match(<span class="regexp">/.*token=(\d+)&amp;.*/</span>)[<span class="number">1</span>];</span><br><span class="line">  &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>Ps:</p>
-<p>原本以为上边就足够了，文章写完测试全部名单的时候没想到翻了车，由于调用的过快，微信把<strong>搜索公众号的接口</strong>给我封了，而且不是封的 <code>token</code> ，是按照账号封的，重新登录获取新的 <code>token</code> 也不行了。<strong>无法通过公众号名称搜了，只能通过公众号的微信号来搜</strong>。</p>
+<p>原本以为上边就足够了，文章写完把下边的整个名单都输入的时候</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">掘金开发者社区,不正经的前端,前端公虾米,编程微刊,胡哥有话说,若川视野,前端壹栈,Vue中文社区,深圳湾码农,编程如画,前端UpUp,印记中文,全栈面试,前端森林,全栈修炼,前端GitHub,洛竹早茶馆,前端简报,前端布道师,前端Q,脑洞前端,前端三元同学,歪立邪说,前端加加,前端下午茶,前端那些趣事,前端皮小蛋,前端开发攻城狮,前端技术优选,前端自学社区,前端印象,前端迷,前端技术江湖,iCSS前端趣闻,全栈前端精选,前端复习课,前端迷社区,最帅的坏兔子,技术漫谈,<span class="number">1024</span>译站,前端进阶指南,前端宇宙,全栈成长之路,豆皮范儿,小生方勤,前端巅峰,前端桃园,秋风的笔记,前端秦爱德,程序员自习室,前端食堂,鱼头的Web海洋,TianTianUp,前端从进阶到入院,编程每日一题,Hello FE</span><br></pre></td></tr></table></figure>
+<p>没想到翻了车。。。由于调用的过快，微信把<strong>搜索公众号的接口</strong>给我封了，而且不是封的 <code>token</code> ，是按照账号封的，重新登录获取新的 <code>token</code> 也不行了。<strong>无法通过公众号名称搜了，只能通过公众号的微信号来搜</strong>。</p>
 <p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp16.jpg" alt=""></p>
 <p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp17.jpg" alt="">为了防止上边的问题出现，代码里需要停顿一下，模拟一个 <code>sleep</code> 函数。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sleep = <span class="keyword">async</span> (time) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>) =&gt;</span> &#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> resolve(), time);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>调用完搜索接口停顿 <code>2</code> 秒，调用完添加接口停顿 <code>1</code>秒 <code>sleep(1000)</code> 。</p>
-<p>Pps:</p>
+<p>pps:</p>
 <p>又找了一个号测试了一下，发现事情并不简单。虽然限制了速度，但另一个号测试的时候发现搜索接口调用到大概 <code>100</code> 次的时候，出现了同样的问题，<strong>不能通过公众号名称搜索，只能通过微信号搜索</strong>。我猜测，公众号的名称搜索接口的每日调用量做了限制，会在第二天某个时间点恢复。</p>
 <p>第二天的时候，果然搜索接口正常了，然后我又重复了几次批量调用，果然又不能正常搜索了。。。</p>
 <h1 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h1><p>使用方法：</p>
@@ -566,7 +568,7 @@
 <p>安装成功后进入微信公众号 -&gt; 原创 -&gt; 全局可转载账号，会发现多了一个「批量添加」的 <code>button</code>，输入所有的公众号然后添加即可。</p>
 <p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mp14.jpg" alt=""></p>
 <h1 id="感受"><a href="#感受" class="headerlink" title="感受"></a>感受</h1><p>很久没有写过原生的 <code>dom</code> 操作了，有种奇妙的感觉。再次感叹下油猴脚本的强大，大家浏览器上有什么痛点的话也可以试一试。另外还见识到了微信的风控能力。。。应该就是为了防止用户去爬公众号的信息。</p>
-<p>文章本来周一早上就该发出来了，没想到逻辑都好了却遇到了微信这一出。用几个公众号做了几次实验，得出的结论大概是：公众号<strong>搜索接口</strong>调用频率太快以及调用次数超过某个值的时候，就无法通过公众号名称搜索公众号了，只能通过微信号进行搜索。</p>
+<p>文章本来周一早上就该发出来了，没想到逻辑都好了却遇到了微信这一出。用几个公众号做了几次实验，得出的结论大概是：公众号<strong>搜索接口</strong>调用频率太快以及调用次数超过某个值的时候，就无法通过公众号名称搜索公众号了，只能通过微信号进行搜索。调用过快引起的话过一会儿就恢复了，但如果是调用过多需要第二天才能恢复了。</p>
 
       
     </div>
