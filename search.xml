@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>21岁的你，生日快乐</title>
-    <url>/2017/01/07/21%E5%B2%81%E7%9A%84%E4%BD%A0%EF%BC%8C%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/</url>
-    <content><![CDATA[<p>&ensp;&ensp;&ensp;&ensp;96,97,98,99,00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,转眼间自己的年龄手脚并用也数不够了，为了使这一天变得有纪念意义，就搭个博客吧，写写随想，总结技术，突然觉得这种感觉很棒。自己本来不喜欢去总结什么，一直认为该记住的自然会记住，无需去记什么，但这几天的编程感觉记博客有时不是为了自己，看到其他人写的博客对自己的帮助那么大，自己也想去帮助后来的人，写个博客与大家共勉吧。<br>&ensp;&ensp;&ensp;&ensp;记得高中的时候自己很喜欢在空间发日志写写自己的思想，现在回去看，觉得又有些许幼稚，但没什么嘛，人总是在成长，1秒前的自己，和现在的自己就完全不同了，好几年没写过了，这里再梳理下自己的世界观人生观价值观？？差不多吧， 可以关注下我以后的技术文章。(<em>^__^</em>) 嘻嘻……</p>
-<ul>
-<li>信仰<br>&ensp;&ensp;&ensp;&ensp;每个人都会有自己的 信仰，不管是宗教也好，还是其他也好，都是神圣的，一些理念会深入到我们的心里，去指引行动。而我是相信心理作用的强大，一些东西，只要你想去实现，迫切的想实现，它就会实现了，哈哈哈哈哈哈哈哈哈。似乎我们是剧本的导演，一切都是自己的导演，不要说怎么可能，没有实现，只是因为自己内心还不够坚定，一旦坚定了，你会毫不迟疑的去为这件事做，慢慢的引导实现这件事。</li>
-<li>爱情<br><del>&ensp;&ensp;&ensp;&ensp;“和我一起长大的发下孩子都有了，而我却还单身”，哈哈哈哈哈哈，没想到我们都已经过了早恋的年纪，不再会有老师说好好学习，不要早恋哦，也不用瞒着家长干这干那，一切都似乎倒了过来，一些家长都开始说媒了，哈哈。那么问题来了，我为什么还单身？QAQ只是因为对代码爱得深沉——。开个玩笑，讲真，感觉自己丧失了恋爱的能力，谁比较强就收了我吧。我觉得，爱情这东西吧，是挺神秘的，2333，完全猜不透它。依旧无法想象两个人在一起后，随着彼此的熟悉，当有了柴米油盐，当神秘感消失后，会剩下什么，但是吧，我觉得应该是这样，就多玩儿吧，两个人一起多出去看看走走玩玩，做些没做过的事，有了矛盾就吵一架，吵完不需要道歉，该做啥就做啥，彼此不需要掩饰什么，做最本真的自己，彼此深信对方一定会在自己身边，开开玩笑，打打闹闹，就很好了吧。</del><br>脱单了，<a href="http://love.windliang.cc" target="_blank" rel="noopener">爱你</a></li>
-<li>学习<br>&ensp;&ensp;&ensp;&ensp;在大学居然成了别人眼中的学霸，大神，然而也只有自己知道自己有多渺小，有多么长的路没有走。学习这种东西我是觉得没有学不会的东西，一遍不行两遍，两遍不行三遍，今天不行明天，明天不行后天，总会搞懂的，唯一缺的是坚持，我们不需要看最后的结果，真的，只要做了，坚持了，我相信一定会有变化的。而所有的知识都不重要，重要的是学会学知识的方法，遇到问题解决问题的能力，我想这才是我们上这么多学最重要的东西吧。</li>
-<li><p>生活<br>&ensp;&ensp;&ensp;&ensp;“我的世界只有代码和婧仪”，真的喜欢，发自内心的喜欢。生活这东西，我觉得找到一件自己喜欢的事情去做就好了，看书也好，游戏也好，运动也好，没什么区别，反正人是不能闲着，不然会发疯。然后其他的呢，多和朋友聚聚，彼此吹个牛，鄙视一下，和家人没事聊几句，毕竟大学已经成了一年回两次家，以后不会多，反而会越来越少。多尝试些没做过的事情，美滋滋啊。然而在这物质的世界，还是得有钱，所以还是，嘿嘿嘿，好好学习吧，当然这里学习已经不再是狭义的学课本了，活到老，学到老嘛，360行。</p>
-</li>
-<li><p>end<br>&ensp;&ensp;&ensp;&ensp;每个人都有了自己的想法，再去改变一个人的想法太难了，唯有自己主动去学习自己认为对的想法，  明确自己一个最终的目标即可，做这做那有什么用呢，我的是“快乐就好了”！</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>随想</category>
-      </categories>
-      <tags>
-        <tag>随想</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>QQ小程序「神奇字体」从注册到发布</title>
     <url>/2019/08/14/QQ%E5%B0%8F%E7%A8%8B%E5%BA%8F%E3%80%8C%E7%A5%9E%E5%A5%87%E5%AD%97%E4%BD%93%E3%80%8D%E4%BB%8E%E6%B3%A8%E5%86%8C%E5%88%B0%E5%8F%91%E5%B8%83/</url>
     <content><![CDATA[<p>QQ 小程序最开始是邀请制的，在上个月差不多快中旬的时候对开发者全面开放了，把之前的微信小程序「神奇字体」搬了过去，关于微信小程序详见 <a href="https://mp.weixin.qq.com/s/CQTk6KMV6sWlF3A2hYEF1Q" target="_blank" rel="noopener">小程序神奇字体的从零到一</a>。</p>
@@ -121,6 +100,27 @@
       </tags>
   </entry>
   <entry>
+    <title>21岁的你，生日快乐</title>
+    <url>/2017/01/07/21%E5%B2%81%E7%9A%84%E4%BD%A0%EF%BC%8C%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/</url>
+    <content><![CDATA[<p>&ensp;&ensp;&ensp;&ensp;96,97,98,99,00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,转眼间自己的年龄手脚并用也数不够了，为了使这一天变得有纪念意义，就搭个博客吧，写写随想，总结技术，突然觉得这种感觉很棒。自己本来不喜欢去总结什么，一直认为该记住的自然会记住，无需去记什么，但这几天的编程感觉记博客有时不是为了自己，看到其他人写的博客对自己的帮助那么大，自己也想去帮助后来的人，写个博客与大家共勉吧。<br>&ensp;&ensp;&ensp;&ensp;记得高中的时候自己很喜欢在空间发日志写写自己的思想，现在回去看，觉得又有些许幼稚，但没什么嘛，人总是在成长，1秒前的自己，和现在的自己就完全不同了，好几年没写过了，这里再梳理下自己的世界观人生观价值观？？差不多吧， 可以关注下我以后的技术文章。(<em>^__^</em>) 嘻嘻……</p>
+<ul>
+<li>信仰<br>&ensp;&ensp;&ensp;&ensp;每个人都会有自己的 信仰，不管是宗教也好，还是其他也好，都是神圣的，一些理念会深入到我们的心里，去指引行动。而我是相信心理作用的强大，一些东西，只要你想去实现，迫切的想实现，它就会实现了，哈哈哈哈哈哈哈哈哈。似乎我们是剧本的导演，一切都是自己的导演，不要说怎么可能，没有实现，只是因为自己内心还不够坚定，一旦坚定了，你会毫不迟疑的去为这件事做，慢慢的引导实现这件事。</li>
+<li>爱情<br><del>&ensp;&ensp;&ensp;&ensp;“和我一起长大的发下孩子都有了，而我却还单身”，哈哈哈哈哈哈，没想到我们都已经过了早恋的年纪，不再会有老师说好好学习，不要早恋哦，也不用瞒着家长干这干那，一切都似乎倒了过来，一些家长都开始说媒了，哈哈。那么问题来了，我为什么还单身？QAQ只是因为对代码爱得深沉——。开个玩笑，讲真，感觉自己丧失了恋爱的能力，谁比较强就收了我吧。我觉得，爱情这东西吧，是挺神秘的，2333，完全猜不透它。依旧无法想象两个人在一起后，随着彼此的熟悉，当有了柴米油盐，当神秘感消失后，会剩下什么，但是吧，我觉得应该是这样，就多玩儿吧，两个人一起多出去看看走走玩玩，做些没做过的事，有了矛盾就吵一架，吵完不需要道歉，该做啥就做啥，彼此不需要掩饰什么，做最本真的自己，彼此深信对方一定会在自己身边，开开玩笑，打打闹闹，就很好了吧。</del><br>脱单了，<a href="http://love.windliang.cc" target="_blank" rel="noopener">爱你</a></li>
+<li>学习<br>&ensp;&ensp;&ensp;&ensp;在大学居然成了别人眼中的学霸，大神，然而也只有自己知道自己有多渺小，有多么长的路没有走。学习这种东西我是觉得没有学不会的东西，一遍不行两遍，两遍不行三遍，今天不行明天，明天不行后天，总会搞懂的，唯一缺的是坚持，我们不需要看最后的结果，真的，只要做了，坚持了，我相信一定会有变化的。而所有的知识都不重要，重要的是学会学知识的方法，遇到问题解决问题的能力，我想这才是我们上这么多学最重要的东西吧。</li>
+<li><p>生活<br>&ensp;&ensp;&ensp;&ensp;“我的世界只有代码和婧仪”，真的喜欢，发自内心的喜欢。生活这东西，我觉得找到一件自己喜欢的事情去做就好了，看书也好，游戏也好，运动也好，没什么区别，反正人是不能闲着，不然会发疯。然后其他的呢，多和朋友聚聚，彼此吹个牛，鄙视一下，和家人没事聊几句，毕竟大学已经成了一年回两次家，以后不会多，反而会越来越少。多尝试些没做过的事情，美滋滋啊。然而在这物质的世界，还是得有钱，所以还是，嘿嘿嘿，好好学习吧，当然这里学习已经不再是狭义的学课本了，活到老，学到老嘛，360行。</p>
+</li>
+<li><p>end<br>&ensp;&ensp;&ensp;&ensp;每个人都有了自己的想法，再去改变一个人的想法太难了，唯有自己主动去学习自己认为对的想法，  明确自己一个最终的目标即可，做这做那有什么用呢，我的是“快乐就好了”！</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>随想</category>
+      </categories>
+      <tags>
+        <tag>随想</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>html的lang属性有什么用吗</title>
     <url>/2020/08/16/html%E7%9A%84lang%E5%B1%9E%E6%80%A7%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8%E5%90%97/</url>
     <content><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>商家反馈，某个页面的列表数据错乱了，并且列表展示了很多条数据，但是标题写的是当前有 <code>0</code> 条数据。本地无法复现，于是联系了商家远程。</p>
@@ -187,6 +187,39 @@
       </tags>
   </entry>
   <entry>
+    <title>leetCode_1_Two_Sum</title>
+    <url>/2018/07/13/leetCode-1-Two-Sum/</url>
+    <content><![CDATA[<h2 id="题目描述-（简单难度）"><a href="#题目描述-（简单难度）" class="headerlink" title="题目描述    （简单难度）"></a>题目描述    （简单难度）</h2><p><img src="http://windliang.oss-cn-beijing.aliyuncs.com/1_two_sum.jpg" alt=""></p>
+<p>给定一个数组和一个目标和，从数组中找两个数字相加等于目标和，输出这两个数字的下标。</p>
+<h2 id="解法一"><a href="#解法一" class="headerlink" title="解法一"></a>解法一</h2><p>简单粗暴些，两重循环，遍历所有情况看相加是否等于目标和，如果符合直接输出。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] twoSum1(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">		<span class="keyword">int</span> []ans=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=(i+<span class="number">1</span>);j&lt;nums.length;j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(nums[i]+nums[j]==target)&#123;</span><br><span class="line">					ans[<span class="number">0</span>]=i;</span><br><span class="line">					ans[<span class="number">1</span>]=j;</span><br><span class="line">					<span class="keyword">return</span> ans;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>时间复杂度：两层 for 循环，O（n²）</p>
+<p>空间复杂度：O（1）</p>
+<h2 id="解法二"><a href="#解法二" class="headerlink" title="解法二"></a>解法二</h2><p>在上边的解法中看下第二个 for 循环步骤。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> j=(i+<span class="number">1</span>);j&lt;nums.length;j++)&#123;</span><br><span class="line">	<span class="keyword">if</span>(nums[i]+nums[j]==target)&#123;</span><br></pre></td></tr></table></figure>
+<p>我们换个理解方式：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> j=(i+<span class="number">1</span>);j&lt;nums.length;j++)&#123; </span><br><span class="line">	sub=target-nums[i]</span><br><span class="line"> 	<span class="keyword">if</span>(nums[j]==sub)&#123;</span><br></pre></td></tr></table></figure>
+<p>第二层 for 循环无非是遍历所有的元素，看哪个元素等于 sub ，时间复杂度为 O（n）。</p>
+<p>有没有一种方法，不用遍历就可以找到元素里有没有等于 sub 的？</p>
+<p>hash table ！！！</p>
+<p>我们可以把数组的每个元素保存为 hash 的 key，下标保存为 hash 的 value 。</p>
+<p>这样只需判断 sub 在不在 hash 的 key 里就可以了，而此时的时间复杂度仅为 O（1）！</p>
+<p>需要注意的地方是，还需判断找到的元素不是当前元素，因为题目里讲一个元素只能用一次。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] twoSum2(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">		Map&lt;Integer,Integer&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">			map.put(nums[i],i);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">			<span class="keyword">int</span> sub=target-nums[i];</span><br><span class="line">			<span class="keyword">if</span>(map.containsKey(sub)&amp;&amp;map.get(sub)!=i)&#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;i,map.get(sub)&#125;;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"No two sum solution"</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>时间复杂度：比解法一少了一个 for 循环，降为 O（n）</p>
+<p>空间复杂度：所谓的空间换时间，这里就能体现出来， 开辟了一个 hash table ，空间复杂度变为 O（n）</p>
+<h2 id="解法三"><a href="#解法三" class="headerlink" title="解法三"></a>解法三</h2><p>看解法二中，两个 for 循环，他们长的一样，我们当然可以把它合起来。复杂度上不会带来什么变化，变化仅仅是不需要判断是不是当前元素了，因为当前元素还没有添加进 hash 里。    </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] twoSum3(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">		Map&lt;Integer,Integer&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">	    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">		    <span class="keyword">int</span> sub=target-nums[i];</span><br><span class="line">		    <span class="keyword">if</span>(map.containsKey(sub))&#123;</span><br><span class="line">			    <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;i,map.get(sub)&#125;;</span><br><span class="line">		&#125;</span><br><span class="line">		map.put(nums[i], i);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"No two sum solution"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>题目比较简单，毕竟暴力的方法也可以解决。唯一闪亮的点就是，时间复杂度从 O（n²）降为 O（n） 的时候，对 hash 的应用，有眼前一亮的感觉。</p>
+]]></content>
+      <categories>
+        <category>LeetCode</category>
+      </categories>
+      <tags>
+        <tag>LeetCode</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>java 的回调机制</title>
     <url>/2017/04/19/java%E7%9A%84%E5%9B%9E%E8%B0%83%E6%9C%BA%E5%88%B6/</url>
     <content><![CDATA[<h3 id="先抛一段代码"><a href="#先抛一段代码" class="headerlink" title="先抛一段代码"></a>先抛一段代码</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CourseActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Button OkBtn;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        </span><br><span class="line">        OkBtn= (Button) findViewById(R.id.ok_btn);</span><br><span class="line">        OkBtn.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">                 <span class="comment">//do something</span></span><br><span class="line"></span><br><span class="line">             &#125;</span><br><span class="line">         &#125;);</span><br><span class="line">         </span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//直接继承接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CourseActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> <span class="keyword">implements</span> <span class="title">View</span>.<span class="title">OnClickListener</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Button OkBtn;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        </span><br><span class="line">        OkBtn= (Button) findViewById(R.id.ok_btn);</span><br><span class="line">        OkBtn.setOnClickListener(<span class="keyword">this</span>);  </span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -220,39 +253,6 @@
         <tag>android</tag>
         <tag>java</tag>
         <tag>回调</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetCode_1_Two_Sum</title>
-    <url>/2018/07/13/leetCode-1-Two-Sum/</url>
-    <content><![CDATA[<h2 id="题目描述-（简单难度）"><a href="#题目描述-（简单难度）" class="headerlink" title="题目描述    （简单难度）"></a>题目描述    （简单难度）</h2><p><img src="http://windliang.oss-cn-beijing.aliyuncs.com/1_two_sum.jpg" alt=""></p>
-<p>给定一个数组和一个目标和，从数组中找两个数字相加等于目标和，输出这两个数字的下标。</p>
-<h2 id="解法一"><a href="#解法一" class="headerlink" title="解法一"></a>解法一</h2><p>简单粗暴些，两重循环，遍历所有情况看相加是否等于目标和，如果符合直接输出。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] twoSum1(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">		<span class="keyword">int</span> []ans=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j=(i+<span class="number">1</span>);j&lt;nums.length;j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(nums[i]+nums[j]==target)&#123;</span><br><span class="line">					ans[<span class="number">0</span>]=i;</span><br><span class="line">					ans[<span class="number">1</span>]=j;</span><br><span class="line">					<span class="keyword">return</span> ans;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>时间复杂度：两层 for 循环，O（n²）</p>
-<p>空间复杂度：O（1）</p>
-<h2 id="解法二"><a href="#解法二" class="headerlink" title="解法二"></a>解法二</h2><p>在上边的解法中看下第二个 for 循环步骤。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> j=(i+<span class="number">1</span>);j&lt;nums.length;j++)&#123;</span><br><span class="line">	<span class="keyword">if</span>(nums[i]+nums[j]==target)&#123;</span><br></pre></td></tr></table></figure>
-<p>我们换个理解方式：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> j=(i+<span class="number">1</span>);j&lt;nums.length;j++)&#123; </span><br><span class="line">	sub=target-nums[i]</span><br><span class="line"> 	<span class="keyword">if</span>(nums[j]==sub)&#123;</span><br></pre></td></tr></table></figure>
-<p>第二层 for 循环无非是遍历所有的元素，看哪个元素等于 sub ，时间复杂度为 O（n）。</p>
-<p>有没有一种方法，不用遍历就可以找到元素里有没有等于 sub 的？</p>
-<p>hash table ！！！</p>
-<p>我们可以把数组的每个元素保存为 hash 的 key，下标保存为 hash 的 value 。</p>
-<p>这样只需判断 sub 在不在 hash 的 key 里就可以了，而此时的时间复杂度仅为 O（1）！</p>
-<p>需要注意的地方是，还需判断找到的元素不是当前元素，因为题目里讲一个元素只能用一次。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] twoSum2(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">		Map&lt;Integer,Integer&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">			map.put(nums[i],i);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">			<span class="keyword">int</span> sub=target-nums[i];</span><br><span class="line">			<span class="keyword">if</span>(map.containsKey(sub)&amp;&amp;map.get(sub)!=i)&#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;i,map.get(sub)&#125;;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"No two sum solution"</span>);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-<p>时间复杂度：比解法一少了一个 for 循环，降为 O（n）</p>
-<p>空间复杂度：所谓的空间换时间，这里就能体现出来， 开辟了一个 hash table ，空间复杂度变为 O（n）</p>
-<h2 id="解法三"><a href="#解法三" class="headerlink" title="解法三"></a>解法三</h2><p>看解法二中，两个 for 循环，他们长的一样，我们当然可以把它合起来。复杂度上不会带来什么变化，变化仅仅是不需要判断是不是当前元素了，因为当前元素还没有添加进 hash 里。    </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span>[] twoSum3(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">		Map&lt;Integer,Integer&gt; map=<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">	    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.length;i++)&#123;</span><br><span class="line">		    <span class="keyword">int</span> sub=target-nums[i];</span><br><span class="line">		    <span class="keyword">if</span>(map.containsKey(sub))&#123;</span><br><span class="line">			    <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;i,map.get(sub)&#125;;</span><br><span class="line">		&#125;</span><br><span class="line">		map.put(nums[i], i);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"No two sum solution"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>题目比较简单，毕竟暴力的方法也可以解决。唯一闪亮的点就是，时间复杂度从 O（n²）降为 O（n） 的时候，对 hash 的应用，有眼前一亮的感觉。</p>
-]]></content>
-      <categories>
-        <category>LeetCode</category>
-      </categories>
-      <tags>
-        <tag>LeetCode</tag>
       </tags>
   </entry>
   <entry>
@@ -605,57 +605,6 @@
       </tags>
   </entry>
   <entry>
-    <title>x86,x64,x86-64,amd64,arm指令集架构之间的关系</title>
-    <url>/2020/03/11/x86-x64-x86-64-amd64-arm%E6%8C%87%E4%BB%A4%E9%9B%86%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB/</url>
-    <content><![CDATA[<p>在 <a href="https://www.zhihu.com/question/63040129/answer/1070349368" target="_blank" rel="noopener">知乎</a> 看到下边的问题，之前自己对这些概念也是迷迷糊糊，索性总结一下吧。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/intel3.jpg" alt=""></p>
-<p>没有 <code>x32</code> 的说法， <code>x86</code>、<code>x64</code> 都指的是 <code>CPU</code> 的指令集架构。</p>
-<h1 id="指令集"><a href="#指令集" class="headerlink" title="指令集"></a>指令集</h1><p>所谓指令集，可以理解成硬件对外的接口。我们运行程序是通过操作系统调度，操作系统然后让硬件去计算。</p>
-<p>让硬件计算的话，比如一些加法乘法，循环之类的，就需要硬件提供的接口，也就是指令集。这个就是我们常说的机器语言，已经到了计算机的最底层了。</p>
-<p>指令集架构主要分两大类。</p>
-<ul>
-<li><p>复杂指令集运算（Complex Instruction Set Computing，CISC）</p>
-<p>简单的理解就是提供的指令很多，也都很复杂。</p>
-<p>以 <code>intel</code> 的 <code>x86</code> 架构为代表，主要针对的操作系统是微软的 <code>Windows</code> 和苹果的 <code>maxOS</code>。另外 <code>Linux</code>，一些 <code>UNIX</code> 等，都可以运行在复杂指令集架构的微处理器。</p>
-</li>
-<li><p>精简指令集运算（Reduced Instruction Set Computing，RISC）</p>
-<p>简单的理解就是提供的指令很少，也都比较简单，只是一些基础的指令。</p>
-<p>以 <code>ARM</code> 公司的 <code>arm</code> 架构为代表。当前有 <code>UNIX</code>、<code>Linux</code> 以及包括 <code>iOS</code>、<code>Android</code>、<code>Windows Phone</code> 等在内的大多数移动操作系统运行在精简指令集的处理器上。</p>
-</li>
-</ul>
-<p>复杂指令集和精简指令集比较的话，区别在于我们编程（直接写机器语言代码在 <code>CPU</code>上运行）的时候，比如实现乘法。根据提供的指令，复杂指令集可能一条命令就够了，而简单指令集我们可能需要加法、循环等多条指令。</p>
-<p>硬件和软件也就是互补的过程，当硬件提供功能简单了，写软件就复杂些。当硬件提供的功能多了，写软件就简单些。</p>
-<h1 id="x86-架构发展"><a href="#x86-架构发展" class="headerlink" title="x86 架构发展"></a>x86 架构发展</h1><p><code>x86</code> 架构于 <code>1978</code> 年推出的 <code>Intel 8086</code> 中央处理器中首度出现，<code>8086</code> 在三年后为 <code>IBM PC</code> 所选用，之后 <code>x86</code> 便成为了个人电脑的标准平台，成为了历来最成功的 <code>CPU</code> 架构。<code>8086</code> 是 <code>16</code> 位处理器，接着一系列的处理器进行了 <code>32</code> 位架构的改进，现在 <code>x86</code> 一般指 <code>32</code> 位的架构。</p>
-<p>该系列较早期的处理器名称是以数字来表示 <code>80x86</code>。由于以 <code>86</code> 作为结尾，包括 <code>Intel 8086</code>、<code>80186</code>、<code>80286</code>、<code>80386</code> 以及 <code>80486</code>，因此其架构被称为 <code>x86</code>。</p>
-<p>生产 <code>x86</code> 架构的 <code>CPU</code> 除了因特尔，它还把专利授权给了现在比较出名的超微（AMD）。然后在 <code>1999</code> 年 <code>AMD</code> 首次公开 <code>64</code> 位集以扩展 <code>x86</code>，此架构称为 <code>AMD64</code>。后来英特尔也推出了与之兼容的处理器，并命名<code>Intel 64</code>。两者一般被统称为 <code>x86-64</code> 或 <code>x64</code>，开创了 <code>x86</code> 的 <code>64</code> 位时代。</p>
-<p>这里会有一个疑问 ，<code>Intel</code> 去哪里了，为什么没有率先做 <code>64</code> 位的？其实 <code>intel</code> 做了，为了不让其他厂商模仿，申请了很多专利，与惠普联合设计了全新的架构 <code>IA-64</code> ，但最大的问题就是它与之前的 <code>x86</code> 不兼容，且市场反应较冷淡，然后就凉凉了。</p>
-<p>苹果公司和 <code>RPM</code> 包管理员以 <code>x86-64</code> 或 <code>x86_64</code> 称呼此 <code>64</code> 位架构。甲骨文公司及 <code>Microsoft</code> 称之为<code>x64</code>。<code>BSD</code> 家族及其他 <code>Linux</code> 发行版则使用 <code>amd64</code>，<code>32</code> 位版本则称为<code>i386</code>（或 <code>i486/586/686</code>），<code>Arch Linux</code> 用<code>x86_64</code> 称呼此 <code>64</code> 位架构。</p>
-<p>现在 <code>x86</code> 架构的<code>CPU</code> 的话基本上就是 <code>Intel</code> 和 <code>AMD</code> 两家公司了。</p>
-<h1 id="arm-架构发展"><a href="#arm-架构发展" class="headerlink" title="arm 架构发展"></a>arm 架构发展</h1><p><code>arm</code> 架构的话就是 <code>ARM</code> 公司的，这家公司不生产芯片，而是以授权的方式盈利。具体发展可以参考 <a href="https://dongka.github.io/2018/11/17/cpu/arm体系架构的发展/" target="_blank" rel="noopener">这里</a> 和 <a href="https://www.eefocus.com/mcu-dsp/409079/r0" target="_blank" rel="noopener">这里</a> 。从诺基亚到苹果手机、安卓手机，奠定了其在智能手机市场的霸主地位。<code>16</code> 年的时候 <code>ARM</code> 公司被日本软银收购了。</p>
-<p>现在常听到的高通骁龙系列就是 <code>arm</code> 架构。</p>
-<h1 id="软件安装"><a href="#软件安装" class="headerlink" title="软件安装"></a>软件安装</h1><p>有时候在 <code>github</code> 上下载安装包的时候需要选择自己 <code>CPU</code> 的架构情况了。会提供不同操作系统的三种架构， <code>x86</code> 的 <code>32</code> 位架构和 <code>64</code> 位架构，以及 <code>arm</code> 架构。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/intel1.jpg" alt=""></p>
-<p>我的 CPU 的话是 <code>intel</code> 的酷睿 <code>i5</code>，架构的话现在基本上是 <code>x64</code>，或者说是 <code>amd64</code> 了。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/intel2.jpg" alt=""></p>
-<p><code>linux</code> 中使用命令 <code>uname -a</code> 可以查看 <code>CPU</code> 的架构。</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">Linux DESKTOP-68NS8J3 3.4.0+ #1 PREEMPT Thu Aug 1 17:06:05 CST 2013 x86_64 x86_64 x86_64 GNU/Linux</span><br></pre></td></tr></table></figure>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>CPU 指令集架构目前主要是两大类。</p>
-<p>复杂指令集是 <code>x86</code>、<code>x64(也叫 x86-64, amd64)</code> 两种架构，专利在 <code>Intel</code> 和 <code>AMD</code> 两家公司手里， 该架构 <code>CPU</code> 主要是 <code>Intel</code> 和 <code>AMD</code> 两家公司，这种 <code>CPU</code> 常用在 <code>PC</code> 机上，包括 <code>Windows</code>，<code>macOS</code> 和 <code>Linux</code>。</p>
-<p>简单指令集是 <code>arm</code> 一种架构，专利在 <code>ARM</code> 公司手里，该架构 <code>CPU</code> 主要有高通、三星、苹果、华为海思、联发科等公司。这种 <code>CPU</code> 常用在手机上，包括安卓和苹果。</p>
-<p>再多说一句，之前也写过 <a href="https://zhuanlan.zhihu.com/p/66605252" target="_blank" rel="noopener">linux</a> 发展的一些历史，就和操作系统一样，我们能设计出一个全新的操作系统，但是各种软件都需要在新的系统上重新开发，软件商愿不愿意就不一定了。</p>
-<p>同样的，我们也能设计出一个新的指令集架构，但是还是生态的问题，现在安卓、苹果的操作系统都是在 <code>arm</code> 架构上的，所以你的新指令集架构还需要安卓再适配一个新的操作系统，安卓不愿意的话，你可以自己出一个新的操作系统，但又回到了最初的问题，各种软件也需要重写。</p>
-<p>如果兼容之前的指令集架构或者操作系统的话，那可能就绕不开各种专利的问题了。</p>
-<p>所以现在各种公司利益都是紧密相连的，合作才能共赢。</p>
-]]></content>
-      <categories>
-        <category>计算机</category>
-      </categories>
-      <tags>
-        <tag>CPU</tag>
-        <tag>指令集</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>windows方便的批处理-批量修改文件夹名</title>
     <url>/2019/08/08/windows%E6%96%B9%E4%BE%BF%E7%9A%84%E6%89%B9%E5%A4%84%E7%90%86/</url>
     <content><![CDATA[<h1 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h1><p>今天同学有一个批量改文件夹名字的需求，因为非计算机专业的同学电脑肯定不会有 <code>python</code> 或者 <code>java</code> 的环境了，那么 <code>windows</code> 自带的批处理编程一定是最好的选择了，新建一个 <code>.txt</code>，改后缀命为 <code>.bat</code>，双击就可以运行了。</p>
@@ -732,6 +681,57 @@
       <tags>
         <tag>批处理</tag>
         <tag>bat</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>x86,x64,x86-64,amd64,arm指令集架构之间的关系</title>
+    <url>/2020/03/11/x86-x64-x86-64-amd64-arm%E6%8C%87%E4%BB%A4%E9%9B%86%E6%9E%B6%E6%9E%84%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB/</url>
+    <content><![CDATA[<p>在 <a href="https://www.zhihu.com/question/63040129/answer/1070349368" target="_blank" rel="noopener">知乎</a> 看到下边的问题，之前自己对这些概念也是迷迷糊糊，索性总结一下吧。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/intel3.jpg" alt=""></p>
+<p>没有 <code>x32</code> 的说法， <code>x86</code>、<code>x64</code> 都指的是 <code>CPU</code> 的指令集架构。</p>
+<h1 id="指令集"><a href="#指令集" class="headerlink" title="指令集"></a>指令集</h1><p>所谓指令集，可以理解成硬件对外的接口。我们运行程序是通过操作系统调度，操作系统然后让硬件去计算。</p>
+<p>让硬件计算的话，比如一些加法乘法，循环之类的，就需要硬件提供的接口，也就是指令集。这个就是我们常说的机器语言，已经到了计算机的最底层了。</p>
+<p>指令集架构主要分两大类。</p>
+<ul>
+<li><p>复杂指令集运算（Complex Instruction Set Computing，CISC）</p>
+<p>简单的理解就是提供的指令很多，也都很复杂。</p>
+<p>以 <code>intel</code> 的 <code>x86</code> 架构为代表，主要针对的操作系统是微软的 <code>Windows</code> 和苹果的 <code>maxOS</code>。另外 <code>Linux</code>，一些 <code>UNIX</code> 等，都可以运行在复杂指令集架构的微处理器。</p>
+</li>
+<li><p>精简指令集运算（Reduced Instruction Set Computing，RISC）</p>
+<p>简单的理解就是提供的指令很少，也都比较简单，只是一些基础的指令。</p>
+<p>以 <code>ARM</code> 公司的 <code>arm</code> 架构为代表。当前有 <code>UNIX</code>、<code>Linux</code> 以及包括 <code>iOS</code>、<code>Android</code>、<code>Windows Phone</code> 等在内的大多数移动操作系统运行在精简指令集的处理器上。</p>
+</li>
+</ul>
+<p>复杂指令集和精简指令集比较的话，区别在于我们编程（直接写机器语言代码在 <code>CPU</code>上运行）的时候，比如实现乘法。根据提供的指令，复杂指令集可能一条命令就够了，而简单指令集我们可能需要加法、循环等多条指令。</p>
+<p>硬件和软件也就是互补的过程，当硬件提供功能简单了，写软件就复杂些。当硬件提供的功能多了，写软件就简单些。</p>
+<h1 id="x86-架构发展"><a href="#x86-架构发展" class="headerlink" title="x86 架构发展"></a>x86 架构发展</h1><p><code>x86</code> 架构于 <code>1978</code> 年推出的 <code>Intel 8086</code> 中央处理器中首度出现，<code>8086</code> 在三年后为 <code>IBM PC</code> 所选用，之后 <code>x86</code> 便成为了个人电脑的标准平台，成为了历来最成功的 <code>CPU</code> 架构。<code>8086</code> 是 <code>16</code> 位处理器，接着一系列的处理器进行了 <code>32</code> 位架构的改进，现在 <code>x86</code> 一般指 <code>32</code> 位的架构。</p>
+<p>该系列较早期的处理器名称是以数字来表示 <code>80x86</code>。由于以 <code>86</code> 作为结尾，包括 <code>Intel 8086</code>、<code>80186</code>、<code>80286</code>、<code>80386</code> 以及 <code>80486</code>，因此其架构被称为 <code>x86</code>。</p>
+<p>生产 <code>x86</code> 架构的 <code>CPU</code> 除了因特尔，它还把专利授权给了现在比较出名的超微（AMD）。然后在 <code>1999</code> 年 <code>AMD</code> 首次公开 <code>64</code> 位集以扩展 <code>x86</code>，此架构称为 <code>AMD64</code>。后来英特尔也推出了与之兼容的处理器，并命名<code>Intel 64</code>。两者一般被统称为 <code>x86-64</code> 或 <code>x64</code>，开创了 <code>x86</code> 的 <code>64</code> 位时代。</p>
+<p>这里会有一个疑问 ，<code>Intel</code> 去哪里了，为什么没有率先做 <code>64</code> 位的？其实 <code>intel</code> 做了，为了不让其他厂商模仿，申请了很多专利，与惠普联合设计了全新的架构 <code>IA-64</code> ，但最大的问题就是它与之前的 <code>x86</code> 不兼容，且市场反应较冷淡，然后就凉凉了。</p>
+<p>苹果公司和 <code>RPM</code> 包管理员以 <code>x86-64</code> 或 <code>x86_64</code> 称呼此 <code>64</code> 位架构。甲骨文公司及 <code>Microsoft</code> 称之为<code>x64</code>。<code>BSD</code> 家族及其他 <code>Linux</code> 发行版则使用 <code>amd64</code>，<code>32</code> 位版本则称为<code>i386</code>（或 <code>i486/586/686</code>），<code>Arch Linux</code> 用<code>x86_64</code> 称呼此 <code>64</code> 位架构。</p>
+<p>现在 <code>x86</code> 架构的<code>CPU</code> 的话基本上就是 <code>Intel</code> 和 <code>AMD</code> 两家公司了。</p>
+<h1 id="arm-架构发展"><a href="#arm-架构发展" class="headerlink" title="arm 架构发展"></a>arm 架构发展</h1><p><code>arm</code> 架构的话就是 <code>ARM</code> 公司的，这家公司不生产芯片，而是以授权的方式盈利。具体发展可以参考 <a href="https://dongka.github.io/2018/11/17/cpu/arm体系架构的发展/" target="_blank" rel="noopener">这里</a> 和 <a href="https://www.eefocus.com/mcu-dsp/409079/r0" target="_blank" rel="noopener">这里</a> 。从诺基亚到苹果手机、安卓手机，奠定了其在智能手机市场的霸主地位。<code>16</code> 年的时候 <code>ARM</code> 公司被日本软银收购了。</p>
+<p>现在常听到的高通骁龙系列就是 <code>arm</code> 架构。</p>
+<h1 id="软件安装"><a href="#软件安装" class="headerlink" title="软件安装"></a>软件安装</h1><p>有时候在 <code>github</code> 上下载安装包的时候需要选择自己 <code>CPU</code> 的架构情况了。会提供不同操作系统的三种架构， <code>x86</code> 的 <code>32</code> 位架构和 <code>64</code> 位架构，以及 <code>arm</code> 架构。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/intel1.jpg" alt=""></p>
+<p>我的 CPU 的话是 <code>intel</code> 的酷睿 <code>i5</code>，架构的话现在基本上是 <code>x64</code>，或者说是 <code>amd64</code> 了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/intel2.jpg" alt=""></p>
+<p><code>linux</code> 中使用命令 <code>uname -a</code> 可以查看 <code>CPU</code> 的架构。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">Linux DESKTOP-68NS8J3 3.4.0+ #1 PREEMPT Thu Aug 1 17:06:05 CST 2013 x86_64 x86_64 x86_64 GNU/Linux</span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>CPU 指令集架构目前主要是两大类。</p>
+<p>复杂指令集是 <code>x86</code>、<code>x64(也叫 x86-64, amd64)</code> 两种架构，专利在 <code>Intel</code> 和 <code>AMD</code> 两家公司手里， 该架构 <code>CPU</code> 主要是 <code>Intel</code> 和 <code>AMD</code> 两家公司，这种 <code>CPU</code> 常用在 <code>PC</code> 机上，包括 <code>Windows</code>，<code>macOS</code> 和 <code>Linux</code>。</p>
+<p>简单指令集是 <code>arm</code> 一种架构，专利在 <code>ARM</code> 公司手里，该架构 <code>CPU</code> 主要有高通、三星、苹果、华为海思、联发科等公司。这种 <code>CPU</code> 常用在手机上，包括安卓和苹果。</p>
+<p>再多说一句，之前也写过 <a href="https://zhuanlan.zhihu.com/p/66605252" target="_blank" rel="noopener">linux</a> 发展的一些历史，就和操作系统一样，我们能设计出一个全新的操作系统，但是各种软件都需要在新的系统上重新开发，软件商愿不愿意就不一定了。</p>
+<p>同样的，我们也能设计出一个新的指令集架构，但是还是生态的问题，现在安卓、苹果的操作系统都是在 <code>arm</code> 架构上的，所以你的新指令集架构还需要安卓再适配一个新的操作系统，安卓不愿意的话，你可以自己出一个新的操作系统，但又回到了最初的问题，各种软件也需要重写。</p>
+<p>如果兼容之前的指令集架构或者操作系统的话，那可能就绕不开各种专利的问题了。</p>
+<p>所以现在各种公司利益都是紧密相连的，合作才能共赢。</p>
+]]></content>
+      <categories>
+        <category>计算机</category>
+      </categories>
+      <tags>
+        <tag>CPU</tag>
+        <tag>指令集</tag>
       </tags>
   </entry>
   <entry>
@@ -823,65 +823,6 @@
       </tags>
   </entry>
   <entry>
-    <title>保研全过程</title>
-    <url>/2017/12/30/%E4%BF%9D%E7%A0%94%E5%85%A8%E8%BF%87%E7%A8%8B/</url>
-    <content><![CDATA[<p>我是中国地质大学（武汉）计算机学院的大四学生，现在保研到华中科技大学计算机学院，经历了保研前的各种不知所措，现在结合自己的经历写一篇保研的过程，给学弟学妹们一些参考。</p>
-<p>首先我们学校的保研率大概在 10% 到 16% ，拿我所在的计算机科学与技术专业来讲，我们专业一共有 126 人，保研人数是 16 人，比率是 12.7% 。一般自己学校的教务网站可以找到历年的保研人数，或者询问学长学姐。</p>
-<p>保研基本是有五个过程，材料准备 → 夏令营 → 预报名 → 联系导师 → 国家推免系统。</p>
-<h2 id="材料准备"><a href="#材料准备" class="headerlink" title="材料准备"></a>材料准备</h2><p>一般需要的材料有前 5 个学期（大一上、大一下、大二上、大二下、大三上）的成绩单（加盖教务章），前 5 个学期的专业排名及排名证明（如果是预报名阶段学校一般会要求前 6 个学期），专家推荐信（一般是你自己拟，然后给教授签字），获奖证书或论文发表证明（与学术或专业知识有关的获奖证书），英语四六级证书复印件（六级能过尽量过能高分尽量高分，导师一般都会问到这个）和其他英语等级测试复印件，以上的都需要电子资料（手机拍摄即可）以及个人陈述（Word）、一寸电子照。</p>
-<p>以上材料不一定全部需要，具体看各个学校的通知，有的需要的多，有的需要的少。</p>
-<p>你要对你研究生要去的学校以及专业明确，因为后面申请的每个步骤都需要填写。如果没有明确的学校，你可以采用广撒网的方式。</p>
-<h2 id="夏令营"><a href="#夏令营" class="headerlink" title="夏令营"></a>夏令营</h2><p>保研夏令营是一些高校抢夺优质生源的一种方式，如果通过夏令营，那么在 9 月正式推免的时候，你只要拿到本校的推免资格，基本就可以万事大吉了。</p>
-<p>夏令营的时间一般是从 4 月可以开始申请，有的学校可能会更早，具体可以从它的学校官网或者学校的招生网或者学校的研究生网或者学校的具体院系的网站找到通知，然后在暑假 7 、8 月的时候去你所报的学校进行 3 天到一周的旅程。学校一般会有个夏令营报名的系统，按照它上边的提示填写即可，有的学校同时是需要自己去邮寄纸质档过去的。</p>
-<p>夏令营一般都是招每个学校专业的前几名，我当时是第十，报的几个夏令营全部没有音讯。我建议自己专业准备保研的同学可以建立个群，方便共享交流信息。因为年级前几如果广撒网，那由于一个专业也就录 1 到 3 个，后边的人基本也就没有希望。</p>
-<p>夏令营一般去了会有笔试、机试、面试、和教授交流等形式，不同学校也是不同的，具体可以从官网了解或学长学姐了解。</p>
-<h2 id="预报名"><a href="#预报名" class="headerlink" title="预报名"></a>预报名</h2><p>预报名就想当于后边的国家报名系统了，只不过是高校提前进行，还是为了抢夺生源。如果拿到了夏令营，就看具体学校的通知，需不需要再进行预报名的填写。如果没拿到夏令营，如果你想要的学校有预报名，那么就必须参加了。</p>
-<p>预报名一般是在夏令营结束，8 月各个学校会有预报名的通知。这步我没有参加，具体做什么我也不知道了，大家仔细查看学校的通知就可以了。</p>
-<h2 id="联系导师"><a href="#联系导师" class="headerlink" title="联系导师"></a>联系导师</h2><p>这步可以说是最重要的了，我是在预报名阶段开始联系导师的，因为华科没有预报名，而夏令营我也没有被录。</p>
-<p>联系导师，最主要的就是从学校官网找到你感兴趣的导师，然后给老师发邮件，表达你想当他的研究生的想法，附上你自己的资料。每个老师回复的速度不一样，有的是干脆不回，有的几个小时。我联系的一个导师，8月底发的邮件，9月初收到的回复。</p>
-<p>一般联系导师，不要给同一个专业导师同时发，因为他们可能是同一个实验室的，如果他们互相交流了，那可以说就是十分的尴尬了。如果一个导师一星期没有给你回复，这时候你再寻找下一个导师再进行联系。导师回复后可能会和你电话面试，如果离得近也会让你去找他，当面聊。</p>
-<h2 id="国家推免系统"><a href="#国家推免系统" class="headerlink" title="国家推免系统"></a>国家推免系统</h2><p>一般每个学校在 9 月初就开始确定保研名额了，此时你只要按照自己学校的保研规定提交申请，拿到推免资格即可。</p>
-<p>如果此时你夏令营和预报名都没有拿到名额，那就只能靠联系的导师了，例如我。当然如果你拿到了，那这步也是必须必须进行的。</p>
-<p>到 9 月底的时候，国家的推免系统会开启，你需要注册账号然后去填写自己的相关资料。在 9 月底某天（今年是28号）的凌晨 12 点会开启报学校。那天是保研人的「狂欢」，是考验心脏承受能力的一天。</p>
-<p>首先你需要填报你要报学校以及研究生方向，可以填三个「平行志愿」，但听说学校可以看到你把所报的学校放在了第几位。然后就一直等待吧，等待所报学校给你发待复试通知，收到待复试通知后你必须确认待复试，会有一个在某个时间内确定的提示，如果没确定就自动认为放弃。</p>
-<p>接下来如果你确认了待复试，可能有的学校会进行电话或者其他的复试，不是很清楚，华科计算机是如果你联系的导师，过一会儿你就会收到「待录取」通知，只要你点击了确定，那么保研之路就将画上完美的句号了。</p>
-<p>推免系统一直会持续到 10 月底，期间会有一些没招满人的学校发通知，我在 QQ 群里看到过好多还需要的人的。</p>
-<h2 id="公众号"><a href="#公众号" class="headerlink" title="公众号"></a>公众号</h2><p>这期间我主要使用了两个公众号，可以说十分良心了，这里推荐一下。<br><img src="/2017/12/30/保研全过程/1.jpg" alt=" "><br><img src="/2017/12/30/保研全过程/2.jpg" alt=" "></p>
-<p>大体过程基本是这样了，当然每个人可能遇到的情况会不一样，但总之希望可以帮到准备保研的你。</p>
-]]></content>
-      <categories>
-        <category>随想</category>
-      </categories>
-      <tags>
-        <tag>随想</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>分辨率，像素，dpi，ppi简谈</title>
-    <url>/2017/02/15/%E5%88%86%E8%BE%A8%E7%8E%87%EF%BC%8C%E5%83%8F%E7%B4%A0%EF%BC%8Cdpi%EF%BC%8Cppi%E7%AE%80%E8%B0%88/</url>
-    <content><![CDATA[<p>一直对分辨率这些东西看了忘，忘了看，傻傻不分清楚，这次索性查些资料，自己也总结下。有些是自己的理解，如有错误感谢指出。</p>
-<h2 id="像素"><a href="#像素" class="headerlink" title="像素"></a>像素</h2><p>译自英文“pixel”，pix是英语单词picture的常用简写，加上英语单词“元素”element，就得到pixel。<br>描述一张位图图片的最小单位可以说就是像素了，就是一个一个带有颜色的点，或者说是正方形，也可以是长方形，把一张图片放大再放大变可以看到了。<br>但是像素它是没有固定大小的，每个像素只是有一些颜色信息，在不同显示屏上同一个点的大小当然会不同，相同之处就是他们的颜色一样。<br><img src="/2017/02/15/分辨率，像素，dpi，ppi简谈/pix.png" alt=" "></p>
-<h2 id="分辨率"><a href="#分辨率" class="headerlink" title="分辨率"></a>分辨率</h2><p>有的地方讲分辨率是用ppi表示，但我看到手机参数，显示器分辨率都用类似1920×1080这样的方式表示，所以按后者讲吧。1920×1080也就是表示电脑显示屏或者手机显示屏横向可以显示1920个像素，纵向可以显示1080个像素，也就是横向有1920个点，纵向有1080个点。<br>常见的就是一直说的1080p(1920×1080,16:9),720p(1280×720,16:9），4k(3840X2160)其他的也没注意，附一个链接<a href="http://design.yesky.com/137/8183137.shtml" target="_blank" rel="noopener">常见分辨率</a>，<a href="http://blog.sina.com.cn/s/blog_48744dcb0101bne9.html" target="_blank" rel="noopener">常见尺寸</a></p>
-<h2 id="ppi"><a href="#ppi" class="headerlink" title="ppi"></a>ppi</h2><p>最让人头疼的一个概念<br>Pixels Per Inch，每英寸长度的像素个数。<br>首先一英寸是2.54厘米，其次注意是<strong>长度</strong>，不是面积，意思就是2.54厘米长度的直线通过多少个像素，就是多少ppi。假如一个显示器的的长是2英寸，宽是1英寸，而他的ppi是5。那他的分辨率就是10×5。<br><img src="/2017/02/15/分辨率，像素，dpi，ppi简谈/ppi.png" alt=" "><br>不要被我的图所误解，一般要是正方形就都是正方形。<br>ppi其实就是像素密度，当长宽固定了，ppi越高，显示器所能显示的像素就越多，可以想象上边的图，如果ppi是三百，也就是2.54厘米的宽会有300个小正方形，几乎就是个点了，300ppi几乎是人眼的极限了，再高，人眼已经分辨不出差别了。<br>所以对于显示器，分辨率=[长乘上ppi] × [宽乘上ppi],<br>长度，ppi，分辨率三者制约。<br>所以对于一个显示器，如果大小确定，当然分辨率越高越好，因为这样ppi就越高，但高于300再高意义也不是很大了。<br>一个很大的显示器，为了达到300ppi,就需要好多好多的像素了。</p>
-<h2 id="图像与显示器"><a href="#图像与显示器" class="headerlink" title="图像与显示器"></a>图像与显示器</h2><p>如果图片的分辨率是10×20，显示器的分辨率高于他，那么没问题，可以正常显示这个图，如果低于它，那显示的时候显示器会自动用一些算法忽略一些像素了。<br>所以一幅图清不清晰，还得看在哪显示他，如果显示器的分辨率也是10×20，图片是不是就清晰呢，答案当时是否定的，还得看显示器的什么？对，ppi，或者说屏幕大小，因为两者互相决定，如果ppi是1，那么显示器就是25.4cm × 50.9cm，可以想象这幅图肯定是马赛克那样了。</p>
-<h2 id="dpi"><a href="#dpi" class="headerlink" title="dpi"></a>dpi</h2><p> Dots Per Inch，每英寸点数，概念和ppi差不多，但多用于打印机等打印设备。比如打印机是300dpi,我们需要打印一张1寸照片1寸 × 1.4寸，那么我们至少需要多大像素的照片才不会看到马赛克，很好算<br>就是 1×300=300,1.4×300=420，也就是300 × 420=126000 像素的照片即可了。<br>补充下照片大小的算法</p>
-<blockquote>
-<p>如1寸相片其规格为1X1.4,用1.4长那边的尺寸来表示，即1寸;<br>5寸相规格是尺寸5X3.5,用长边尺寸5表示其照片的规格。<br>而国际上还有一种通行的表示照片尺寸的方法，即取照片短的一边的英寸整数数值加字母R来表示。<br>比如5寸照片，规格为5X3.5英寸，即3R；<br>6寸照片，规格为6×4英寸，即4R。<br>所以像素再高其实也没什么用，除非你想要一张好大好大的照片。</p>
-</blockquote>
-<h2 id="手机ppi计算"><a href="#手机ppi计算" class="headerlink" title="手机ppi计算"></a>手机ppi计算</h2><p>显示器的尺寸是用对角线表示的，比如iphone 7的尺寸为4.7寸，那么其实是说他的对角线长度为4.7寸。<br><img src="/2017/02/15/分辨率，像素，dpi，ppi简谈/iphone.png" alt=" "><br>有了像素和尺寸，我们完全可以算ppi，可以勾股定理算出对角线的像素数，然后除以4.7即可。<br>也可以因为iphone 7的屏幕尺寸比大约为16比9，根据这个算出长宽，再除以长或者宽的像素也就求出来了。</p>
-<h2 id="dip"><a href="#dip" class="headerlink" title="dip"></a>dip</h2><p>dip（dp)是安卓里为了适配屏幕专门提出的概念，简单说就是一个公式<br>px = dp * (dpi / 160)<br>也就是说如果图片宽2dp，那么如果手机的ppi是320，那么图片宽将是4个像素。<br>对安卓感兴趣的，我再专门详细写一下。</p>
-]]></content>
-      <categories>
-        <category>设计</category>
-      </categories>
-      <tags>
-        <tag>分辨率</tag>
-        <tag>像素</tag>
-        <tag>dpi</tag>
-        <tag>ppi</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>分享两个好玩的编程项目</title>
     <url>/2019/06/30/%E5%88%86%E4%BA%AB%E4%B8%A4%E4%B8%AA%E5%A5%BD%E7%8E%A9%E7%9A%84%E7%BC%96%E7%A8%8B%E9%A1%B9%E7%9B%AE/</url>
     <content><![CDATA[<h1 id="Scratch"><a href="#Scratch" class="headerlink" title="Scratch"></a>Scratch</h1><blockquote>
@@ -923,6 +864,40 @@
       <tags>
         <tag>scratch</tag>
         <tag>tensorflow.js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>保研全过程</title>
+    <url>/2017/12/30/%E4%BF%9D%E7%A0%94%E5%85%A8%E8%BF%87%E7%A8%8B/</url>
+    <content><![CDATA[<p>我是中国地质大学（武汉）计算机学院的大四学生，现在保研到华中科技大学计算机学院，经历了保研前的各种不知所措，现在结合自己的经历写一篇保研的过程，给学弟学妹们一些参考。</p>
+<p>首先我们学校的保研率大概在 10% 到 16% ，拿我所在的计算机科学与技术专业来讲，我们专业一共有 126 人，保研人数是 16 人，比率是 12.7% 。一般自己学校的教务网站可以找到历年的保研人数，或者询问学长学姐。</p>
+<p>保研基本是有五个过程，材料准备 → 夏令营 → 预报名 → 联系导师 → 国家推免系统。</p>
+<h2 id="材料准备"><a href="#材料准备" class="headerlink" title="材料准备"></a>材料准备</h2><p>一般需要的材料有前 5 个学期（大一上、大一下、大二上、大二下、大三上）的成绩单（加盖教务章），前 5 个学期的专业排名及排名证明（如果是预报名阶段学校一般会要求前 6 个学期），专家推荐信（一般是你自己拟，然后给教授签字），获奖证书或论文发表证明（与学术或专业知识有关的获奖证书），英语四六级证书复印件（六级能过尽量过能高分尽量高分，导师一般都会问到这个）和其他英语等级测试复印件，以上的都需要电子资料（手机拍摄即可）以及个人陈述（Word）、一寸电子照。</p>
+<p>以上材料不一定全部需要，具体看各个学校的通知，有的需要的多，有的需要的少。</p>
+<p>你要对你研究生要去的学校以及专业明确，因为后面申请的每个步骤都需要填写。如果没有明确的学校，你可以采用广撒网的方式。</p>
+<h2 id="夏令营"><a href="#夏令营" class="headerlink" title="夏令营"></a>夏令营</h2><p>保研夏令营是一些高校抢夺优质生源的一种方式，如果通过夏令营，那么在 9 月正式推免的时候，你只要拿到本校的推免资格，基本就可以万事大吉了。</p>
+<p>夏令营的时间一般是从 4 月可以开始申请，有的学校可能会更早，具体可以从它的学校官网或者学校的招生网或者学校的研究生网或者学校的具体院系的网站找到通知，然后在暑假 7 、8 月的时候去你所报的学校进行 3 天到一周的旅程。学校一般会有个夏令营报名的系统，按照它上边的提示填写即可，有的学校同时是需要自己去邮寄纸质档过去的。</p>
+<p>夏令营一般都是招每个学校专业的前几名，我当时是第十，报的几个夏令营全部没有音讯。我建议自己专业准备保研的同学可以建立个群，方便共享交流信息。因为年级前几如果广撒网，那由于一个专业也就录 1 到 3 个，后边的人基本也就没有希望。</p>
+<p>夏令营一般去了会有笔试、机试、面试、和教授交流等形式，不同学校也是不同的，具体可以从官网了解或学长学姐了解。</p>
+<h2 id="预报名"><a href="#预报名" class="headerlink" title="预报名"></a>预报名</h2><p>预报名就想当于后边的国家报名系统了，只不过是高校提前进行，还是为了抢夺生源。如果拿到了夏令营，就看具体学校的通知，需不需要再进行预报名的填写。如果没拿到夏令营，如果你想要的学校有预报名，那么就必须参加了。</p>
+<p>预报名一般是在夏令营结束，8 月各个学校会有预报名的通知。这步我没有参加，具体做什么我也不知道了，大家仔细查看学校的通知就可以了。</p>
+<h2 id="联系导师"><a href="#联系导师" class="headerlink" title="联系导师"></a>联系导师</h2><p>这步可以说是最重要的了，我是在预报名阶段开始联系导师的，因为华科没有预报名，而夏令营我也没有被录。</p>
+<p>联系导师，最主要的就是从学校官网找到你感兴趣的导师，然后给老师发邮件，表达你想当他的研究生的想法，附上你自己的资料。每个老师回复的速度不一样，有的是干脆不回，有的几个小时。我联系的一个导师，8月底发的邮件，9月初收到的回复。</p>
+<p>一般联系导师，不要给同一个专业导师同时发，因为他们可能是同一个实验室的，如果他们互相交流了，那可以说就是十分的尴尬了。如果一个导师一星期没有给你回复，这时候你再寻找下一个导师再进行联系。导师回复后可能会和你电话面试，如果离得近也会让你去找他，当面聊。</p>
+<h2 id="国家推免系统"><a href="#国家推免系统" class="headerlink" title="国家推免系统"></a>国家推免系统</h2><p>一般每个学校在 9 月初就开始确定保研名额了，此时你只要按照自己学校的保研规定提交申请，拿到推免资格即可。</p>
+<p>如果此时你夏令营和预报名都没有拿到名额，那就只能靠联系的导师了，例如我。当然如果你拿到了，那这步也是必须必须进行的。</p>
+<p>到 9 月底的时候，国家的推免系统会开启，你需要注册账号然后去填写自己的相关资料。在 9 月底某天（今年是28号）的凌晨 12 点会开启报学校。那天是保研人的「狂欢」，是考验心脏承受能力的一天。</p>
+<p>首先你需要填报你要报学校以及研究生方向，可以填三个「平行志愿」，但听说学校可以看到你把所报的学校放在了第几位。然后就一直等待吧，等待所报学校给你发待复试通知，收到待复试通知后你必须确认待复试，会有一个在某个时间内确定的提示，如果没确定就自动认为放弃。</p>
+<p>接下来如果你确认了待复试，可能有的学校会进行电话或者其他的复试，不是很清楚，华科计算机是如果你联系的导师，过一会儿你就会收到「待录取」通知，只要你点击了确定，那么保研之路就将画上完美的句号了。</p>
+<p>推免系统一直会持续到 10 月底，期间会有一些没招满人的学校发通知，我在 QQ 群里看到过好多还需要的人的。</p>
+<h2 id="公众号"><a href="#公众号" class="headerlink" title="公众号"></a>公众号</h2><p>这期间我主要使用了两个公众号，可以说十分良心了，这里推荐一下。<br><img src="/2017/12/30/保研全过程/1.jpg" alt=" "><br><img src="/2017/12/30/保研全过程/2.jpg" alt=" "></p>
+<p>大体过程基本是这样了，当然每个人可能遇到的情况会不一样，但总之希望可以帮到准备保研的你。</p>
+]]></content>
+      <categories>
+        <category>随想</category>
+      </categories>
+      <tags>
+        <tag>随想</tag>
       </tags>
   </entry>
   <entry>
@@ -979,6 +954,31 @@
       </tags>
   </entry>
   <entry>
+    <title>分辨率，像素，dpi，ppi简谈</title>
+    <url>/2017/02/15/%E5%88%86%E8%BE%A8%E7%8E%87%EF%BC%8C%E5%83%8F%E7%B4%A0%EF%BC%8Cdpi%EF%BC%8Cppi%E7%AE%80%E8%B0%88/</url>
+    <content><![CDATA[<p>一直对分辨率这些东西看了忘，忘了看，傻傻不分清楚，这次索性查些资料，自己也总结下。有些是自己的理解，如有错误感谢指出。</p>
+<h2 id="像素"><a href="#像素" class="headerlink" title="像素"></a>像素</h2><p>译自英文“pixel”，pix是英语单词picture的常用简写，加上英语单词“元素”element，就得到pixel。<br>描述一张位图图片的最小单位可以说就是像素了，就是一个一个带有颜色的点，或者说是正方形，也可以是长方形，把一张图片放大再放大变可以看到了。<br>但是像素它是没有固定大小的，每个像素只是有一些颜色信息，在不同显示屏上同一个点的大小当然会不同，相同之处就是他们的颜色一样。<br><img src="/2017/02/15/分辨率，像素，dpi，ppi简谈/pix.png" alt=" "></p>
+<h2 id="分辨率"><a href="#分辨率" class="headerlink" title="分辨率"></a>分辨率</h2><p>有的地方讲分辨率是用ppi表示，但我看到手机参数，显示器分辨率都用类似1920×1080这样的方式表示，所以按后者讲吧。1920×1080也就是表示电脑显示屏或者手机显示屏横向可以显示1920个像素，纵向可以显示1080个像素，也就是横向有1920个点，纵向有1080个点。<br>常见的就是一直说的1080p(1920×1080,16:9),720p(1280×720,16:9），4k(3840X2160)其他的也没注意，附一个链接<a href="http://design.yesky.com/137/8183137.shtml" target="_blank" rel="noopener">常见分辨率</a>，<a href="http://blog.sina.com.cn/s/blog_48744dcb0101bne9.html" target="_blank" rel="noopener">常见尺寸</a></p>
+<h2 id="ppi"><a href="#ppi" class="headerlink" title="ppi"></a>ppi</h2><p>最让人头疼的一个概念<br>Pixels Per Inch，每英寸长度的像素个数。<br>首先一英寸是2.54厘米，其次注意是<strong>长度</strong>，不是面积，意思就是2.54厘米长度的直线通过多少个像素，就是多少ppi。假如一个显示器的的长是2英寸，宽是1英寸，而他的ppi是5。那他的分辨率就是10×5。<br><img src="/2017/02/15/分辨率，像素，dpi，ppi简谈/ppi.png" alt=" "><br>不要被我的图所误解，一般要是正方形就都是正方形。<br>ppi其实就是像素密度，当长宽固定了，ppi越高，显示器所能显示的像素就越多，可以想象上边的图，如果ppi是三百，也就是2.54厘米的宽会有300个小正方形，几乎就是个点了，300ppi几乎是人眼的极限了，再高，人眼已经分辨不出差别了。<br>所以对于显示器，分辨率=[长乘上ppi] × [宽乘上ppi],<br>长度，ppi，分辨率三者制约。<br>所以对于一个显示器，如果大小确定，当然分辨率越高越好，因为这样ppi就越高，但高于300再高意义也不是很大了。<br>一个很大的显示器，为了达到300ppi,就需要好多好多的像素了。</p>
+<h2 id="图像与显示器"><a href="#图像与显示器" class="headerlink" title="图像与显示器"></a>图像与显示器</h2><p>如果图片的分辨率是10×20，显示器的分辨率高于他，那么没问题，可以正常显示这个图，如果低于它，那显示的时候显示器会自动用一些算法忽略一些像素了。<br>所以一幅图清不清晰，还得看在哪显示他，如果显示器的分辨率也是10×20，图片是不是就清晰呢，答案当时是否定的，还得看显示器的什么？对，ppi，或者说屏幕大小，因为两者互相决定，如果ppi是1，那么显示器就是25.4cm × 50.9cm，可以想象这幅图肯定是马赛克那样了。</p>
+<h2 id="dpi"><a href="#dpi" class="headerlink" title="dpi"></a>dpi</h2><p> Dots Per Inch，每英寸点数，概念和ppi差不多，但多用于打印机等打印设备。比如打印机是300dpi,我们需要打印一张1寸照片1寸 × 1.4寸，那么我们至少需要多大像素的照片才不会看到马赛克，很好算<br>就是 1×300=300,1.4×300=420，也就是300 × 420=126000 像素的照片即可了。<br>补充下照片大小的算法</p>
+<blockquote>
+<p>如1寸相片其规格为1X1.4,用1.4长那边的尺寸来表示，即1寸;<br>5寸相规格是尺寸5X3.5,用长边尺寸5表示其照片的规格。<br>而国际上还有一种通行的表示照片尺寸的方法，即取照片短的一边的英寸整数数值加字母R来表示。<br>比如5寸照片，规格为5X3.5英寸，即3R；<br>6寸照片，规格为6×4英寸，即4R。<br>所以像素再高其实也没什么用，除非你想要一张好大好大的照片。</p>
+</blockquote>
+<h2 id="手机ppi计算"><a href="#手机ppi计算" class="headerlink" title="手机ppi计算"></a>手机ppi计算</h2><p>显示器的尺寸是用对角线表示的，比如iphone 7的尺寸为4.7寸，那么其实是说他的对角线长度为4.7寸。<br><img src="/2017/02/15/分辨率，像素，dpi，ppi简谈/iphone.png" alt=" "><br>有了像素和尺寸，我们完全可以算ppi，可以勾股定理算出对角线的像素数，然后除以4.7即可。<br>也可以因为iphone 7的屏幕尺寸比大约为16比9，根据这个算出长宽，再除以长或者宽的像素也就求出来了。</p>
+<h2 id="dip"><a href="#dip" class="headerlink" title="dip"></a>dip</h2><p>dip（dp)是安卓里为了适配屏幕专门提出的概念，简单说就是一个公式<br>px = dp * (dpi / 160)<br>也就是说如果图片宽2dp，那么如果手机的ppi是320，那么图片宽将是4个像素。<br>对安卓感兴趣的，我再专门详细写一下。</p>
+]]></content>
+      <categories>
+        <category>设计</category>
+      </categories>
+      <tags>
+        <tag>分辨率</tag>
+        <tag>像素</tag>
+        <tag>dpi</tag>
+        <tag>ppi</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>建立博客系列（一）：域名相关知识</title>
     <url>/2017/01/18/%E5%BB%BA%E7%AB%8B%E5%8D%9A%E5%AE%A2%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E5%9F%9F%E5%90%8D%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86/</url>
     <content><![CDATA[<p>ip，域名，DNS（Domain Name System）域名系统，三者可以理解成如下的关系：</p>
@@ -1010,31 +1010,6 @@
       <tags>
         <tag>域名</tag>
         <tag>url</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>建立博客系列（二）：git，coding，购买域名相关</title>
-    <url>/2017/01/19/%E5%BB%BA%E7%AB%8B%E5%8D%9A%E5%AE%A2%E7%B3%BB%E5%88%97%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9Agit%EF%BC%8Ccoding%EF%BC%8C%E8%B4%AD%E4%B9%B0%E5%9F%9F%E5%90%8D%E7%9B%B8%E5%85%B3/</url>
-    <content><![CDATA[<p>此系列教程采用hexo+coding搭建博客，所以首先介绍下git和coding。</p>
-<h2 id="git"><a href="#git" class="headerlink" title="git"></a>git</h2><p>搭建博客使用的git知识不多，这里仅介绍我们需要的知识，git的详细知识推荐<br><a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">廖雪峰老师的git教程</a><br>git多用于版本管理，多人合作，但如果用hexo写博客，git的命令几乎不用。</p>
-<h3 id="安装git-这里仅介绍windows的"><a href="#安装git-这里仅介绍windows的" class="headerlink" title="安装git,这里仅介绍windows的"></a>安装git,这里仅介绍windows的</h3><p>首先在  <a href="https://github.com/waylau/git-for-win" target="_blank" rel="noopener">git下载</a> ， 选择最新版的 64-bit Git for Windows Setup ，如果电脑是32位的找到下面的 32-bit Git for Windows Setup，下载即可。<br>安装过程中，安装位置自己选择，还有就是把添加到桌面勾选上<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/gitsetup.png" alt=" "><br>其他一路Next就可以了。</p>
-<h3 id="git默认路径调整"><a href="#git默认路径调整" class="headerlink" title="git默认路径调整"></a>git默认路径调整</h3><p>打开git bash,输入命令pwd(Print working directory),显示当前路径，我们可以看到是在C盘里。<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/pwd.png" alt=" "><br>虽然现在硬盘空间很大了，放到C盘也不影响什么，但一些软件增加删除会引起文件碎片化严重，影响C盘文件的读写速度，还有就是为了数据的安全，以免忘记备份，我们现在将它的默认路径改到非系统盘。我以D盘为例讲一下。<br>1.运行命令<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --global user.name &quot;windliang&quot;</span><br></pre></td></tr></table></figure></p>
-<p>  windliang 改成你自己的名字<br>2.再运行命令 git<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --global user.email windliang@example.com</span><br></pre></td></tr></table></figure></p>
-<p>  <a href="mailto:windliang@example.com" target="_blank" rel="noopener">windliang@example.com</a> 改成你自己的邮箱<br>3.运行命令<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --list</span><br></pre></td></tr></table></figure></p>
-<p> 看一下配置是否成功，如下图,红色部分输对即可<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/config.png" alt=" "><br>4.在D盘新建文件夹，取名git<br>5.找到pwd后显示的路径，我的是c:\用户\asus,然后将其目录下的.gitconfig复制到上一步建立的文件夹中<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/gitconfig.png" alt=" "><br>6.配置环境变量，以win7 为例，在我的电脑点击右键，属性，高级系统设置，环境变量，在系统变量里看一下有没有HOME变量，没有的话自己新建一个，并且添加值 D:\git<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/home.png" alt=" "><br>不同系统可能不一样，但只要最后是这样的效果即成功<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/home2.png" alt=" "><br>7.找到桌面的gitbash，右键属性，起始位置改为 %HOME%<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/desk.png" alt=" "><br>8.打开gitbash,运行pwd命令，看一下当前路径，如果为下图，代表着就成功了！<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/success.png" alt=" "></p>
-<h2 id="Coding"><a href="#Coding" class="headerlink" title="Coding"></a>Coding</h2><p>Coding可以类比于国外的github，可以理解为一个远程仓库，可以把我们的代码什么的放进去，这里之所以用到它，我们可以把文章放进去，这样的话，就不需要再额外购买服务器了，由于是国内的，访问速度也比github强。</p>
-<h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><p>进入 <a href="https://coding.net" target="_blank" rel="noopener">Coding</a> ，按照提示注册即可。</p>
-<h3 id="创建一个项目"><a href="#创建一个项目" class="headerlink" title="创建一个项目"></a>创建一个项目</h3><p>点击添加项目<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c1.png" alt=" "><br>输入名称blog,其他不用改，点击创建项目即可。<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c2.png" alt=" "></p>
-<h3 id="添加SSH公钥"><a href="#添加SSH公钥" class="headerlink" title="添加SSH公钥"></a>添加SSH公钥</h3><p>我们从Coding克隆一个项目可以用https方式和SSH两种，https每次操作都需要输入Coding的账号和密码，比较繁琐，所以我们采用SSH方式。<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c3.png" alt=" "><br>1.打开gitbash,输入命令 ssh-keygen -t rsa -C “<a href="mailto:your_email@youremail.com" target="_blank" rel="noopener">your_email@youremail.com</a>“<br>双引号里的邮箱改成你自己的邮箱，然后一路回车，会出现一张萌萌哒图<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c4.png" alt=" "><br>2.打开D:\git\ssh目录，用文本编辑器打开id_rsa.pub,将里边的内容复制<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c5.png" alt=" "><br>3.打开Coding,点击账户，SSH公钥，将刚才复制的内容加到公钥内容中，名称自己写。<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c6.png" alt=" "><br>4.打开gitbash,输入命令 ssh -T <a href="mailto:git@git.coding.net" target="_blank" rel="noopener">git@git.coding.net</a>，中间需要输入yes,然后出现successfully即代表配置成功。<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c7.png" alt=" "></p>
-<h2 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h2><p>不购买域名的话，以后访问自己的博客会是这样的链接  wind_liang.coding.me/blog， 好长好长，购买了域名就可以关联成自己购买的例如我的 windliang.cc<br>我知道购买域名的地方有两家，<a href="https://dnspod.qcloud.com/" target="_blank" rel="noopener">腾讯云</a>，<a href="https://wanwang.aliyun.com/domain" target="_blank" rel="noopener">阿里云</a>，我开始买的是腾讯云，但免费的DNS解析比较慢，花钱的DNS又比较贵，而阿里花钱的DNS解析还可以接受，所以域名解析我用的阿里的，所以后边教程也将以阿里云的域名进行讲解。<br>如果大家准备购买的话，点开链接后注册账号即可，然后输入自己想购买的域名，再选择自己能接受的价格购买即可，购买的时候会提示实名认证，按流程进行即可，实名认证通过一般为3到5天。</p>
-]]></content>
-      <categories>
-        <category>建立博客</category>
-      </categories>
-      <tags>
-        <tag>域名</tag>
-        <tag>coding</tag>
-        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -1075,34 +1050,28 @@
       </tags>
   </entry>
   <entry>
-    <title>情人节快乐</title>
-    <url>/2020/02/14/%E6%83%85%E4%BA%BA%E8%8A%82%E5%BF%AB%E4%B9%90/</url>
-    <content><![CDATA[<p>今天就是情人节了，祝我的小可爱情人节快乐！</p>
-<p>之前在知乎里回答过一个问题，<a href="https://www.zhihu.com/question/312092622/answer/597069150" target="_blank" rel="noopener">每到情人节，就属于程序员秀恩爱最独特，2019可以有什么新鲜的秀法吗？</a>  ，把原回答整理到这里吧。</p>
-<p>前段时间一个节日，突发奇想，先导出之前 qq 之前所有的聊天记录，然后用 python 词云的库，以女朋友背景生成过词云。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/valentine1.jpg" alt=""></p>
-<p>还记得最开始，程序员如果找浪漫的程序，一定会找到下边的这个心，是的，我就是这样，哈哈哈。原版左边是一行一行字，或者一行一行代码，被我去掉了。</p>
-<p><a href="http://love.windliang.wang/" target="_blank" rel="noopener">http://love.windliang.wang/</a></p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/valentine2.jpg" alt=""></p>
-<p>前年一周年的时候，把自己拍过的照片，利用国外的一个服务，也没写代码，放在了时间轴上，但是得科学上网才能预览。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/year.gif" alt=""></p>
-<p>这是官方的教程，<a href="https://timeline.knightlab.com/#make" target="_blank" rel="noopener">https://timeline.knightlab.com/#make</a>，主要是结合谷歌表格，把标题，文字，图片写到表格中，然后会自动帮你生成上边的网站。现在再看一遍第一年的点点滴滴，还是很有意义的。</p>
-<p>女朋友有选择困难症，就写了个网页，显示「正」「反」让她用，哈哈哈哈。</p>
-<p><a href="http://idea.windliang.cc/" target="_blank" rel="noopener">http://idea.windliang.cc/</a></p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/year2.gif" alt=""></p>
-<p>源码放到了 <a href="https://github.com/wind-liang/idea" target="_blank" rel="noopener">github</a> 上。</p>
-<p>有段时间因为 <a href="https://www.cryptokitties.co/" target="_blank" rel="noopener">云养猫</a>  CryptoKitties，区块链特别火，当时买了比特币换成以太币准备买猫，这是我买到的猫，哈哈。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/valentine4.jpg" alt=""></p>
-<p>然后突发灵感，自己把爱写到了区块链交易上，不可更改， 永久有效。</p>
-<p><a href="https://etherscan.io/tx/0x49697081f5711f7cddaeb2e2b8e80c75da8d76c44165729da6f49bc75f247f56" target="_blank" rel="noopener">https://etherscan.io/tx/0x49697081f5711f7cddaeb2e2b8e80c75da8d76c44165729da6f49bc75f247f56</a> </p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/valentine3.jpg" alt=""></p>
-<p>还有一些其他小事情，整理表格啦，软件上的问题啦，找电影啦，找图片啦，找电视剧啦，我为程序员代言，程序员这个物种，你值得拥有，哈哈！</p>
+    <title>建立博客系列（二）：git，coding，购买域名相关</title>
+    <url>/2017/01/19/%E5%BB%BA%E7%AB%8B%E5%8D%9A%E5%AE%A2%E7%B3%BB%E5%88%97%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9Agit%EF%BC%8Ccoding%EF%BC%8C%E8%B4%AD%E4%B9%B0%E5%9F%9F%E5%90%8D%E7%9B%B8%E5%85%B3/</url>
+    <content><![CDATA[<p>此系列教程采用hexo+coding搭建博客，所以首先介绍下git和coding。</p>
+<h2 id="git"><a href="#git" class="headerlink" title="git"></a>git</h2><p>搭建博客使用的git知识不多，这里仅介绍我们需要的知识，git的详细知识推荐<br><a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">廖雪峰老师的git教程</a><br>git多用于版本管理，多人合作，但如果用hexo写博客，git的命令几乎不用。</p>
+<h3 id="安装git-这里仅介绍windows的"><a href="#安装git-这里仅介绍windows的" class="headerlink" title="安装git,这里仅介绍windows的"></a>安装git,这里仅介绍windows的</h3><p>首先在  <a href="https://github.com/waylau/git-for-win" target="_blank" rel="noopener">git下载</a> ， 选择最新版的 64-bit Git for Windows Setup ，如果电脑是32位的找到下面的 32-bit Git for Windows Setup，下载即可。<br>安装过程中，安装位置自己选择，还有就是把添加到桌面勾选上<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/gitsetup.png" alt=" "><br>其他一路Next就可以了。</p>
+<h3 id="git默认路径调整"><a href="#git默认路径调整" class="headerlink" title="git默认路径调整"></a>git默认路径调整</h3><p>打开git bash,输入命令pwd(Print working directory),显示当前路径，我们可以看到是在C盘里。<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/pwd.png" alt=" "><br>虽然现在硬盘空间很大了，放到C盘也不影响什么，但一些软件增加删除会引起文件碎片化严重，影响C盘文件的读写速度，还有就是为了数据的安全，以免忘记备份，我们现在将它的默认路径改到非系统盘。我以D盘为例讲一下。<br>1.运行命令<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --global user.name &quot;windliang&quot;</span><br></pre></td></tr></table></figure></p>
+<p>  windliang 改成你自己的名字<br>2.再运行命令 git<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --global user.email windliang@example.com</span><br></pre></td></tr></table></figure></p>
+<p>  <a href="mailto:windliang@example.com" target="_blank" rel="noopener">windliang@example.com</a> 改成你自己的邮箱<br>3.运行命令<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git config --list</span><br></pre></td></tr></table></figure></p>
+<p> 看一下配置是否成功，如下图,红色部分输对即可<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/config.png" alt=" "><br>4.在D盘新建文件夹，取名git<br>5.找到pwd后显示的路径，我的是c:\用户\asus,然后将其目录下的.gitconfig复制到上一步建立的文件夹中<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/gitconfig.png" alt=" "><br>6.配置环境变量，以win7 为例，在我的电脑点击右键，属性，高级系统设置，环境变量，在系统变量里看一下有没有HOME变量，没有的话自己新建一个，并且添加值 D:\git<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/home.png" alt=" "><br>不同系统可能不一样，但只要最后是这样的效果即成功<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/home2.png" alt=" "><br>7.找到桌面的gitbash，右键属性，起始位置改为 %HOME%<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/desk.png" alt=" "><br>8.打开gitbash,运行pwd命令，看一下当前路径，如果为下图，代表着就成功了！<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/success.png" alt=" "></p>
+<h2 id="Coding"><a href="#Coding" class="headerlink" title="Coding"></a>Coding</h2><p>Coding可以类比于国外的github，可以理解为一个远程仓库，可以把我们的代码什么的放进去，这里之所以用到它，我们可以把文章放进去，这样的话，就不需要再额外购买服务器了，由于是国内的，访问速度也比github强。</p>
+<h3 id="注册"><a href="#注册" class="headerlink" title="注册"></a>注册</h3><p>进入 <a href="https://coding.net" target="_blank" rel="noopener">Coding</a> ，按照提示注册即可。</p>
+<h3 id="创建一个项目"><a href="#创建一个项目" class="headerlink" title="创建一个项目"></a>创建一个项目</h3><p>点击添加项目<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c1.png" alt=" "><br>输入名称blog,其他不用改，点击创建项目即可。<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c2.png" alt=" "></p>
+<h3 id="添加SSH公钥"><a href="#添加SSH公钥" class="headerlink" title="添加SSH公钥"></a>添加SSH公钥</h3><p>我们从Coding克隆一个项目可以用https方式和SSH两种，https每次操作都需要输入Coding的账号和密码，比较繁琐，所以我们采用SSH方式。<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c3.png" alt=" "><br>1.打开gitbash,输入命令 ssh-keygen -t rsa -C “<a href="mailto:your_email@youremail.com" target="_blank" rel="noopener">your_email@youremail.com</a>“<br>双引号里的邮箱改成你自己的邮箱，然后一路回车，会出现一张萌萌哒图<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c4.png" alt=" "><br>2.打开D:\git\ssh目录，用文本编辑器打开id_rsa.pub,将里边的内容复制<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c5.png" alt=" "><br>3.打开Coding,点击账户，SSH公钥，将刚才复制的内容加到公钥内容中，名称自己写。<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c6.png" alt=" "><br>4.打开gitbash,输入命令 ssh -T <a href="mailto:git@git.coding.net" target="_blank" rel="noopener">git@git.coding.net</a>，中间需要输入yes,然后出现successfully即代表配置成功。<br><img src="/2017/01/19/建立博客系列（二）：git，coding，购买域名相关/c7.png" alt=" "></p>
+<h2 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h2><p>不购买域名的话，以后访问自己的博客会是这样的链接  wind_liang.coding.me/blog， 好长好长，购买了域名就可以关联成自己购买的例如我的 windliang.cc<br>我知道购买域名的地方有两家，<a href="https://dnspod.qcloud.com/" target="_blank" rel="noopener">腾讯云</a>，<a href="https://wanwang.aliyun.com/domain" target="_blank" rel="noopener">阿里云</a>，我开始买的是腾讯云，但免费的DNS解析比较慢，花钱的DNS又比较贵，而阿里花钱的DNS解析还可以接受，所以域名解析我用的阿里的，所以后边教程也将以阿里云的域名进行讲解。<br>如果大家准备购买的话，点开链接后注册账号即可，然后输入自己想购买的域名，再选择自己能接受的价格购买即可，购买的时候会提示实名认证，按流程进行即可，实名认证通过一般为3到5天。</p>
 ]]></content>
       <categories>
-        <category>随想</category>
+        <category>建立博客</category>
       </categories>
       <tags>
-        <tag>随想</tag>
+        <tag>域名</tag>
+        <tag>coding</tag>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -1136,6 +1105,37 @@
       </tags>
   </entry>
   <entry>
+    <title>情人节快乐</title>
+    <url>/2020/02/14/%E6%83%85%E4%BA%BA%E8%8A%82%E5%BF%AB%E4%B9%90/</url>
+    <content><![CDATA[<p>今天就是情人节了，祝我的小可爱情人节快乐！</p>
+<p>之前在知乎里回答过一个问题，<a href="https://www.zhihu.com/question/312092622/answer/597069150" target="_blank" rel="noopener">每到情人节，就属于程序员秀恩爱最独特，2019可以有什么新鲜的秀法吗？</a>  ，把原回答整理到这里吧。</p>
+<p>前段时间一个节日，突发奇想，先导出之前 qq 之前所有的聊天记录，然后用 python 词云的库，以女朋友背景生成过词云。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/valentine1.jpg" alt=""></p>
+<p>还记得最开始，程序员如果找浪漫的程序，一定会找到下边的这个心，是的，我就是这样，哈哈哈。原版左边是一行一行字，或者一行一行代码，被我去掉了。</p>
+<p><a href="http://love.windliang.wang/" target="_blank" rel="noopener">http://love.windliang.wang/</a></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/valentine2.jpg" alt=""></p>
+<p>前年一周年的时候，把自己拍过的照片，利用国外的一个服务，也没写代码，放在了时间轴上，但是得科学上网才能预览。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/year.gif" alt=""></p>
+<p>这是官方的教程，<a href="https://timeline.knightlab.com/#make" target="_blank" rel="noopener">https://timeline.knightlab.com/#make</a>，主要是结合谷歌表格，把标题，文字，图片写到表格中，然后会自动帮你生成上边的网站。现在再看一遍第一年的点点滴滴，还是很有意义的。</p>
+<p>女朋友有选择困难症，就写了个网页，显示「正」「反」让她用，哈哈哈哈。</p>
+<p><a href="http://idea.windliang.cc/" target="_blank" rel="noopener">http://idea.windliang.cc/</a></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/year2.gif" alt=""></p>
+<p>源码放到了 <a href="https://github.com/wind-liang/idea" target="_blank" rel="noopener">github</a> 上。</p>
+<p>有段时间因为 <a href="https://www.cryptokitties.co/" target="_blank" rel="noopener">云养猫</a>  CryptoKitties，区块链特别火，当时买了比特币换成以太币准备买猫，这是我买到的猫，哈哈。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/valentine4.jpg" alt=""></p>
+<p>然后突发灵感，自己把爱写到了区块链交易上，不可更改， 永久有效。</p>
+<p><a href="https://etherscan.io/tx/0x49697081f5711f7cddaeb2e2b8e80c75da8d76c44165729da6f49bc75f247f56" target="_blank" rel="noopener">https://etherscan.io/tx/0x49697081f5711f7cddaeb2e2b8e80c75da8d76c44165729da6f49bc75f247f56</a> </p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/valentine3.jpg" alt=""></p>
+<p>还有一些其他小事情，整理表格啦，软件上的问题啦，找电影啦，找图片啦，找电视剧啦，我为程序员代言，程序员这个物种，你值得拥有，哈哈！</p>
+]]></content>
+      <categories>
+        <category>随想</category>
+      </categories>
+      <tags>
+        <tag>随想</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>推荐一些常用的软件</title>
     <url>/2017/07/20/%E6%8E%A8%E8%8D%90%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E8%BD%AF%E4%BB%B6/</url>
     <content><![CDATA[<blockquote>
@@ -1163,46 +1163,6 @@
       </categories>
       <tags>
         <tag>随想</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>机器学习理论系列一：Linear Regression(线性回归)</title>
-    <url>/2018/01/01/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%90%86%E8%AE%BA%E7%B3%BB%E5%88%97%E4%B8%80%EF%BC%9ALinear-Regression-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</url>
-    <content><![CDATA[<blockquote>
-<p>Linear  Regression 美 [ˈlɪniər] [rɪˈɡrɛʃən] : 线性回归<br> Loss funcition 美 [lɔs] [ˈfʌŋkʃən] : 损失函数<br>Gradient Descent 美[ˈɡrediənt] [dɪˈsɛnt] : 梯度下降<br>Model 美 [ˈmɑdl] : 模型</p>
-</blockquote>
-<p>本文是对李宏毅教授课程的笔记加上自己的理解重新组织，如有错误，感谢指出。<br>视频及 PPT 原教程：<a href="https://pan.baidu.com/s/1geFro9H" target="_blank" rel="noopener">https://pan.baidu.com/s/1geFro9H</a> 密码：50sc<br>线性回归中<a href="&quot;https://zh.wikipedia.org/zh-hans/%E7%B7%9A%E6%80%A7%E5%9B%9E%E6%AD%B8&quot;">维基百科</a>的定义如下:</p>
-<blockquote>
-<p>在统计学中，线性回归（Linear regression）是利用称为线性回归方程的最小平方函数对一个或多个自变量和因变量之间关系进行建模的一种回归分析。 这种函数是一个或多个称为回归系数的模型参数的线性组合。<br><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/w.png" alt=" "></p>
-</blockquote>
-<p>线性回归用途最多的地方就是做预测，根据已知的数据建立一个模型（也就是一个很复杂的函数），然后利用这个模型做预测。先举一个例子，即预测进化后神奇宝贝的 cp 值。</p>
-<h2 id="数据收集"><a href="#数据收集" class="headerlink" title="数据收集"></a>数据收集</h2><p>假设我们有一些神奇宝贝的数据，他们有种类 ，cp 值，hp 值，weight ，height 以及进化后的 cp 值。我们选取其中的 10 只做训练。</p>
-<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/baby.jpg" alt=" "></p>
-<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/data.jpg" alt=" "></p>
-<h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><p>下边是线性回归的最一般表示：</p>
-<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/1.jpg" alt=" "><br>这里的 $x_i$ 可以是 cp , weight , height 的值， 而 y 代表进化后的 cp 值，我们需要做的工作是确定 $w_i$ 和 b 的值。而 $x_i$ 的选取会直接影响到模型预测的准确性。</p>
-<p>进化后的 cp 和什么因素相关？最直接的和进化前的 cp 一定相关，所以我们先用一个最简单的模型试一下：</p>
-<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/2.jpg" alt=" "><br>即 $x_i$ 只取一个 cp 值，w 和 b 的值可以有无数个，例如</p>
-<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/3.jpg" alt=" "><br>那么，我们应该选哪一个的  w 和 b 的值呢？</p>
-<h2 id="Goodness-of-Function"><a href="#Goodness-of-Function" class="headerlink" title="Goodness of Function"></a>Goodness of Function</h2><p>我们定义一个函数，来评估当前的模型好不好，也就是 w 和 b 好不好。我们叫他为  Loss funcition ，他越小代表 w 和 b 越好。如果预测的完全正确，那么他将是 0 。</p>
-<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/6.jpg" alt=" "><br>把 f 代入：</p>
-<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/4.jpg" alt=" "><br>$b + w * x{^n_{cp}}$ 就是 f ,也就是预测的 cp 值<br>y 上边一个三角 ( y 帽）指的是进化后的 cp 值。</p>
-<h2 id="Best-Function"><a href="#Best-Function" class="headerlink" title="Best  Function"></a>Best  Function</h2><p>求 $f_1$ 的 w 和 cp 的 对应的 loss 值<br> $$ L = \sum_{i=0}^{10} ( \hat{y} - ( 10.0 + 9.0 · x{^n_{cp}} ) )^2$$<br>先把 w = 9.0 和 b = 10.0 的值带入，然后把已知的数据的 cp 值分别带入函数中，然后把预测出来的 cp 值 和原本的 cp 值 $\hat{y}$ 做个差，再平方一下（消除负数的影响），然后把每一个数据都这样做，然后加起来得到 L 。</p>
-<p>同理，求出 $f_1$，$f_2$，$f_3$ …… 的 loss 值，然后把它的分布图画出来。</p>
-<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/5.jpg" alt=" "><br>每一个点都代表一个 f<br>颜色深代表 loss 值大，颜色浅代表 loss 值小<br>最小的 f 是叉号的地方，目测 w 是 2.4 ， b 是 -190。</p>
-<p>所以我们得到的模型就是<br>$$f = -190 + 2.4 · x_{cp}$$<br>这样，我们就可以愉快的预测进化后的 cp 值了。</p>
-<h2 id="Test-amp-重新设计模型"><a href="#Test-amp-重新设计模型" class="headerlink" title="Test &amp; 重新设计模型"></a>Test &amp; 重新设计模型</h2><p>咦？准确率似乎不是很高。原因很简单，我们的模型太简单了。让我们回到 Model 那个阶段，重新设计 Model 。<br><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/1.jpg" alt=" "><br>之前的 Model 我们用了最简单的<br>$$ y = b + w · x_{cp}$$<br>我们不妨，再加个 $x{^2_{cp}}$ ，变成<br>$$ y = b + w_1 · x_{cp} + w_2 ·  x{^2_{cp}}$$<br>不是线性回归吗？怎么出现了 2 次项。<br>仔细观察线性回归 Model 的定义 $y = b + \sum w_ix_i$ ，我们可以把 $ x_{cp}$ 和 $ x{^2_{cp}}$ 整体都当做是 $x_i$ 项，不管平不平方，他们都可以看做常数项，而我们的自变量是 $w_i$ ，它是 1 次的，那我们就是线性的。</p>
-<p>同理，我们还可以再加入 3 次项， 4 次项，让 Model 更复杂，然后再进行 Test  查看预测的结果的 loss 值够不够小。</p>
-<p>当然，我们还可以把其他的因素加入到模型中。<br><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/more.jpg" alt=" "><br>我们可以看到，似乎 HP 的值对进化后的 CP 值是有一定影响的，HP 值越大，进化后的 CP 值也越大。<br>我们继续复杂我们的模型。<br>$$ y = b + w_1 · x_{cp} + w_2 ·  x{^2_{cp}}+ w_3·x_{hp} + w_4·x{^2_{hp}}$$<br>然后我们向上边一样穷举 b , $w_1$, $w_2$ ,  $w_3$ , $w_4$ 的值，观察哪一个 b , $w_1$, $w_2$ ,  $w_3$  ,  $w_4$ 会使得 loss 值最小。</p>
-<p>那大概是疯了，上边是两个变量能穷举，这 5 个变量或者更多这一辈子也算不完。<br>所以除了穷举的方法，还有其他的方法去求 b 和 $w_i$ 的值吗？<br>没错，就是 Gradient Descent （梯度下降），不管 w 有多少个都可以轻轻松松求出来，且听下篇文章。</p>
-<h2 id="总"><a href="#总" class="headerlink" title="总"></a>总</h2><p>其实，步骤就是对现实就行抽象，找到影响预测的因素，找到一批数据，然后设计一个模型，利用数据对模型训练（求出最佳的 b 和 $w_i$) ，然后进行测试，看结果的准确率是否能接受，然后再进行模型的修改，反反复复直到满意。</p>
-<p>不如思考下课程中的例子股票预测，无人驾驶，购物推荐，找一下影响预测的因素是什么，理一理具体的过程。</p>
-<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/l.jpg" alt=" "></p>
-]]></content>
-      <tags>
-        <tag>线性回归</tag>
-        <tag>机器学习</tag>
-        <tag>梯度下降</tag>
       </tags>
   </entry>
   <entry>
@@ -1302,6 +1262,46 @@
       <tags>
         <tag>机器学习</tag>
         <tag>梯度下降</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习理论系列一：Linear Regression(线性回归)</title>
+    <url>/2018/01/01/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%90%86%E8%AE%BA%E7%B3%BB%E5%88%97%E4%B8%80%EF%BC%9ALinear-Regression-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</url>
+    <content><![CDATA[<blockquote>
+<p>Linear  Regression 美 [ˈlɪniər] [rɪˈɡrɛʃən] : 线性回归<br> Loss funcition 美 [lɔs] [ˈfʌŋkʃən] : 损失函数<br>Gradient Descent 美[ˈɡrediənt] [dɪˈsɛnt] : 梯度下降<br>Model 美 [ˈmɑdl] : 模型</p>
+</blockquote>
+<p>本文是对李宏毅教授课程的笔记加上自己的理解重新组织，如有错误，感谢指出。<br>视频及 PPT 原教程：<a href="https://pan.baidu.com/s/1geFro9H" target="_blank" rel="noopener">https://pan.baidu.com/s/1geFro9H</a> 密码：50sc<br>线性回归中<a href="&quot;https://zh.wikipedia.org/zh-hans/%E7%B7%9A%E6%80%A7%E5%9B%9E%E6%AD%B8&quot;">维基百科</a>的定义如下:</p>
+<blockquote>
+<p>在统计学中，线性回归（Linear regression）是利用称为线性回归方程的最小平方函数对一个或多个自变量和因变量之间关系进行建模的一种回归分析。 这种函数是一个或多个称为回归系数的模型参数的线性组合。<br><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/w.png" alt=" "></p>
+</blockquote>
+<p>线性回归用途最多的地方就是做预测，根据已知的数据建立一个模型（也就是一个很复杂的函数），然后利用这个模型做预测。先举一个例子，即预测进化后神奇宝贝的 cp 值。</p>
+<h2 id="数据收集"><a href="#数据收集" class="headerlink" title="数据收集"></a>数据收集</h2><p>假设我们有一些神奇宝贝的数据，他们有种类 ，cp 值，hp 值，weight ，height 以及进化后的 cp 值。我们选取其中的 10 只做训练。</p>
+<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/baby.jpg" alt=" "></p>
+<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/data.jpg" alt=" "></p>
+<h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><p>下边是线性回归的最一般表示：</p>
+<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/1.jpg" alt=" "><br>这里的 $x_i$ 可以是 cp , weight , height 的值， 而 y 代表进化后的 cp 值，我们需要做的工作是确定 $w_i$ 和 b 的值。而 $x_i$ 的选取会直接影响到模型预测的准确性。</p>
+<p>进化后的 cp 和什么因素相关？最直接的和进化前的 cp 一定相关，所以我们先用一个最简单的模型试一下：</p>
+<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/2.jpg" alt=" "><br>即 $x_i$ 只取一个 cp 值，w 和 b 的值可以有无数个，例如</p>
+<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/3.jpg" alt=" "><br>那么，我们应该选哪一个的  w 和 b 的值呢？</p>
+<h2 id="Goodness-of-Function"><a href="#Goodness-of-Function" class="headerlink" title="Goodness of Function"></a>Goodness of Function</h2><p>我们定义一个函数，来评估当前的模型好不好，也就是 w 和 b 好不好。我们叫他为  Loss funcition ，他越小代表 w 和 b 越好。如果预测的完全正确，那么他将是 0 。</p>
+<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/6.jpg" alt=" "><br>把 f 代入：</p>
+<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/4.jpg" alt=" "><br>$b + w * x{^n_{cp}}$ 就是 f ,也就是预测的 cp 值<br>y 上边一个三角 ( y 帽）指的是进化后的 cp 值。</p>
+<h2 id="Best-Function"><a href="#Best-Function" class="headerlink" title="Best  Function"></a>Best  Function</h2><p>求 $f_1$ 的 w 和 cp 的 对应的 loss 值<br> $$ L = \sum_{i=0}^{10} ( \hat{y} - ( 10.0 + 9.0 · x{^n_{cp}} ) )^2$$<br>先把 w = 9.0 和 b = 10.0 的值带入，然后把已知的数据的 cp 值分别带入函数中，然后把预测出来的 cp 值 和原本的 cp 值 $\hat{y}$ 做个差，再平方一下（消除负数的影响），然后把每一个数据都这样做，然后加起来得到 L 。</p>
+<p>同理，求出 $f_1$，$f_2$，$f_3$ …… 的 loss 值，然后把它的分布图画出来。</p>
+<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/5.jpg" alt=" "><br>每一个点都代表一个 f<br>颜色深代表 loss 值大，颜色浅代表 loss 值小<br>最小的 f 是叉号的地方，目测 w 是 2.4 ， b 是 -190。</p>
+<p>所以我们得到的模型就是<br>$$f = -190 + 2.4 · x_{cp}$$<br>这样，我们就可以愉快的预测进化后的 cp 值了。</p>
+<h2 id="Test-amp-重新设计模型"><a href="#Test-amp-重新设计模型" class="headerlink" title="Test &amp; 重新设计模型"></a>Test &amp; 重新设计模型</h2><p>咦？准确率似乎不是很高。原因很简单，我们的模型太简单了。让我们回到 Model 那个阶段，重新设计 Model 。<br><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/1.jpg" alt=" "><br>之前的 Model 我们用了最简单的<br>$$ y = b + w · x_{cp}$$<br>我们不妨，再加个 $x{^2_{cp}}$ ，变成<br>$$ y = b + w_1 · x_{cp} + w_2 ·  x{^2_{cp}}$$<br>不是线性回归吗？怎么出现了 2 次项。<br>仔细观察线性回归 Model 的定义 $y = b + \sum w_ix_i$ ，我们可以把 $ x_{cp}$ 和 $ x{^2_{cp}}$ 整体都当做是 $x_i$ 项，不管平不平方，他们都可以看做常数项，而我们的自变量是 $w_i$ ，它是 1 次的，那我们就是线性的。</p>
+<p>同理，我们还可以再加入 3 次项， 4 次项，让 Model 更复杂，然后再进行 Test  查看预测的结果的 loss 值够不够小。</p>
+<p>当然，我们还可以把其他的因素加入到模型中。<br><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/more.jpg" alt=" "><br>我们可以看到，似乎 HP 的值对进化后的 CP 值是有一定影响的，HP 值越大，进化后的 CP 值也越大。<br>我们继续复杂我们的模型。<br>$$ y = b + w_1 · x_{cp} + w_2 ·  x{^2_{cp}}+ w_3·x_{hp} + w_4·x{^2_{hp}}$$<br>然后我们向上边一样穷举 b , $w_1$, $w_2$ ,  $w_3$ , $w_4$ 的值，观察哪一个 b , $w_1$, $w_2$ ,  $w_3$  ,  $w_4$ 会使得 loss 值最小。</p>
+<p>那大概是疯了，上边是两个变量能穷举，这 5 个变量或者更多这一辈子也算不完。<br>所以除了穷举的方法，还有其他的方法去求 b 和 $w_i$ 的值吗？<br>没错，就是 Gradient Descent （梯度下降），不管 w 有多少个都可以轻轻松松求出来，且听下篇文章。</p>
+<h2 id="总"><a href="#总" class="headerlink" title="总"></a>总</h2><p>其实，步骤就是对现实就行抽象，找到影响预测的因素，找到一批数据，然后设计一个模型，利用数据对模型训练（求出最佳的 b 和 $w_i$) ，然后进行测试，看结果的准确率是否能接受，然后再进行模型的修改，反反复复直到满意。</p>
+<p>不如思考下课程中的例子股票预测，无人驾驶，购物推荐，找一下影响预测的因素是什么，理一理具体的过程。</p>
+<p><img src="/2018/01/01/机器学习理论系列一：Linear-Regression-线性回归/l.jpg" alt=" "></p>
+]]></content>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>梯度下降</tag>
+        <tag>线性回归</tag>
       </tags>
   </entry>
   <entry>
@@ -1532,6 +1532,37 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
       </tags>
   </entry>
   <entry>
+    <title>面完腾讯阿里后对人生的思考</title>
+    <url>/2019/08/16/%E9%9D%A2%E5%AE%8C%E8%85%BE%E8%AE%AF%E9%98%BF%E9%87%8C%E5%90%8E%E5%AF%B9%E4%BA%BA%E7%94%9F%E7%9A%84%E6%80%9D%E8%80%83/</url>
+    <content><![CDATA[<p>从大学入门计算机，陆陆续续接触了很多东西。</p>
+<p>最开始的时候学 MFC ，做了 PC 端的个性化的贪吃蛇，后来和同学又做了一个校园安卓 APP。自己又去搞爬虫，给团队提供充校园卡的接口，又用 python 搭到服务器。为了怀念童年，做过一个 web 版的 <a href="https://zhuanlan.zhihu.com/p/71165578" target="_blank" rel="noopener">狼吃羊</a>，最近又做过微信小程序 <a href="https://zhuanlan.zhihu.com/p/64866114" target="_blank" rel="noopener">神奇字体</a>。</p>
+<p>然后算法方面也做过些，本科做演化算法方面的，也有了一篇 <a href="https://link.springer.com/chapter/10.1007/978-981-10-3614-9_9" target="_blank" rel="noopener">论文</a> 。然后本科毕设，又做了深度学习，用 DBN 去做高分辨率的遥感图像分类。上了研究生，上深度学习的课，也结合前端做了个 <a href="https://zhuanlan.zhihu.com/p/71647786" target="_blank" rel="noopener">打砖块</a> 的游戏。一直也在 <a href="https://zhuanlan.zhihu.com/p/73146252" target="_blank" rel="noopener">刷 leetcode</a>，每道题都详细总结。</p>
+<p>上边做的东西都也是兴趣驱动的，就和玩游戏一样，会有满足感，愉悦感。</p>
+<p>成功做完一个又一个项目，开始可能会觉得难一些，慢慢的觉得只是做一个应用，完成一个任务，不管接没接触过，自己认为只要有一定的时间什么都可以做出来，先去了解需要的语言的基础语法，然后再根据需要选一些轮子，实在找不到就去找一些类似的项目模仿着做，比如最近做的 <a href="https://zhuanlan.zhihu.com/p/77414095" target="_blank" rel="noopener">windows 批处理</a>，还有自己对 <a href="https://www.zhihu.com/people/wang-liang-61-22/answers?page=2" target="_blank" rel="noopener">不同编程语言的看法</a> 也验证了自己的想法。</p>
+<p>但慢慢觉得这些不够，由于现在轮子太多了，无论是搞前端开发，还是搞安卓开发，亦或是跑深度学习，都太方便了，方便到只要理清自己的逻辑，调几行 API 就够了，如果说某一块去深挖的话，就完全不行了。如果未来找工作肯定是不够的，于是在去年的时候决定以后就主要学习前端吧。</p>
+<p>当时选择前端最直接的理由就是，跨平台呀，一个浏览器，PC、安卓、苹果都可以用，发布到网页，任何人都可以直接体验。现在各种小程序的使用，甚至觉得未来可能都不会有原生程序了，全部云服务器，用户只是需要一个显示的界面，桌面也好，一张纸也好，用前端 BS 的模式显示即可。</p>
+<p>然后自己开始看各种书了，从 head first html 补充基础，然后 js 权威指南， Dom 编程艺术等等，看着看着开始迷茫了，因为看完并不知道自己会不会，这不像做一个应用，会有一个明确的目标，然后在网上找了找其他人怎么学前端，看了 <a href="https://www.zhihu.com/people/winter-25" target="_blank" rel="noopener">@winter</a> 大神在极客时间上的课，还有 <a href="https://www.zhihu.com/people/qing-feng-yi-yang" target="_blank" rel="noopener">@冴羽</a> 大神 github 上总结的笔记，渐渐的似乎有了方向，也理解了一入前端深似海的含义，比如 winter 大神总结的前端进阶路径。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/life.png" alt="img"></p>
+<p>自己的水平也最多可能就是个前端工程师，但看完整个课程也理清了很多东西，也总结了几篇文章，<a href="https://zhuanlan.zhihu.com/p/73917931" target="_blank" rel="noopener">字符串及编码</a>，<a href="https://zhuanlan.zhihu.com/p/71780882" target="_blank" rel="noopener">访问器属性</a>，也在研究 underscore 的源码实现，想着就这样一步一步走吧，直到之前面试了头条二面被拒，昨天又面试了腾讯阿里，表现也不是很好，让我思考开了人生的意义。。。</p>
+<p>首先面试自己觉得太应试了，就像从小到大的考试一样，比如最近的大学、研究生的考试，一些课都不用听，然后只要在考试前把历年的的题从打印店买过来，把题型总结出来，多刷几套，然后基本上就 80、90 + 了，甚至嘲讽的是你会发现题目一年比一年简单，就是为了挂科人数少一些。。。本以为以后可能不会有什么考试了，谁又曾想，工作的面试也是这么应试，网上的各种面经，一些题目被面试官问了一遍又一遍，this 指针、防抖节流、HTTPS、跨域问题… </p>
+<p>而自己的态度一直是遇到问题就去学，就去总结解决，或者别人遇到问题，自己去一起探究，一味的背知识点又有什么用呢？而所谓的各种框架，之所以出现不是因为有需求，然后才出现的吗，现在却成了面试时候的必考知识点了，你用过 VUE 吗，那你说下它的双向绑定吧。</p>
+<p>自己理想的面试，应该是抛出一个问题，网上没有现成答案的那种，然后去提出解决的方案，然后一步一步去解决，一步一步探究，当然这真的也许就是理想而已了，就像高考一样，就是那么应试，但你又不能否认应试就是一种能力。甚至自己都在想，自己身边的同学，都具备解决一个之前没有遇到的问题的能力，现在面试的作用真的能选择出「更好」的人吗，或者说选出的人的效果其实和在自己身边随机选几个人的效果是一样的。</p>
+<p>所以昨天面试完，我真的迷茫了，一直被同学叫学霸，学神，被老师夸不错，被网上加的好友叫大佬，夸博客总结的不错，但现在似乎是找不到工作了，真的迷茫了。</p>
+<p>开始思考，我们从出生，上了一年又一年的学到底为了什么，为了赚钱吗？为了找工作吗？赚钱以后呢，找工作以后呢，为了吃喝玩吗？写了一个又一个程序又是为了什么呢，写前端无非也就是写个普通用户的应用程序，写个程序员的框架、组件，但其实世界也并不会有什么变化，一切又有什么意义呢？再上升一级，人生的意义到底是什么，一切又都是为了什么呢？</p>
+<p>然后昨天睡了一觉，今天似乎找到答案了，人生是没有意义的，我们需要做的只是去体验这一切，开心也好、纠结也罢，亦或是伤心，一个又一个的感受其实哪里有好坏之分。我们能真切的感受到，感受到自己的存在，这种感觉其实足够令自己满足，做一切是没有意义的，那又怎么样，至少我体验过了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/life2.png" alt="img"></p>
+<p>所以现在自己找工作也没有那么纠结了，一切都看开了，遇到面试问到的不会的问题就去研究研究，平时多逛逛 github 看看别人的源码，学学怎么造一个轮子，多留意一些生活中的细节，有需求了就写个程序给大家用一用，每天刷刷 LeetCode，出去跑跑步，看个电影，和女朋友聊聊天，是的，生活这么美好，有什么可以纠结的呢？</p>
+<p>最后找不到工作，没有收入呢？赚钱这件事其实也不用那么刻意追求，我们从出生到现在做的一切真的是为了赚钱吗？如果告诉你一种赚钱方法，但每天就是固定机械的做一些事情，我想也很少有人愿意去做。所以我们应该追求的是做一些喜欢做的事情，令自己舒适的事情，顺便把钱赚了。</p>
+<p>以上，越努力，越幸运，共勉。</p>
+]]></content>
+      <categories>
+        <category>随想</category>
+      </categories>
+      <tags>
+        <tag>随想</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>苹果手机大小周闹钟设置</title>
     <url>/2021/03/09/%E8%8B%B9%E6%9E%9C%E6%89%8B%E6%9C%BA%E5%A4%A7%E5%B0%8F%E5%91%A8%E9%97%B9%E9%92%9F%E8%AE%BE%E7%BD%AE/</url>
     <content><![CDATA[<p>继年后从 <code>996</code> 恢复了一周的双休，接下来又要改成大小周了。既然要大小周，身为一名程序员，周六的闹钟总不能自己手动算着日子去打开关闭吧，于是有了下边的过程。</p>
@@ -1573,37 +1604,6 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
       <tags>
         <tag>苹果手机</tag>
         <tag>捷径</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>面完腾讯阿里后对人生的思考</title>
-    <url>/2019/08/16/%E9%9D%A2%E5%AE%8C%E8%85%BE%E8%AE%AF%E9%98%BF%E9%87%8C%E5%90%8E%E5%AF%B9%E4%BA%BA%E7%94%9F%E7%9A%84%E6%80%9D%E8%80%83/</url>
-    <content><![CDATA[<p>从大学入门计算机，陆陆续续接触了很多东西。</p>
-<p>最开始的时候学 MFC ，做了 PC 端的个性化的贪吃蛇，后来和同学又做了一个校园安卓 APP。自己又去搞爬虫，给团队提供充校园卡的接口，又用 python 搭到服务器。为了怀念童年，做过一个 web 版的 <a href="https://zhuanlan.zhihu.com/p/71165578" target="_blank" rel="noopener">狼吃羊</a>，最近又做过微信小程序 <a href="https://zhuanlan.zhihu.com/p/64866114" target="_blank" rel="noopener">神奇字体</a>。</p>
-<p>然后算法方面也做过些，本科做演化算法方面的，也有了一篇 <a href="https://link.springer.com/chapter/10.1007/978-981-10-3614-9_9" target="_blank" rel="noopener">论文</a> 。然后本科毕设，又做了深度学习，用 DBN 去做高分辨率的遥感图像分类。上了研究生，上深度学习的课，也结合前端做了个 <a href="https://zhuanlan.zhihu.com/p/71647786" target="_blank" rel="noopener">打砖块</a> 的游戏。一直也在 <a href="https://zhuanlan.zhihu.com/p/73146252" target="_blank" rel="noopener">刷 leetcode</a>，每道题都详细总结。</p>
-<p>上边做的东西都也是兴趣驱动的，就和玩游戏一样，会有满足感，愉悦感。</p>
-<p>成功做完一个又一个项目，开始可能会觉得难一些，慢慢的觉得只是做一个应用，完成一个任务，不管接没接触过，自己认为只要有一定的时间什么都可以做出来，先去了解需要的语言的基础语法，然后再根据需要选一些轮子，实在找不到就去找一些类似的项目模仿着做，比如最近做的 <a href="https://zhuanlan.zhihu.com/p/77414095" target="_blank" rel="noopener">windows 批处理</a>，还有自己对 <a href="https://www.zhihu.com/people/wang-liang-61-22/answers?page=2" target="_blank" rel="noopener">不同编程语言的看法</a> 也验证了自己的想法。</p>
-<p>但慢慢觉得这些不够，由于现在轮子太多了，无论是搞前端开发，还是搞安卓开发，亦或是跑深度学习，都太方便了，方便到只要理清自己的逻辑，调几行 API 就够了，如果说某一块去深挖的话，就完全不行了。如果未来找工作肯定是不够的，于是在去年的时候决定以后就主要学习前端吧。</p>
-<p>当时选择前端最直接的理由就是，跨平台呀，一个浏览器，PC、安卓、苹果都可以用，发布到网页，任何人都可以直接体验。现在各种小程序的使用，甚至觉得未来可能都不会有原生程序了，全部云服务器，用户只是需要一个显示的界面，桌面也好，一张纸也好，用前端 BS 的模式显示即可。</p>
-<p>然后自己开始看各种书了，从 head first html 补充基础，然后 js 权威指南， Dom 编程艺术等等，看着看着开始迷茫了，因为看完并不知道自己会不会，这不像做一个应用，会有一个明确的目标，然后在网上找了找其他人怎么学前端，看了 <a href="https://www.zhihu.com/people/winter-25" target="_blank" rel="noopener">@winter</a> 大神在极客时间上的课，还有 <a href="https://www.zhihu.com/people/qing-feng-yi-yang" target="_blank" rel="noopener">@冴羽</a> 大神 github 上总结的笔记，渐渐的似乎有了方向，也理解了一入前端深似海的含义，比如 winter 大神总结的前端进阶路径。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/life.png" alt="img"></p>
-<p>自己的水平也最多可能就是个前端工程师，但看完整个课程也理清了很多东西，也总结了几篇文章，<a href="https://zhuanlan.zhihu.com/p/73917931" target="_blank" rel="noopener">字符串及编码</a>，<a href="https://zhuanlan.zhihu.com/p/71780882" target="_blank" rel="noopener">访问器属性</a>，也在研究 underscore 的源码实现，想着就这样一步一步走吧，直到之前面试了头条二面被拒，昨天又面试了腾讯阿里，表现也不是很好，让我思考开了人生的意义。。。</p>
-<p>首先面试自己觉得太应试了，就像从小到大的考试一样，比如最近的大学、研究生的考试，一些课都不用听，然后只要在考试前把历年的的题从打印店买过来，把题型总结出来，多刷几套，然后基本上就 80、90 + 了，甚至嘲讽的是你会发现题目一年比一年简单，就是为了挂科人数少一些。。。本以为以后可能不会有什么考试了，谁又曾想，工作的面试也是这么应试，网上的各种面经，一些题目被面试官问了一遍又一遍，this 指针、防抖节流、HTTPS、跨域问题… </p>
-<p>而自己的态度一直是遇到问题就去学，就去总结解决，或者别人遇到问题，自己去一起探究，一味的背知识点又有什么用呢？而所谓的各种框架，之所以出现不是因为有需求，然后才出现的吗，现在却成了面试时候的必考知识点了，你用过 VUE 吗，那你说下它的双向绑定吧。</p>
-<p>自己理想的面试，应该是抛出一个问题，网上没有现成答案的那种，然后去提出解决的方案，然后一步一步去解决，一步一步探究，当然这真的也许就是理想而已了，就像高考一样，就是那么应试，但你又不能否认应试就是一种能力。甚至自己都在想，自己身边的同学，都具备解决一个之前没有遇到的问题的能力，现在面试的作用真的能选择出「更好」的人吗，或者说选出的人的效果其实和在自己身边随机选几个人的效果是一样的。</p>
-<p>所以昨天面试完，我真的迷茫了，一直被同学叫学霸，学神，被老师夸不错，被网上加的好友叫大佬，夸博客总结的不错，但现在似乎是找不到工作了，真的迷茫了。</p>
-<p>开始思考，我们从出生，上了一年又一年的学到底为了什么，为了赚钱吗？为了找工作吗？赚钱以后呢，找工作以后呢，为了吃喝玩吗？写了一个又一个程序又是为了什么呢，写前端无非也就是写个普通用户的应用程序，写个程序员的框架、组件，但其实世界也并不会有什么变化，一切又有什么意义呢？再上升一级，人生的意义到底是什么，一切又都是为了什么呢？</p>
-<p>然后昨天睡了一觉，今天似乎找到答案了，人生是没有意义的，我们需要做的只是去体验这一切，开心也好、纠结也罢，亦或是伤心，一个又一个的感受其实哪里有好坏之分。我们能真切的感受到，感受到自己的存在，这种感觉其实足够令自己满足，做一切是没有意义的，那又怎么样，至少我体验过了。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/life2.png" alt="img"></p>
-<p>所以现在自己找工作也没有那么纠结了，一切都看开了，遇到面试问到的不会的问题就去研究研究，平时多逛逛 github 看看别人的源码，学学怎么造一个轮子，多留意一些生活中的细节，有需求了就写个程序给大家用一用，每天刷刷 LeetCode，出去跑跑步，看个电影，和女朋友聊聊天，是的，生活这么美好，有什么可以纠结的呢？</p>
-<p>最后找不到工作，没有收入呢？赚钱这件事其实也不用那么刻意追求，我们从出生到现在做的一切真的是为了赚钱吗？如果告诉你一种赚钱方法，但每天就是固定机械的做一些事情，我想也很少有人愿意去做。所以我们应该追求的是做一些喜欢做的事情，令自己舒适的事情，顺便把钱赚了。</p>
-<p>以上，越努力，越幸运，共勉。</p>
-]]></content>
-      <categories>
-        <category>随想</category>
-      </categories>
-      <tags>
-        <tag>随想</tag>
       </tags>
   </entry>
   <entry>
@@ -2351,86 +2351,6 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
       </tags>
   </entry>
   <entry>
-    <title>在美团工作的第一年</title>
-    <url>/2021/05/29/%E5%9C%A8%E7%BE%8E%E5%9B%A2%E5%B7%A5%E4%BD%9C%E7%9A%84%E7%AC%AC%E4%B8%80%E5%B9%B4/</url>
-    <content><![CDATA[<p>时间真是快，转眼间变成打工人也有一年的时间了，最近几天朋友圈被各个同学的答辩刷屏了。去年自己过年回到家里，再回学校就是领毕业证了，经历了可能是唯一一年的云答辩。学生时代的最后一年，对未来的工作充满了想象，一直想知道工作后会是什么样子，每天会干些什么，这里就分享一下自己一年以来在美团的工作和生活。</p>
-<h1 id="对接的伙伴"><a href="#对接的伙伴" class="headerlink" title="对接的伙伴"></a>对接的伙伴</h1><p>学生时代自己做软件的话，前端、后端、设计、测试可能都需要自己来搞，但在公司的话一切都分工明确。主要过程就是需求评审 -&gt; 排期 -&gt; 前后端开发 -&gt; 联调提测 -&gt; 测试 -&gt; 回归上线。</p>
-<ul>
-<li><p>需求评审</p>
-<p>首先产品（<code>PM</code>）给出需求文档（<code>prd</code>），每周的话会拉前端、后端、测试（<code>QA</code>）大家一起开需求评审会，介绍需求的背景、本期要做的东西，有问题的话在会上进行讨论。</p>
-<p>期间产品会找设计要设计稿和交互图，类似于下边这种</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan1.jpg" alt=""></p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan3.jpg" alt=""></p>
-<p>每一个地方详细标好了大小、间距、颜色、圆角等属性，前端的工作就是还原设计稿，并且实现交互。</p>
-</li>
-<li><p>排期</p>
-<p>我觉得这是对新人最麻烦的事情了，有了设计稿以后前后端就需要估算需要完成的时间，单位是 <code>pd</code>，也就是 <code>person day</code>（每人每天），对于大需求的话可能需要 <code>6 pd</code>，如果两个人的话就会排 <code>3</code> 天的时间去开发。</p>
-<p>然后前端、后端、<code>QA</code>一起对一下时间，定下开发、联调、测试、上线的时间，比如 <code>6.1 ～ 6.3</code> 开发，<code>6.4 ～ 6.5</code> 联调，<code>6.6</code> QA 测试，<code>6.7</code> 上线。</p>
-<p>排期麻烦的地方在于，估时少了，那你到最后一天还差的多的话就得加班加时了，甚至造成需求延期。估时多了，如果是 <code>0.5 pd</code>或者 <code>1pd</code> 的 <code>buffer</code> 还可以，但太多的话你的 <code>leader</code> 可能就会找你谈话了。</p>
-<p>自己一年来收获的经验就是对于一个大需求，<strong>一定要把事情分割，每天都完成具体的目标，没完成的话当天一定要赶完</strong>，这样到最后一天就不会出现什么问题了。</p>
-<p>如果造成了需求 <code>delay</code>，因为大家时间都是提前排好的，因为你一个人造成推迟，后边大家配合你再改排期很不好，也很麻烦。</p>
-</li>
-<li><p>联调提测</p>
-<p>前端开发的时候因为还没有接口，所以开始的时候会根据后端给的接口文档在本地 <code>mock</code>(模拟) 数据进行开发。前后端开发都完毕后，就是联调时间，会真正走后端的接口请求数据，接口调通后，会根据 <code>QA</code> 给出的测试 <code>case</code> ，比如翻页是不是正常、下拉加载数据有没有刷新等等，一条一条的进行测试。当 <code>case</code> 全部通过以后，就会提交测试，交由 <code>QA</code> 继续。</p>
-</li>
-<li><p>测试</p>
-<p><code>QA</code> 给到开发的属于冒烟测试，也就是一些主要的功能，更细节的一些东西 <code>QA</code> 会继续测试。测试环境的话主要有两种，一种是测试环境，测试环境的数据有的是从线上拉下来的，有的是自己造的。一种是 <code>staging</code> 环境，也就是预发布环境，这些数据和线上是打通的，会为了测试建一些专用的门店、数据。 <code>QA</code> 会在两种环境都进行测试，因为一些神奇的 <code>Bug</code> 在测试环境没有出现，在 <code>staging</code> 环境才能测试出来。</p>
-</li>
-<li><p>回归上线</p>
-<p>对于小程序开发，因为需要微信那边审核，所以并不能随时开发、随时上线。一般都会固定一周的某几天进行上线。上线前，因为会有不同的需求在同一个小程序项目中开发，所以会将大家的代码合在一起，不同需求的 <code>QA</code> 会再在 <code>staging</code> 环境再回归一次自己的测试 <code>case</code> 。大家全部回归完毕后，就会进行上线，上线完毕后观察线上各个指标是否正常，有异常的话要尽快回滚。</p>
-</li>
-</ul>
-<h1 id="工作时间"><a href="#工作时间" class="headerlink" title="工作时间"></a>工作时间</h1><p>互联网的工作时间，在 <code>996</code> 的声音中经常出现在各个 <code>app</code> 的话题中。我虽然只工作了一年，但却体验了双休、<code>996</code>、大小周，哈哈，把互联网公司的工作时间都经历了一遍。</p>
-<ul>
-<li><p>双休</p>
-<p>去年 <code>5</code> 月进入美团实习的时候，我还是在上海的到店事业群，现在看来真的是养老生活了。</p>
-<p>每天早上 <code>10</code> 点上班，去了公司接一杯美团的白开水，开始一天的代码之旅。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan4.jpg" alt=""></p>
-<p>到了中午 <code>12</code> 点，公司没有自己的食堂，一般和同事出去到周围的饭店吃，或者在美团点个美团外卖，当然也可以点饿了么。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan5.jpg" alt=""></p>
-<p>吃完饭会在公司周围散散步，聊聊天，然后回到公司。</p>
-<p>回到公司一般快 <code>1</code> 点，做到工位上拿出手机刷刷知识星球、看看微信读书，<code>1</code> 点半的时候准时睡觉，睡到 <code>2</code> 点的时候继续干活。</p>
-<p>到了两点，继续肝代码。期间和同事讨论讨论问题，写写需求，或者开开会，然后又到了吃饭的时候。</p>
-<p>下午 <code>6</code> 点的时候，继续吃饭、散步，<code>7</code> 点左右的时候回到公司。</p>
-<p>然后「摸会儿鱼」，到了 <code>8</code> 点准时打卡回家，因为到 <code>8</code> 点美团会有 <code>30</code> 块钱餐补。</p>
-<p>家住的比较近，<code>10</code> 分钟回家后，换好衣服甚至还能出去跑个步，回来后和女朋友聊聊天、网上逛逛、写写文章、再学学英语，完美的一天结束！</p>
-<p>到了周五晚上，<code>6</code> 点直接下班，开启两天周末时光，出去看看电影、逛逛公园或者继续学习学习，撸撸猫、晒晒太阳。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan6.jpg" alt=""></p>
-</li>
-<li><p><code>996</code></p>
-<p>开启 <code>996</code> 的生活，是因为最近一年比较热的「社区团购」，美团主要是「美团优选」，还有拼多多的「多多买菜」、滴滴的「橙心优选」。区别于外卖的及时配送，社区团购是预购模式，也就是今天下单，第二天到自提点自己拿。对于企业来说，用户买多少就到供应商拿多少，省了很多成本。对于用户来说，价格相对也会更便宜。</p>
-<p>去年 <code>11</code> 月我们组被抽调过去支持美团优选业务，从此开启了 <code>996</code> 生活。</p>
-<p><code>10</code> 点开始上班，然后白天时间和上边的基本一样，但到了晚上 <code>8</code> 点的时候就不再是打卡走人了，一般都是到晚上 <code>10</code> 点，忙的时候 <code>11</code> 点、<code>12</code> 点也可能。然后下班回去，铲铲猫屎，乱七八糟搞一搞，就睡觉了。</p>
-<p>星期六的话也是继续上班，唯一的好处是会给双倍工资，甚至开水团周六都给提供了小吃。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan7.jpg" alt=""></p>
-<p><code>996</code> 期间最大的感受就是没有了生活，感觉一直是在上班。周日早上睡个懒觉，到中午起来点个外卖，边吃外卖边看会儿综艺，然后发现下午也快过去了，再一想第二天就又要开始 <code>6</code> 天的上班了，太难了。</p>
-</li>
-<li><p>大小周</p>
-<p> <code>996</code> 持续到了今年过年，年后改为了大小周。有一说一，经历过了 <code>996</code> 之后，大小周都感觉真香了。轮到双休的时候，到了周六晚上一想，天呐，明天还是休息，太幸福了。现在随着业务的迭代，需求比最开始也少很多了，每天 <code>9</code> 点半基本就下班了，回家以后也会有时间做一些其他的事情，这个状态目前看来还是可以的。</p>
-</li>
-</ul>
-<h1 id="在公司做的事情"><a href="#在公司做的事情" class="headerlink" title="在公司做的事情"></a>在公司做的事情</h1><p>在公司做的项目总体上分两类，一类是业务需求，分为 <code>B</code> 端、<code>c</code> 端、<code>M</code> 端。<code>B</code> 端之前我是给商家做评价分析的工具，比如肯德基、<code>coco</code> 这些商家的评论数据、销售数据，给他们的运营用。现在我主要是做 <code>C</code> 端，也就是微信的美团优选小程序。还会做一些 <code>M</code> 端项目，公司内部的运营人员会使用。</p>
-<p>另一类就是技术方面的需求， 会做一些工具提升平时开发的效率、做一些数据类的产品，用来整合各个项目的数据等等。</p>
-<p>上边的项目压力最大的就是 <code>C</code> 端项目了，因为它的用户量非常非常大，毕竟开发的小程序是在阿拉丁指数里排第 <code>3</code>。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan8.jpg" alt=""></p>
-<p>如果出了一点 <code>bug</code> ，最终的影响面会非常广。因此开发的时候一定要非常小心，一些错误的捕捉，极端情况都需要多多考虑。</p>
-<p>除了项目本身的需求，公司对一些性能指标也会很关注，比如秒开率、白屏率等，还有就是对线上的项目的监控也尤为重要，因此也需要完善的日志系统、告警系统等，这些都属于公司的基建项目，一般直接调用就可以。</p>
-<p>另外感觉最挫败的就是一些 <code>bug</code> 是真的解决不了，最大的问题就是这些 <code>bug</code> 无法在本地自己复现，只是看到线上日志上有很多的报错，然而却并不知道为什么。只能不停的试，然后上线，然后再观察，很难受。</p>
-<h1 id="绩效以及晋升"><a href="#绩效以及晋升" class="headerlink" title="绩效以及晋升"></a>绩效以及晋升</h1><p>这是上班和之前学生时期唯一像的地方了。很多公司都会划分出很多职级，比如美团 <code>L5</code>、<code>L6</code>、<code>L7</code>，阿里的 <code>P6</code>、<code>P7</code>，腾讯的 <code>2-1</code>、<code>2-2</code>、<code>3-1</code> 等等。</p>
-<p>校招生入职美团是 <code>L5</code>，然后每年会有固定的时间去晋升，晋升前需要准备好材料，介绍你在公司做了什么，为公司提供了什么价值，未来你会做什么等等，然后会在评委面前讲一遍，评委是部门里各个业务线的 <code>leader</code> 们，结束后他们又会问一些问题。哈哈，是不是有毕业答辩的感觉了。</p>
-<p>除了晋升，然后就是每个季度的述职了，这个主要是自己组内的，互相讲一讲大家各自做的项目。由于平时主要做一些业务需求，这个总结也比较难写，要根据 <code>STAR</code> 原则理出来自己的东西，然后再写，我是感觉很痛苦，不如写代码快乐。之后 <code>leader</code> 会结合述职以及平时的表现打绩效，绩效的话就和最后的年终奖挂钩了。比如美团是 <code>15.5</code> 个月的工资，除去一年 <code>12</code> 个月，剩下的 <code>3.5</code> 就是绩效工资了。</p>
-<h1 id="未来"><a href="#未来" class="headerlink" title="未来"></a>未来</h1><p>工作一年也渐渐适应了打工人的生活，相比于学生时期，甚至开始有些怀念了。学生时期，想几点睡就几点睡，因为第二天起晚也没有关系。吃饭、打球约上小伙伴想啥时候打就啥时候打。编程的话，想学习什么就学习什么，感觉有大把的时间，当时每天的 <a href="https://leetcode.wang/leetcode%E5%8A%9B%E6%89%A3%E5%88%B7%E9%A2%981%E5%88%B0300%E7%9A%84%E6%84%9F%E5%8F%97.html" target="_blank" rel="noopener">leetcode</a> 现在是不敢想了。总结就是，学生时期除了钱少一些，真的是完美生活了。现在吃饭的话题就变成了买房、股票、生娃了，然而我却觉得我还是个孩子。</p>
-<p>未来主要是两个方向吧，一方面就是技术的提高，自己是做前端方向的，做的越多就发现不会的越多，还是需要不断的学习提高。另一方面就是英语了，程序员英语的话虽然平时工作遇不到，但如果技术上想要有更多的进步，肯定还是需要用英语在社区上和世界各地的人交流的。</p>
-<p>最后，还是那句话，越努力，越幸运，共勉～</p>
-]]></content>
-      <categories>
-        <category>随想</category>
-      </categories>
-      <tags>
-        <tag>随想</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>小程序神奇字体的从零到一</title>
     <url>/2019/05/06/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%A5%9E%E5%A5%87%E5%AD%97%E4%BD%93%E7%9A%84%E4%BB%8E%E9%9B%B6%E5%88%B0%E4%B8%80/</url>
     <content><![CDATA[<p>成品是下边的小程序，神奇字体，可以生成不同样式的字体，𝓘 𝓵𝓸𝓿𝓮 𝔂𝓸𝓾 𝓽𝓱𝓻𝓮𝓮 𝓽𝓱𝓸𝓾𝓼𝓪𝓷𝓭. 在各个平台使用。</p>
@@ -2657,6 +2577,91 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
       </tags>
   </entry>
   <entry>
+    <title>我的秋招之路</title>
+    <url>/2019/10/29/%E6%88%91%E7%9A%84%E7%A7%8B%E6%8B%9B%E4%B9%8B%E8%B7%AF/</url>
+    <content><![CDATA[<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan.png" alt=""></p>
+<p>秋招差不多以上海美团的签约结束了，在此记录一下秋招自己的时间线，以及秋招需要准备的东西吧。</p>
+<p>先说下背景，本科是中国地质大学（武汉），然后是去年保研到华中科技大学，两年制专硕，所以基本上去年来了华科，感觉还啥也没干今年就秋招了。和女朋友商量了下未来的工作地点，最终决定去上海了，所以后边也只投了上海的部门，岗位是前端。</p>
+<h1 id="时间线"><a href="#时间线" class="headerlink" title="时间线"></a>时间线</h1><p>6.18 投了今日头条（字节跳动）的提前批「超级工程师」计划，当时本来是去现场直接面试的。后来改成了在 7.6  在北京参观总部，变为远程面试。</p>
+<p>在 7.8 号迎来了人生的第一场面试，采用的视频面试，在「牛客网」上进行（找互联网相关工作一定会知道这个网站），面试的界面除了视频交流还可以现场写代码，是的，头条比较喜欢考算法题。</p>
+<p>一面面试官当时竟然问了「2048」这个游戏怎么拿最高分，设计一种算法。当时我说了用贪心的算法，讲了下自己的思路，接着面试官说了他的想法，表示这个题比较开放，也没有标准答案。</p>
+<p>当时感觉自己表现的不好，但没想到又收到了第二天的面试，第二天有了第一天的经验，感觉也没那么紧张了，和面试官聊的自我感觉良好。但后来就一直没消息了，几周后给 HR 发短信，得知自己没有通过，和字节的缘分也就到此结束了。（后来 9.8 号又参加字节跳动正式批的笔试，题目比较难，最后收到了感谢信）</p>
+<p>一眨眼 7 月就结束了，此外在 7.28 号参加了拼多多的第一次笔试，「学霸批」计划，遗憾的是第一次笔试并没有过。</p>
+<p>面头条都到的经验就是有些东西还是得去刻意的记一下的，很像我们一直以来的应试教育。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/toutiao.jpg" alt=""></p>
+<p>在 8.2 号和 8.8 又分别投了腾讯和阿里的提前批，8.13 号又投了拼多多的第二次提前批「寻梦计划」，15 号还投了携程的提前批。</p>
+<p>8.15 号晚上进行了腾讯的第一次电话面试，表现的可以说很不好了。和腾讯面试官通话期间，阿里面试官也打进了电话。和腾讯面试官一结束，立刻又开始了和阿里的第一次电话面试，当时已经晚上 10 点了，阿里面试官问的几个问题，刚好又是腾讯刚刚问的，又恰好是我不会的，当时真的很绝望了，感觉各种回答都语无伦次了。</p>
+<p>面完以后，真的有些抑郁了，和女朋友电话还探讨了很久人生意义，突然对这个世界失去了兴趣，然后也没啥结论，就是心情突然很低落，可能因为给自己的压力太大了吧，然后就躺下思考人生了，幸运的是，睡前还是想通了。</p>
+<p>在第二天，恰巧在知乎看到这样一个问题。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/zhihu.jpg" alt=""></p>
+<p>感觉题主的男朋友和自己很像，然后就顺手去回答了问题，并且把前一天的感悟也加了进去。<br><a href="https://www.zhihu.com/question/335453235/answer/791492481" target="_blank" rel="noopener">https://www.zhihu.com/question/335453235/answer/791492481</a></p>
+<p>总之，最后的结论就是「人生就是一场体验」，说白了，就是看开点，一切随缘。然后从 16 号开始，报着看开的心态，开始准备了前端，自己也开始看了看别人的面经，各种知识点也仔细准备了一下。</p>
+<p>一周后没想到又接到了阿里的二面，同样是自我感觉良好，不过和字节一样，也到了二面就结束了。</p>
+<p>接着 8.30 进行了拼多多的二次笔试。</p>
+<p>转眼就到了 9 月份，当时的感觉就是太快了，太快了，感觉还没准备好，秋招就要结束了。当时其实有些慌了，毕竟提前批一个 offer 都没拿到，然后自己在 9 月初的前几天，把上海有的公司差不多都投了一遍，小红书，美团，B 站，百度，华为，爱奇艺，流利说，阅文集团，同时这几天做了很多的笔试。</p>
+<p>9.9 号猫眼来华科宣讲会，自己在官网看了一下有上海部门就去了，现场进行了笔试。就在宣讲会期间，分别接到了美团约电话一面，9.10 号下午小红书现场面试。</p>
+<p>9.10 上午进行了美团电话一面，很愉快，面试官表示尽快给约二面面试官。</p>
+<p>9.10 下午去了小红书武汉部门，进行现场面试。人很多，很慢，但体验还是不错的，到了晚上饭点的时候还给了盒饭。最终，三面 + HR 全部通过，这也是自己第一家到了 HR 面的，终于也松了口气。</p>
+<p>9.11 上午，猫眼现场面试，这个进展很快，三面 + HR 很快结束了，遗憾的是猫眼主要只招北京的，所以当时我也就拒绝了。</p>
+<p>然后又清闲了几天，9.16 美团进行了电话二面。</p>
+<p>9.18 中午美团现场终面 +  HR 面，第三次进入了 HR 面，感觉最近这几次现场面都很顺利。</p>
+<p>由于 9.10 晚上面小红书，所以错过了当天 B 站（百度，他俩冲突了）的笔试 ，因此 9.18 下午去 B 站宣讲会手动投了一份简历。</p>
+<p>9.19 号，同学收到了携程的面试通知，自己没收到，虽然已经过了小红书和美团的 HR 面，但还是怕不稳，所以去在武大的宣讲会又手动投了一份简历。（不过到现在，依旧也没收到 B 站和携程的面试，似乎现场投了简历并没有什么用）</p>
+<p>9.21 号拼多多现场面，一面挂。</p>
+<p>至此，面试笔试基本结束，就焦急的等待小红书和美团的意向书。</p>
+<p>9.25 拿到了小红书的录取意向书，大大的松了一口气，可以愉快的过一个国庆了。</p>
+<p>国庆期间美团也一直没消息，觉得应该会去小红书了，也挺好的，最后也不用纠结去哪里。美团感觉自己面的还可以，想不通为什么还没给意向书。</p>
+<p>9.26 流利说进行了电话一面，但此时其实已经无心面试了（后来约二面，也就直接拒掉了）。</p>
+<p>10.11 收到了美团的录取意向书。</p>
+<p>10.15 华科三方开通，下午小红书 HR 就约到公司谈薪资，签三方。不过当时，美团薪资还没谈，所以也和 HR 商量，等美团下来再选择。</p>
+<p>10.17 被阿里捞起来了，约面试，但此时已然是一条咸鱼了，没有心思面试，只想等着了。还有，之前腾讯广州微信小程序部门的 HR 也陆续给自己打过三次电话约面试，但由于部门在广州，我也就直接拒了。阿里腾讯秋招的缘分，也就此结束了。</p>
+<p>接下来就是折磨人的时间了，美团迟迟不谈薪资，offershow 上大家也是编各种段子进行调侃。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/of1.jpg" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/of3.jpg" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/of2.jpg" alt=""></p>
+<p>我相对于他们还好，我是 10.11 号才收到意向书，他们提前批 9 月初就有收到意向书的了，一直等到了 10 月中旬还是没有谈薪资。</p>
+<p>10.24 号，美团终于和我谈了薪资，在可接受范围内，就准备签美团了。</p>
+<p>10.28 号，小红书这边打过来又给调薪，但自己最终还是决定去美团了。说实话感觉真的很对不起小红书，小红书发的意向书早，而且还等了自己这么久。</p>
+<p>10.29 号，收到了美团正式 offer，也收到了三方邀约，至此，秋招正式结束。</p>
+<h1 id="分享"><a href="#分享" class="headerlink" title="分享"></a>分享</h1><ul>
+<li><p>秋招必备的工具</p>
+<p>牛客网，<a href="https://www.nowcoder.com/" target="_blank" rel="noopener">https://www.nowcoder.com/</a> ，可以在上边看面经，刷相关笔试面试题，看其他人各个厂的进度，有人也会发各个公司微信群的二维码，加进去也可以一起等待 offer。</p>
+<p>力扣（leetcode），<a href="https://leetcode.com/problemset/all/" target="_blank" rel="noopener">https://leetcode.com/problemset/all/</a>，现在也有中国站  <a href="https://leetcode-cn.com/problemset/all/" target="_blank" rel="noopener">https://leetcode-cn.com/problemset/all/</a> 了，当然还要推荐一下我的刷题总结，哈哈，每道题都有详细的题解，现在有 150 到了，大家给的反馈也都表示总结的很好，地址是 <a href="https://leetcode.wang/" target="_blank" rel="noopener">https://leetcode.wang/</a>。刷题可以说是必备的了，不管是笔试或是面试，都会涉及到，运气好的话，笔试和面试可能碰到上边的原题。</p>
+<p>offershow，一个小程序，上边会有一些人去匿名公开自己谈的薪资，可以上去瞅瞅，自己多少会有一个底。</p>
+</li>
+<li><p>秋招流程</p>
+<p>提前批 -&gt;（正式批）-&gt; 拿到录取意向书，又叫 oc -&gt;（签订两方协议） -&gt; ( sc）-&gt; 谈薪资 -&gt; 签订三方协议</p>
+<p>上边加括号表示是可选的，可能有，可能没有。</p>
+<p>基本上都是笔试 + 面试，有的公司会免笔试。面试前有的公司会有一个测评，基本上就是一些找规律，还有语文段落提取，性格测试的题，都是选择题。</p>
+<p>oc，offer call 的简称，一般会收到 HR 的电话或者邮件，给你发一个录取意向书，也就是一张图片吧。</p>
+<p>两方协议，现场或者邮寄签，如果违约的话会有一定的违约金，具体看协议规定。大多数人为了保底 offer，HR 给 oc 或者签订两方协议，都会先同意下来，虽然不诚信，但也没办法。所以一些公司，发的 oc 会多于 hc（head count，也就是要招的人）。大家相互备胎。</p>
+<p>sc，suvery call 的简称，HR 会打电话问你目前的 offer，以便更好的给你定薪资。</p>
+<p>谈薪资，一般就是拿手上更有竞争力的 offer 和 HR argue，HR 会告诉你能不能帮你再争取更高的薪资。</p>
+<p>签订三方协议，有的学校是网签，有的学校是纸质的，这个签了以后就基本定了。我们学校的话，99% 签了就不能违约了，具体还是看学校怎么规定，有的学校可能可以违约一下，所谓的撕三方。</p>
+<p>另外补充下，只要过了 HR 面，并且没有收到感谢信，最后都还是有机会的，不要太慌。</p>
+</li>
+<li><p>面试会有哪些内容</p>
+<p>每家公司其实差不多，我只了解前端和后台岗位的，基本上就是四大块。</p>
+<p>第一块，自己所做的项目，基本上会给不同面试官讲一次又一次，所以一定要熟悉自己的项目，总结出来。</p>
+<p>第二块，自己岗位的基础知识，各种数据结构啦，语言的一些特性啦，可以在牛客网上看面经。</p>
+<p>第三块，算法题，上边讲到的，leetcode 的题目，一般现场写到纸上或者面试官电脑上，有的要求调通，有的只需要写出大概思路即可。</p>
+<p>第四块，比较开放性的问题，未来的规划？自己最自豪的事情？</p>
+</li>
+</ul>
+<h1 id="一些经验"><a href="#一些经验" class="headerlink" title="一些经验"></a>一些经验</h1><p>最早 7 月份就有公司开始秋招了，所以要提前关注，以免错过。8 月份提前批就多了起来，像腾讯、阿里，这些大厂也在这个时候开始，可以找学长学姐内推，也可以在牛客网上找内推码。然后就是 9 月份了，所谓的金 9 银 10，9 月份就是找工作的黄金时期，大部分人基本在 9 月份就会拿到几个 offer。不过 9 月份没找到的话，也不要灰心，10 月份依旧有很多机会。</p>
+<p>对于宣讲会，如果是现场笔试的可以去参加，基本上第二天就开始现场面试了。至于只是投简历的，我觉得不是很有必要去。</p>
+<p>秋招确实将一定程度上决定自己未来的一些发展，所以压力难免会大一些，要多和身边的同学交流，不管是谈心也好，还是交流面试经验，都挺好。</p>
+<p>能提早面试就提早去参加，不要拖，不然到后边会发现自己还没开始，各个公司都要结束了。还有就是到后期，如果已经拿到了几个 offer 的话，再有面试其实已经无心面试了，一般就直接拒掉了。所以基本上状态好的时候，就是在 9 月份，可以多面几个公司，多一些选择。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>明年就会开启新的一段旅程了，不管怎么样，尽情体验吧，越努力，越幸运，共勉。</p>
+]]></content>
+      <categories>
+        <category>随想</category>
+      </categories>
+      <tags>
+        <tag>随想</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>我对指针的理解</title>
     <url>/2019/12/11/%E6%88%91%E5%AF%B9%E6%8C%87%E9%92%88%E7%9A%84%E7%90%86%E8%A7%A3/</url>
     <content><![CDATA[<p>如果最开始接触的是 C/C++ 语言，一定会对指针这个概念感到困惑，一不小心就会被它绕进去，不知所云。最近看 <code>linux</code> 内核的一些代码，自己又开始接触了指针的一些东西，索性也就总结一下，写一下自己目前对于它的理解。</p>
@@ -2759,91 +2764,6 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
       </tags>
   </entry>
   <entry>
-    <title>我的秋招之路</title>
-    <url>/2019/10/29/%E6%88%91%E7%9A%84%E7%A7%8B%E6%8B%9B%E4%B9%8B%E8%B7%AF/</url>
-    <content><![CDATA[<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan.png" alt=""></p>
-<p>秋招差不多以上海美团的签约结束了，在此记录一下秋招自己的时间线，以及秋招需要准备的东西吧。</p>
-<p>先说下背景，本科是中国地质大学（武汉），然后是去年保研到华中科技大学，两年制专硕，所以基本上去年来了华科，感觉还啥也没干今年就秋招了。和女朋友商量了下未来的工作地点，最终决定去上海了，所以后边也只投了上海的部门，岗位是前端。</p>
-<h1 id="时间线"><a href="#时间线" class="headerlink" title="时间线"></a>时间线</h1><p>6.18 投了今日头条（字节跳动）的提前批「超级工程师」计划，当时本来是去现场直接面试的。后来改成了在 7.6  在北京参观总部，变为远程面试。</p>
-<p>在 7.8 号迎来了人生的第一场面试，采用的视频面试，在「牛客网」上进行（找互联网相关工作一定会知道这个网站），面试的界面除了视频交流还可以现场写代码，是的，头条比较喜欢考算法题。</p>
-<p>一面面试官当时竟然问了「2048」这个游戏怎么拿最高分，设计一种算法。当时我说了用贪心的算法，讲了下自己的思路，接着面试官说了他的想法，表示这个题比较开放，也没有标准答案。</p>
-<p>当时感觉自己表现的不好，但没想到又收到了第二天的面试，第二天有了第一天的经验，感觉也没那么紧张了，和面试官聊的自我感觉良好。但后来就一直没消息了，几周后给 HR 发短信，得知自己没有通过，和字节的缘分也就到此结束了。（后来 9.8 号又参加字节跳动正式批的笔试，题目比较难，最后收到了感谢信）</p>
-<p>一眨眼 7 月就结束了，此外在 7.28 号参加了拼多多的第一次笔试，「学霸批」计划，遗憾的是第一次笔试并没有过。</p>
-<p>面头条都到的经验就是有些东西还是得去刻意的记一下的，很像我们一直以来的应试教育。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/toutiao.jpg" alt=""></p>
-<p>在 8.2 号和 8.8 又分别投了腾讯和阿里的提前批，8.13 号又投了拼多多的第二次提前批「寻梦计划」，15 号还投了携程的提前批。</p>
-<p>8.15 号晚上进行了腾讯的第一次电话面试，表现的可以说很不好了。和腾讯面试官通话期间，阿里面试官也打进了电话。和腾讯面试官一结束，立刻又开始了和阿里的第一次电话面试，当时已经晚上 10 点了，阿里面试官问的几个问题，刚好又是腾讯刚刚问的，又恰好是我不会的，当时真的很绝望了，感觉各种回答都语无伦次了。</p>
-<p>面完以后，真的有些抑郁了，和女朋友电话还探讨了很久人生意义，突然对这个世界失去了兴趣，然后也没啥结论，就是心情突然很低落，可能因为给自己的压力太大了吧，然后就躺下思考人生了，幸运的是，睡前还是想通了。</p>
-<p>在第二天，恰巧在知乎看到这样一个问题。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/zhihu.jpg" alt=""></p>
-<p>感觉题主的男朋友和自己很像，然后就顺手去回答了问题，并且把前一天的感悟也加了进去。<br><a href="https://www.zhihu.com/question/335453235/answer/791492481" target="_blank" rel="noopener">https://www.zhihu.com/question/335453235/answer/791492481</a></p>
-<p>总之，最后的结论就是「人生就是一场体验」，说白了，就是看开点，一切随缘。然后从 16 号开始，报着看开的心态，开始准备了前端，自己也开始看了看别人的面经，各种知识点也仔细准备了一下。</p>
-<p>一周后没想到又接到了阿里的二面，同样是自我感觉良好，不过和字节一样，也到了二面就结束了。</p>
-<p>接着 8.30 进行了拼多多的二次笔试。</p>
-<p>转眼就到了 9 月份，当时的感觉就是太快了，太快了，感觉还没准备好，秋招就要结束了。当时其实有些慌了，毕竟提前批一个 offer 都没拿到，然后自己在 9 月初的前几天，把上海有的公司差不多都投了一遍，小红书，美团，B 站，百度，华为，爱奇艺，流利说，阅文集团，同时这几天做了很多的笔试。</p>
-<p>9.9 号猫眼来华科宣讲会，自己在官网看了一下有上海部门就去了，现场进行了笔试。就在宣讲会期间，分别接到了美团约电话一面，9.10 号下午小红书现场面试。</p>
-<p>9.10 上午进行了美团电话一面，很愉快，面试官表示尽快给约二面面试官。</p>
-<p>9.10 下午去了小红书武汉部门，进行现场面试。人很多，很慢，但体验还是不错的，到了晚上饭点的时候还给了盒饭。最终，三面 + HR 全部通过，这也是自己第一家到了 HR 面的，终于也松了口气。</p>
-<p>9.11 上午，猫眼现场面试，这个进展很快，三面 + HR 很快结束了，遗憾的是猫眼主要只招北京的，所以当时我也就拒绝了。</p>
-<p>然后又清闲了几天，9.16 美团进行了电话二面。</p>
-<p>9.18 中午美团现场终面 +  HR 面，第三次进入了 HR 面，感觉最近这几次现场面都很顺利。</p>
-<p>由于 9.10 晚上面小红书，所以错过了当天 B 站（百度，他俩冲突了）的笔试 ，因此 9.18 下午去 B 站宣讲会手动投了一份简历。</p>
-<p>9.19 号，同学收到了携程的面试通知，自己没收到，虽然已经过了小红书和美团的 HR 面，但还是怕不稳，所以去在武大的宣讲会又手动投了一份简历。（不过到现在，依旧也没收到 B 站和携程的面试，似乎现场投了简历并没有什么用）</p>
-<p>9.21 号拼多多现场面，一面挂。</p>
-<p>至此，面试笔试基本结束，就焦急的等待小红书和美团的意向书。</p>
-<p>9.25 拿到了小红书的录取意向书，大大的松了一口气，可以愉快的过一个国庆了。</p>
-<p>国庆期间美团也一直没消息，觉得应该会去小红书了，也挺好的，最后也不用纠结去哪里。美团感觉自己面的还可以，想不通为什么还没给意向书。</p>
-<p>9.26 流利说进行了电话一面，但此时其实已经无心面试了（后来约二面，也就直接拒掉了）。</p>
-<p>10.11 收到了美团的录取意向书。</p>
-<p>10.15 华科三方开通，下午小红书 HR 就约到公司谈薪资，签三方。不过当时，美团薪资还没谈，所以也和 HR 商量，等美团下来再选择。</p>
-<p>10.17 被阿里捞起来了，约面试，但此时已然是一条咸鱼了，没有心思面试，只想等着了。还有，之前腾讯广州微信小程序部门的 HR 也陆续给自己打过三次电话约面试，但由于部门在广州，我也就直接拒了。阿里腾讯秋招的缘分，也就此结束了。</p>
-<p>接下来就是折磨人的时间了，美团迟迟不谈薪资，offershow 上大家也是编各种段子进行调侃。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/of1.jpg" alt=""></p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/of3.jpg" alt=""></p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/of2.jpg" alt=""></p>
-<p>我相对于他们还好，我是 10.11 号才收到意向书，他们提前批 9 月初就有收到意向书的了，一直等到了 10 月中旬还是没有谈薪资。</p>
-<p>10.24 号，美团终于和我谈了薪资，在可接受范围内，就准备签美团了。</p>
-<p>10.28 号，小红书这边打过来又给调薪，但自己最终还是决定去美团了。说实话感觉真的很对不起小红书，小红书发的意向书早，而且还等了自己这么久。</p>
-<p>10.29 号，收到了美团正式 offer，也收到了三方邀约，至此，秋招正式结束。</p>
-<h1 id="分享"><a href="#分享" class="headerlink" title="分享"></a>分享</h1><ul>
-<li><p>秋招必备的工具</p>
-<p>牛客网，<a href="https://www.nowcoder.com/" target="_blank" rel="noopener">https://www.nowcoder.com/</a> ，可以在上边看面经，刷相关笔试面试题，看其他人各个厂的进度，有人也会发各个公司微信群的二维码，加进去也可以一起等待 offer。</p>
-<p>力扣（leetcode），<a href="https://leetcode.com/problemset/all/" target="_blank" rel="noopener">https://leetcode.com/problemset/all/</a>，现在也有中国站  <a href="https://leetcode-cn.com/problemset/all/" target="_blank" rel="noopener">https://leetcode-cn.com/problemset/all/</a> 了，当然还要推荐一下我的刷题总结，哈哈，每道题都有详细的题解，现在有 150 到了，大家给的反馈也都表示总结的很好，地址是 <a href="https://leetcode.wang/" target="_blank" rel="noopener">https://leetcode.wang/</a>。刷题可以说是必备的了，不管是笔试或是面试，都会涉及到，运气好的话，笔试和面试可能碰到上边的原题。</p>
-<p>offershow，一个小程序，上边会有一些人去匿名公开自己谈的薪资，可以上去瞅瞅，自己多少会有一个底。</p>
-</li>
-<li><p>秋招流程</p>
-<p>提前批 -&gt;（正式批）-&gt; 拿到录取意向书，又叫 oc -&gt;（签订两方协议） -&gt; ( sc）-&gt; 谈薪资 -&gt; 签订三方协议</p>
-<p>上边加括号表示是可选的，可能有，可能没有。</p>
-<p>基本上都是笔试 + 面试，有的公司会免笔试。面试前有的公司会有一个测评，基本上就是一些找规律，还有语文段落提取，性格测试的题，都是选择题。</p>
-<p>oc，offer call 的简称，一般会收到 HR 的电话或者邮件，给你发一个录取意向书，也就是一张图片吧。</p>
-<p>两方协议，现场或者邮寄签，如果违约的话会有一定的违约金，具体看协议规定。大多数人为了保底 offer，HR 给 oc 或者签订两方协议，都会先同意下来，虽然不诚信，但也没办法。所以一些公司，发的 oc 会多于 hc（head count，也就是要招的人）。大家相互备胎。</p>
-<p>sc，suvery call 的简称，HR 会打电话问你目前的 offer，以便更好的给你定薪资。</p>
-<p>谈薪资，一般就是拿手上更有竞争力的 offer 和 HR argue，HR 会告诉你能不能帮你再争取更高的薪资。</p>
-<p>签订三方协议，有的学校是网签，有的学校是纸质的，这个签了以后就基本定了。我们学校的话，99% 签了就不能违约了，具体还是看学校怎么规定，有的学校可能可以违约一下，所谓的撕三方。</p>
-<p>另外补充下，只要过了 HR 面，并且没有收到感谢信，最后都还是有机会的，不要太慌。</p>
-</li>
-<li><p>面试会有哪些内容</p>
-<p>每家公司其实差不多，我只了解前端和后台岗位的，基本上就是四大块。</p>
-<p>第一块，自己所做的项目，基本上会给不同面试官讲一次又一次，所以一定要熟悉自己的项目，总结出来。</p>
-<p>第二块，自己岗位的基础知识，各种数据结构啦，语言的一些特性啦，可以在牛客网上看面经。</p>
-<p>第三块，算法题，上边讲到的，leetcode 的题目，一般现场写到纸上或者面试官电脑上，有的要求调通，有的只需要写出大概思路即可。</p>
-<p>第四块，比较开放性的问题，未来的规划？自己最自豪的事情？</p>
-</li>
-</ul>
-<h1 id="一些经验"><a href="#一些经验" class="headerlink" title="一些经验"></a>一些经验</h1><p>最早 7 月份就有公司开始秋招了，所以要提前关注，以免错过。8 月份提前批就多了起来，像腾讯、阿里，这些大厂也在这个时候开始，可以找学长学姐内推，也可以在牛客网上找内推码。然后就是 9 月份了，所谓的金 9 银 10，9 月份就是找工作的黄金时期，大部分人基本在 9 月份就会拿到几个 offer。不过 9 月份没找到的话，也不要灰心，10 月份依旧有很多机会。</p>
-<p>对于宣讲会，如果是现场笔试的可以去参加，基本上第二天就开始现场面试了。至于只是投简历的，我觉得不是很有必要去。</p>
-<p>秋招确实将一定程度上决定自己未来的一些发展，所以压力难免会大一些，要多和身边的同学交流，不管是谈心也好，还是交流面试经验，都挺好。</p>
-<p>能提早面试就提早去参加，不要拖，不然到后边会发现自己还没开始，各个公司都要结束了。还有就是到后期，如果已经拿到了几个 offer 的话，再有面试其实已经无心面试了，一般就直接拒掉了。所以基本上状态好的时候，就是在 9 月份，可以多面几个公司，多一些选择。</p>
-<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>明年就会开启新的一段旅程了，不管怎么样，尽情体验吧，越努力，越幸运，共勉。</p>
-]]></content>
-      <categories>
-        <category>随想</category>
-      </categories>
-      <tags>
-        <tag>随想</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>机器学习理论系列五 : Logistic Regression (逻辑回归)</title>
     <url>/2018/01/20/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%90%86%E8%AE%BA%E7%B3%BB%E5%88%97%E4%BA%94-Logistic-Regression-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/</url>
     <content><![CDATA[<blockquote>
@@ -2916,6 +2836,53 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
         <tag>机器学习</tag>
         <tag>分类</tag>
         <tag>逻辑回归</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>给大一计算机的建议,来自一名即将大四的老货</title>
+    <url>/2017/08/18/%E7%BB%99%E5%A4%A7%E4%B8%80%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%BB%BA%E8%AE%AE-%E6%9D%A5%E8%87%AA%E4%B8%80%E5%90%8D%E5%8D%B3%E5%B0%86%E5%A4%A7%E5%9B%9B%E7%9A%84%E8%80%81%E8%B4%A7/</url>
+    <content><![CDATA[<blockquote>
+<p>本文纯属个人观点，勿喷，愿意和大家一起交流进步</p>
+</blockquote>
+<h2 id="致有缘人"><a href="#致有缘人" class="headerlink" title="致有缘人"></a>致有缘人</h2><p>自己即将升入大四，犹记得自己大一的时候的迷茫，当时自己多么希望有个带自己的学长，然而无奈只能自己摸索，特写此篇献给即将踏入大学的你们。</p>
+<p>不管什么原因来了计算机专业，既然来了，就要努力爱上它。这里你将见识到很多很多新名词，Web，html，JavaScript，C++，python，框架，包，复杂度，函数，库，协议，TCP，UDP，CPU，if，else，循环，算法，递归，迭代，内存，指针，Android，比特，爬虫，二进制，调制，服务器，VPS……开始的自己和你们一样，什么也不知道，但这不重要，要相信自己可以做到，缺的只是去开始，一篇 <a href="https://zhuanlan.zhihu.com/p/19959253" target="_blank" rel="noopener">编程入门</a>，先推荐给大家。</p>
+<h2 id="学计算机能做什么"><a href="#学计算机能做什么" class="headerlink" title="学计算机能做什么"></a>学计算机能做什么</h2><p>大一的时候开始学 C++ ，整天对着黑框框，不禁在想，自己学了假计算机吗，这是在干什么？但我想告诉你的是，计算机不仅如此，他可以做应用，电脑上的应用，QQ，迅雷，手机上的游戏王者荣耀，斗地主，计算器，时钟，各种每天浏览的网页，研究算法，打败柯洁的阿尔法狗，汽车的自动驾驶，共享单车……所有的所有我们都可以做，没错，我们应该自豪，我们每天使用的各种东西，都是我们程序员所能做出来的。</p>
+<h2 id="三条大学的道路"><a href="#三条大学的道路" class="headerlink" title="三条大学的道路"></a>三条大学的道路</h2><p>大学早已不同高中，不再有人管，但最重要的还是「好好学习，天天向上」，真的，即使大一，也要认真，只要拿出高中的百分之八十去学，相信就会取得不错的成绩。有了成绩，大四的时候会有更多的选择，保研？读研？工作？</p>
+<h3 id="ACM"><a href="#ACM" class="headerlink" title="ACM"></a>ACM</h3><p>ACM 说简单了就是一个比赛，一般三个人组队，然后在规定时间和其他小组比谁做对的算法题多。题目做完提交，如果成功了就会得到令人兴奋的 「AC」，accept，就是题目做对了，还有就是「AK」，all kill，完成了所有题目。</p>
+<p>自己大一的时候，对 ACM 不是很感冒，总觉得那些题目很无聊。现在反而有点喜欢上了算法（算法就是解决一个问题的思路，方法，具体操作），每解一道题的喜悦，是他人无法体会的。我推荐大家先去尝试尝试 ACM ，因为不管保研，还是找工作，很深的算法基础都会得到青睐。我们院也有自己的 ACM 队，可以去加入。</p>
+<p>这里给几个地址，大家可以去尝试下<br><a href="http://acm.hdu.edu.cn/listproblem.php?vol=1" target="_blank" rel="noopener">杭电 OJ</a> ,大多数人用这个<br><a href="http://poj.org/problemlist" target="_blank" rel="noopener">北大 OJ</a> ，和杭电 OJ 类似<br><a href="https://leetcode.com/problemset/all/" target="_blank" rel="noopener">LeetCode</a> ，国外的一个网站，Facebook ，谷歌的笔试算法题都可能出自上边。</p>
+<h3 id="科研"><a href="#科研" class="headerlink" title="科研"></a>科研</h3><p>所谓科研就是看别人的论文，了解别人的思想，去改进作者的算法。怎么判断是否改进了呢？举个简单的例子，预测明天天气，作者的正确率 90%，你的算法经过实验发现是 95%，你这个算法就比原作者的好。然后你就可以发论文了，从此走上人生巅峰。就是看论文，写代码，做实验，分析实验数据，尝试尝试再尝试。当然更牛的人就是提出崭新的算法，从此留名青史，如果你做到了，记得带我飞。</p>
+<p>怎么开始科研呢？做到不要脸，直接去找老师，问老师有没有什么项目，自己想跟着做。大学老师真的都很好，他带你其实得不到任何的好处，因为把你带出来，你可能研究生也不会跟他。这里感谢一直带我的龚文引老师，谢谢老师。不要想着老师找你，大学最重要的是要主动。</p>
+<h3 id="做应用"><a href="#做应用" class="headerlink" title="做应用"></a>做应用</h3><p>做应用，相比其他两个会更有成就感。因为做出来可以很快的让你的同学用到，或者服务自己。主要有三个方向。</p>
+<p>Web。 就是网页，你每天用浏览器进的所有东西都是网页。做网页你需要去学 html ，JavaScript，css。微信推出的小程序，也可以算做在这里。当然由于越来越多的人进入 IT 行业，除了了解 Web 前端，你还得了解一些后端的东西，例如一些脚本语言 PHP，python，或者 java 都可以。你如果全精通了，就可以走上人生巅峰，成为一名传说中的全栈工程师。</p>
+<p>移动端。Android，iOS，手机上所有的 APP 我们都可以做。对于 Android 你需要学习 java 或者最新的 ktolin。对于 iOS 你需要学习 Objective-C 或者 swift ，当然你还需要买苹果的手机和电脑。</p>
+<p>后端。这里的东西就比较杂了，大家接触的也比较少，因为我们只会用 APP ，浏览网页，背后的东西谁知道呢。你需要去了解 Linux 系统，做后端的东西它比 Windows 方便的多。你需要学习 python ，go，java 等等中的几种。你需要学数据库，网络，系统安全。总之很杂，慢慢的了解。</p>
+<p>总之，由于现在越来越多的库，做一个 APP ，网页成本越来越低，随随便便就可以做出来一个。你如果想往这方面走，一定要记录深入你所学的，不然仅仅做个东西没什么竞争力的。重要的是他设计的思想，方法，你的目标应该是成为造轮子的人，而不是用别人的东西。</p>
+<p>最后，不管哪个方向，我们都可以去尝试，甚至都去做到极致。</p>
+<h2 id="科学上网"><a href="#科学上网" class="headerlink" title="科学上网"></a>科学上网</h2><p>大一的一个巧合，我才意识到，天哪我们原来上的是假网。由于 GFW 的存在，一些国外的东西，我们都不能用。之所有我们不会感觉缺了什么，是因为国内所有东西都有了对应的替代。作为程序员，我们至少会使用 Google 搜索，所以大家要想办法去使用它。这里推荐修改 hosts 或者 ss ，话题敏感，不多谈。</p>
+<h2 id="一些有用的东西"><a href="#一些有用的东西" class="headerlink" title="一些有用的东西"></a>一些有用的东西</h2><p><a href="https://github.com/" target="_blank" rel="noopener">github</a>/<a href="https://coding.net/" target="_blank" rel="noopener">coding</a><br>两个可以找到开源项目，或者放自己项目的地方，一个国外的一个国内的。里边有世界上各种各样的大牛贡献的项目，也有 BAT，也就是国内的百度阿里腾讯贡献的项目。所谓开源就是，在遵循某些协议的前提下，我们可以把它的代码用到我们自己的代码里。 </p>
+<p><a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">git</a><br>要使用 github ，当然少不了 git。一个版本控制和协作的工具，你一定会爱上它。推荐廖雪峰老师的 git 教程。</p>
+<p><a href="https://shimo.im/desktop" target="_blank" rel="noopener">石墨</a><br>可以进行多人协作，实时编辑保存文档，用了就知道了，不解释。</p>
+<p><a href="https://segmentfault.com" target="_blank" rel="noopener">segmentfault</a><br>一个问答平台，当你有什么 BUG 解决不了的话可以到上边提问</p>
+<p><a href="https://stackoverflow.com/" target="_blank" rel="noopener">stackoverflow</a><br>国外的问答平台，你如果用英文搜索问题，多半会进入这个网站，几乎没有它解决不了的问题。</p>
+<p><a href="https://www.zhihu.com/" target="_blank" rel="noopener">知乎</a> 以及 其 APP<br>上边很多程序员，这里推荐下 温兆伦，即 winter，赵劼，vczh，虽然他们现在都是在水知乎，但可以看看他们的之前的回答，感受下和牛人直接的差距。还有 萧井陌 ，蓝色 翻翻他们的答案会有一些好处的。</p>
+<p><a href="https://www.quora.com/" target="_blank" rel="noopener">quora</a>  以及其 APP<br>一个国外的问答网站，可以提高自己英语，以及了解下世界上有趣的事情。说道英语，一定要学好英语，一定要学好英语，一定要学好英语，背单词可以用扇贝，百词斩等，也可以用我最近用的 <a href="https://learn.lingvist.com/#guess" target="_blank" rel="noopener">Lingvist</a>。推荐一个口语教程，链接：<a href="http://pan.baidu.com/s/1c184jNa" target="_blank" rel="noopener">http://pan.baidu.com/s/1c184jNa</a> 密码：rpbf 。</p>
+<p>Telegram<br>一个 IM 应用，也就是即时通讯，与QQ，微信类似。安全性很高，上边可以找一些有趣的群组，和外国人交流学习，会发现很多很多有趣的事情。但需要科学上网。</p>
+<p>微信公众号<br>stormzhang ,主要做安卓的，现在分享一些他的经历、经验<br>一个程序员的日常，主要做 python，数据分析<br>小道消息，互联网最新的见解</p>
+<h2 id="社团"><a href="#社团" class="headerlink" title="社团"></a>社团</h2><p>根据自己的兴趣要选择加入一些社团，这是高中所不具有的，你会认识更多的全国各地的朋友，增长自己的见识，这里介绍两个我加入的。</p>
+<p><a href="https://pointstone.org/" target="_blank" rel="noopener">点石团队</a><br>地大唯一的互联网团队，加入后至少可以增加你的见识，你也可以和里边的小伙伴合作完成一些东西， APP ，网页 什么的，充实自己的大学生活。</p>
+<p>计算机羽毛球队<br>自己虽然球打的不怎么样，但认识了很多朋友，一起打球，一起吃饭，一起出去玩，一起过生日，很棒。</p>
+<h2 id="能力"><a href="#能力" class="headerlink" title="能力"></a>能力</h2><p>计算机最重要的就是解决问题的能力，搜索的能力，我们会遇到各种各样的 BUG，无穷无尽的 BUG，但我们要养成自己解决的习惯，不要动不动就去问别人，这样提高的只会是别人，自己永远提高不了。你要相信没有搜不到的问题。</p>
+<p>还有就是该学哪门语言的问题，至少会两种类型的语言，编译型的语言 JAVA，C++ 之类的，解释型的语言，python，php 之类的。但最后你会发现，语言其实仅仅是一种工具，最重要还是解决问题的思路方法。</p>
+<h2 id="End"><a href="#End" class="headerlink" title="End"></a>End</h2><p>「当你觉得已经很厉害的时候，其实仍旧什么也不会」，计算机相关的东西真的太多太多了，学的越多，不会的也将越多，这方面我们一定要谦逊，多向其他人学习。大学很短，真的很短，「starting is half the battle」，共勉~</p>
+]]></content>
+      <categories>
+        <category>随想</category>
+      </categories>
+      <tags>
+        <tag>随想</tag>
+        <tag>计算机</tag>
+        <tag>建议</tag>
       </tags>
   </entry>
   <entry>
@@ -3046,53 +3013,6 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
       </tags>
   </entry>
   <entry>
-    <title>给大一计算机的建议,来自一名即将大四的老货</title>
-    <url>/2017/08/18/%E7%BB%99%E5%A4%A7%E4%B8%80%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%BB%BA%E8%AE%AE-%E6%9D%A5%E8%87%AA%E4%B8%80%E5%90%8D%E5%8D%B3%E5%B0%86%E5%A4%A7%E5%9B%9B%E7%9A%84%E8%80%81%E8%B4%A7/</url>
-    <content><![CDATA[<blockquote>
-<p>本文纯属个人观点，勿喷，愿意和大家一起交流进步</p>
-</blockquote>
-<h2 id="致有缘人"><a href="#致有缘人" class="headerlink" title="致有缘人"></a>致有缘人</h2><p>自己即将升入大四，犹记得自己大一的时候的迷茫，当时自己多么希望有个带自己的学长，然而无奈只能自己摸索，特写此篇献给即将踏入大学的你们。</p>
-<p>不管什么原因来了计算机专业，既然来了，就要努力爱上它。这里你将见识到很多很多新名词，Web，html，JavaScript，C++，python，框架，包，复杂度，函数，库，协议，TCP，UDP，CPU，if，else，循环，算法，递归，迭代，内存，指针，Android，比特，爬虫，二进制，调制，服务器，VPS……开始的自己和你们一样，什么也不知道，但这不重要，要相信自己可以做到，缺的只是去开始，一篇 <a href="https://zhuanlan.zhihu.com/p/19959253" target="_blank" rel="noopener">编程入门</a>，先推荐给大家。</p>
-<h2 id="学计算机能做什么"><a href="#学计算机能做什么" class="headerlink" title="学计算机能做什么"></a>学计算机能做什么</h2><p>大一的时候开始学 C++ ，整天对着黑框框，不禁在想，自己学了假计算机吗，这是在干什么？但我想告诉你的是，计算机不仅如此，他可以做应用，电脑上的应用，QQ，迅雷，手机上的游戏王者荣耀，斗地主，计算器，时钟，各种每天浏览的网页，研究算法，打败柯洁的阿尔法狗，汽车的自动驾驶，共享单车……所有的所有我们都可以做，没错，我们应该自豪，我们每天使用的各种东西，都是我们程序员所能做出来的。</p>
-<h2 id="三条大学的道路"><a href="#三条大学的道路" class="headerlink" title="三条大学的道路"></a>三条大学的道路</h2><p>大学早已不同高中，不再有人管，但最重要的还是「好好学习，天天向上」，真的，即使大一，也要认真，只要拿出高中的百分之八十去学，相信就会取得不错的成绩。有了成绩，大四的时候会有更多的选择，保研？读研？工作？</p>
-<h3 id="ACM"><a href="#ACM" class="headerlink" title="ACM"></a>ACM</h3><p>ACM 说简单了就是一个比赛，一般三个人组队，然后在规定时间和其他小组比谁做对的算法题多。题目做完提交，如果成功了就会得到令人兴奋的 「AC」，accept，就是题目做对了，还有就是「AK」，all kill，完成了所有题目。</p>
-<p>自己大一的时候，对 ACM 不是很感冒，总觉得那些题目很无聊。现在反而有点喜欢上了算法（算法就是解决一个问题的思路，方法，具体操作），每解一道题的喜悦，是他人无法体会的。我推荐大家先去尝试尝试 ACM ，因为不管保研，还是找工作，很深的算法基础都会得到青睐。我们院也有自己的 ACM 队，可以去加入。</p>
-<p>这里给几个地址，大家可以去尝试下<br><a href="http://acm.hdu.edu.cn/listproblem.php?vol=1" target="_blank" rel="noopener">杭电 OJ</a> ,大多数人用这个<br><a href="http://poj.org/problemlist" target="_blank" rel="noopener">北大 OJ</a> ，和杭电 OJ 类似<br><a href="https://leetcode.com/problemset/all/" target="_blank" rel="noopener">LeetCode</a> ，国外的一个网站，Facebook ，谷歌的笔试算法题都可能出自上边。</p>
-<h3 id="科研"><a href="#科研" class="headerlink" title="科研"></a>科研</h3><p>所谓科研就是看别人的论文，了解别人的思想，去改进作者的算法。怎么判断是否改进了呢？举个简单的例子，预测明天天气，作者的正确率 90%，你的算法经过实验发现是 95%，你这个算法就比原作者的好。然后你就可以发论文了，从此走上人生巅峰。就是看论文，写代码，做实验，分析实验数据，尝试尝试再尝试。当然更牛的人就是提出崭新的算法，从此留名青史，如果你做到了，记得带我飞。</p>
-<p>怎么开始科研呢？做到不要脸，直接去找老师，问老师有没有什么项目，自己想跟着做。大学老师真的都很好，他带你其实得不到任何的好处，因为把你带出来，你可能研究生也不会跟他。这里感谢一直带我的龚文引老师，谢谢老师。不要想着老师找你，大学最重要的是要主动。</p>
-<h3 id="做应用"><a href="#做应用" class="headerlink" title="做应用"></a>做应用</h3><p>做应用，相比其他两个会更有成就感。因为做出来可以很快的让你的同学用到，或者服务自己。主要有三个方向。</p>
-<p>Web。 就是网页，你每天用浏览器进的所有东西都是网页。做网页你需要去学 html ，JavaScript，css。微信推出的小程序，也可以算做在这里。当然由于越来越多的人进入 IT 行业，除了了解 Web 前端，你还得了解一些后端的东西，例如一些脚本语言 PHP，python，或者 java 都可以。你如果全精通了，就可以走上人生巅峰，成为一名传说中的全栈工程师。</p>
-<p>移动端。Android，iOS，手机上所有的 APP 我们都可以做。对于 Android 你需要学习 java 或者最新的 ktolin。对于 iOS 你需要学习 Objective-C 或者 swift ，当然你还需要买苹果的手机和电脑。</p>
-<p>后端。这里的东西就比较杂了，大家接触的也比较少，因为我们只会用 APP ，浏览网页，背后的东西谁知道呢。你需要去了解 Linux 系统，做后端的东西它比 Windows 方便的多。你需要学习 python ，go，java 等等中的几种。你需要学数据库，网络，系统安全。总之很杂，慢慢的了解。</p>
-<p>总之，由于现在越来越多的库，做一个 APP ，网页成本越来越低，随随便便就可以做出来一个。你如果想往这方面走，一定要记录深入你所学的，不然仅仅做个东西没什么竞争力的。重要的是他设计的思想，方法，你的目标应该是成为造轮子的人，而不是用别人的东西。</p>
-<p>最后，不管哪个方向，我们都可以去尝试，甚至都去做到极致。</p>
-<h2 id="科学上网"><a href="#科学上网" class="headerlink" title="科学上网"></a>科学上网</h2><p>大一的一个巧合，我才意识到，天哪我们原来上的是假网。由于 GFW 的存在，一些国外的东西，我们都不能用。之所有我们不会感觉缺了什么，是因为国内所有东西都有了对应的替代。作为程序员，我们至少会使用 Google 搜索，所以大家要想办法去使用它。这里推荐修改 hosts 或者 ss ，话题敏感，不多谈。</p>
-<h2 id="一些有用的东西"><a href="#一些有用的东西" class="headerlink" title="一些有用的东西"></a>一些有用的东西</h2><p><a href="https://github.com/" target="_blank" rel="noopener">github</a>/<a href="https://coding.net/" target="_blank" rel="noopener">coding</a><br>两个可以找到开源项目，或者放自己项目的地方，一个国外的一个国内的。里边有世界上各种各样的大牛贡献的项目，也有 BAT，也就是国内的百度阿里腾讯贡献的项目。所谓开源就是，在遵循某些协议的前提下，我们可以把它的代码用到我们自己的代码里。 </p>
-<p><a href="https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000" target="_blank" rel="noopener">git</a><br>要使用 github ，当然少不了 git。一个版本控制和协作的工具，你一定会爱上它。推荐廖雪峰老师的 git 教程。</p>
-<p><a href="https://shimo.im/desktop" target="_blank" rel="noopener">石墨</a><br>可以进行多人协作，实时编辑保存文档，用了就知道了，不解释。</p>
-<p><a href="https://segmentfault.com" target="_blank" rel="noopener">segmentfault</a><br>一个问答平台，当你有什么 BUG 解决不了的话可以到上边提问</p>
-<p><a href="https://stackoverflow.com/" target="_blank" rel="noopener">stackoverflow</a><br>国外的问答平台，你如果用英文搜索问题，多半会进入这个网站，几乎没有它解决不了的问题。</p>
-<p><a href="https://www.zhihu.com/" target="_blank" rel="noopener">知乎</a> 以及 其 APP<br>上边很多程序员，这里推荐下 温兆伦，即 winter，赵劼，vczh，虽然他们现在都是在水知乎，但可以看看他们的之前的回答，感受下和牛人直接的差距。还有 萧井陌 ，蓝色 翻翻他们的答案会有一些好处的。</p>
-<p><a href="https://www.quora.com/" target="_blank" rel="noopener">quora</a>  以及其 APP<br>一个国外的问答网站，可以提高自己英语，以及了解下世界上有趣的事情。说道英语，一定要学好英语，一定要学好英语，一定要学好英语，背单词可以用扇贝，百词斩等，也可以用我最近用的 <a href="https://learn.lingvist.com/#guess" target="_blank" rel="noopener">Lingvist</a>。推荐一个口语教程，链接：<a href="http://pan.baidu.com/s/1c184jNa" target="_blank" rel="noopener">http://pan.baidu.com/s/1c184jNa</a> 密码：rpbf 。</p>
-<p>Telegram<br>一个 IM 应用，也就是即时通讯，与QQ，微信类似。安全性很高，上边可以找一些有趣的群组，和外国人交流学习，会发现很多很多有趣的事情。但需要科学上网。</p>
-<p>微信公众号<br>stormzhang ,主要做安卓的，现在分享一些他的经历、经验<br>一个程序员的日常，主要做 python，数据分析<br>小道消息，互联网最新的见解</p>
-<h2 id="社团"><a href="#社团" class="headerlink" title="社团"></a>社团</h2><p>根据自己的兴趣要选择加入一些社团，这是高中所不具有的，你会认识更多的全国各地的朋友，增长自己的见识，这里介绍两个我加入的。</p>
-<p><a href="https://pointstone.org/" target="_blank" rel="noopener">点石团队</a><br>地大唯一的互联网团队，加入后至少可以增加你的见识，你也可以和里边的小伙伴合作完成一些东西， APP ，网页 什么的，充实自己的大学生活。</p>
-<p>计算机羽毛球队<br>自己虽然球打的不怎么样，但认识了很多朋友，一起打球，一起吃饭，一起出去玩，一起过生日，很棒。</p>
-<h2 id="能力"><a href="#能力" class="headerlink" title="能力"></a>能力</h2><p>计算机最重要的就是解决问题的能力，搜索的能力，我们会遇到各种各样的 BUG，无穷无尽的 BUG，但我们要养成自己解决的习惯，不要动不动就去问别人，这样提高的只会是别人，自己永远提高不了。你要相信没有搜不到的问题。</p>
-<p>还有就是该学哪门语言的问题，至少会两种类型的语言，编译型的语言 JAVA，C++ 之类的，解释型的语言，python，php 之类的。但最后你会发现，语言其实仅仅是一种工具，最重要还是解决问题的思路方法。</p>
-<h2 id="End"><a href="#End" class="headerlink" title="End"></a>End</h2><p>「当你觉得已经很厉害的时候，其实仍旧什么也不会」，计算机相关的东西真的太多太多了，学的越多，不会的也将越多，这方面我们一定要谦逊，多向其他人学习。大学很短，真的很短，「starting is half the battle」，共勉~</p>
-]]></content>
-      <categories>
-        <category>随想</category>
-      </categories>
-      <tags>
-        <tag>随想</tag>
-        <tag>计算机</tag>
-        <tag>建议</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>追本溯源：字符串及编码</title>
     <url>/2019/07/15/%E8%BF%BD%E6%9C%AC%E6%BA%AF%E6%BA%90-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8F%8A%E7%BC%96%E7%A0%81/</url>
     <content><![CDATA[<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><p> 先考虑下边的问题。</p>
@@ -3191,79 +3111,6 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
         <tag>编码</tag>
         <tag>utf-8</tag>
         <tag>unicode</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>通过js或者nginx实现域名重定向</title>
-    <url>/2020/04/11/%E9%80%9A%E8%BF%87js%E6%88%96%E8%80%85nginx%E5%AE%9E%E7%8E%B0%E5%9F%9F%E5%90%8D%E9%87%8D%E5%AE%9A%E5%90%91/</url>
-    <content><![CDATA[<p>大学的时候买了 <a href="http://windliang.cc/" target="_blank" rel="noopener">windliang.cc</a> 的域名当做自己的博客，然后一直使用的是 <code>github</code> 的 <code>pages</code> 服务。最近国内访问 <code>github</code> 有些慢，想把博客迁移到阿里云的服务器上。</p>
-<p>之前已经把刷题博客 <a href="https://leetcode.wang/" target="_blank" rel="noopener">leetcode.wang</a> 通过 <code>nginx</code> 成功放到阿里云上了，参考 <a href="https://windliang.wang/2020/02/23/云服务器搭建网站全过程/">云服务器搭建网站全过程</a>。</p>
-<p>但是大学买的 <code>.cc</code> 域名有一个最大的问题，现在不能备案了，不能备案的话就不能放到国内服务器上。于是前段时间又买了一个 <a href="https://windliang.wang/">windliang.wang</a> 域名，备案成功后，按照之前的总结，很快就放到了阿里云上。</p>
-<p>现在需要做的是当访问 <code>.cc</code> 域名的时候，重新定向到 <code>.wang</code> 域名上。</p>
-<p>有两种方式，一种是在前端通过 <code>js</code> 进行重定向，另一种就是在后端通过 <code>nginx</code> 。</p>
-<h1 id="通过-js"><a href="#通过-js" class="headerlink" title="通过 js"></a>通过 js</h1><p>因为 <code>.cc</code> 域名没有备案，所以我们需要在国外的服务器上放一个 <code>html</code> 来实现重定向。</p>
-<p>最简单的方法，就是依旧使用 <code>github</code> 的 <code>pages</code> 服务。需要的<code>index.html</code> 写法如下。</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> domain = <span class="string">"windliang.wang"</span>;</span></span><br><span class="line"><span class="javascript">    <span class="comment">//得到 https://windliang.cc/XXXXX</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> src = <span class="built_in">window</span>.location.href;</span></span><br><span class="line"><span class="undefined">    </span></span><br><span class="line"><span class="javascript">    <span class="comment">//得到 https</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> prtc = src.substring(<span class="number">0</span>, src.indexOf(<span class="string">':'</span>));</span></span><br><span class="line"><span class="undefined">    </span></span><br><span class="line"><span class="javascript">    <span class="comment">//得到 /XXXXX</span></span></span><br><span class="line"><span class="javascript">    <span class="comment">//indexOf 的第二个参数是开始查找的位置</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> target = src.substring(src.indexOf(<span class="string">'/'</span>, src.indexOf(<span class="string">':'</span>) + <span class="number">3</span>));</span></span><br><span class="line"><span class="undefined">    </span></span><br><span class="line"><span class="javascript">    <span class="comment">//组合在一起</span></span></span><br><span class="line"><span class="javascript">    <span class="comment">//https://windliang.wang/XXXXX</span></span></span><br><span class="line"><span class="javascript">    <span class="built_in">window</span>.location.href = prtc + <span class="string">"://"</span> + domain + target;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>比较好理解，上边也都注释了。</p>
-<p>我们只需要把它保存为 <code>index.html</code> 然后放到 <code>github</code> 仓库里。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect1.jpg" alt=""></p>
-<p>在 <code>Settings</code> 里开启 <code>pages</code> 服务，并且绑定我们的域名。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect2.jpg" alt=""></p>
-<p>并且在自己的 <code>DNS</code> 里面添加一个 <code>CNAME</code> 记录，将域名解析到 <code>wind-liang.github.io</code>。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect3.jpg" alt=""></p>
-<p>然后再去打开 <code>windliang.cc</code> 的任意地址，就会自动跳转到 <code>windliang.wang</code> 了。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect4.gif" alt=""></p>
-<p>这样就成功实现域名的重定向了。但这样做的话，可能对搜索引擎不是很友好，我也没研究过 SEO，仅仅是我的猜测。下边再介绍通过 <code>nginx</code> 方式的重定向。</p>
-<p>但是这里有一点我不能理解的是，访问 <code>windliang.cc</code> 的时候会有一个 <code>404</code> 的状态码，这里我也不知道是为什么，如果谁知道的话可以告诉我。</p>
-<h1 id="通过-nginx"><a href="#通过-nginx" class="headerlink" title="通过 nginx"></a>通过 nginx</h1><p>因为原来的域名没有备案，所以你需要一个国外的服务器，我的服务器操作系统是 <code>Debian</code> 。</p>
-<p>对于 <code>http</code> 的重定向很简单，只需要在 <code>/etc/nginx/conf.d</code> 文件夹下新建一个配置文件。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">vim /etc/nginx/conf.d/windliang.cc.conf</span><br></pre></td></tr></table></figure>
-<p>然后添加下边的内容。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen <span class="number">80</span>;</span><br><span class="line">        server_name  windliang.cc;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">301</span> https:<span class="comment">//windliang.wang$request_uri;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样的话就可以了。但因为监听的是 <code>80</code> 端口，所以只会对 <code>http://windliang.cc</code> 进行重定向，对于 <code>https</code> 的链接就无能为力了。</p>
-<p>所以我们还需要为 <code>windliang.cc</code> 申请一个 <code>SSL</code> 证书，从而完成 <code>https</code> 的跳转。</p>
-<p>需要知道两个东西。</p>
-<p><strong>Let’s Encrypt</strong></p>
-<blockquote>
-<p>Let’s Encrypt由<a href="https://zh.wikipedia.org/w/index.php?title=互联网安全研究小组&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">互联网安全研究小组</a>（缩写ISRG）提供服务。主要赞助商包括<a href="https://zh.wikipedia.org/wiki/电子前哨基金会" target="_blank" rel="noopener">电子前哨基金会</a>、<a href="https://zh.wikipedia.org/wiki/Mozilla基金会" target="_blank" rel="noopener">Mozilla基金会</a>、<a href="https://zh.wikipedia.org/wiki/Akamai" target="_blank" rel="noopener">Akamai</a>以及<a href="https://zh.wikipedia.org/wiki/思科" target="_blank" rel="noopener">思科</a>。2015年4月9日，ISRG与<a href="https://zh.wikipedia.org/wiki/Linux基金會" target="_blank" rel="noopener">Linux基金会</a>宣布合作。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-5" target="_blank" rel="noopener">[5]</a></p>
-<p>用以实现新的数字证书认证机构的协议被称为自动证书管理环境（ACME）。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-le-getinvolved-6" target="_blank" rel="noopener">[6]</a><a href="https://zh.wikipedia.org/wiki/GitHub" target="_blank" rel="noopener">GitHub</a>上有这一规范的草案，<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-le-getinvolved-6" target="_blank" rel="noopener">[6]</a><a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-7" target="_blank" rel="noopener">[7]</a>且提案的一个版本已作为一个<a href="https://zh.wikipedia.org/wiki/RFC" target="_blank" rel="noopener">Internet草案</a>发布。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-8" target="_blank" rel="noopener">[8]</a></p>
-<p>Let’s Encrypt宣称这一过程将十分简单、自动化并且免费。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-9" target="_blank" rel="noopener">[9]</a></p>
-</blockquote>
-<p><strong>Certbot</strong></p>
-<blockquote>
-<p>Certbot is a free, open source software tool for automatically using <a href="https://letsencrypt.org/" target="_blank" rel="noopener">Let’s Encrypt</a> certificates on manually-administrated websites to enable HTTPS.</p>
-<p>Certbot is made by the <a href="https://www.eff.org/" target="_blank" rel="noopener">Electronic Frontier Foundation (EFF)</a>, a 501(c)3 nonprofit based in San Francisco, CA, that defends digital privacy, free speech, and innovation.</p>
-</blockquote>
-<p>是一个可以帮我们自动获取证书的软件。我们可以在 <a href="https://certbot.eff.org/instructions" target="_blank" rel="noopener">官网</a> 选择自己的后端软件以及操作系统，它会列出我们需要操作的步骤。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect4.jpg" alt=""></p>
-<p>然后就会出现下边的步骤，我只截了一部分图。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect5.jpg" alt=""></p>
-<p>首先是安装 <code>Certbot</code>。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">sudo apt-get install certbot python-certbot-nginx</span><br></pre></td></tr></table></figure>
-<p>有两种获得证书的方式，一种是自动获取证书并且配置 <code>nginx</code> ，一种是仅获取证书。因为我的网站是在阿里云上，不在这个服务器上，所以我采用仅获取证书的方式。</p>
-<p>运行之前，要把之前的 <code>CNAME</code> 记录删除，添加一个 <code>A</code> 记录，将域名指向当前服务器的 <code>ip</code>。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect6.jpg" alt=""></p>
-<p>然后执行下边的命令。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">sudo certbot certonly --nginx</span><br></pre></td></tr></table></figure>
-<p>执行过程中会让你填邮箱，选择域名，然后等几秒钟就生成成功了，记住最后输出的证书的地址和密钥的地址。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect7.jpg" alt=""></p>
-<p>更改之前的配置文件。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">vim /etc/nginx/conf.d/windliang.cc.conf</span><br></pre></td></tr></table></figure>
-<p>把 <code>80</code> 端口和 <code>443</code> 端口合在一起，然后将上边保存的证书和密钥地址填上。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen <span class="number">80</span>;</span><br><span class="line">    listen <span class="number">443</span> ssl;</span><br><span class="line">    server_name windliang.cc;</span><br><span class="line">    ssl_certificate   /etc/letsencrypt/live/windliang.cc/fullchain.pem;</span><br><span class="line">    ssl_certificate_key  /etc/letsencrypt/live/windliang.cc/privkey.pem;</span><br><span class="line">    ssl_session_timeout <span class="number">5</span>m;</span><br><span class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;</span><br><span class="line">    ssl_prefer_server_ciphers on;</span><br><span class="line">    # 将80端口的http请求 301 重定向到新域名</span><br><span class="line">    <span class="keyword">if</span> ( $scheme = <span class="string">"http"</span> ) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">301</span> https:<span class="comment">//windliang.wang$request_uri;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    # 将443端口的https请求 rewrite 重定向到新域名</span><br><span class="line">    location / &#123;</span><br><span class="line">        rewrite ^(.*)$ https:<span class="comment">//windliang.wang$1 permanent;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后，就会发现可以得到 <code>301</code> 的状态码了。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect8.jpg" alt=""></p>
-<p>最后一步，仔细看之前得到证书的截图，会发现证书的有效期是 <code>3</code> 个月。但没有关系，教程说如果通过上边的步骤走的话，到期前它会自动帮我们更新。</p>
-<p>我也不敢确定，只能到时候看它有没有更新了，哈哈。</p>
-<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>以上就是域名重定向的过程了，主要是前端通过 <code>js</code> 和后端通过 <code>nginx</code>。</p>
-<p>上边流程看起来很流畅，但今天用 <code>nginx</code> 做重定向的过程相当曲折了。因为一开始我只对 <code>80</code> 端口做了重定向，当我在浏览器输入 <code>windliang.cc</code> 的时候，因为之前是通过 <code>https</code> 访问的，所以浏览器会自动在前边加上 <code>https://</code> ，所以导致一直不能成功跳转。</p>
-<p>最神奇的是不知道为什么中午吃饭前有一次跳转成功了，然后吃完饭回来心想再放个网站到服务器，毕竟国外服务器的话，域名就不需要备案了，但是突然发现 <code>windliang.cc</code> 不能跳转了。</p>
-<p>然后自己就各种尝试，一直以为是 <code>nginx</code> 的原因，各种看日志，重启 <code>nginx</code>，但始终没找到问题，把 <code>nginx</code> 重装了两遍，甚至想把服务器重装了，最最后，终于意识到了这个 <code>https</code> 的问题，才想到了上边的解决方案。</p>
-]]></content>
-      <tags>
-        <tag>网站</tag>
-        <tag>云服务器</tag>
-        <tag>nginx</tag>
       </tags>
   </entry>
   <entry>
@@ -3590,6 +3437,159 @@ MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
       <tags>
         <tag>补码</tag>
         <tag>计算机</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>通过js或者nginx实现域名重定向</title>
+    <url>/2020/04/11/%E9%80%9A%E8%BF%87js%E6%88%96%E8%80%85nginx%E5%AE%9E%E7%8E%B0%E5%9F%9F%E5%90%8D%E9%87%8D%E5%AE%9A%E5%90%91/</url>
+    <content><![CDATA[<p>大学的时候买了 <a href="http://windliang.cc/" target="_blank" rel="noopener">windliang.cc</a> 的域名当做自己的博客，然后一直使用的是 <code>github</code> 的 <code>pages</code> 服务。最近国内访问 <code>github</code> 有些慢，想把博客迁移到阿里云的服务器上。</p>
+<p>之前已经把刷题博客 <a href="https://leetcode.wang/" target="_blank" rel="noopener">leetcode.wang</a> 通过 <code>nginx</code> 成功放到阿里云上了，参考 <a href="https://windliang.wang/2020/02/23/云服务器搭建网站全过程/">云服务器搭建网站全过程</a>。</p>
+<p>但是大学买的 <code>.cc</code> 域名有一个最大的问题，现在不能备案了，不能备案的话就不能放到国内服务器上。于是前段时间又买了一个 <a href="https://windliang.wang/">windliang.wang</a> 域名，备案成功后，按照之前的总结，很快就放到了阿里云上。</p>
+<p>现在需要做的是当访问 <code>.cc</code> 域名的时候，重新定向到 <code>.wang</code> 域名上。</p>
+<p>有两种方式，一种是在前端通过 <code>js</code> 进行重定向，另一种就是在后端通过 <code>nginx</code> 。</p>
+<h1 id="通过-js"><a href="#通过-js" class="headerlink" title="通过 js"></a>通过 js</h1><p>因为 <code>.cc</code> 域名没有备案，所以我们需要在国外的服务器上放一个 <code>html</code> 来实现重定向。</p>
+<p>最简单的方法，就是依旧使用 <code>github</code> 的 <code>pages</code> 服务。需要的<code>index.html</code> 写法如下。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> domain = <span class="string">"windliang.wang"</span>;</span></span><br><span class="line"><span class="javascript">    <span class="comment">//得到 https://windliang.cc/XXXXX</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> src = <span class="built_in">window</span>.location.href;</span></span><br><span class="line"><span class="undefined">    </span></span><br><span class="line"><span class="javascript">    <span class="comment">//得到 https</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> prtc = src.substring(<span class="number">0</span>, src.indexOf(<span class="string">':'</span>));</span></span><br><span class="line"><span class="undefined">    </span></span><br><span class="line"><span class="javascript">    <span class="comment">//得到 /XXXXX</span></span></span><br><span class="line"><span class="javascript">    <span class="comment">//indexOf 的第二个参数是开始查找的位置</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> target = src.substring(src.indexOf(<span class="string">'/'</span>, src.indexOf(<span class="string">':'</span>) + <span class="number">3</span>));</span></span><br><span class="line"><span class="undefined">    </span></span><br><span class="line"><span class="javascript">    <span class="comment">//组合在一起</span></span></span><br><span class="line"><span class="javascript">    <span class="comment">//https://windliang.wang/XXXXX</span></span></span><br><span class="line"><span class="javascript">    <span class="built_in">window</span>.location.href = prtc + <span class="string">"://"</span> + domain + target;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>比较好理解，上边也都注释了。</p>
+<p>我们只需要把它保存为 <code>index.html</code> 然后放到 <code>github</code> 仓库里。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect1.jpg" alt=""></p>
+<p>在 <code>Settings</code> 里开启 <code>pages</code> 服务，并且绑定我们的域名。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect2.jpg" alt=""></p>
+<p>并且在自己的 <code>DNS</code> 里面添加一个 <code>CNAME</code> 记录，将域名解析到 <code>wind-liang.github.io</code>。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect3.jpg" alt=""></p>
+<p>然后再去打开 <code>windliang.cc</code> 的任意地址，就会自动跳转到 <code>windliang.wang</code> 了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect4.gif" alt=""></p>
+<p>这样就成功实现域名的重定向了。但这样做的话，可能对搜索引擎不是很友好，我也没研究过 SEO，仅仅是我的猜测。下边再介绍通过 <code>nginx</code> 方式的重定向。</p>
+<p>但是这里有一点我不能理解的是，访问 <code>windliang.cc</code> 的时候会有一个 <code>404</code> 的状态码，这里我也不知道是为什么，如果谁知道的话可以告诉我。</p>
+<h1 id="通过-nginx"><a href="#通过-nginx" class="headerlink" title="通过 nginx"></a>通过 nginx</h1><p>因为原来的域名没有备案，所以你需要一个国外的服务器，我的服务器操作系统是 <code>Debian</code> 。</p>
+<p>对于 <code>http</code> 的重定向很简单，只需要在 <code>/etc/nginx/conf.d</code> 文件夹下新建一个配置文件。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">vim /etc/nginx/conf.d/windliang.cc.conf</span><br></pre></td></tr></table></figure>
+<p>然后添加下边的内容。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">        listen <span class="number">80</span>;</span><br><span class="line">        server_name  windliang.cc;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">301</span> https:<span class="comment">//windliang.wang$request_uri;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的话就可以了。但因为监听的是 <code>80</code> 端口，所以只会对 <code>http://windliang.cc</code> 进行重定向，对于 <code>https</code> 的链接就无能为力了。</p>
+<p>所以我们还需要为 <code>windliang.cc</code> 申请一个 <code>SSL</code> 证书，从而完成 <code>https</code> 的跳转。</p>
+<p>需要知道两个东西。</p>
+<p><strong>Let’s Encrypt</strong></p>
+<blockquote>
+<p>Let’s Encrypt由<a href="https://zh.wikipedia.org/w/index.php?title=互联网安全研究小组&amp;action=edit&amp;redlink=1" target="_blank" rel="noopener">互联网安全研究小组</a>（缩写ISRG）提供服务。主要赞助商包括<a href="https://zh.wikipedia.org/wiki/电子前哨基金会" target="_blank" rel="noopener">电子前哨基金会</a>、<a href="https://zh.wikipedia.org/wiki/Mozilla基金会" target="_blank" rel="noopener">Mozilla基金会</a>、<a href="https://zh.wikipedia.org/wiki/Akamai" target="_blank" rel="noopener">Akamai</a>以及<a href="https://zh.wikipedia.org/wiki/思科" target="_blank" rel="noopener">思科</a>。2015年4月9日，ISRG与<a href="https://zh.wikipedia.org/wiki/Linux基金會" target="_blank" rel="noopener">Linux基金会</a>宣布合作。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-5" target="_blank" rel="noopener">[5]</a></p>
+<p>用以实现新的数字证书认证机构的协议被称为自动证书管理环境（ACME）。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-le-getinvolved-6" target="_blank" rel="noopener">[6]</a><a href="https://zh.wikipedia.org/wiki/GitHub" target="_blank" rel="noopener">GitHub</a>上有这一规范的草案，<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-le-getinvolved-6" target="_blank" rel="noopener">[6]</a><a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-7" target="_blank" rel="noopener">[7]</a>且提案的一个版本已作为一个<a href="https://zh.wikipedia.org/wiki/RFC" target="_blank" rel="noopener">Internet草案</a>发布。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-8" target="_blank" rel="noopener">[8]</a></p>
+<p>Let’s Encrypt宣称这一过程将十分简单、自动化并且免费。<a href="https://zh.wikipedia.org/wiki/Let&#39;s_Encrypt#cite_note-9" target="_blank" rel="noopener">[9]</a></p>
+</blockquote>
+<p><strong>Certbot</strong></p>
+<blockquote>
+<p>Certbot is a free, open source software tool for automatically using <a href="https://letsencrypt.org/" target="_blank" rel="noopener">Let’s Encrypt</a> certificates on manually-administrated websites to enable HTTPS.</p>
+<p>Certbot is made by the <a href="https://www.eff.org/" target="_blank" rel="noopener">Electronic Frontier Foundation (EFF)</a>, a 501(c)3 nonprofit based in San Francisco, CA, that defends digital privacy, free speech, and innovation.</p>
+</blockquote>
+<p>是一个可以帮我们自动获取证书的软件。我们可以在 <a href="https://certbot.eff.org/instructions" target="_blank" rel="noopener">官网</a> 选择自己的后端软件以及操作系统，它会列出我们需要操作的步骤。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect4.jpg" alt=""></p>
+<p>然后就会出现下边的步骤，我只截了一部分图。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect5.jpg" alt=""></p>
+<p>首先是安装 <code>Certbot</code>。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">sudo apt-get install certbot python-certbot-nginx</span><br></pre></td></tr></table></figure>
+<p>有两种获得证书的方式，一种是自动获取证书并且配置 <code>nginx</code> ，一种是仅获取证书。因为我的网站是在阿里云上，不在这个服务器上，所以我采用仅获取证书的方式。</p>
+<p>运行之前，要把之前的 <code>CNAME</code> 记录删除，添加一个 <code>A</code> 记录，将域名指向当前服务器的 <code>ip</code>。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect6.jpg" alt=""></p>
+<p>然后执行下边的命令。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">sudo certbot certonly --nginx</span><br></pre></td></tr></table></figure>
+<p>执行过程中会让你填邮箱，选择域名，然后等几秒钟就生成成功了，记住最后输出的证书的地址和密钥的地址。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect7.jpg" alt=""></p>
+<p>更改之前的配置文件。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">vim /etc/nginx/conf.d/windliang.cc.conf</span><br></pre></td></tr></table></figure>
+<p>把 <code>80</code> 端口和 <code>443</code> 端口合在一起，然后将上边保存的证书和密钥地址填上。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen <span class="number">80</span>;</span><br><span class="line">    listen <span class="number">443</span> ssl;</span><br><span class="line">    server_name windliang.cc;</span><br><span class="line">    ssl_certificate   /etc/letsencrypt/live/windliang.cc/fullchain.pem;</span><br><span class="line">    ssl_certificate_key  /etc/letsencrypt/live/windliang.cc/privkey.pem;</span><br><span class="line">    ssl_session_timeout <span class="number">5</span>m;</span><br><span class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;</span><br><span class="line">    ssl_prefer_server_ciphers on;</span><br><span class="line">    # 将80端口的http请求 301 重定向到新域名</span><br><span class="line">    <span class="keyword">if</span> ( $scheme = <span class="string">"http"</span> ) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">301</span> https:<span class="comment">//windliang.wang$request_uri;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    # 将443端口的https请求 rewrite 重定向到新域名</span><br><span class="line">    location / &#123;</span><br><span class="line">        rewrite ^(.*)$ https:<span class="comment">//windliang.wang$1 permanent;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后，就会发现可以得到 <code>301</code> 的状态码了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/redirect8.jpg" alt=""></p>
+<p>最后一步，仔细看之前得到证书的截图，会发现证书的有效期是 <code>3</code> 个月。但没有关系，教程说如果通过上边的步骤走的话，到期前它会自动帮我们更新。</p>
+<p>我也不敢确定，只能到时候看它有没有更新了，哈哈。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>以上就是域名重定向的过程了，主要是前端通过 <code>js</code> 和后端通过 <code>nginx</code>。</p>
+<p>上边流程看起来很流畅，但今天用 <code>nginx</code> 做重定向的过程相当曲折了。因为一开始我只对 <code>80</code> 端口做了重定向，当我在浏览器输入 <code>windliang.cc</code> 的时候，因为之前是通过 <code>https</code> 访问的，所以浏览器会自动在前边加上 <code>https://</code> ，所以导致一直不能成功跳转。</p>
+<p>最神奇的是不知道为什么中午吃饭前有一次跳转成功了，然后吃完饭回来心想再放个网站到服务器，毕竟国外服务器的话，域名就不需要备案了，但是突然发现 <code>windliang.cc</code> 不能跳转了。</p>
+<p>然后自己就各种尝试，一直以为是 <code>nginx</code> 的原因，各种看日志，重启 <code>nginx</code>，但始终没找到问题，把 <code>nginx</code> 重装了两遍，甚至想把服务器重装了，最最后，终于意识到了这个 <code>https</code> 的问题，才想到了上边的解决方案。</p>
+]]></content>
+      <tags>
+        <tag>网站</tag>
+        <tag>云服务器</tag>
+        <tag>nginx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在美团工作的第一年</title>
+    <url>/2021/05/29/%E5%9C%A8%E7%BE%8E%E5%9B%A2%E5%B7%A5%E4%BD%9C%E7%9A%84%E7%AC%AC%E4%B8%80%E5%B9%B4/</url>
+    <content><![CDATA[<p>时间真是快，转眼间变成打工人也有一年的时间了，最近几天朋友圈被各个同学的答辩刷屏了。去年自己过年回到家里，再回学校就是领毕业证了，经历了可能是唯一一年的云答辩。学生时代的最后一年，对未来的工作充满了想象，一直想知道工作后会是什么样子，每天会干些什么，这里就分享一下自己一年以来在美团的工作和生活。</p>
+<h1 id="对接的伙伴"><a href="#对接的伙伴" class="headerlink" title="对接的伙伴"></a>对接的伙伴</h1><p>学生时代自己做软件的话，前端、后端、设计、测试可能都需要自己来搞，但在公司的话一切都分工明确。主要过程就是需求评审 -&gt; 排期 -&gt; 前后端开发 -&gt; 联调提测 -&gt; 测试 -&gt; 回归上线。</p>
+<ul>
+<li><p>需求评审</p>
+<p>首先产品（<code>PM</code>）给出需求文档（<code>prd</code>），每周的话会拉前端、后端、测试（<code>QA</code>）大家一起开需求评审会，介绍需求的背景、本期要做的东西，有问题的话在会上进行讨论。</p>
+<p>期间产品会找设计要设计稿和交互图，类似于下边这种</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan1.jpg" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan3.jpg" alt=""></p>
+<p>每一个地方详细标好了大小、间距、颜色、圆角等属性，前端的工作就是还原设计稿，并且实现交互。</p>
+</li>
+<li><p>排期</p>
+<p>我觉得这是对新人最麻烦的事情了，有了设计稿以后前后端就需要估算需要完成的时间，单位是 <code>pd</code>，也就是 <code>person day</code>（每人每天），对于大需求的话可能需要 <code>6 pd</code>，如果两个人的话就会排 <code>3</code> 天的时间去开发。</p>
+<p>然后前端、后端、<code>QA</code>一起对一下时间，定下开发、联调、测试、上线的时间，比如 <code>6.1 ～ 6.3</code> 开发，<code>6.4 ～ 6.5</code> 联调，<code>6.6</code> QA 测试，<code>6.7</code> 上线。</p>
+<p>排期麻烦的地方在于，估时少了，那你到最后一天还差的多的话就得加班加时了，甚至造成需求延期。估时多了，如果是 <code>0.5 pd</code>或者 <code>1pd</code> 的 <code>buffer</code> 还可以，但太多的话你的 <code>leader</code> 可能就会找你谈话了。</p>
+<p>自己一年来收获的经验就是对于一个大需求，<strong>一定要把事情分割，每天都完成具体的目标，没完成的话当天一定要赶完</strong>，这样到最后一天就不会出现什么问题了。</p>
+<p>如果造成了需求 <code>delay</code>，因为大家时间都是提前排好的，因为你一个人造成推迟，后边大家配合你再改排期很不好，也很麻烦。</p>
+</li>
+<li><p>联调提测</p>
+<p>前端开发的时候因为还没有接口，所以开始的时候会根据后端给的接口文档在本地 <code>mock</code>(模拟) 数据进行开发。前后端开发都完毕后，就是联调时间，会真正走后端的接口请求数据，接口调通后，会根据 <code>QA</code> 给出的测试 <code>case</code> ，比如翻页是不是正常、下拉加载数据有没有刷新等等，一条一条的进行测试。当 <code>case</code> 全部通过以后，就会提交测试，交由 <code>QA</code> 继续。</p>
+</li>
+<li><p>测试</p>
+<p><code>QA</code> 给到开发的属于冒烟测试，也就是一些主要的功能，更细节的一些东西 <code>QA</code> 会继续测试。测试环境的话主要有两种，一种是测试环境，测试环境的数据有的是从线上拉下来的，有的是自己造的。一种是 <code>staging</code> 环境，也就是预发布环境，这些数据和线上是打通的，会为了测试建一些专用的门店、数据。 <code>QA</code> 会在两种环境都进行测试，因为一些神奇的 <code>Bug</code> 在测试环境没有出现，在 <code>staging</code> 环境才能测试出来。</p>
+</li>
+<li><p>回归上线</p>
+<p>对于小程序开发，因为需要微信那边审核，所以并不能随时开发、随时上线。一般都会固定一周的某几天进行上线。上线前，因为会有不同的需求在同一个小程序项目中开发，所以会将大家的代码合在一起，不同需求的 <code>QA</code> 会再在 <code>staging</code> 环境再回归一次自己的测试 <code>case</code> 。大家全部回归完毕后，就会进行上线，上线完毕后观察线上各个指标是否正常，有异常的话要尽快回滚。</p>
+</li>
+</ul>
+<h1 id="工作时间"><a href="#工作时间" class="headerlink" title="工作时间"></a>工作时间</h1><p>互联网的工作时间，在 <code>996</code> 的声音中经常出现在各个 <code>app</code> 的话题中。我虽然只工作了一年，但却体验了双休、<code>996</code>、大小周，哈哈，把互联网公司的工作时间都经历了一遍。</p>
+<ul>
+<li><p>双休</p>
+<p>去年 <code>5</code> 月进入美团实习的时候，我还是在上海的到店事业群，现在看来真的是养老生活了。</p>
+<p>每天早上 <code>10</code> 点上班，去了公司接一杯美团的白开水，开始一天的代码之旅。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan4.jpg" alt=""></p>
+<p>到了中午 <code>12</code> 点，公司没有自己的食堂，一般和同事出去到周围的饭店吃，或者在美团点个美团外卖，当然也可以点饿了么。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan5.jpg" alt=""></p>
+<p>吃完饭会在公司周围散散步，聊聊天，然后回到公司。</p>
+<p>回到公司一般快 <code>1</code> 点，做到工位上拿出手机刷刷知识星球、看看微信读书，<code>1</code> 点半的时候准时睡觉，睡到 <code>2</code> 点的时候继续干活。</p>
+<p>到了两点，继续肝代码。期间和同事讨论讨论问题，写写需求，或者开开会，然后又到了吃饭的时候。</p>
+<p>下午 <code>6</code> 点的时候，继续吃饭、散步，<code>7</code> 点左右的时候回到公司。</p>
+<p>然后「摸会儿鱼」，到了 <code>8</code> 点准时打卡回家，因为到 <code>8</code> 点美团会有 <code>30</code> 块钱餐补。</p>
+<p>家住的比较近，<code>10</code> 分钟回家后，换好衣服甚至还能出去跑个步，回来后和女朋友聊聊天、网上逛逛、写写文章、再学学英语，完美的一天结束！</p>
+<p>到了周五晚上，<code>6</code> 点直接下班，开启两天周末时光，出去看看电影、逛逛公园或者继续学习学习，撸撸猫、晒晒太阳。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan6.jpg" alt=""></p>
+</li>
+<li><p><code>996</code></p>
+<p>开启 <code>996</code> 的生活，是因为最近一年比较热的「社区团购」，美团主要是「美团优选」，还有拼多多的「多多买菜」、滴滴的「橙心优选」。区别于外卖的及时配送，社区团购是预购模式，也就是今天下单，第二天到自提点自己拿。对于企业来说，用户买多少就到供应商拿多少，省了很多成本。对于用户来说，价格相对也会更便宜。</p>
+<p>去年 <code>11</code> 月我们组被抽调过去支持美团优选业务，从此开启了 <code>996</code> 生活。</p>
+<p><code>10</code> 点开始上班，然后白天时间和上边的基本一样，但到了晚上 <code>8</code> 点的时候就不再是打卡走人了，一般都是到晚上 <code>10</code> 点，忙的时候 <code>11</code> 点、<code>12</code> 点也可能。然后下班回去，铲铲猫屎，乱七八糟搞一搞，就睡觉了。</p>
+<p>星期六的话也是继续上班，唯一的好处是会给双倍工资，甚至开水团周六都给提供了小吃。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan7.jpg" alt=""></p>
+<p><code>996</code> 期间最大的感受就是没有了生活，感觉一直是在上班。周日早上睡个懒觉，到中午起来点个外卖，边吃外卖边看会儿综艺，然后发现下午也快过去了，再一想第二天就又要开始 <code>6</code> 天的上班了，太难了。</p>
+</li>
+<li><p>大小周</p>
+<p> <code>996</code> 持续到了今年过年，年后改为了大小周。有一说一，经历过了 <code>996</code> 之后，大小周都感觉真香了。轮到双休的时候，到了周六晚上一想，天呐，明天还是休息，太幸福了。现在随着业务的迭代，需求比最开始也少很多了，每天 <code>9</code> 点半基本就下班了，回家以后也会有时间做一些其他的事情，这个状态目前看来还是可以的。</p>
+</li>
+</ul>
+<h1 id="在公司做的事情"><a href="#在公司做的事情" class="headerlink" title="在公司做的事情"></a>在公司做的事情</h1><p>在公司做的项目总体上分两类，一类是业务需求，分为 <code>B</code> 端、<code>c</code> 端、<code>M</code> 端。<code>B</code> 端之前我是给商家做评价分析的工具，比如肯德基、<code>coco</code> 这些商家的评论数据、销售数据，给他们的运营用。现在我主要是做 <code>C</code> 端，也就是微信的美团优选小程序。还会做一些 <code>M</code> 端项目，公司内部的运营人员会使用。</p>
+<p>另一类就是技术方面的需求， 会做一些工具提升平时开发的效率、做一些数据类的产品，用来整合各个项目的数据等等。</p>
+<p>上边的项目压力最大的就是 <code>C</code> 端项目了，因为它的用户量非常非常大，毕竟开发的小程序是在阿拉丁指数里排第 <code>3</code>。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/meituan8.jpg" alt=""></p>
+<p>如果出了一点 <code>bug</code> ，最终的影响面会非常广。因此开发的时候一定要非常小心，一些错误的捕捉，极端情况都需要多多考虑。</p>
+<p>除了项目本身的需求，公司对一些性能指标也会很关注，比如秒开率、白屏率等，还有就是对线上的项目的监控也尤为重要，因此也需要完善的日志系统、告警系统等，这些都属于公司的基建项目，一般直接调用就可以。</p>
+<p>另外感觉最挫败的就是一些 <code>bug</code> 是真的解决不了，最大的问题就是这些 <code>bug</code> 无法在本地自己复现，只是看到线上日志上有很多的报错，然而却并不知道为什么。只能不停的试，然后上线，然后再观察，很难受。</p>
+<h1 id="绩效以及晋升"><a href="#绩效以及晋升" class="headerlink" title="绩效以及晋升"></a>绩效以及晋升</h1><p>这是上班和之前学生时期唯一像的地方了。很多公司都会划分出很多职级，比如美团 <code>L5</code>、<code>L6</code>、<code>L7</code>，阿里的 <code>P6</code>、<code>P7</code>，腾讯的 <code>2-1</code>、<code>2-2</code>、<code>3-1</code> 等等。</p>
+<p>校招生入职美团是 <code>L5</code>，然后每年会有固定的时间去晋升，晋升前需要准备好材料，介绍你在公司做了什么，为公司提供了什么价值，未来你会做什么等等，然后会在评委面前讲一遍，评委是部门里各个业务线的 <code>leader</code> 们，结束后他们又会问一些问题。哈哈，是不是有毕业答辩的感觉了。</p>
+<p>除了晋升，然后就是每个季度的述职了，这个主要是自己组内的，互相讲一讲大家各自做的项目。由于平时主要做一些业务需求，这个总结也比较难写，要根据 <code>STAR</code> 原则理出来自己的东西，然后再写，我是感觉很痛苦，不如写代码快乐。之后 <code>leader</code> 会结合述职以及平时的表现打绩效，绩效的话就和最后的年终奖挂钩了。比如美团是 <code>15.5</code> 个月的工资，除去一年 <code>12</code> 个月，剩下的 <code>3.5</code> 就是绩效工资了。</p>
+<h1 id="未来"><a href="#未来" class="headerlink" title="未来"></a>未来</h1><p>工作一年也渐渐适应了打工人的生活，相比于学生时期，甚至开始有些怀念了。学生时期，想几点睡就几点睡，因为第二天起晚也没有关系。吃饭、打球约上小伙伴想啥时候打就啥时候打。编程的话，想学习什么就学习什么，感觉有大把的时间，当时每天的 <a href="https://leetcode.wang/leetcode%E5%8A%9B%E6%89%A3%E5%88%B7%E9%A2%981%E5%88%B0300%E7%9A%84%E6%84%9F%E5%8F%97.html" target="_blank" rel="noopener">leetcode</a> 现在是不敢想了。总结就是，学生时期除了钱少一些，真的是完美生活了。现在吃饭的话题就变成了买房、股票、生娃了，然而我却觉得我还是个孩子。</p>
+<p>未来主要是两个方向吧，一方面就是技术的提高，自己是做前端方向的，做的越多就发现不会的越多，还是需要不断的学习提高。另一方面就是英语了，程序员英语的话虽然平时工作遇不到，但如果技术上想要有更多的进步，肯定还是需要用英语在社区上和世界各地的人交流的。</p>
+<p>最后，还是那句话，越努力，越幸运，共勉～</p>
+]]></content>
+      <categories>
+        <category>随想</category>
+      </categories>
+      <tags>
+        <tag>随想</tag>
       </tags>
   </entry>
   <entry>
