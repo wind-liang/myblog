@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="背景了解到二叉索引树这个数据结构，是在 leetcode 的 307 题，题目是要求实现一个数据结构，可以返回数组任意区间的和以及更新数组的某个值。 12345678910111213141516171819307、Range Sum Query - MutableGiven an integer array nums, find the sum of the elements between i">
+<meta name="keywords" content="leetcode,二叉索引树,树状数组">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉索引树（树状数组）的原理">
+<meta property="og:url" content="https://windliang.wang/2020/08/30/二叉索引树（树状数组）的原理/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="背景了解到二叉索引树这个数据结构，是在 leetcode 的 307 题，题目是要求实现一个数据结构，可以返回数组任意区间的和以及更新数组的某个值。 12345678910111213141516171819307、Range Sum Query - MutableGiven an integer array nums, find the sum of the elements between i">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/303_2.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/tree1.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/306_2.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/306_3.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/306_4.jpg">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.939Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="二叉索引树（树状数组）的原理">
+<meta name="twitter:description" content="背景了解到二叉索引树这个数据结构，是在 leetcode 的 307 题，题目是要求实现一个数据结构，可以返回数组任意区间的和以及更新数组的某个值。 12345678910111213141516171819307、Range Sum Query - MutableGiven an integer array nums, find the sum of the elements between i">
+<meta name="twitter:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/303_2.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2020/08/30/二叉索引树（树状数组）的原理/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>二叉索引树（树状数组）的原理 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2020/08/30/二叉索引树（树状数组）的原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">二叉索引树（树状数组）的原理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-08-30 12:59:30" itemprop="dateCreated datePublished" datetime="2020-08-30T12:59:30+08:00">2020-08-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/算法/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2020/08/30/二叉索引树（树状数组）的原理/" class="leancloud_visitors" data-flag-title="二叉索引树（树状数组）的原理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>了解到二叉索引树这个数据结构，是在 <code>leetcode</code> 的 <a href="https://leetcode.wang/leetcode-307-Range-Sum-Query-Mutable.html" target="_blank" rel="noopener">307 题</a>，题目是要求实现一个数据结构，可以返回数组任意区间的和以及更新数组的某个值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">307</span>、Range Sum Query - Mutable</span><br><span class="line"></span><br><span class="line">Given an integer array nums, <span class="function">find the sum of the elements between indices i and <span class="title">j</span> <span class="params">(i ≤ j)</span>, inclusive.</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">The <span class="title">update</span><span class="params">(i, val)</span> function modifies nums by updating the element at index i to val.</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">Example:</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    Given nums </span>= [<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>]</span><br><span class="line">    </span><br><span class="line">    sumRange(<span class="number">0</span>, <span class="number">2</span>) -&gt; <span class="number">9</span></span><br><span class="line">    update(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    sumRange(<span class="number">0</span>, <span class="number">2</span>) -&gt; <span class="number">8</span></span><br><span class="line"></span><br><span class="line">Constraints:</span><br><span class="line"></span><br><span class="line">- The array is only modifiable by the update function.</span><br><span class="line">- You may assume the number of calls to update and sumRange function is distributed evenly.</span><br><span class="line">- <span class="number">0</span> &lt;= i &lt;= j &lt;= nums.length - <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h1 id="常规解法"><a href="#常规解法" class="headerlink" title="常规解法"></a>常规解法</h1><p>先介绍下常规的解法，树状数组有用到他们之中的一些思想或者过程。</p>
+<h2 id="解法一"><a href="#解法一" class="headerlink" title="解法一"></a>解法一</h2><p>最暴力的解法，<code>sumRange</code>  直接 <code>for</code> 循环算，<code>update</code> 直接更新数组中的值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number[]&#125; nums</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> NumArray = <span class="function"><span class="keyword">function</span> (<span class="params">nums</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.nums = [...nums];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; i</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; val</span></span><br><span class="line"><span class="comment"> * @return &#123;void&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">NumArray.prototype.update = <span class="function"><span class="keyword">function</span> (<span class="params">i, val</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.nums[i] = val;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; i</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; j</span></span><br><span class="line"><span class="comment"> * @return &#123;number&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">NumArray.prototype.sumRange = <span class="function"><span class="keyword">function</span> (<span class="params">i, j</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> sum = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> k = i; k &lt;= j; k++) &#123;</span><br><span class="line">    sum += <span class="keyword">this</span>.nums[k];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> sum;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your NumArray object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * var obj = new NumArray(nums)</span></span><br><span class="line"><span class="comment"> * obj.update(i,val)</span></span><br><span class="line"><span class="comment"> * var param_2 = obj.sumRange(i,j)</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+<p>时间复杂度： <code>update</code> 是 <code>O(1)</code>，<code>sumRange</code> 是 <code>O(n)</code>。</p>
+<h2 id="解法二"><a href="#解法二" class="headerlink" title="解法二"></a>解法二</h2><p><a href="https://leetcode.wang/leetcode-303-Range-Sum-Query-Immutable.html" target="_blank" rel="noopener">303 题</a> 做过 <code>sumRange</code> 的优化，我们用一个数组保存累计的和，<code>numsAccumulate[i]</code> 存储 <code>0</code> 到 <code>i - 1</code> 累计的和。</p>
+<p>如果我们想求 <code>i</code> 累积到 <code>j</code> 的和，只需要用 <code>numsAccumulate[j + 1]</code> 减去 <code>numsAccumulate[i]</code>。</p>
+<p>结合下边的图应该很好理解，我们要求的是橙色部分，相当于 <code>B</code> 的部分减去 <code>A</code> 的部分。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/303_2.jpg" alt="img"></p>
+<p>所以我们可以提前把一些前缀和存起来，然后查询区间和的时候在可以通过差实现。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number[]&#125; nums</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> NumArray = <span class="function"><span class="keyword">function</span> (<span class="params">nums</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.nums = [...nums];</span><br><span class="line">  <span class="keyword">this</span>.numsAccumulate = [<span class="number">0</span>];</span><br><span class="line">  <span class="keyword">let</span> sum = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">    sum += nums[i];</span><br><span class="line">    <span class="keyword">this</span>.numsAccumulate.push(sum);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; i</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; val</span></span><br><span class="line"><span class="comment"> * @return &#123;void&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">NumArray.prototype.update = <span class="function"><span class="keyword">function</span> (<span class="params">i, val</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> sub = val - <span class="keyword">this</span>.nums[i];</span><br><span class="line">  <span class="keyword">this</span>.nums[i] = val;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> k = i + <span class="number">1</span>; k &lt; <span class="keyword">this</span>.numsAccumulate.length; k++) &#123;</span><br><span class="line">    <span class="keyword">this</span>.numsAccumulate[k] += sub;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; i</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; j</span></span><br><span class="line"><span class="comment"> * @return &#123;number&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">NumArray.prototype.sumRange = <span class="function"><span class="keyword">function</span> (<span class="params">i, j</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.numsAccumulate[j + <span class="number">1</span>] - <span class="keyword">this</span>.numsAccumulate[i];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your NumArray object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * var obj = new NumArray(nums)</span></span><br><span class="line"><span class="comment"> * obj.update(i,val)</span></span><br><span class="line"><span class="comment"> * var param_2 = obj.sumRange(i,j)</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+<p>时间复杂度： <code>update</code> 是 <code>O(n)</code>，<code>sumRange</code> 是 <code>O(1)</code>。</p>
+<p>虽然 <code>sumRange</code> 的时间复杂度优化了，但是 <code>update</code> 又变成了 <code>O(n)</code>。因为更新一个值的时候，这个值后边的累计和都需要更新。</p>
+<h2 id="解法三"><a href="#解法三" class="headerlink" title="解法三"></a>解法三</h2><p>解法一和解法二时间复杂度两个方法始终一个是 <code>O(1)</code>，一个是 <code>O(n)</code>。这里再分享 <a href="https://leetcode.com/problems/range-sum-query-mutable/solution/" target="_blank" rel="noopener">官方题解</a> 提供的一个解法，可以优化查询区间的时间复杂度。</p>
+<p>我们可以将原数据分成若干个组，然后提前计算这些组的和，举个例子。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">组号:    <span class="number">0</span>         <span class="number">1</span>            <span class="number">2</span>              <span class="number">3</span></span><br><span class="line">数组: [<span class="number">2</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span>] [<span class="number">9</span> <span class="number">9</span> <span class="number">3</span> <span class="number">8</span>] [<span class="number">1</span>  <span class="number">2</span>  <span class="number">3</span>   <span class="number">4</span>]  [<span class="number">4</span>    <span class="number">2</span>  <span class="number">3</span>   <span class="number">4</span>]</span><br><span class="line">下标:  <span class="number">0</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span>   <span class="number">4</span> <span class="number">5</span> <span class="number">6</span> <span class="number">7</span>   <span class="number">8</span>  <span class="number">9</span>  <span class="number">10</span>  <span class="number">11</span>   <span class="number">12</span>  <span class="number">13</span>  <span class="number">14</span>  <span class="number">15</span></span><br><span class="line">和:      <span class="number">17</span>        <span class="number">29</span>          <span class="number">10</span>              <span class="number">13</span></span><br></pre></td></tr></table></figure>
+<p>如果我们要计算 <code>sumRange(1,13)</code>，之前我们需要循环累加下标 <code>1</code> 到 <code>13</code> 的数字的和。</p>
+<p>现在我们只需要循环累加 <code>1</code> 到 <code>3</code> 的和，加上循环累加 <code>12</code> 到 <code>13</code> 的和，再累加中间组提前算好的和，也就是第 <code>1</code> 组和第 <code>2</code> 组的和 <code>29</code> 和 <code>10</code> ，就是最终的结果了。</p>
+<p>至于更新的话，我们也不需要像解法二那样更新那么多。我们只需要更新当前元素所在的组即可。</p>
+<p>下一个问题，每组的大小定多少呢？</p>
+<p>如果定的小了，那么组数就会特别多。</p>
+<p>如果定的大了，那么组内元素就会特别多。</p>
+<p>组数和组内元素个数都会影响到 <code>sumRange</code> 的时间复杂度。</p>
+<p>这里，我们在组数和组内元素个数之间取个平衡，假设数组大小是 <code>n</code>，那么组内元素个数取 $\sqrt{n}$ ，这样的话组数也是  $\sqrt{n}$ ，这样就可以保证我们查询的时间复杂度是  $O(\sqrt{n})$ 了。因为最坏的情况，无非是查询范围跨越整个数组，中间我们需要累加 $\sqrt{n} - 2$ 个组，第 <code>0</code> 组最多累加 $\sqrt{n}$  次，最后一组也最多累加 $\sqrt{n}$  次，整体上就是   $O(\sqrt{n})$ 了。</p>
+<p>结合代码理解一下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number[]&#125; nums</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> NumArray = <span class="function"><span class="keyword">function</span> (<span class="params">nums</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.nums = [...nums];</span><br><span class="line">  <span class="keyword">this</span>.groupSize = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.sqrt(<span class="keyword">this</span>.nums.length));</span><br><span class="line">  <span class="keyword">this</span>.group = [];</span><br><span class="line">  <span class="keyword">let</span> sum = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">let</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">    sum += nums[i];</span><br><span class="line">    <span class="keyword">if</span> ((i + <span class="number">1</span>) % <span class="keyword">this</span>.groupSize === <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">this</span>.group.push(sum);</span><br><span class="line">      sum = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//有可能数组大小不能整除组的大小, 最后会遗漏下几个元素</span></span><br><span class="line">  <span class="keyword">if</span> (i % <span class="keyword">this</span>.groupSize !== <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.group.push(sum);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; i</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; val</span></span><br><span class="line"><span class="comment"> * @return &#123;void&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">NumArray.prototype.update = <span class="function"><span class="keyword">function</span> (<span class="params">i, val</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> sub = val - <span class="keyword">this</span>.nums[i];</span><br><span class="line">  <span class="keyword">let</span> groudId = <span class="built_in">Math</span>.floor(i / <span class="keyword">this</span>.groupSize);</span><br><span class="line">  <span class="keyword">this</span>.group[groudId] += sub;</span><br><span class="line">  <span class="keyword">this</span>.nums[i] = val;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; i</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; j</span></span><br><span class="line"><span class="comment"> * @return &#123;number&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">NumArray.prototype.sumRange = <span class="function"><span class="keyword">function</span> (<span class="params">i, j</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> groupI = <span class="built_in">Math</span>.floor(i / <span class="keyword">this</span>.groupSize);</span><br><span class="line">  <span class="keyword">let</span> groupJ = <span class="built_in">Math</span>.floor(j / <span class="keyword">this</span>.groupSize);</span><br><span class="line">  <span class="keyword">let</span> sum = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">//在同一组内, 直接累加</span></span><br><span class="line">  <span class="keyword">if</span> (groupI === groupJ) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> k = i; k &lt;= j; k++) &#123;</span><br><span class="line">      sum += <span class="keyword">this</span>.nums[k];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">//左边组的元素累加</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> k = i; k &lt; (groupI + <span class="number">1</span>) * <span class="keyword">this</span>.groupSize; k++) &#123;</span><br><span class="line">      sum += <span class="keyword">this</span>.nums[k];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//累加中间所有的组</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> g = groupI + <span class="number">1</span>; g &lt; groupJ; g++) &#123;</span><br><span class="line">      sum += <span class="keyword">this</span>.group[g];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//右边组的元素累加</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> k = groupJ * <span class="keyword">this</span>.groupSize; k &lt;= j; k++) &#123;</span><br><span class="line">      sum += <span class="keyword">this</span>.nums[k];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> sum;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your NumArray object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * var obj = new NumArray(nums)</span></span><br><span class="line"><span class="comment"> * obj.update(i,val)</span></span><br><span class="line"><span class="comment"> * var param_2 = obj.sumRange(i,j)</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+<p>时间复杂度： <code>update</code> 是 <code>O(1)</code>，<code>sumRange</code> 是  $O(\sqrt{n})$  。</p>
+<h1 id="树状数组"><a href="#树状数组" class="headerlink" title="树状数组"></a>树状数组</h1><p>有了上边的背景，我们再回到树状数组。</p>
+<p>这个解法写法很简单，但理解的话可能稍微难一些，很多文章都直接讲该怎么用，没有介绍最初的动机，于是去看了提出这个解法的 <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.14.8917&amp;rep=rep1&amp;type=pdf" target="_blank" rel="noopener">原始论文</a>，看看能不能理解。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/tree1.jpg" alt=""></p>
+<p>这个解法叫 <code>Fenwick tree</code> 或者<code>binary indexed tree</code>，翻译过来的话叫做树状数组或者二叉索引树，但我觉得 <code>binary</code> 翻译成二进制更好，叫做二进制索引树更贴切些，二叉树容易引起误解。</p>
+<p>回想一下解法三，我们预先求出了若干个区间和，然后查询的区间可以根据之前预先求出来的区间来求出。这里的话同样的思想，先预先求一些区间和，然后把要求的区间分解成若干个之前求好的区间和即可。相比于解法三，这里的分解会更加巧妙一些。</p>
+<p>我们知道计算机中的数都是由二进制来表示的，任何一个数都可以分解成 <code>2</code> 的幂次的和，进制转换不熟的话可以参考 <a href="https://zhuanlan.zhihu.com/p/114542440" target="_blank" rel="noopener">再谈进制转换</a>。</p>
+<p>举个例子 $11 = 2^0 + 2^1 + 2^3 = 1 + 2 + 8$，$9=2^0+2^3=1+8$ 等等。</p>
+<p>接下来就是神奇的地方了，每一个数都可以拆成这样的 <code>x = a + b + c + ...</code> 的形式。</p>
+<p>我们把等式左侧的数 <code>x</code> 看做是区间 <code>[1, x]</code>，等式右边看做从 <code>x</code> 开始每个区间的<strong>长度</strong>，也就变成了下边的样子。</p>
+<p><code>[1, x] = [x, x - a + 1] + [x - a, x - a - b + 1] + [x - a - b, x - a - b - c + 1] + ...</code>。</p>
+<p>看起来有些复杂，举个具体的例子就简单多了。</p>
+<p>以  $11 = 2^0 + 2^1 + 2^3 = 1 + 2 + 8$ 为例，可以转换为下边的等式。</p>
+<p><code>[1, 11] = [11, 11] + [10, 9] + [8, 1]</code>。</p>
+<p><code>[11, 11]</code>、<code>[10, 9]</code>、<code>[8, 1]</code> 长度分别是 <code>1</code>、<code>2</code>、<code>8</code>。</p>
+<p>我们成功把一个大区间，分成了若干个小区间，这就是树状数组最核心的地方了，只要理解了上边讲的，下边就很简单了。</p>
+<p>首先，因为数组的下标是从 <code>0</code>  开始的，上边的区间范围是从 <code>1</code> 开始的，所以我们在原数组开头补一个 <code>0</code> ，这样区间就是从 <code>1</code> 开始了。</p>
+<p>因此我们可以通过分解快速的求出 <code>[1, x]</code> 任意前缀区间的和，知道了前缀区间的和，就回到了解法二，通过做差可以算出任意区间的和了。</p>
+<p>最后，我们需要解决子区间该怎么求？</p>
+<p><code>[1, 11] = [11, 11] + [10, 9] + [8, 1]</code> 我们用 <code>V</code> 表示子区间，用 <code>F</code> 表示某个区间。</p>
+<p><code>F[1,11] = V[11] + V[10] + V[8]</code></p>
+<p>其中，<code>V[11] = F[11,11], V[10] = F[10,9], V[8]=F[8...1]</code>，为什么是这样？</p>
+<p>回到二进制，<code>F[0001,1011] = V[1011] + V[1010] + V[1000]</code></p>
+<p><code>1010 = 1011 - 0001</code>，<code>0001</code> 就是十进制的 <code>1</code>，所以 <code>V[1011]</code> 存 <code>1</code> 个数，所以 <code>V[11] = F[11,11]</code>。</p>
+<p><code>1000 = 1010 - 0010</code>，<code>0010</code> 就是十进制的 <code>2</code>，所以 <code>V[1010]</code> 存 <code>2</code> 个数，所以 <code>V[10] = F[10,9]</code>。</p>
+<p><code>0000 = 1000 - 1000</code>，<code>1000</code> 就是十进制的 <code>8</code>，所以 <code>V[1000]</code> 存 <code>8</code> 个数，所以 <code>V[8] = F[8...1]</code>。</p>
+<p> <code>V[1011]</code> 存 <code>1</code> 个数， <code>V[1010]</code> 存 <code>2</code> 个数，看的是二进制最右边的一个 <code>1</code> 到末尾的大小。<code>1010</code> 就是 <code>10</code>，<code>1000</code> 就是 <code>1000</code> 。</p>
+<p>怎么得到一个数最右边的 <code>1</code> 到末尾的大小，是二进制操作的一个技巧，会用到一些补码的知识，可以参考 <a href="https://zhuanlan.zhihu.com/p/67227136" target="_blank" rel="noopener">趣谈计算机补码</a>。</p>
+<p>将原数取反，然后再加 <code>1</code> 得到的新数和原数按位相与就得到了最右边的 <code>1</code> 到末尾的数。</p>
+<p>举个例子，对于 <code>101000</code> ，先取反得到 <code>010111</code>，再加 <code>1</code> 变成 <code>011000</code>，再和原数相与，<code>101000 &amp; 011000</code>，刚好就得到了 <code>1000</code>。其中，取反再加一，根据补码的知识，可以通过取相反数得到。</p>
+<p>所以对于 <code>i</code> 的话，<code>i &amp; -i</code> 就得到了最右边的 <code>1</code> 到末尾的数，也就是 <code>V[i]</code> 这个区间存多少个数。</p>
+<p>如果 <code>len = i &amp; -i</code> ，那么 <code>V[i] = F[i,i-1,i-2, ... i-len+1]</code>。</p>
+<p>参考下边的代码，<code>BIT</code> 就是我们上边要求的 <code>V</code> 数组。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number[]&#125; nums</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> NumArray = <span class="function"><span class="keyword">function</span> (<span class="params">nums</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.nums = [<span class="number">0</span>, ...nums]; <span class="comment">//补一个 0</span></span><br><span class="line">    <span class="keyword">this</span>.BIT = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="keyword">this</span>.nums.length);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; <span class="keyword">this</span>.BIT.length; i++) &#123;</span><br><span class="line">        <span class="keyword">let</span> index = i - ( i &amp; -i ) + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">this</span>.BIT[i] = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">//累加 index 到 i 的和</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.BIT[i] += <span class="keyword">this</span>.nums[index];</span><br><span class="line">            index += <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (index &gt; i) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>有了 <code>BIT</code> 这个数组，一切就都好说了。如果我们想求 <code>F[1, 11]</code> 也就是前 <code>11</code> 个数的和。</p>
+<p><code>F[1,11] = BIT[11] + BIT[10] + BIT[8]</code>，看下二进制 <code>BIT[0001,1011] = BIT[1011] + BIT[1010] + BIT[1000]</code> 。</p>
+<p><code>1011 -&gt; 1010 -&gt; 1000</code>，对于  <code>BIT</code> 每次的下标就是依次把当前数最右边的 <code>1</code> 变成 <code>0</code> 。</p>
+<p>这里有两种做法，一种是我们求出当前数最右边的 <code>1</code> 到末尾的数，然后用原数减一下。</p>
+<p>举个例子， <code>1010</code> 最右边的 <code>1</code> 到末尾的数是 <code>10</code> ，然后用 <code>1010 - 10</code> 就得到 <code>1000</code> 了。</p>
+<p>另外一种做法，就是 <code>n &amp; (n - 1)</code>，比如 <code>1010 &amp; (1010 - 1)</code>，刚好就是 <code>1000</code> 了。</p>
+<p>知道了这个，我们可以实现一个函数，用来求区间 <code>[1, n]</code> 的和。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">NumArray.prototype.range = <span class="function"><span class="keyword">function</span> (<span class="params">index</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> sum = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">while</span> (index &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    sum += <span class="keyword">this</span>.BIT[index];</span><br><span class="line">    index -= index &amp; -index;</span><br><span class="line">    <span class="comment">//index = index &amp; (index - 1); //这样也可以</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> sum;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>有了 <code>range</code> 函数，题目中的 <code>sumRange</code> 也就很好实现了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NumArray.prototype.sumRange = <span class="function"><span class="keyword">function</span> (<span class="params">i, j</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//range 求的区间范围下标是从 1 开始的,所以这里的 j 需要加 1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.range(j + <span class="number">1</span>) - <span class="keyword">this</span>.range(i);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>接下来是更新函数怎么写。</p>
+<p>更新函数的话，最关键的就是找出，当我们更新数组第 <code>i</code> 个值，会影响到我们的哪些子区间，也就是代码中的 <code>BIT</code> 数组需要更新哪些。</p>
+<p>我们来回忆下之前做了什么事情。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/306_2.jpg" alt=""></p>
+<p>这是论文中的一张图，含义就是我们之前分析的，<code>BIT[8]</code> 存的是 <code>F[1...8]</code> ，对应图中的就是从第 <code>8</code> 个位置到第 <code>1</code> 个位置的矩形。<code>BIT[6]</code> 存的是 <code>F[6,5]</code>， 对应图中的就是从第 <code>6</code> 个位置一直到第 <code>5</code> 个位置的矩形。</p>
+<p>然后我们水平从某个数画一条线，比如从 <code>3</code> 那里画一条线。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/306_3.jpg" alt=""></p>
+<p>穿过了 <code>3</code> 对应的矩形，<code>4</code> 对应的矩形，<code>8</code> 对应的矩形。因此如果改变第 <code>3</code> 个数，<code>BIT[3]</code>，<code>BIT[4]</code> 以及 <code>BIT[8]</code> 就需要更新。通过这种方式我们把每个数会影响到哪个区间画出来，找一下规律。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/306_4.jpg" alt=""></p>
+<p>当改变了第 <code>5</code> 个元素的时候，会依次影响到 <code>BIT[5]</code>，<code>BIT[6]</code>，<code>BIT[8]</code>，<code>BIT[16]</code>。</p>
+<p><code>00101 -&gt; 00110 -&gt; 01000 -&gt; 10000</code>。</p>
+<p><code>00101 + 1 = 00110</code>。</p>
+<p><code>00110 + 10 = 01000</code></p>
+<p><code>01000 + 1000 = 10000</code></p>
+<p>可以看到每次都是加上当前数最右边的 <code>1</code> 到末尾的数，即 <code>next = current + (current &amp; -current)</code>。</p>
+<p>所以更新的代码也就出来了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; i</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; val</span></span><br><span class="line"><span class="comment"> * @return &#123;void&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">NumArray.prototype.update = <span class="function"><span class="keyword">function</span> (<span class="params">i, val</span>) </span>&#123;</span><br><span class="line">  i += <span class="number">1</span>;<span class="comment">//对应的下标要进行加 1</span></span><br><span class="line">  <span class="keyword">const</span> sub = val - <span class="keyword">this</span>.nums[i];</span><br><span class="line">  <span class="keyword">this</span>.nums[i] = val;</span><br><span class="line">  <span class="keyword">while</span> (i &lt; <span class="keyword">this</span>.nums.length) &#123;</span><br><span class="line">    <span class="keyword">this</span>.BIT[i] += sub;</span><br><span class="line">    i += i &amp; -i;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>综上，这道题就解决了，我们把代码合在一起。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number[]&#125; nums</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> NumArray = <span class="function"><span class="keyword">function</span> (<span class="params">nums</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.nums = [<span class="number">0</span>, ...nums];</span><br><span class="line">  <span class="keyword">this</span>.BIT = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="keyword">this</span>.nums.length);</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i &lt; <span class="keyword">this</span>.BIT.length; i++) &#123;</span><br><span class="line">    <span class="keyword">let</span> index = i - ( i &amp; -i ) + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">this</span>.BIT[i] = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">      <span class="keyword">this</span>.BIT[i] += <span class="keyword">this</span>.nums[index];</span><br><span class="line">      index += <span class="number">1</span>;</span><br><span class="line">      <span class="keyword">if</span> (index &gt; i) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; i</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; val</span></span><br><span class="line"><span class="comment"> * @return &#123;void&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">NumArray.prototype.update = <span class="function"><span class="keyword">function</span> (<span class="params">i, val</span>) </span>&#123;</span><br><span class="line">  i += <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">const</span> sub = val - <span class="keyword">this</span>.nums[i];</span><br><span class="line">  <span class="keyword">this</span>.nums[i] = val;</span><br><span class="line">  <span class="keyword">while</span> (i &lt; <span class="keyword">this</span>.nums.length) &#123;</span><br><span class="line">    <span class="keyword">this</span>.BIT[i] += sub;</span><br><span class="line">    i += i &amp; -i;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; i</span></span><br><span class="line"><span class="comment"> * @param &#123;number&#125; j</span></span><br><span class="line"><span class="comment"> * @return &#123;number&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">NumArray.prototype.sumRange = <span class="function"><span class="keyword">function</span> (<span class="params">i, j</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.range(j + <span class="number">1</span>) - <span class="keyword">this</span>.range(i);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">NumArray.prototype.range = <span class="function"><span class="keyword">function</span> (<span class="params">index</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> sum = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">while</span> (index &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    sum += <span class="keyword">this</span>.BIT[index];</span><br><span class="line">    <span class="comment">// index -= index &amp; -index;</span></span><br><span class="line">    index = index &amp; (index - <span class="number">1</span>); <span class="comment">//这样也可以</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> sum;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your NumArray object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * var obj = new NumArray(nums)</span></span><br><span class="line"><span class="comment"> * obj.update(i,val)</span></span><br><span class="line"><span class="comment"> * var param_2 = obj.sumRange(i,j)</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+<p>时间复杂度的话，初始化、更新、查询其实都和二进制的位数有关，以查询为例。每次将二进制的最后一位变成 <code>0</code>，最坏的情况就是初始值是全 <code>1</code>，即 <code>1111</code> 这种，执行次数就是 <code>4</code> 次，也就是二进制的位数。</p>
+<p>如果是 <code>n</code> ，那么位数大约就是 <code>log(n)</code>，可以结合 <a href="https://zhuanlan.zhihu.com/p/114542440" target="_blank" rel="noopener">再谈进制转换</a> 理解。把一个数展开为 <code>2</code> 的幂次和，位数其实就是最高位的幂次加 <code>1</code>。比如 $11 = 2^0 + 2^1 + 2^3$ ，最高幂次是 <code>3</code> ，所以 <code>11</code> 的二进制<code>(1011)</code> 位数就是 <code>4</code>。如果要求的数是 <code>n</code>，最高的次幂是 <code>x</code> ，$2^x + … = n$，近似一下 $2^x=n$，<code>x = log(n)</code>，位数就是 <code>log(n) + 1</code>。</p>
+<p>所以 <code>update</code> 和 <code>sumRange</code> 的时间复杂度就是 <code>O(log(n))</code>。</p>
+<p>对于初始化函数，因为要执行 <code>n</code> 次，所以就是 <code>O(nlog(n))</code>。当然我们也可以利用解法二，把前缀和都求出来，然后更新数组 <code>BIT</code> 的每个值，这样就是 <code>O(n)</code> 了。但不是很有必要，因为如果查询和更新的次数很多，远大于 <code>n</code> 次，那么初始化这里的时间复杂度也就无关紧要了。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>讲了很多，其实树状数组最根本的就是开头所提到的二进制幂次的分解，$11 = 2^0 + 2^1 + 2^3 = 1 + 2 + 8$，然后把右边的分解出来的数看做子区间的长度。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/leetcode/" rel="tag"># leetcode</a>
+          
+            <a href="/tags/二叉索引树/" rel="tag"># 二叉索引树</a>
+          
+            <a href="/tags/树状数组/" rel="tag"># 树状数组</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/22/累计用户50万的小程序可以赚多少钱/" rel="next" title="累计用户50万的小程序可以赚多少钱?">
+                <i class="fa fa-chevron-left"></i> 累计用户50万的小程序可以赚多少钱?
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/11/18/WebAssembly入门-未来可能发生的巨变/" rel="prev" title="WebAssembly入门-未来可能发生的巨变">
+                WebAssembly入门-未来可能发生的巨变 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常规解法"><span class="nav-number">2.</span> <span class="nav-text">常规解法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#解法一"><span class="nav-number">2.1.</span> <span class="nav-text">解法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解法二"><span class="nav-number">2.2.</span> <span class="nav-text">解法二</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解法三"><span class="nav-number">2.3.</span> <span class="nav-text">解法三</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#树状数组"><span class="nav-number">3.</span> <span class="nav-text">树状数组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">4.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

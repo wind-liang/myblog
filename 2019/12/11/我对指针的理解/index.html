@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="如果最开始接触的是 C/C++ 语言，一定会对指针这个概念感到困惑，一不小心就会被它绕进去，不知所云。最近看 linux 内核的一些代码，自己又开始接触了指针的一些东西，索性也就总结一下，写一下自己目前对于它的理解。 关于地址在程序中，我们会声明一些变量，然后将数据存到变量中。例如 int a = 3。而在计算机内部，这个值会存到内存（RAM）中。存的话就会涉及存到哪里，因此内存会进行编址。 就像">
+<meta name="keywords" content="编程,语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我对指针的理解">
+<meta property="og:url" content="https://windliang.wang/2019/12/11/我对指针的理解/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="如果最开始接触的是 C/C++ 语言，一定会对指针这个概念感到困惑，一不小心就会被它绕进去，不知所云。最近看 linux 内核的一些代码，自己又开始接触了指针的一些东西，索性也就总结一下，写一下自己目前对于它的理解。 关于地址在程序中，我们会声明一些变量，然后将数据存到变量中。例如 int a = 3。而在计算机内部，这个值会存到内存（RAM）中。存的话就会涉及存到哪里，因此内存会进行编址。 就像">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/point1.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/point2.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/point3.jpg">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.969Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="我对指针的理解">
+<meta name="twitter:description" content="如果最开始接触的是 C/C++ 语言，一定会对指针这个概念感到困惑，一不小心就会被它绕进去，不知所云。最近看 linux 内核的一些代码，自己又开始接触了指针的一些东西，索性也就总结一下，写一下自己目前对于它的理解。 关于地址在程序中，我们会声明一些变量，然后将数据存到变量中。例如 int a = 3。而在计算机内部，这个值会存到内存（RAM）中。存的话就会涉及存到哪里，因此内存会进行编址。 就像">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/point1.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2019/12/11/我对指针的理解/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>我对指针的理解 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2019/12/11/我对指针的理解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">我对指针的理解
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-11 14:10:18" itemprop="dateCreated datePublished" datetime="2019-12-11T14:10:18+08:00">2019-12-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机/" itemprop="url" rel="index"><span itemprop="name">计算机</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/12/11/我对指针的理解/" class="leancloud_visitors" data-flag-title="我对指针的理解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如果最开始接触的是 C/C++ 语言，一定会对指针这个概念感到困惑，一不小心就会被它绕进去，不知所云。最近看 <code>linux</code> 内核的一些代码，自己又开始接触了指针的一些东西，索性也就总结一下，写一下自己目前对于它的理解。</p>
+<h1 id="关于地址"><a href="#关于地址" class="headerlink" title="关于地址"></a>关于地址</h1><p>在程序中，我们会声明一些变量，然后将数据存到变量中。例如 <code>int a = 3</code>。而在计算机内部，这个值会存到内存（RAM）中。存的话就会涉及存到哪里，因此内存会进行编址。</p>
+<p>就像一栋楼的每户人家，会有门牌号，101，102，103，201，202…</p>
+<p>内存也是一样的道理，会对内存空间进行分配，而最小的分配单元是字节。换句话说，一个地址对于一个字节，也就是 <code>8</code> 比特。</p>
+<p>还有一个问题，用几位数进行编址，早几年都是采用 <code>32</code> 个比特就行编址，现在大部分都是 <code>64</code> 个比特了。</p>
+<p>如果用 <code>32</code> 个比特进行编址，那么我们的地址数量就是 <code>2</code> 的 <code>32</code> 次方，$1K = 2^{10}$，$1M = 2^{20}$，$1G = 2^{30}$，所以 $2^{32} = 2^2 * 2^{30} = 4G$，也就是我们有 <code>4G</code> 个地址，注意这里 <code>4G</code> 就是一个数字，它是二进制下的简写形式，本质上和十进制下的 <code>1, 1231, 989932</code> 这些数字一样。</p>
+<p>又因为一个地址对应一个字节，所以我们总共有 <code>4G</code> 个字节，即 <code>4GB</code>。这也是我们常说的，<code>32</code> 位操作系统下最多支持 <code>4G</code> 内存条的原因了。内存再增加的话，没有多余的地址去表示，也就没用了。</p>
+<p>最后，关于地址和内存我们可以抽象成下边的图。因为 <code>32</code> 位太长了，所以书写上我们用 <code>16</code> 进制书写，每 <code>4</code> 位二进制对应一位 <code>16</code> 进制。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/point1.jpg" alt=""></p>
+<p>而对于 <code>int a = 3</code>，操作系统会帮我们在内存中找一个地址，然后把 <code>3</code> 放入内存中，变成下边的样子。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/point2.jpg" alt=""></p>
+<p>操作系统把 <code>3</code> 放到了地址 <code>0x00000001</code> 的位置，此外需要注意的是 <code>int</code> 是四个字节，所以需要占据四个地址，而对于 <code>3</code> 写成二进制就是 <code>0000000000...11</code>，<code>30</code> 个 <code>0</code>。</p>
+<p>接下来的问题，因为是四个字节，那么对于 <code>00000000 00000000 00000000 00000011</code>，我们先存储高位的 <code>00000000</code> 还是低位的 <code>00000011</code> 呢？这和处理器架构有关，比如常见的Intel x86系列是小端序，也就是先存低位的 <code>0000011</code> ，如上图所示。相应的另外一种就是大端序，先存高位的 <code>00000000</code>。</p>
+<p>那么我们如果想知道 <code>a</code> 存放数据的地址该怎么办呢？C/C++ 为我们提供了 <code>&amp;</code> 这个操作符，可以得到变量的首地址。</p>
+<p>因为 <code>&amp;a</code> 得到的就是一个数字，即 <code>0x00000001</code>。那么，如果我们想把它存到一个变量中，我们需要声明一个什么类型呢？</p>
+<h1 id="关于指针"><a href="#关于指针" class="headerlink" title="关于指针"></a>关于指针</h1><p>接着上边的问题，有没有一个专门存地址的类型呀，比如 <code>pointer</code> ，然后 <code>pointer p = &amp;a</code>。或者更直接点，地址不就是一个数字吗，我们也用 <code>int</code> 去存，比如 <code>int p = &amp;a</code> 。这样做看起来没什么问题，我们确实可以把地址存到一个变量中。但有一个问题，怎么逆回去呢？</p>
+<p>现在，<code>p</code> 保存了数字 <code>3</code> 的首地址，怎么得到 <code>p</code> 地址对应的数据呢？直接把 <code>p</code> 地址对应的字节拿出来吗？显然是不够的，因为 <code>int</code> 是四个字节，我们应该把连续的四个字节拿出来组成一个数。</p>
+<p>而不同类型 <code>double</code>、<code>int</code> 、<code>char</code> 所需要的字节数是不一样的，所以只有首地址是不够的，我们还需要知道这个地址对应的类型占几个字节。</p>
+<p>所以我们需要 <code>double</code> 指针类型去存 <code>double</code> 类型的地址，也需要 <code>int</code> 指针类型去存 <code>int</code> 类型的地址，还需要 <code>char</code> 指针类型去存 <code>char</code> 类型的地址。</p>
+<p>为了方便，我们就规定在一种类型后边加 <code>*</code> 号就来表示该类型的指针，也就是去存该类型的地址。</p>
+<p>所以 <code>int a = 3</code>，我们就可以 <code>int* p = &amp;a</code>。</p>
+<p>现在 <code>p</code> 就存了 <code>a</code> 的地址，同时也知道了当前存的是 <code>int</code> 类型的地址，也就是 <code>4</code> 个字节，我们就可以把 <code>p</code> 对应的地址中的数据正确的拿出来了。</p>
+<p>同样的，C/C++ 中规定了 <code>*</code> 操作符来从对应指针类型存放的地址中拿出相应数据。</p>
+<p><code>int b = *p</code>，此时 <code>b</code> 得到的就是 <code>3</code> 了。</p>
+<p>所以说了这么多，指针其实就是一种存<strong>地址</strong>的类型，而又因为不同类型所占的字节数不同，所以只有地址还不够，就有了不同的类型指针。</p>
+<p>做个实验，看看我们能否直接通过地址来得到对应的数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">1024</span>;</span><br><span class="line"><span class="keyword">int</span>* p1 = &amp;a;</span><br><span class="line"><span class="keyword">int</span> p2 = (<span class="keyword">int</span>)&amp;a;</span><br><span class="line">cout &lt;&lt; p1 &lt;&lt; endl; <span class="comment">//16 进制的地址 004FFC84</span></span><br><span class="line">cout &lt;&lt; p2 &lt;&lt; endl; <span class="comment">//10 进制的地址 5241988</span></span><br><span class="line"></span><br><span class="line">cout &lt;&lt; *p1 &lt;&lt; endl; <span class="comment">//1024</span></span><br><span class="line">cout &lt;&lt; *(<span class="keyword">int</span>*)p2 &lt;&lt; endl; <span class="comment">//1024</span></span><br></pre></td></tr></table></figure>
+<p>对于 <code>p2</code> 我们需要把它强转成 <code>int*</code> 类型，作用就是告诉计算机当前的这个数字是个地址，并且对应存储的是 <code>int</code> 类型的数字。</p>
+<h1 id="关于数组"><a href="#关于数组" class="headerlink" title="关于数组"></a>关于数组</h1><p>对于数组，<code>int a[3] = {1,2,3}</code>，我们知道 <code>a[0]</code> 就是 <code>1</code>，<code>a[1]</code> 就是 <code>2</code> ，<code>a[2]</code> 就是 <code>3</code>。</p>
+<p><code>a</code>  是一个 <code>int[3]</code> 类型。当然如果 <code>int a[4] = {1,2,3,4}</code>，那么 <code>a</code> 就是一个 <code>int[4]</code> 类型。</p>
+<p><code>int[3]</code> 类型和 <code>int*</code> 类型有一个共同点就是，它们存的都是地址。区别在于 <code>int[3]</code> 类型还代表总共连续有 <code>3</code> 个数字。</p>
+<p>因此对于 <code>int[3]</code> 类型，我们得到当前有多少个数字。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;</span><br><span class="line"><span class="keyword">int</span> len = sizeof(a)/sizeof(a[<span class="number">0</span>]); <span class="comment">//3</span></span><br></pre></td></tr></table></figure>
+<p>如果我们人为的把 <code>a</code> 赋值过来，也就是 <code>int* b = a</code>，怎么取到 <code>a[0]</code> 的值呢？只需要 <code>*b</code> 即可。怎么知道 <code>a[1]</code> 的值呢？只需要 <code>*(b + 1)</code>，注意这里对 <code>b</code> 进行加 <code>1</code>，事实上并不只是加了 <code>1</code>。因为 <code>b</code> 是一个 <code>int</code> 类型的指针，所以加一的含义是移动到下一个元素的首位置，所以会加 <code>4</code>。我们来验证下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a []  = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line"><span class="keyword">int</span>* b = a;</span><br><span class="line">cout &lt;&lt; b &lt;&lt; endl; <span class="comment">//00DDF8AC</span></span><br><span class="line">cout &lt;&lt; b + <span class="number">1</span> &lt;&lt; endl; <span class="comment">//00DDF8B0</span></span><br><span class="line"></span><br><span class="line">cout &lt;&lt; *b &lt;&lt; endl; <span class="comment">//1</span></span><br><span class="line">cout &lt;&lt; *(b + <span class="number">1</span>) &lt;&lt; endl; <span class="comment">//2</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cout &lt;&lt; b[<span class="number">0</span>] &lt;&lt; endl; <span class="comment">//1</span></span><br><span class="line">cout &lt;&lt; b[<span class="number">1</span>] &lt;&lt; endl; <span class="comment">//2</span></span><br></pre></td></tr></table></figure>
+<p><code>00DDF8AC</code> 和 <code>00DDF8B0</code> 确实是差了 <code>4</code>。此外 <code>*（b+1)</code> 和 <code>b[1]</code> 是完全等价的，可以互换。</p>
+<p><code>a</code> 是数组元素的首地址，此外我们知道 <code>a[0]</code> 是第一个元素，我们之前用过的取地址符 <code>&amp;</code> 在这里也可以用到。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a []  = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line"><span class="keyword">int</span>* b = &amp;a[<span class="number">0</span>]; <span class="comment">// &lt; == &gt; int* b = a;</span></span><br><span class="line">cout &lt;&lt; b &lt;&lt; endl; <span class="comment">//00DDF8AC</span></span><br><span class="line">cout &lt;&lt; b + <span class="number">1</span> &lt;&lt; endl; <span class="comment">//00DDF8B0</span></span><br><span class="line"></span><br><span class="line">cout &lt;&lt; *b &lt;&lt; endl; <span class="comment">//1</span></span><br><span class="line">cout &lt;&lt; *(b + <span class="number">1</span>) &lt;&lt; endl; <span class="comment">//2</span></span><br></pre></td></tr></table></figure>
+<p>当然，因为 <code>a</code> 是一个地址，我们也可以直接对 <code>a</code> 进行取元素。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cout &lt;&lt; *a &lt;&lt; endl; <span class="comment">//1</span></span><br><span class="line">cout &lt;&lt; *(a + <span class="number">1</span>) &lt;&lt; endl; <span class="comment">//2</span></span><br></pre></td></tr></table></figure>
+<p>既然 <code>int[3]</code> 和 <code>int*</code> 都存的地址，我们把 <code>a</code> 赋值给了 <code>b</code>，那么我们能把 <code>b</code> 赋值给 <code>a</code> 吗？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a []  = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> c = <span class="number">9</span>;</span><br><span class="line"><span class="keyword">int</span>* b = &amp;c;</span><br><span class="line"></span><br><span class="line">a = b; <span class="comment">//可以吗？</span></span><br></pre></td></tr></table></figure>
+<p>答案是否定的，虽然两者都存的是一个地址，但是 <code>int[3]</code> 还有一个信息，那就是代表有连续的 <code>3</code> 个元素，而指针 <code>int*</code> 仅仅是一个地址信息，所以不能直接把 <code>int* b</code>  赋值给 <code>int[3] a</code>。此外还有一个原因，数组名 <code>a</code> 是一个 <code>const</code> 变量，不可更改。</p>
+<h1 id="多级指针"><a href="#多级指针" class="headerlink" title="多级指针"></a>多级指针</h1><p>我们知道指针存的是一个普通类型的地址，它就是一个数字，也需要放到内存中，就会有对应的地址，那么这个地址如果想放到一个变量中，放到什么类型呢？也就是指针的指针。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span>* b = &amp;a;</span><br><span class="line"><span class="keyword">int</span>** c = &amp;b;</span><br><span class="line"><span class="keyword">int</span>*** d = &amp;c;</span><br><span class="line">cout &lt;&lt; d &lt;&lt; endl; <span class="comment">//004FFDA8</span></span><br><span class="line">cout &lt;&lt; *d &lt;&lt; endl; <span class="comment">//004FFDB4</span></span><br><span class="line">cout &lt;&lt; **d &lt;&lt; endl; <span class="comment">//004FFDC0</span></span><br><span class="line">cout &lt;&lt; ***d &lt;&lt; endl; <span class="comment">//3</span></span><br></pre></td></tr></table></figure>
+<p><code>**d</code> 保存了 <code>3</code> 所在的地址，而 <code>**d</code> 也需要存在内存中，它存到了 <code>004FFDB4</code> 的地方，由 <code>*d</code> 进行保存。同样的 <code>*d</code> 也需要存到内存中，它存到了 <code>004FFDA8</code> 的地方，由 <code>d</code> 来保存，如下图所示。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/point3.jpg" alt=""></p>
+<p>事实上，<code>*</code> 的数量只是表明我们需要 <code>*</code> 几次才能拿到数据，比如 <code>int ***d = &amp;c</code>，所以我们对 <code>d</code> 进行三次的 <code>*</code> 操作就能拿到最初的元素而不是地址。</p>
+<p>但不管是 <code>int *</code> 还是 <code>int **</code> 还是 <code>int ****</code> 类型，它们都存的只是地址，没有其他的信息，所以我们可以进行强制转换。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> ***********p = (<span class="keyword">int</span> ***********)&amp;a;</span><br><span class="line">cout &lt;&lt; *p &lt;&lt; endl;　<span class="comment">//00000003</span></span><br></pre></td></tr></table></figure>
+<p>我们看到它输出的是 <code>00000003</code> ，因为程序以为进行 <code>*</code> 一次操作后得到的是一个地址，但事实上，我们已经得到了原本的数值。</p>
+<p>当然上边的这些写法，仅用于对指针的理解，实际上不要这样做。</p>
+<h1 id="多维数组"><a href="#多维数组" class="headerlink" title="多维数组"></a>多维数组</h1><p>二维数组我们也经常用到，比如下边的例子。就相当于一个二维矩阵。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>]  = &#123;&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;,&#123;<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;&#125;</span><br><span class="line">   [<span class="number">0</span>] [<span class="number">1</span>] [<span class="number">2</span>]</span><br><span class="line">[<span class="number">0</span>] <span class="number">1</span>   <span class="number">2</span>   <span class="number">3</span></span><br><span class="line">[<span class="number">1</span>] <span class="number">4</span>   <span class="number">5</span>   <span class="number">6</span></span><br></pre></td></tr></table></figure>
+<p>因此 <code>a[1][1]</code> 就会取到 <code>5</code>。</p>
+<p>那么 <code>a</code> 是什么类型呢？ <code>int[2][3]</code> 类型，含义就是有连续的两个 <code>int[3]</code> 类型，和一维数组一样，存的也是一个地址。</p>
+<p>那么二级指针和二维数组什么关系呢？是不是直接把二维数组的变量赋值给二级指针就可以了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123; &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span> &#125;,&#123; <span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span> &#125; &#125;;</span><br><span class="line"><span class="keyword">int</span> **b = (<span class="keyword">int</span> **)a;</span><br><span class="line">cout &lt;&lt; b[<span class="number">1</span>][<span class="number">1</span>] &lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+<p>程序运行会直接崩溃，想一下为什么。</p>
+<p>如果是 <code>cout &lt;&lt; a[1][1] &lt;&lt; endl</code> 肯定是没有问题的，我们拆分一下 <code>a[1][1]</code> 做了什么。</p>
+<p>前半部分的 <code>a[1]</code> 得到的是一个 <code>int[3]</code> 类型，也就是之前分析的一维数组，换言之得到了一个地址。因此可以用一维指针存储，然后再进行 <code>(a[1])[1]</code> 就会得到 <code>5</code> 了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123; &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span> &#125;,&#123; <span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span> &#125; &#125;;</span><br><span class="line"><span class="keyword">int</span> *b = a[<span class="number">1</span>]; <span class="comment">// &lt;==&gt; int *b = *(a + 1)</span></span><br><span class="line">cout&lt;&lt; b[<span class="number">1</span>] &lt;&lt; endl; <span class="comment">//5</span></span><br><span class="line">cout&lt;&lt; *(b + <span class="number">1</span>） &lt;&lt; endl; <span class="comment">//5</span></span><br></pre></td></tr></table></figure>
+<p>回到最开始的问题，我们把 <code>a</code> 强制赋值给了 <code>b</code>，<code>int **b = (int **)a;</code>，然后 <code>b[1][1]</code> 会得到什么呢？</p>
+<p><code>b[1][1]</code> 等价于 <code>*(*(b + 1) + 1)</code>，<code>b</code> 是 <code>int</code> 类型的指针，所以 <code>b + 1</code> 相当于在 <code>b</code> 存储的地址上加 <code>4</code>。那么 <code>*(b + 1)</code> 得到的其实是一个数字，也就是二维数组中的第二个元素 <code>2</code>，那么再进行加 <code>1</code>，最后执行的是 <code>*(2 + 1)</code>，把 <code>0x00000003</code> 当成地址去取元素，而这个地址是受保护的，不能随便去取，所以程序也就崩溃了。</p>
+<p>所以怎么让 <code>b</code> 数组输出 <code>a[1][1]</code> 呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123; &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span> &#125;,&#123; <span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span> &#125; &#125;;</span><br><span class="line"><span class="keyword">int</span>* b = (<span class="keyword">int</span> *)a;</span><br><span class="line">cout &lt;&lt; b[<span class="number">4</span>] &lt;&lt; endl; <span class="comment">//5</span></span><br></pre></td></tr></table></figure>
+<p>为什么可以这样，因为二维数组在内存中也是线性存储的，我们把所有的地址打印一下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123; &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span> &#125;,&#123; <span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span> &#125; &#125;;</span><br><span class="line">cout &lt;&lt; &amp;a[<span class="number">0</span>][<span class="number">0</span>] &lt;&lt; <span class="string">" -&gt; "</span>&lt;&lt; a[<span class="number">0</span>][<span class="number">0</span>] &lt;&lt; endl;</span><br><span class="line">cout &lt;&lt; &amp;a[<span class="number">0</span>][<span class="number">1</span>] &lt;&lt; <span class="string">" -&gt; "</span> &lt;&lt; a[<span class="number">0</span>][<span class="number">1</span>] &lt;&lt; endl;</span><br><span class="line">cout &lt;&lt; &amp;a[<span class="number">0</span>][<span class="number">2</span>] &lt;&lt; <span class="string">" -&gt; "</span> &lt;&lt; a[<span class="number">0</span>][<span class="number">2</span>] &lt;&lt; endl;</span><br><span class="line">cout &lt;&lt; &amp;a[<span class="number">1</span>][<span class="number">0</span>] &lt;&lt; <span class="string">" -&gt; "</span> &lt;&lt; a[<span class="number">1</span>][<span class="number">0</span>] &lt;&lt; endl;</span><br><span class="line">cout &lt;&lt; &amp;a[<span class="number">1</span>][<span class="number">1</span>] &lt;&lt; <span class="string">" -&gt; "</span> &lt;&lt; a[<span class="number">1</span>][<span class="number">1</span>] &lt;&lt; endl;</span><br><span class="line">cout &lt;&lt; &amp;a[<span class="number">1</span>][<span class="number">2</span>] &lt;&lt; <span class="string">" -&gt; "</span> &lt;&lt; a[<span class="number">1</span>][<span class="number">2</span>] &lt;&lt; endl;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">0099FBF4 -&gt; 1</span></span><br><span class="line"><span class="comment">0099FBF8 -&gt; 2</span></span><br><span class="line"><span class="comment">0099FBFC -&gt; 3</span></span><br><span class="line"><span class="comment">0099FC00 -&gt; 4</span></span><br><span class="line"><span class="comment">0099FC04 -&gt; 5</span></span><br><span class="line"><span class="comment">0099FC08 -&gt; 6</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<p>把它们的地址依次打印输出，会发现它们是连续的，并且两两相差 <code>4</code>。</p>
+<p>而 <code>b[4]</code> 实际上就相当于在 <code>b</code> 的地址上加 <code>4 * 4 = 16</code>，也就是 <code>0099FBF4 + 10 = 0099FBF4</code>，这个地址就对应的是  <code>a[1][1]</code> ，也就是 <code>5</code> 了。</p>
+<p>此外，首地址 <code>0099FBF4</code> 其实也有三种得到的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123; &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span> &#125;,&#123; <span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span> &#125; &#125;;</span><br><span class="line"><span class="keyword">int</span> *b = (<span class="keyword">int</span> * )a;</span><br><span class="line">cout &lt;&lt; b[<span class="number">4</span>] &lt;&lt; endl; <span class="comment">//5</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">int</span> *b = a[<span class="number">0</span>];</span><br><span class="line">cout &lt;&lt; b[<span class="number">4</span>] &lt;&lt; endl; <span class="comment">//5</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">int</span> *b = &amp;a[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line">cout &lt;&lt; b[<span class="number">4</span>] &lt;&lt; endl; <span class="comment">//5</span></span><br></pre></td></tr></table></figure>
+<p>其中，<code>a</code> 和 <code>a[0]</code> 存的其实都是地址，而且是相等的。但类型不同，<code>a</code> 的类型是 <code>int[2][3]</code> ，而 <code>a[0]</code> 的类型是<code>int[3]</code>。</p>
+<p>一维数组可以用指针来保存其地址，二维数组刚才探讨了不能用二级指针表示，那么怎么办呢？</p>
+<p>一维数组中，对于 <code>int a [2]</code> 代表连续的 <code>2</code> 个 <code>int</code>，所以我们可以定义一个 <code>int *</code> 指针来保存 <code>a</code> 。</p>
+<p>二维数组中，对于 <code>int a [2][3]</code> 代表连续的 <code>2</code> 个 <code>int[3]</code>，同理我们可以定义一个 <code>int * [3]</code> 指针来保存 <code>a</code> 。</p>
+<p>写法的话就是 <code>int (*b) [3] = a</code>。</p>
+<p>这样的话，除了 <code>b</code> 不知道有几个 <code>int[3]</code> 以外，<code>b</code> 和 <code>a</code> 就可以混用了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123; &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span> &#125;,&#123; <span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span> &#125; &#125;;</span><br><span class="line"><span class="keyword">int</span> (*b)[<span class="number">3</span>] = a;</span><br><span class="line">cout &lt;&lt; a[<span class="number">1</span>][<span class="number">1</span>] &lt;&lt; endl; <span class="comment">//5</span></span><br><span class="line">cout &lt;&lt; b[<span class="number">1</span>][<span class="number">1</span>] &lt;&lt; endl; <span class="comment">//5</span></span><br><span class="line">cout &lt;&lt; *(*(a + <span class="number">1</span>) + <span class="number">1</span>) &lt;&lt; endl; <span class="comment">//5</span></span><br><span class="line">cout &lt;&lt; *(*(b + <span class="number">1</span>) + <span class="number">1</span>) &lt;&lt; endl; <span class="comment">//5</span></span><br></pre></td></tr></table></figure>
+<p>这里的话，要注意的是，<code>*(b + 1)</code> ，由于此时 <code>b</code> 是 <code>int [3]</code>  类型的指针，所以其实是加了 <code>3 * 4 = 12</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cout &lt;&lt; b &lt;&lt; endl; <span class="comment">//012FF774</span></span><br><span class="line">cout &lt;&lt; b + <span class="number">1</span> &lt;&lt; endl; <span class="comment">//012FF780</span></span><br></pre></td></tr></table></figure>
+<p>总之，最主要的就是要抓住指针存储的是<strong>地址</strong>，然后有各种类型的指针，当对其进行加一操作的时候，加的数值是该类型的大小。</p>
+<h1 id="更多"><a href="#更多" class="headerlink" title="更多"></a>更多</h1><p>C/C++ 中的指针知识就写这么多了，另外我们平常在描述一些数据结构和算法的时候也会提到指针这个词，其实和上边的关系并不大，这里的指针就是字面意思。</p>
+<p>举个例子，找出有序数字的两个数字，使得其和是 <code>sum</code> 的时候，常常用到双指针法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="number">4</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span> sum = <span class="number">13</span></span><br><span class="line"></span><br><span class="line">使用 i,j 两个指针分别指向头尾</span><br><span class="line"><span class="number">1</span> <span class="number">4</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span></span><br><span class="line">^       ^</span><br><span class="line">i       j</span><br><span class="line">上边的两个指针指向的数字的和 <span class="number">1</span> + <span class="number">8</span> 小于 sum, i 指针后移</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="number">4</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span></span><br><span class="line">  ^     ^</span><br><span class="line">  i     j</span><br><span class="line">上边的两个指针指向的数字的和 <span class="number">4</span> + <span class="number">8</span> 小于 sum, i 指针后移</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="number">4</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span></span><br><span class="line">    ^   ^</span><br><span class="line">    i   j</span><br><span class="line">上边的两个指针指向的数字的和 <span class="number">6</span> + <span class="number">8</span> 大于 sum, j 指针前移</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> <span class="number">4</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span></span><br><span class="line">    ^ ^</span><br><span class="line">    i j</span><br><span class="line">上边的两个指针指向的数字的和 <span class="number">6</span> + <span class="number">7</span> 等于 sum, 结束</span><br></pre></td></tr></table></figure>
+<p>此外，当我们谈论链表的时候，也常常说 <code>next</code>  指针，但对于一些更高层的语言，比如 <code>java</code>，其实是没有我们上边分析的指针的概念的，我们并不能知道变量的地址。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> data;</span><br><span class="line">    Node next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>比如上边的例子，我们常常说 <code>next</code> 指针，但其实和 C/C++ 中的指针还是有区别的，对于 <code>java</code> ，<code>next</code> 其实是个引用。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>其实本来是想总结 <code>linux</code> 内核源码中链表的实现的，没想到将指针概念就讲了这么多，哈哈，那就下篇文章写 <code>linux</code> 的链表吧，非常有意思，会对指针有个更深的了解。</p>
+<p>前边讲了那么多，其实我们只要把握住一点，指针类型变量存的是<strong>地址</strong>，然后有各种各样类型的指针，类型是告诉我们当通过这个地址取元素的时候，要取连续几个字节的数据。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编程/" rel="tag"># 编程</a>
+          
+            <a href="/tags/语言/" rel="tag"># 语言</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/13/大学的科研之路/" rel="next" title="大学的科研之路">
+                <i class="fa fa-chevron-left"></i> 大学的科研之路
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/14/情人节快乐/" rel="prev" title="情人节快乐">
+                情人节快乐 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于地址"><span class="nav-number">1.</span> <span class="nav-text">关于地址</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于指针"><span class="nav-number">2.</span> <span class="nav-text">关于指针</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于数组"><span class="nav-number">3.</span> <span class="nav-text">关于数组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多级指针"><span class="nav-number">4.</span> <span class="nav-text">多级指针</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#多维数组"><span class="nav-number">5.</span> <span class="nav-text">多维数组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更多"><span class="nav-number">6.</span> <span class="nav-text">更多</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">7.</span> <span class="nav-text">最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

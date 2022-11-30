@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="开始 先考虑下边的问题。  我们知道 length 就是字符串的字符数，所以输出的依次是 2，1，1，对吗？ 探索一我们知道，计算机里只能存 0 和 1，换言之，只能存数字，而我们现在在屏幕上看到的文字只是将数字对应到图形而已。 早期的 ASCII 码就是典型的例子，如下图，为了书写方便我在数字前边加了 0x 代表是 16 进制。  我们用 106 代表 ‘ j ‘，115 代表 ‘ s ‘。然后">
+<meta name="keywords" content="编码,utf-8,unicode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="追本溯源：字符串及编码">
+<meta property="og:url" content="https://windliang.wang/2019/07/15/追本溯源-字符串及编码/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="开始 先考虑下边的问题。  我们知道 length 就是字符串的字符数，所以输出的依次是 2，1，1，对吗？ 探索一我们知道，计算机里只能存 0 和 1，换言之，只能存数字，而我们现在在屏幕上看到的文字只是将数字对应到图形而已。 早期的 ASCII 码就是典型的例子，如下图，为了书写方便我在数字前边加了 0x 代表是 16 进制。  我们用 106 代表 ‘ j ‘，115 代表 ‘ s ‘。然后">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220401211405994.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/ascii.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/unicode.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/uni.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/utf32.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/utf8.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220401211405994.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/test1.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/test2.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/test3.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/test4.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/test5.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/text6.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/text7.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/emoji.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/emoji2.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini.png">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.992Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="追本溯源：字符串及编码">
+<meta name="twitter:description" content="开始 先考虑下边的问题。  我们知道 length 就是字符串的字符数，所以输出的依次是 2，1，1，对吗？ 探索一我们知道，计算机里只能存 0 和 1，换言之，只能存数字，而我们现在在屏幕上看到的文字只是将数字对应到图形而已。 早期的 ASCII 码就是典型的例子，如下图，为了书写方便我在数字前边加了 0x 代表是 16 进制。  我们用 106 代表 ‘ j ‘，115 代表 ‘ s ‘。然后">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220401211405994.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2019/07/15/追本溯源-字符串及编码/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>追本溯源：字符串及编码 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2019/07/15/追本溯源-字符串及编码/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">追本溯源：字符串及编码
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-15 21:54:03" itemprop="dateCreated datePublished" datetime="2019-07-15T21:54:03+08:00">2019-07-15</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/07/15/追本溯源-字符串及编码/" class="leancloud_visitors" data-flag-title="追本溯源：字符串及编码">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><p> 先考虑下边的问题。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220401211405994.png" alt="image-20220401211405994"></p>
+<p>我们知道 length 就是字符串的字符数，所以输出的依次是 2，1，1，对吗？</p>
+<h1 id="探索一"><a href="#探索一" class="headerlink" title="探索一"></a>探索一</h1><p>我们知道，计算机里只能存 0 和 1，换言之，只能存数字，而我们现在在屏幕上看到的文字只是将数字对应到图形而已。</p>
+<p>早期的 ASCII 码就是典型的例子，如下图，为了书写方便我在数字前边加了 0x 代表是 16 进制。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/ascii.jpg" alt=""></p>
+<p>我们用 106 代表 ‘ j ‘，115 代表 ‘ s ‘。然后如果用 ASCII 码表示 “js” 的话，其实就是 <code>0110101001110011</code> ，然后每 8 位也就是一个字节组成一个数字，根据对应关系电脑把本来的数字转换成了字符 “js” 展示到了我们面前。</p>
+<p>有一个缺点就是 ASCII 码是 8 位，那么只能表示 $2^8$ 个数字，也就是 256 个数字，这对于英文字母已经足够了。但是对于汉字的话，还远远不够。</p>
+<h1 id="探索二"><a href="#探索二" class="headerlink" title="探索二"></a>探索二</h1><p>所以我们加 1 个字节，用两个字节的数字去对应汉字，$2^{16}$ 也就是 65536，肯定足够了。</p>
+<p>当然，每个国家都会这样想，然后都制定了自己的语言相应的对应规则，这当然不方便大家在互联网上互通有无，如果本机不知道对应国家的编码对应关系，从而会造成乱码。所以后来有了 Unicode。</p>
+<p>我们用 0x000000 - 0x10FFFF 这么多的数字去对应全世界所有的语言、公式、符号。然后把这些数字分成 17 部分，把常用的放到 0x0000 - 0xFFFF，也就是 2 个字节，叫做基本平面 （BMP）。从 0x010000 - 0x10FFFF 再划分为其他平面。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/unicode.jpg" alt=""></p>
+<p>和 ASCII 码一样，我们可以把每个符号对应于一个数字，这个数字我们也把它叫做<strong>码点值</strong>。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/uni.jpg" alt=""></p>
+<p>有了对应关系，我们可以像 ASCII 码那样去存了。当然这里的话因为每个字符都对应 24 比特位的数字，所以我们就用 3 个字节去存它吧。但是考虑到 CPU 的寄存器都是 8 位，16 位，32 位。。。翻倍来的，所以即使用 24 位，最终还得转到 32 位，所以我们直接用 32 位吧。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/utf32.jpg" alt=""></p>
+<p>是的，这就是传说中的 UTF - 32 编码，简单明了，码点值是多少，内存中就存多少。</p>
+<h1 id="探索三"><a href="#探索三" class="headerlink" title="探索三"></a>探索三</h1><p>UTF - 32  缺点很明显了，字母 A 原本只需要 1 个字节去存储，而现在却用了 4 个字节去存，大部分位置都是 0。</p>
+<p>我们为什么要多存那么多零呢？能不能 <code>A</code> 只存 <code>0x41</code>，<code>亮</code>只存 <code>0x4eae</code>。如果 <code>A亮</code>这个字符串放到内存中就是 <code>0x414eae</code>。问题来了，计算机怎么知道，几个字节代表一个字符呢？是 <code>0x41</code>呢？还是 <code>0x414e</code> 呢？还是 <code>0x414eae</code>？</p>
+<p>于是，就有了 UTF - 8，将码点值进行一定的转换再去存储。</p>
+<p>把阮一峰老师的讲解搬过来。</p>
+<blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; Unicode 符号范围     |        UTF-<span class="number">8</span> 编码方式</span><br><span class="line">&gt; (十六进制)           |           （二进制）</span><br><span class="line">&gt; ----------------------+---------------------------------------------</span><br><span class="line">&gt; <span class="number">0000</span> <span class="number">0000</span> - <span class="number">0000</span> <span class="number">007F</span> | <span class="number">0</span>xxxxxxx</span><br><span class="line">&gt; <span class="number">0000</span> <span class="number">0080</span> - <span class="number">0000</span> <span class="number">07F</span>F | <span class="number">110</span>xxxxx <span class="number">10</span>xxxxxx</span><br><span class="line">&gt; <span class="number">0000</span> <span class="number">0800</span> - <span class="number">0000</span> FFFF | <span class="number">1110</span>xxxx <span class="number">10</span>xxxxxx <span class="number">10</span>xxxxxx</span><br><span class="line">&gt; <span class="number">0001</span> <span class="number">0000</span> - <span class="number">0010</span> FFFF | <span class="number">11110</span>xxx <span class="number">10</span>xxxxxx <span class="number">10</span>xxxxxx <span class="number">10</span>xxxxxx</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>根据上表，解读 UTF-8 编码非常简单。如果一个字节的第一位是<code>0</code>，则这个字节单独就是一个字符；如果第一位是<code>1</code>，则连续有多少个<code>1</code>，就表示当前字符占用多少个字节。</p>
+<p>下面，还是以汉字<code>严</code>为例，演示如何实现 UTF-8 编码。</p>
+<p><code>严</code>的 Unicode 是<code>4E25</code>（<code>100111000100101</code>），根据上表，可以发现<code>4E25</code>处在第三行的范围内（<code>0000 0800 - 0000 FFFF</code>），因此<code>严</code>的 UTF-8 编码需要三个字节，即格式是<code>1110xxxx 10xxxxxx 10xxxxxx</code>。然后，从<code>严</code>的最右边二进制位开始，依次从右往左填入上边格式中的<code>x</code>，多出的位补<code>0</code>。这样就得到了，<code>严</code>的 UTF-8 编码是<code>11100100 10111000 10100101</code>，转换成十六进制就是<code>E4 B8 A5</code>。</p>
+</blockquote>
+<p>让我们再看下「亮」，码点值是<code>0x4eae</code>，二进制就是 <code>100111010101110</code>，同样符合第三行，即格式是<code>1110xxxx 10xxxxxx 10xxxxxx</code>。从<code>亮</code>的最右边二进制位开始，依次从右往左填入上边格式中的<code>x</code>，多出的位补<code>0</code>。这样就得到了，<code>亮</code>的 UTF-8 编码是 <code>1110(0100) 10(111010) 10(101110)</code>，16 进制就是 <code>e4 ba ae</code>。</p>
+<p>所以现在的对应关系变成了下边的样子。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/utf8.jpg" alt=""></p>
+<p>和 UTF - 32 不同之处在于，我们不再用 4 个字节存储码点值，而是通过规则转换后再存储，这样的好处就是之前的<code>A</code>的话就只需 1 个字节就够了，而其他的可能是 2 个或 3 个，4 个字节，所以 UTF - 8 也叫变字长编码。</p>
+<p>由于 UTF - 8 的变字长，而对于大部分常用字符都是 1 或 2 个字节，所以对于 html、邮件的传输多用 UTF-8 进行编码后传输。</p>
+<h1 id="探索四"><a href="#探索四" class="headerlink" title="探索四"></a>探索四</h1><p>UTF - 8 有什么缺点吗？</p>
+<p>对于一个字符串<code>abc天气不错</code>，如果我们知道它的总共大小是 19 字节，但是我们很难算出它有多少个字符。因为有的字符是 1 个字节，有的是 2 个字节，有的是 3 个。所以为了知道字符数，我们还需要遍历一遍所有字节，从而确定有多少个字符。此外如果我们想取第 3 个字符，我们还是得从第 0 个字节开始遍历，因为我们不知道每个字符有多少字节。</p>
+<p>如果每个字符都用固定长度编码就好了，这不又回到 UTF - 32 了吗？不不不，我们折中一下。</p>
+<p>对于 Unicode 字符集，基本平面是我们常用的一些字符，用两个字节就可以编码。所以对于<code>亮</code>字的话，码点值是<code>0x4eae</code>，那么我们内部就用 <code>0x4eae</code> 去存。而 ASCII 码只需要一个字节，那么我们把通过高位补零扩充至两个字节去存。例如<code>A</code>的码点值是 65，16 进制对应 0x41，用 <strong>U+41</strong> 表示。那么内部的话就用 0x0041 去存。</p>
+<p>那么基本面以外的字符呢？比如<code>𫠂</code>这个字就属于基本面以外，它的 Unicode  码点值是 178178，也就是 0x2b802 ，显然用两个字节是存不下的，那怎么办呢？</p>
+<p>用四个字节存呗，像 UTF - 32 那样直接存码点值，然后高位补零吗？显然不行了，因为第一平面我们是用的两个字节，如果第一平面外的直接用四个字节去存码点值的话，可能会导致前两个字节和基本面的两个字节重复，导致我们无法区分当前字符是两个字节还是四个字节。</p>
+<p>UTF - 8 中，我们根据二进制开头的 1 的个数来表示当前字符是几个字节。这里的话，幸运的是在第一平面 U+D800..U+DFFF 的值不对应于任何字符。所以我们可以根据一些算法，把码点值转换为 4 个字节，前两个字节就用 U+D800..U+DFFF 中的值，这样如果前两个字节是 U+D800..U+DFFF 范围内的数，那就意味着该字符是 4 个字节编码的。否则就是两个字节。</p>
+<p>这就是 UTF - 16 的编码方式了（具体的算法大家可以网上找一下），相对于 UTF - 8 的优势就是固定字节数，大部分字符都是两个字节。所以如果对于一个字符串<code>abc天气不错</code>如果采用 UTF - 16 编码，我们知道了它的总大小是 14 字节，那么字符数就很好知道了，它的大小除以 2 就是它的字符数了。而取第 4 个字符，如果知道了字符串开头的地址，也只需要加 2 * 4 就可以了（下标从 0 开始）。对于字符串的切割合并也都很好操作了。</p>
+<p>所以对于一些语言 java，javascript 里的字符串也都用了 UTF - 16 编码。所以回到最开始的问题。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220401211405994.png" alt="image-20220401211405994"></p>
+<p>那么就取决于这些字符是不是在第一平面内了，如果是的话，那么结果就会就是 2 1 1。遗憾的是 “𫠂” 并不在基本平面，所以它内部是用四个字节编码，而 js 为了方便简单，它简单粗暴的认为两个字节就是一个字符，所以输出的就是 2 了。</p>
+<p>此外关于，Unicdoe 所有的字符的码点值可以在 <a href="https://unicode.org/charts/" target="_blank" rel="noopener">这个</a> 网站找到。</p>
+<h1 id="实验验证"><a href="#实验验证" class="headerlink" title="实验验证"></a>实验验证</h1><p>接下来说一下文件的存储。</p>
+<p>我们打开一个 .txt，看到很多文字、符号，而内部其实也是用 0、1 存储的。既然要存储，就需要把 Unicode 的码点值进行编码。</p>
+<p>如果是 UTF - 8 编码，那么一个码点值会生成 1 个或多个字节，然后把这些字节按顺序存就可以了。</p>
+<p>如果是 UTF - 16 编码呢？</p>
+<p>我们知道一个 Unicode 的码点值会对应一个数字，对于基本平面的字符，我们直接把这个数字存到内存中。那么问题来了，我们知道<code>亮</code>的码点值是 20142，换成 16 进制就是 <code>0x4eae</code>，内存中是按字节进行编址的。所以我们是先存<code>4e</code>呢？还是<code>ae</code>？先存<code>4e</code>吧，这样就符合我们人类阅读顺序，先读<code>4e</code>，所以先存<code>4e</code>呗。所以在内存中就是下边的样子。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">内存地址       内存值</span><br><span class="line"><span class="number">0x00000000</span>    <span class="number">01001110</span> (<span class="number">4</span>e)</span><br><span class="line"><span class="number">0x00000001</span>    <span class="number">10101110</span> (ae)</span><br></pre></td></tr></table></figure>
+<p>那么问题又来了，计算机处理的话先读取的是低地址，也就是<code>4e</code>，而<code>4e</code>对应数字<code>0x4eae</code>的高位（如果是 10 进制，个十百千，千就叫做高位）。有时候我们希望从低位读（也就是十进制中的个位）数字，所以我们希望这样去存。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">内存地址       内存值</span><br><span class="line"><span class="number">0x00000000</span>    <span class="number">01001110</span> (ae)</span><br><span class="line"><span class="number">0x00000001</span>    <span class="number">10101110</span> (<span class="number">4</span>e)</span><br></pre></td></tr></table></figure>
+<p>这就是多个字节存储的时候的字节序问题，把数字的高位存到低地址，低位存到高地址，叫做大端序（big endian），存储顺序符合我们人类习惯。反之就叫小端序（little endian）。</p>
+<p>如果把<code>亮</code>字存到一个 .txt 中。</p>
+<p>如果用 UTF-8 编码，那么前边算过的，就是<code>e4 ba ae</code>。</p>
+<p>如果用 UTF-16 编码，大端序的话就是<code>4eae</code>。</p>
+<p>如果用 UTF-16 编码，小端序的话就是<code>ae4e</code>。</p>
+<p>我们可以验证一下，可以用 notepad++，安装一个 HEXEditor 插件即可。或者其他的可以查看内部编码的也行。</p>
+<p>写一个<code>亮</code>到 text.txt</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/test1.jpg" alt=""></p>
+<p>以 UTF - 8 编码。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/test2.jpg" alt=""></p>
+<p>如果用 UTF - 16 编码，大端序</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/test3.jpg" alt=""></p>
+<p>如果用 UTF - 16 编码，小端序</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/test4.jpg" alt=""></p>
+<p>可以看到 UTF - 16 编码的时候，除了本身的字节，最开头还多了两个字节，<code>ff</code>和<code>fe</code>。原因很直接了，就是为了区分大端序和小端序。<code>feff</code>代表大端序，<code>fffe</code>代表小端序。</p>
+<p><code>feff</code>和<code>fffe</code>也叫做 BOM，它可以区分不同编码。我们也听过 UTF - 8 无 BOM 或者 UTF - 8 BOM。UTF - 8 的 BOM 是 <code>EF BB BF</code>，windows 记事本编写的 .txt ，如果以 UTF - 8 编码保存，它默认就是有 BOM 的，所以如果看他的内存存储就是下边的样子。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/test5.jpg" alt=""></p>
+<p>而 UTF - 8 并不存在字节序的问题，因为它的最小编码单位就是字节，而 UTF - 16 编码最小单位是两个字节，所以有字节序的问题，从而加了 BOM 来区分是大端序还是小端序。但是 UTF - 8 并不需要区分大端序还是小端序，所以可以不需要 BOM。如果加了 BOM，对于一些读取操作，它可能会把读取到的 BOM 认为是字符，从而造成一些错误。所以我们保存 UTF - 8 编码的文件时，最好选择无 BOM。</p>
+<p>我们也可以在浏览器的控制台上直接验证，因为 js 允许我们直接给字符串赋 Unicode 的码点值。格式是 \u 加上 16 进制的码点值即可。对于超过 2 个字节的码点值，用大括号括起来。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/text6.jpg" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/text7.jpg" alt=""></p>
+<p>我们所熟知的 emoji 表情其实在 Unicode 字符集上也有对应的码点值。</p>
+<p>比如最常用的笑哭脸的码点值是 U+1F602，当然 Unicode 只规定了码点值，并没有规定怎么实现，不同平台对于笑哭的表情展现也是不一样的。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/emoji.jpg" alt=""></p>
+<p>同样我们也可以在浏览器上进行验证。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/emoji2.jpg" alt=""></p>
+<h1 id="更多好玩"><a href="#更多好玩" class="headerlink" title="更多好玩"></a>更多好玩</h1><p>知道了上边的编码原则，我们就可以做些有趣的事情了，还记得「神奇字体」小程序吗？可以生成不同样式的字体，在微信、知乎发送。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini.png" alt=""></p>
+<p>𝙄 𝙡𝙤𝙫𝙚 𝙮𝙤𝙪 𝙩𝙝𝙧𝙚𝙚 𝙩𝙝𝙤𝙪𝙨𝙖𝙣𝙙</p>
+<p>其实上边的每一个字母并不是对应 ASCII 码值，而是对应基本平面外的 Unicode 码点值。所以我们如果输出上边的 I 字母，”𝙄”.length，输出的就是 2，因为它是基本平面外的字符，用了 4 个字节编码。</p>
+<p>大家可以回顾下，我之前写的探索过程，就会明白「神奇字体」的原理了。</p>
+<p><a href="https://mp.weixin.qq.com/s/CQTk6KMV6sWlF3A2hYEF1Q" target="_blank" rel="noopener">「神奇字体」小程序的从零到一</a></p>
+<p>此外，Unicode 还有一些组合字符、控制字符，实现不同字符的组合，比如删除线、下划线和字符的组合，实现字符的逆序输出等等，大家可以自己去探索下，蛮有意思的。</p>
+<h1 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h1><p>以上就是字符串编码的全部了，这里只介绍了 ASCII，Unicode，UTF 系列，其他的编码方式还有 GBK，GB2312，Big5，ISO 8859-6 等等，这块内容真的是太多太多了，大家感兴趣的话可以自己再去找找资料，上边我总结的如果发现问题可以及时和我反馈，感谢。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编码/" rel="tag"># 编码</a>
+          
+            <a href="/tags/utf-8/" rel="tag"># utf-8</a>
+          
+            <a href="/tags/unicode/" rel="tag"># unicode</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/11/leetcode100斩回顾/" rel="next" title="leetcode100斩回顾">
+                <i class="fa fa-chevron-left"></i> leetcode100斩回顾
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/23/理解进制转换的原理/" rel="prev" title="理解进制转换的原理">
+                理解进制转换的原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#开始"><span class="nav-number">1.</span> <span class="nav-text">开始</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#探索一"><span class="nav-number">2.</span> <span class="nav-text">探索一</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#探索二"><span class="nav-number">3.</span> <span class="nav-text">探索二</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#探索三"><span class="nav-number">4.</span> <span class="nav-text">探索三</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#探索四"><span class="nav-number">5.</span> <span class="nav-text">探索四</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验验证"><span class="nav-number">6.</span> <span class="nav-text">实验验证</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#更多好玩"><span class="nav-number">7.</span> <span class="nav-text">更多好玩</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结束"><span class="nav-number">8.</span> <span class="nav-text">结束</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

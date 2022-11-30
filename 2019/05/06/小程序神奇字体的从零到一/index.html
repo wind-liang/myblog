@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="成品是下边的小程序，神奇字体，可以生成不同样式的字体，𝓘 𝓵𝓸𝓿𝓮 𝔂𝓸𝓾 𝓽𝓱𝓻𝓮𝓮 𝓽𝓱𝓸𝓾𝓼𝓪𝓷𝓭. 在各个平台使用。  从 5 月 2 号晚上开始构思执行，到 3 号凌晨上线 web，到 4 号上线小程序「神奇字体」， 到今天 6 号成功开通了流量主，应该能赚点零花钱，哈哈哈哈。复盘一下整个过程，自己遇到的问题，自己使用的工具。  2 号下午  在">
+<meta name="keywords" content="随想,前端,小程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小程序神奇字体的从零到一">
+<meta property="og:url" content="https://windliang.wang/2019/05/06/小程序神奇字体的从零到一/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="成品是下边的小程序，神奇字体，可以生成不同样式的字体，𝓘 𝓵𝓸𝓿𝓮 𝔂𝓸𝓾 𝓽𝓱𝓻𝓮𝓮 𝓽𝓱𝓸𝓾𝓼𝓪𝓷𝓭. 在各个平台使用。  从 5 月 2 号晚上开始构思执行，到 3 号凌晨上线 web，到 4 号上线小程序「神奇字体」， 到今天 6 号成功开通了流量主，应该能赚点零花钱，哈哈哈哈。复盘一下整个过程，自己遇到的问题，自己使用的工具。  2 号下午  在">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/mini.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/shimo1.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/shimo2.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/shimo3.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/shimo4.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/shimo5.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/shimo6.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/shimo7.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/shimo8.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/shimo9.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/busuanzi.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/friend.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/zhishi.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/cat.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/black.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/alan.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/doris.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/tim.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/before.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/first.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/luren.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/web.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/zhangjia.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/duan.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/mini.png">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/54data.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/55data.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/56data.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/source.jpg">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/people.jpg">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.943Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小程序神奇字体的从零到一">
+<meta name="twitter:description" content="成品是下边的小程序，神奇字体，可以生成不同样式的字体，𝓘 𝓵𝓸𝓿𝓮 𝔂𝓸𝓾 𝓽𝓱𝓻𝓮𝓮 𝓽𝓱𝓸𝓾𝓼𝓪𝓷𝓭. 在各个平台使用。  从 5 月 2 号晚上开始构思执行，到 3 号凌晨上线 web，到 4 号上线小程序「神奇字体」， 到今天 6 号成功开通了流量主，应该能赚点零花钱，哈哈哈哈。复盘一下整个过程，自己遇到的问题，自己使用的工具。  2 号下午  在">
+<meta name="twitter:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/mini.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2019/05/06/小程序神奇字体的从零到一/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>小程序神奇字体的从零到一 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2019/05/06/小程序神奇字体的从零到一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">小程序神奇字体的从零到一
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-06 19:00:28" itemprop="dateCreated datePublished" datetime="2019-05-06T19:00:28+08:00">2019-05-06</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/随想/" itemprop="url" rel="index"><span itemprop="name">随想</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/05/06/小程序神奇字体的从零到一/" class="leancloud_visitors" data-flag-title="小程序神奇字体的从零到一">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>成品是下边的小程序，神奇字体，可以生成不同样式的字体，𝓘 𝓵𝓸𝓿𝓮 𝔂𝓸𝓾 𝓽𝓱𝓻𝓮𝓮 𝓽𝓱𝓸𝓾𝓼𝓪𝓷𝓭. 在各个平台使用。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/mini.png" alt=""></p>
+<p>从 5 月 2 号晚上开始构思执行，到 3 号凌晨上线 web，到 4 号上线小程序「神奇字体」， 到今天 6 号成功开通了流量主，应该能赚点零花钱，哈哈哈哈。复盘一下整个过程，自己遇到的问题，自己使用的工具。</p>
+<blockquote>
+<p>2 号下午</p>
+</blockquote>
+<p>在微信群里看到有人问 𝙄 𝙡𝙤𝙫𝙚 𝙮𝙤𝙪 𝙩𝙝𝙧𝙚𝙚 𝙩𝙝𝙤𝙪𝙨𝙖𝙣𝙙. 是怎么生成的？</p>
+<p>晚上碰到电脑，就开始研究，直到凌晨 3 点多完成了 text.windliang.cc 网页的上线和在石墨写了一篇总结的文章 <a href="https://shimo.im/docs/onTnczeeCkY607ug/" target="_blank" rel="noopener">https://shimo.im/docs/onTnczeeCkY607ug/</a> 。</p>
+<p>原文如下：</p>
+<hr>
+<p>最后的成果，<a href="http://text.windliang.cc" target="_blank" rel="noopener">http://text.windliang.cc/</a></p>
+<p>说一下自己的脑回路。</p>
+<p>昨天下午在微信群看到有人问，下图的英文怎么打出来的。</p>
+<p>​         <img src="https://windliang.oss-cn-beijing.aliyuncs.com/shimo1.png" alt="img">       </p>
+<p>作为一个学计算机的，这我就不服了，于是开始了探索之路。</p>
+<p>首先想到了 Unicode 字符集，一定是这里作怪，晚上回去后，开始试验。</p>
+<p>直接复制这句话，到浏览器控制台。</p>
+<p>​         <img src="https://windliang.oss-cn-beijing.aliyuncs.com/shimo2.png" alt="img">       </p>
+<p>没什么问题，然后去掉所有字母，只保留第一个字母  “𝙄”，并且输出一下它的长度。</p>
+<p>​         <img src="https://windliang.oss-cn-beijing.aliyuncs.com/shimo3.png" alt="img">       </p>
+<p>果然是 2，之所以 2 就是因为 js 内部是用 utf-16 编码，正常情况是 2 个字节代表一个字符。比如正常的 a 字符，它内部字节就是 0x0061。而后来扩充了很多字符，一个字符就需要 4 个字节表示，我们一直用的 emoji 字符就是这样的。</p>
+<p>​         <img src="https://windliang.oss-cn-beijing.aliyuncs.com/shimo4.png" alt="img">       </p>
+<p>这块是很大一块内容，先不说了，接着讲后边的事情。</p>
+<p>知道了这个以后，自己当然想着，就做一个转任意字母的网页吧，然后问题又来了？这些字符的码点值都是多少？</p>
+<p>​         <img src="https://windliang.oss-cn-beijing.aliyuncs.com/shimo5.png" alt="img">       </p>
+<p>可以看到 “𝙄” 码点值是 0x1d644。然后就去查 Unicode 所有的码点值了，然后就找到了下边的网站。<a href="https://www.unicode.org/charts/" target="_blank" rel="noopener">https://www.unicode.org/charts/</a>。</p>
+<p>​         <img src="https://windliang.oss-cn-beijing.aliyuncs.com/shimo6.png" alt="img">       </p>
+<p>这里包含了所有的字符集，那怎么找到我们要的呢？观察到他每一个都是 PDF 链接，而且命名都是以码点范围来命名的。于是</p>
+<p>​         <img src="https://windliang.oss-cn-beijing.aliyuncs.com/shimo7.png" alt="img">       </p>
+<p>直接打开控制台去搜，就找到了我们要找的那个字符。发现他是 Mathematical Alphanumeric Symbols 下的，数学字母数字符号。</p>
+<p>​         <img src="https://windliang.oss-cn-beijing.aliyuncs.com/shimo8.png" alt="img">       </p>
+<p>万事俱备，只欠东风，有了对应关系，只需要做加法就行了，下边几句就是代码的关键了。</p>
+<p>​         <img src="https://windliang.oss-cn-beijing.aliyuncs.com/shimo9.png" alt="img">       </p>
+<p>由于最近看了几天 Vue 的书，想着就当一个练手项目吧，于是就敲着敲着，就好晚了。</p>
+<p>至此，<a href="http://text.windliang.cc" target="_blank" rel="noopener">http://text.windliang.cc</a>   诞生了。</p>
+<hr>
+<p>网站我直接使用的 github 的 pages 服务，简单来说，它可以免费托管任何的静态网站，本意是用来写博客的，但我觉得可能被我玩坏了，写了好多网页都直接部署在上边，方便快捷不要钱。它会提供 github.io 的域名，也可以使用自己的域名。我直接用了自己的 windliang.cc 域名，然后绑了二级域名 text，域名现在很便宜的，一年也就几十块钱，而且买了域名后，二级域名也可以绑理论上无数个域名，例如我的  <a href="http://idea.windliang.cc" target="_blank" rel="noopener">http://idea.windliang.cc</a>  ，<a href="http://love.windliang.cc" target="_blank" rel="noopener">http://love.windliang.cc</a> ，<a href="http://leetcode.windliang.cc" target="_blank" rel="noopener">http://leetcode.windliang.cc</a> 都是同一个域名下的，而且都是在 github 上放着。</p>
+<p>之前写的网页都没有加网站访问量的，那天晚上突然想到这个程序也许会火呀，就加了一个最简单的流量统计，<a href="https://busuanzi.ibruce.info/" target="_blank" rel="noopener">不蒜子</a>提供的统计服务，简单到什么程度呢，加一句代码，就知道网站访问量，当然也只有访问量。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/busuanzi.jpg" alt=""></p>
+<p>之后分别在朋友圈和知识星球「帅张和他的朋友们」发了一下就睡了，此时已经是凌晨 3 点了，每次一写程序总是停不下来，哈哈哈哈哈哈哈哈哈。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/friend.jpg" alt=""></p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/zhishi.png" alt=""></p>
+<blockquote>
+<p>3 号上午</p>
+</blockquote>
+<p>9 点起来后，网页的浏览量已经过千了，然后分别在微信群「大猫城堡」和「增长黑盒」发了自己的网页，然后就又睡了，再起来就 12 点多了。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/cat.jpg" alt=""></p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/black.jpg" alt=""></p>
+<p>然后发现大家在群里都反馈的不错，并且都试用了一下，有很多群友建议可以做一个小程序，认识了 @森淼。 由于之前也没有接触过小程序，然后下午就开始研究了。</p>
+<p>期间 @增长黑盒 Alan帮推了朋友圈，下午的时候发现网页浏览量在持续上升，我记得好像有两三千了。晚上的时候，同学又和我说在即刻看见 @刀姐doris 帮推了一下。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/alan.png" alt=""></p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/doris.jpg" alt=""></p>
+<blockquote>
+<p>3 号晚上</p>
+</blockquote>
+<p>到了 22：20 ，小程序基本功能实现，然后和女朋友要图标，哈哈哈哈。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/tim.jpg" alt=""></p>
+<p>然后处理了一下细节，23：44 提交了小程序，发了朋友圈，建立了一个群，让大家找找 BUG 提提意见，此时网页浏览量已经达到了 6000。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/before.png" alt=""></p>
+<p>然后，群里的小伙伴反馈了一下，就去睡了。</p>
+<blockquote>
+<p>4 号中午</p>
+</blockquote>
+<p>11 点起来之后，发现小程序审核失败了，可能是因为自己在文字里加了「如果喜欢，可以分享」类似的话，然后去掉后又提交了一次，审核的很快，好像不到半小时就审核通过了。就是下边的第一版，看起来很粗糙的样子。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/first.png" alt=""></p>
+<p>接下来，在朋友圈和微信群「大猫城堡」、「增长黑盒」分享了小程序，在知识星球「路人甲乙丙」分享了一下。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/luren.png" alt=""></p>
+<p>然后，在网页里加上了小程序名字，后来又加上了小程序的二维码。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/web.jpg" alt=""></p>
+<p>到了晚上，基本的功能完成了，然后在女朋友的指导下把页面美化了一下，很多细节处理一下，之后又提交了。</p>
+<blockquote>
+<p>5 号</p>
+</blockquote>
+<p>小程序开通流量主的条件是 UV 达到 1000，而 4 号一天 UV 是 700 多，所以还未达标。 5 号的时候，认识了 @张佳，是 @森淼 推荐的，然后 @张佳 帮在他的知识星球「数据和黑科技」推了一下小程序和 @wulujia 老板的「产品学徒」星球推了小程序。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/zhangjia.jpg" alt=""></p>
+<p>还有许多我不知道的人帮我做了分享，在此感谢大家。</p>
+<p>然后继续做了细节的优化，提交了一版小程序。</p>
+<blockquote>
+<p>6 号</p>
+</blockquote>
+<p>也就是今天，上午的时候进入小程序主页，发现达到了开通流量主的条件，发现开通的话需要银行卡，身份证的照片，无奈身上没有。等到下午女朋友回到屋里，给我了照片，开始了申请。差不多一个小时，银行卡信息通过了。然后就将广告代码，加入小程序中，提交审核。差不多又是一个小时，审核通过。接下来是，广告组件的审核，差不多快一个小时，收到了一条短信，</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/duan.jpg" alt=""></p>
+<p>上网页看，广告组件也审核通过了，总体上微信的审核速度还是蛮快的，工作时间应该是周一到周五，9点 - 21点；周六周日，9 点 - 19点，晚上发的基本是第二天上午通过审核，至此小程序就基本完成了。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/mini.png" alt=""></p>
+<h1 id="数据分享"><a href="#数据分享" class="headerlink" title="数据分享"></a>数据分享</h1><p>分享一下小程序，不到三天的数据。</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/54data.jpg" alt=""></p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/55data.jpg" alt=""></p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/56data.jpg" alt=""></p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/source.jpg" alt=""></p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/people.jpg" alt=""></p>
+<p>主要传播渠道就是微信群、知识星球、朋友圈，还有网页留下的小程序码。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>主要用到了石墨文档，github pages 服务，不蒜子，知识星球。</p>
+<p>像@刘大猫讲的，开始网页没有留任何沉淀流量的东西，二维码，微信类似的，造成了前期的一些流量的浪费。对于流量的沉淀，自己这方面一直没有很深的体会，以后可以多看一些案例学习。还有由于自己的 .cc 域名不能备案，在微信会先跳转到微信 110 ，对用户来说不方便。</p>
+<p>有很多人夸自己的执行力，我觉得只是自己很喜欢编程吧，当热爱一件事情的时候，就会很想把它做好，做完，还有就是一种要做就要做完的精神。</p>
+<p>以上就是整个过程了，希望对大家有些许帮助。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/随想/" rel="tag"># 随想</a>
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+            <a href="/tags/小程序/" rel="tag"># 小程序</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/15/leetCode系列转到gitbook/" rel="next" title="leetCode系列转到gitbook">
+                <i class="fa fa-chevron-left"></i> leetCode系列转到gitbook
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/21/linux和Android的关系/" rel="prev" title="linux和Android的关系">
+                linux和Android的关系 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据分享"><span class="nav-number">1.</span> <span class="nav-text">数据分享</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">2.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

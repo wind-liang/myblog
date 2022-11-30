@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前段时间一直在更 vue2的源码系列，最近换了换口味，学了一下 cocos ，照猫画虎的写了一个「挑战1024」小游戏。 学习一门新语言或者新框架其实就是一个堆时间的过程了，整个过程就是结合已有经验进行不同的猜测，然后验证，搞不定就去官网或者搜索引擎找答案，99.9% 的问题应该都能找到。 cocos 网上很多是视频教程，虽然对新手友好，但是信息密度太低了，这里我总结一下 cocos 专有的或者不">
+<meta name="keywords" content="cocos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端er开发cocos小游戏快速入门">
+<meta property="og:url" content="https://windliang.wang/2022/11/07/前端er开发cocos小游戏快速入门/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="前段时间一直在更 vue2的源码系列，最近换了换口味，学了一下 cocos ，照猫画虎的写了一个「挑战1024」小游戏。 学习一门新语言或者新框架其实就是一个堆时间的过程了，整个过程就是结合已有经验进行不同的猜测，然后验证，搞不定就去官网或者搜索引擎找答案，99.9% 的问题应该都能找到。 cocos 网上很多是视频教程，虽然对新手友好，但是信息密度太低了，这里我总结一下 cocos 专有的或者不">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113101837574.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113104527992.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113104543991.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113110410892.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113112755384.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113153540396.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113153748303.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113153900887.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113154522620.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113154930782.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113160458554.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113161547263.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113173512981.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113162101123.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113162143563.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113162918517.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113165834371.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113165636129.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113170821916.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20221119205327720.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113173906330.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113172140746.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221114064750298.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221114065217375.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113174535576.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113182122357.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113174930670.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113175131343.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113175207934.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113175852560.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113180058709.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113180445655.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113181717593.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113183809044.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113184029466.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113184927037.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113184416196.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113184628466.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/%E8%87%AA%E6%9F%A5.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20221119103132834.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20221130083045661.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/gh_dc7db84e6a20_258.jpg">
+<meta property="og:updated_time" content="2022-11-30T00:45:21.369Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端er开发cocos小游戏快速入门">
+<meta name="twitter:description" content="前段时间一直在更 vue2的源码系列，最近换了换口味，学了一下 cocos ，照猫画虎的写了一个「挑战1024」小游戏。 学习一门新语言或者新框架其实就是一个堆时间的过程了，整个过程就是结合已有经验进行不同的猜测，然后验证，搞不定就去官网或者搜索引擎找答案，99.9% 的问题应该都能找到。 cocos 网上很多是视频教程，虽然对新手友好，但是信息密度太低了，这里我总结一下 cocos 专有的或者不">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113101837574.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2022/11/07/前端er开发cocos小游戏快速入门/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>前端er开发cocos小游戏快速入门 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2022/11/07/前端er开发cocos小游戏快速入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">前端er开发cocos小游戏快速入门
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-11-07 08:56:38" itemprop="dateCreated datePublished" datetime="2022-11-07T08:56:38+08:00">2022-11-07</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-30 08:45:21" itemprop="dateModified" datetime="2022-11-30T08:45:21+08:00">2022-11-30</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2022/11/07/前端er开发cocos小游戏快速入门/" class="leancloud_visitors" data-flag-title="前端er开发cocos小游戏快速入门">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前段时间一直在更 <a href="https://vue.windliang.wang/" target="_blank" rel="noopener">vue2的源码系列</a>，最近换了换口味，学了一下 <code>cocos</code> ，照猫画虎的写了一个「挑战1024」小游戏。</p>
+<p>学习一门新语言或者新框架其实就是一个堆时间的过程了，整个过程就是结合已有经验进行不同的猜测，然后验证，搞不定就去官网或者搜索引擎找答案，<code>99.9%</code> 的问题应该都能找到。</p>
+<p><code>cocos</code> 网上很多是视频教程，虽然对新手友好，但是信息密度太低了，这里我总结一下 <code>cocos</code> 专有的或者不太符合直觉的一些点，前端的同学看完以后能更快的进入 <code>cocos</code> 的开发中。</p>
+<p>建议先跟着官方的 <a href="https://docs.cocos.com/creator/manual/zh/getting-started/first-game/" target="_blank" rel="noopener">快速上手</a> 先一步一步实现一个小游戏，再读下边的文章效果会更佳。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p><code>cocos</code> 提供了游戏引擎，一些常用的操作，碰撞检测、重力模拟、变换位置、旋转、缩放、粒子系统等都可以通过配置一键实现，游戏引擎最终会帮我们把界面渲染到 <code>canvas</code> 节点上。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113101837574.png" alt="image-20221113101837574"></p>
+<p>因为是渲染至 <code>canvas</code> ，当然很自然的可以支持跨端，一套代码可以编译至 <code>h5</code>、微信小游戏等平台。</p>
+<p>同一个功能不同平台之间有不同的 <code>api</code> ，比如 <code>localstorage</code> 的使用会有所不同，<code>cocos</code> 会帮我们在上层抹平，只需要按照 <code>cocos</code> 的语法编写，编译的时候选择相应的平台就会转成对应平台的 <code>api</code>。</p>
+<h1 id="编辑器"><a href="#编辑器" class="headerlink" title="编辑器"></a>编辑器</h1><p><code>cocos</code> 开发和平常的前端开发不太一样，它是代码结合 <code>UI</code> 拖拽来实现的，通过拖拽我们可以快速的布局、添加组件、设置属性等。</p>
+<p>基于此，项目和编辑器就有了强绑定的关系，如果下载别人的项目，还需要下载相应的编辑器。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113104527992.png" alt="image-20221113104527992"></p>
+<p>打开项目的时候需要选择相应的编辑器。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113104543991.png" alt="image-20221113104543991"></p>
+<p>当然，如果编辑器差的版本比较小，<code>Cocos</code> 也可以帮我们自动升级项目的编辑器版本。如果是 <code>2.x</code> 升到 <code>3.x</code> 就会有 <code>break changes</code> ，需要手动进行一些代码的兼容。</p>
+<p><code>ps</code>：<code>MAC</code> <code>M1</code> 版本不支持 <code>2.4.5</code> 以下的版本。</p>
+<h1 id="场景-Scene"><a href="#场景-Scene" class="headerlink" title="场景/Scene"></a>场景/Scene</h1><p>游戏的 <code>ui</code> 、逻辑都挂载在某个场景（<code>Scene</code>）下，可以在资源管理器右键创建场景，然后双击打开。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113110410892.png" alt="image-20221113110410892"></p>
+<p>接下来我们就可以在当前 <code>Canvas</code> 添加各种节点和代码逻辑了。</p>
+<p>游戏如果有多个页面，可以新建多个场景各自维护。</p>
+<p>ps：如果从导入网上下载的 <code>cocos</code> 项目，场景不会自动加载，需要双击一下场景然后再预览。</p>
+<h1 id="节点-Node"><a href="#节点-Node" class="headerlink" title="节点/Node"></a>节点/Node</h1><p>我们可以通过右键创建节点，除了空结点，还帮我们预设了其他的很多节点，比如 <code>Label</code> 、<code>Button</code> 等。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113112755384.png" alt="image-20221113112755384"></p>
+<p>节点是树状关系，每个节点可以得到它的父节点，也可以得到它的子节点。</p>
+<p>比如我们可以通过 <code>getChildByName</code> 得到它的子节点。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.node.getChildByName(<span class="string">"message"</span>); <span class="comment">// 得到相应的 Node 节点</span></span><br></pre></td></tr></table></figure>
+<p>通过 <code>this.node.parent</code> 拿到它的父节点。</p>
+<h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><p>一个空结点只有一些位置、大小属性。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113153540396.png" alt="image-20221113153540396"></p>
+<p>我们可以在 <code>Node</code> 节点上挂载一些组件让 <code>Node</code> 拥有样式和功能。</p>
+<h2 id="Label-组件"><a href="#Label-组件" class="headerlink" title="Label 组件"></a>Label 组件</h2><p>如果我们创建一个 <code>Label</code> 节点，会自动挂一个 <code>Label</code> 组件。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113153748303.png" alt="image-20221113153748303"></p>
+<p>通过 <code>Label</code> 组件我们可以设置文案 、字体大小等，展示到场景中的就是一个普通的 <code>Label</code>。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113153900887.png" alt="image-20221113153900887"></p>
+<h2 id="图片组件"><a href="#图片组件" class="headerlink" title="图片组件"></a>图片组件</h2><p>我们可以通过将「资源管理器」中的图片拖动到「层级管理器」中生成一个带背景的 <code>Node</code> 节点。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113154522620.png" alt="image-20221113154522620"></p>
+<p>拖过去之后会生成一个带有 <code>Sprite</code> 组件的节点，并将该图片设置为 <code>Sprite Frame</code> 属性的值，这样这张图片就会展示到场景中了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113154930782.png" alt="image-20221113154930782"></p>
+<p>如果想要更改图片，只要把 <code>Sprite Frame</code> 属性清空，重新拖一个图片上去即可。</p>
+<h2 id="脚本组件"><a href="#脚本组件" class="headerlink" title="脚本组件"></a>脚本组件</h2><p>这个是最重要的，我们可以编写游戏逻辑，设置一些点击监听、节点之间联动等逻辑，然后挂到 <code>Node</code> 节点上。</p>
+<p>先新建一个 <code>js</code> 文件，会自动帮我们生成带有生命周期的一些代码。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113160458554.png" alt="image-20221113160458554"></p>
+<p>双击打开新建的 <code>js</code> 文件，我们可以把文件和 <code>VSCode</code> 关联，用 <code>VSCode</code> 进行代码的编辑。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Learn cc.Class:</span></span><br><span class="line"><span class="comment">//  - https://docs.cocos.com/creator/manual/en/scripting/class.html</span></span><br><span class="line"><span class="comment">// Learn Attribute:</span></span><br><span class="line"><span class="comment">//  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html</span></span><br><span class="line"><span class="comment">// Learn life-cycle callbacks:</span></span><br><span class="line"><span class="comment">//  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html</span></span><br><span class="line"></span><br><span class="line">cc.Class(&#123;</span><br><span class="line">    extends: cc.Component,</span><br><span class="line"></span><br><span class="line">    properties: &#123;</span><br><span class="line">        <span class="comment">// foo: &#123;</span></span><br><span class="line">        <span class="comment">//     // ATTRIBUTES:</span></span><br><span class="line">        <span class="comment">//     default: null,        // The default value will be used only when the component attaching</span></span><br><span class="line">        <span class="comment">//                           // to a node for the first time</span></span><br><span class="line">        <span class="comment">//     type: cc.SpriteFrame, // optional, default is typeof default</span></span><br><span class="line">        <span class="comment">//     serializable: true,   // optional, default is true</span></span><br><span class="line">        <span class="comment">// &#125;,</span></span><br><span class="line">        <span class="comment">// bar: &#123;</span></span><br><span class="line">        <span class="comment">//     get () &#123;</span></span><br><span class="line">        <span class="comment">//         return this._bar;</span></span><br><span class="line">        <span class="comment">//     &#125;,</span></span><br><span class="line">        <span class="comment">//     set (value) &#123;</span></span><br><span class="line">        <span class="comment">//         this._bar = value;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">// &#125;,</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// LIFE-CYCLE CALLBACKS:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// onLoad () &#123;&#125;,</span></span><br><span class="line"></span><br><span class="line">    start () &#123;</span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// update (dt) &#123;&#125;,</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><code>properties</code> 是脚本组件的属性，写在这里的属性可以在 <code>Cocos</code> 的界面上看到。</p>
+<p>比较重要是 <code>OnLoad</code> 和 <code>update</code> 两个生命周期，<code>OnLoad</code> 会在组件渲染前进行执行，这里我们可以进行一些初始化的操作，<code>update</code> 生命周期会在每一帧渲染前执行，这里我们就可以更新节点的位置让一些节点动起来。</p>
+<p>文件编写好以后，我们可以以组件的形式逻辑挂载到相应的 <code>Node</code> 节点上。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113161547263.png" alt="image-20221113161547263"></p>
+<h2 id="Widget-组件"><a href="#Widget-组件" class="headerlink" title="Widget 组件"></a>Widget 组件</h2><p>这个比较简单，它可以设置和边界的相对距离。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113173512981.png" alt="image-20221113173512981"></p>
+<h2 id="碰撞组件"><a href="#碰撞组件" class="headerlink" title="碰撞组件"></a>碰撞组件</h2><p>两个 <code>Node</code> 节点相撞，我们可以根据它们的坐标手动进行判断，也可以在 <code>Node</code> 节点上挂载碰撞组件，设置它们的分组，然后在脚本组件中增加 <code>onCollisionEnter</code> 回调函数即可。</p>
+<p>添加 <code>BoxCollider</code> 组件。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113162101123.png" alt="image-20221113162101123"></p>
+<p>设置 <code>Node</code> 中的 <code>Group</code> 属性。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113162143563.png" alt="image-20221113162143563"></p>
+<p><code>Group</code> 我们可以手动进行管理，并且设置哪些 <code>Group</code> 产生碰撞。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113162918517.png" alt="image-20221113162918517"></p>
+<p>接下来还需要在游戏最开始的时候开始碰撞检测，可以给层级节点中的 <code>Canvas</code> 节点添加一个用户脚本组件 <code>game.js</code> ，然后修改脚本组件的 <code>OnLoad</code> 中调用下边的方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> collisionManager = cc.director.getCollisionManager();</span><br><span class="line">collisionManager.enabled = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+<p>最后在相应的 <code>Node</code> 节点的用户脚本中添加 <code>onCollisionEnter</code> 回调函数进行碰撞后的逻辑即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">onCollisionEnter(other) &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.game.continueIng &amp;&amp; other.node.name !== <span class="string">"ground"</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">switch</span> (other.node.name) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"star"</span>:</span><br><span class="line">      <span class="keyword">this</span>.handleStar(other);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"meteorites"</span>:</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"ground"</span>:</span><br><span class="line">      <span class="keyword">this</span>.game.endGame();</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>通过回调参数 <code>other</code> 可以拿到碰撞的节点。</p>
+<h2 id="刚体组件"><a href="#刚体组件" class="headerlink" title="刚体组件"></a>刚体组件</h2><p>这里通过刚体组件我们可以实现物体受到重力的效果。</p>
+<p>首先给节点添加一个 <code>RightBody</code> 组件，并且将类型设置为 <code>Dynamic</code> 。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113165834371.png" alt="image-20221113165834371"></p>
+<p>和碰撞组件一样，我们在 <code>Canvas</code> 对应的用户脚本组件的 <code>OnLoad</code> 中调用下边的方法开启重力模拟即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> instance = cc.director.getPhysicsManager();</span><br><span class="line">instance.enabled = <span class="literal">true</span>;</span><br><span class="line">instance.gravity = cc.v2(<span class="number">0</span>, <span class="number">-980</span> * <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+<p>这样相应的节点就会受到重力的作用了。</p>
+<h2 id="动画组件"><a href="#动画组件" class="headerlink" title="动画组件"></a>动画组件</h2><p>在层级管理器选中相应的节点，点击「动画编辑器」，然后添加一个 <code>Animation</code> 组件</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113165636129.png" alt="image-20221113165636129"></p>
+<p>接着添加一个 <code>Clip</code>，并进行编辑，设置动画的关键帧等，有点像 <code>photoShop</code> 里的动画编辑器。</p>
+<p>保存后将新建的 <code>Clip</code> 拖到到对应的属性上即可。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113170821916.png" alt="image-20221113170821916"></p>
+<h2 id="防穿透组件"><a href="#防穿透组件" class="headerlink" title="防穿透组件"></a>防穿透组件</h2><p><code>button</code> 被弹窗盖住，此时 <code>button</code> 依旧会响应到点击时间，此时可以通过给弹窗增加 <code>BlockInputEvents</code> 防止点击穿透。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20221119205327720.png" alt="image-20221119205327720"></p>
+<p>需要点击的时候激活，关闭的时候取消激活。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.node.getComponent(cc.BlockInputEvents).enabled = <span class="literal">true</span>; <span class="comment">// 点击的时候激活</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">this</span>.node.getComponent(cc.BlockInputEvents).enabled = <span class="literal">false</span>;  <span class="comment">// 关闭的时候取消激活</span></span><br></pre></td></tr></table></figure>
+<h1 id="坐标系"><a href="#坐标系" class="headerlink" title="坐标系"></a>坐标系</h1><p>设置的 <code>positon</code> 是在父节点坐标系下的位置。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113173906330.png" alt=""></p>
+<p>如果它有子节点，它的子节点设置的 <code>positon</code> 就是基于上边的红线和绿线为坐标轴进行排布。</p>
+<h1 id="脚本组件属性"><a href="#脚本组件属性" class="headerlink" title="脚本组件属性"></a>脚本组件属性</h1><p>我们可以脚本组件中添加一些属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">properties: &#123;</span><br><span class="line">       bird: &#123;</span><br><span class="line">           <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">           type: Bird,</span><br><span class="line">       &#125;,</span><br><span class="line">       gravity: cc.v2(<span class="number">0</span>, <span class="number">-980</span> * <span class="number">2</span>),</span><br><span class="line">       starPool: &#123;</span><br><span class="line">           <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">           type: StarPool,</span><br><span class="line">       &#125;,</span><br><span class="line">       scoreDisplay: &#123;</span><br><span class="line">           <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">           type: cc.Label,</span><br><span class="line">       &#125;,</span><br><span class="line">       scoreResult: &#123;</span><br><span class="line">           <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">           type: cc.Node,</span><br><span class="line">       &#125;,</span><br><span class="line">       successAudio: &#123;</span><br><span class="line">           <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">           type: cc.AudioClip,</span><br><span class="line">       &#125;,</span><br><span class="line">       failAudio: &#123;</span><br><span class="line">           <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">           type: cc.AudioClip,</span><br><span class="line">       &#125;,</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+<p>这样在 <code>cocos</code> 编辑器中我们可以通过拖动进行属性的初始化。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113172140746.png" alt="image-20221113172140746"></p>
+<p>值的注意的是，如果我们在 <code>properties</code> 外边写属性，比如下边的 <code>num</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">cc.Class(&#123;</span><br><span class="line">    extends: cc.Component,</span><br><span class="line"></span><br><span class="line">    properties: &#123;</span><br><span class="line">        <span class="comment">// foo: &#123;</span></span><br><span class="line">        <span class="comment">//     // ATTRIBUTES:</span></span><br><span class="line">        <span class="comment">//     default: null,        // The default value will be used only when the component attaching</span></span><br><span class="line">        <span class="comment">//                           // to a node for the first time</span></span><br><span class="line">        <span class="comment">//     type: cc.SpriteFrame, // optional, default is typeof default</span></span><br><span class="line">        <span class="comment">//     serializable: true,   // optional, default is true</span></span><br><span class="line">        <span class="comment">// &#125;,</span></span><br><span class="line">        <span class="comment">// bar: &#123;</span></span><br><span class="line">        <span class="comment">//     get () &#123;</span></span><br><span class="line">        <span class="comment">//         return this._bar;</span></span><br><span class="line">        <span class="comment">//     &#125;,</span></span><br><span class="line">        <span class="comment">//     set (value) &#123;</span></span><br><span class="line">        <span class="comment">//         this._bar = value;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">// &#125;,</span></span><br><span class="line">    &#125;,</span><br><span class="line">  </span><br><span class="line">  	num: <span class="number">0</span>, <span class="comment">// 自定义属性</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// LIFE-CYCLE CALLBACKS:</span></span><br><span class="line"></span><br><span class="line">    onLoad () &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>.num)</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    start () &#123;</span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// update (dt) &#123;&#125;,</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>此时我们在 <code>onLoad</code> 打印该值只会是 <code>undefind</code> ，如果想在当前实例上挂载属性，我们可以选择在 <code>onLoad</code> 中进行值的初始化。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">onLoad () &#123;</span><br><span class="line">  <span class="keyword">this</span>.num = <span class="number">2</span>; <span class="comment">// 自定义属性</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>这里需要注意的是如果改变脚本代码，保存后我们需要重新切到 <code>Cocos</code> 的编辑页面 才会重新进行编译。</p>
+<h1 id="Prelab"><a href="#Prelab" class="headerlink" title="Prelab"></a>Prelab</h1><p>节点可以在编辑器生成，当然也可以通过代码动态生成。对于需要重复生成的节点，我们可以将它保存成 <code>Prefab</code>（预制）资源，作为我们动态生成节点时使用的模板。</p>
+<p>做法就是在「层级管理器」随便新建一个 <code>Node</code> 节点，并且添加所需要的组件和自定义的脚本组件，最后将该 <code>node</code> 节点拖动到「资源管理器」即可。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221114064750298.png" alt="image-20221114064750298"></p>
+<p>之后我们就可以层级管理器中刚新建的节点删除。当然，为了后续方便编辑，该 <code>Node</code> 节点也可以保留，但需要将其放到画面外，并且将脚本组件取消勾选一下，不执行逻辑。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221114065217375.png" alt="image-20221114065217375"></p>
+<p>有了预制资源后，我们可以通过下边的代码来动态生成 <code>Node</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> newStar = cc.instantiate(<span class="keyword">this</span>.starPrefab); <span class="comment">// 根据预置资源生成 node 节点</span></span><br><span class="line">newStar.getComponent(<span class="string">"Star"</span>).init(<span class="keyword">this</span>, <span class="keyword">this</span>.game); <span class="comment">// 根据 node 节点的脚本组件进行初始化</span></span><br><span class="line"><span class="keyword">this</span>.node.addChild(newStar); <span class="comment">// 加到当前 node 节点的下面</span></span><br></pre></td></tr></table></figure>
+<p>对于画面中移动的 <code>node</code> ，当移出画面后我们可以进行重复利用，这里可以引入 <code>NodePool</code> ，出画面后加入节点池，需要的时候再从里边拿。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.pool = <span class="keyword">new</span> cc.NodePool();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 放入节点池</span></span><br><span class="line"><span class="keyword">this</span>.pool.put(star);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要的时候从里边拿</span></span><br><span class="line"><span class="keyword">const</span> newStar = <span class="keyword">this</span>.pool.get();</span><br></pre></td></tr></table></figure>
+<p>通过节点池我们可以节省内存的开销。</p>
+<h1 id="Node-和-组件"><a href="#Node-和-组件" class="headerlink" title="Node 和 组件"></a>Node 和 组件</h1><p><code>Node</code> 和组件的关系最开始的时候有点懵逼，慢慢的调试后大致了解了，下边讲一下我的理解。</p>
+<p>在定义 <code>properties</code> 的时候我们需要定义对象的属性，它可以是 <code>type: cc.Node,</code> ，也可以是自带的组件类型 <code>type: cc.Label</code> ，也可以是我们定义的脚本组件类型，可以先将编写的脚本代码引入 <code>const Bird = require(&quot;Bird&quot;);</code> ，然后将其作为一种类型  <code>type: Bird</code>。</p>
+<p>一个节点属于复合类型，它既是本身的 <code>cc.Node</code> 类型，如果添加了相应的组件，它也是相应的组件类型。</p>
+<p>以下图为例，它既是 <code>cc.Node</code> 类型，也是 <code>cc.Label</code> 类型，还是 <code>test</code> 类型。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113174535576.png" alt="image-20221113174535576"></p>
+<p>下边以动态修改 <code>Label</code> 的值，讲一下 <code>Node</code> 和组件之间的关系。</p>
+<p>首先新建一个 <code>canvas</code> 的脚本组件 <code>game.js</code> ，将该组件挂载到 <code>canvas</code> 节点中。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113182122357.png" alt="image-20221113182122357"></p>
+<p><code>game.js</code> 中添加一个 <code>label</code> 属性，类型为 <code>cc.Node</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">cc.Class(&#123;</span><br><span class="line">    extends: cc.Component,</span><br><span class="line">    properties: &#123;</span><br><span class="line">        label: &#123;</span><br><span class="line">            <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">            type: cc.Node,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    onLoad() &#123;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    start() &#123;&#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// update (dt) &#123;&#125;,</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>选中 <code>Canvas</code> 节点，将 <code>FirstLabel</code> 节点拖动添加的属性中。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113174930670.png" alt="image-20221113174930670"></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113175131343.png" alt="image-20221113175131343"></p>
+<p>虽然 <code>firstLabel</code> 属于三种类型，但因为我们定义的类型是 <code>cc.Node</code> ，因此拿到的是一个 <code>Node</code> 对象，我们打印看一下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">onLoad() &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span>.label);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113175207934.png" alt="image-20221113175207934"></p>
+<p>如果想要在运行的时候改变当前节点的位置，调用 <code>setPositon</code> 即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">cc.Class(&#123;</span><br><span class="line">    extends: cc.Component,</span><br><span class="line"></span><br><span class="line">    properties: &#123;</span><br><span class="line">        label: &#123;</span><br><span class="line">            <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">            type: cc.Node,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    onLoad() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.label);</span><br><span class="line">        <span class="keyword">this</span>.label.setPosition(cc.v2(<span class="number">0</span>, <span class="number">-200</span>));</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    start() &#123;&#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// update (dt) &#123;&#125;,</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>如果我们想改变组件的文案，我们需要先通过 <code>getComponent</code> 拿到 <code>Label</code> 组件的实例对象，然后更新 <code>string</code> 属性即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">onLoad() &#123;</span><br><span class="line">       <span class="built_in">console</span>.log(<span class="keyword">this</span>.label);</span><br><span class="line">       <span class="keyword">this</span>.label.setPosition(cc.v2(<span class="number">0</span>, <span class="number">-200</span>));</span><br><span class="line">       <span class="keyword">this</span>.label.getComponent(cc.Label).string = <span class="string">"我改变了"</span>;</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+<p>初值设置的是 <code>设置文案</code>。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113175852560.png" alt="image-20221113175852560"></p>
+<p>运行起来会发现是我们在 <code>onLoad</code> 中设置的值。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113180058709.png" alt="image-20221113180058709"></p>
+<p>当然，我们也可以在开始的时候将组件类型设置为 <code>cc.Label</code> ，这样我们开始拿到的就是 <code>Label</code> 实例对象，就不需要再通过 <code>getComponent</code>  方法了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">cc.Class(&#123;</span><br><span class="line">    extends: cc.Component,</span><br><span class="line"></span><br><span class="line">    properties: &#123;</span><br><span class="line">        label: &#123;</span><br><span class="line">            <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">            type: cc.Label,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    onLoad() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.label);</span><br><span class="line">        <span class="keyword">this</span>.label.string = <span class="string">"我改变了"</span>;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    start() &#123;&#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// update (dt) &#123;&#125;,</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>改为代码后我们重新拖动，更新下属性的值。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113180445655.png" alt="image-20221113180445655"></p>
+<p>那么如果我们想改变 <code>node</code> 位置该怎么办呢？</p>
+<p>获得的组件实例中有一个 <code>node</code> 属性，我们可以直接拿到当前的 <code>node</code> 对象实例，然后继续调用 <code>setPosition</code> 就可以了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">cc.Class(&#123;</span><br><span class="line">    extends: cc.Component,</span><br><span class="line"></span><br><span class="line">    properties: &#123;</span><br><span class="line">        label: &#123;</span><br><span class="line">            <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">            type: cc.Label,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    onLoad() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.label);</span><br><span class="line">        <span class="keyword">this</span>.label.string = <span class="string">"我改变了"</span>;</span><br><span class="line">        <span class="keyword">this</span>.label.node.setPosition(cc.v2(<span class="number">0</span>, <span class="number">-300</span>));</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    start() &#123;&#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// update (dt) &#123;&#125;,</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>为了更深刻的理解，我们再绕一下，实现通过当前节点的 <code>Node</code> ，调用自定义脚本组件的方法，来动态修改 <code>Label</code> 的值。</p>
+<p>首先编写自定义组件的代码，提供一个方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// test.js</span></span><br><span class="line">cc.Class(&#123;</span><br><span class="line">    extends: cc.Component,</span><br><span class="line"></span><br><span class="line">    properties: &#123;&#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// LIFE-CYCLE CALLBACKS:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// onLoad () &#123;&#125;,</span></span><br><span class="line"></span><br><span class="line">    start() &#123;&#125;,</span><br><span class="line"></span><br><span class="line">    setLabelValue() &#123;</span><br><span class="line">        <span class="keyword">this</span>.getComponent(cc.Label).string = <span class="string">"我被 test 改变了"</span>;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// update (dt) &#123;&#125;,</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>当前脚本添加到相应的属性中。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113181717593.png" alt="image-20221113181717593"></p>
+<p>接着我们只需要在 <code>canvas</code> 的脚本组件中调用 <code>getComponent(&quot;test&quot;)</code> 拿到上边的脚本对象实例，调用 <code>setLabelValue</code> 方法即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">cc.Class(&#123;</span><br><span class="line">    extends: cc.Component,</span><br><span class="line"></span><br><span class="line">    properties: &#123;</span><br><span class="line">        label: &#123;</span><br><span class="line">            <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">            type: cc.Node,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    onLoad() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.label);</span><br><span class="line">        <span class="keyword">this</span>.label.getComponent(<span class="string">"test"</span>).setLabelValue();</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    start() &#123;&#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// update (dt) &#123;&#125;,</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>小结一下，使用对象的时候，我们需要明确当前是 <code>cc.Node</code> 类型，还是某种组件类型，每一个种类型都有自己的方法。</p>
+<p>如果想从 <code>cc.Node</code> 对象中拿到相应的组件，调用 <code>getComponent</code> 方法即可。</p>
+<p>如果想从组件中拿到 <code>cc.Node</code> 类型，不管是自带的组件，还是自定义的脚本组件，可以直接通过 <code>this.node</code> 拿到当前的 <code>node</code> 实例对象。</p>
+<h1 id="显示隐藏"><a href="#显示隐藏" class="headerlink" title="显示隐藏"></a>显示隐藏</h1><p>最直接就是设置 <code>node</code> 对象的 <code>active</code> 属性即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">cc.Class(&#123;</span><br><span class="line">    extends: cc.Component,</span><br><span class="line"></span><br><span class="line">    properties: &#123;</span><br><span class="line">        label: &#123;</span><br><span class="line">            <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">            type: cc.Node,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    onLoad() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.label);</span><br><span class="line">        <span class="keyword">this</span>.label.active = <span class="literal">false</span>;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    start() &#123;&#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// update (dt) &#123;&#125;,</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>上边的方式类似于 <code>vue</code> 的 <code>v-if</code> ，会直接把节点销毁掉。</p>
+<p>如果想保留节点，实现 <code>vue</code> 的 <code>v-show</code> ，我们可以设置 <code>opacity</code> 透明度属性弯道实现，只需要将值设置为 <code>0</code> 实现隐藏。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">cc.Class(&#123;</span><br><span class="line">    extends: cc.Component,</span><br><span class="line"></span><br><span class="line">    properties: &#123;</span><br><span class="line">        label: &#123;</span><br><span class="line">            <span class="keyword">default</span>: <span class="literal">null</span>,</span><br><span class="line">            type: cc.Node,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    onLoad() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.label);</span><br><span class="line">        <span class="keyword">this</span>.label.opacity = <span class="number">0</span>;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    start() &#123;&#125;,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// update (dt) &#123;&#125;,</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这里需要注意的是，虽然通过透明度可以隐藏组件，但是此时的点击事件还是存在的，需要处理一下。</p>
+<h1 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h1><p>编译的时候我们选择微信小游戏，填写 <code>appId</code> ，编译完成后通过微信开发者工具导入 <code>build</code> 出来的文件就可以了。</p>
+<p>菜单 -&gt;项目 -&gt; 构建发布：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113183809044.png" alt="image-20221113183809044"></p>
+<p>我们可以设置初始场景、设备方向等。</p>
+<p>需要注意的是，微信主包有 <code>2M</code> 大小的限制，如果预览的微信小游戏遇到超包的情况，我们可以将没用到的组件在编译设置中去除。</p>
+<p>菜单 -&gt; 项目 -&gt; 项目设置 -&gt; 模块设置：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113184029466.png" alt="image-20221113184029466"></p>
+<h1 id="微信小游戏排行榜"><a href="#微信小游戏排行榜" class="headerlink" title="微信小游戏排行榜"></a>微信小游戏排行榜</h1><p>微信为了防止好友的关系链泄露，提出了一个子域的概念，在子域中可以调用 <code>wx.getFriendCloudStorage</code> 方法拿到好友数据。</p>
+<p>为了实现排行榜，我们需要再创建一个空项目，实现排行榜的显示逻辑，和正常项目开发是一致的。</p>
+<p>添加 <code>message</code> 回调函数，供主项目调用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private onMessage(msg: any) &#123;</span><br><span class="line">        <span class="keyword">switch</span> (msg.event) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">"setScore"</span>:</span><br><span class="line">                <span class="keyword">this</span>.setScore(msg.score);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="string">"showRank"</span>:</span><br><span class="line">                <span class="keyword">this</span>.getRank();</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>编译的时候需要选择 <code>微信小游戏开发数据域</code>，名称自己定义，我写的是<code>wxSubContext</code>，路径选择之前项目编译的文件夹。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113184927037.png" alt="image-20221113184927037"></p>
+<p>然后在主项目中我们需要添加一个空节点，并且添加一个 <code>SubContextView</code> 组件，将这个节点作为排行榜项目的容器节点。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113184416196.png" alt="image-20221113184416196"></p>
+<p>如果想要调用排行榜的方法通过 <code>postMessage</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wx.postMessage(&#123;</span><br><span class="line">  event: <span class="string">"showRank"</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>编译的时候指定一下排行榜项目之前设置的名称 <code>wxSubContext</code>    。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221113184628466.png" alt="image-20221113184628466"></p>
+<p>上边就是实现排行榜的整个逻辑了，详细的可以参考 <a href="https://developers.weixin.qq.com/community/minigame/article/doc/00028ce147c270ac955a031b057813" target="_blank" rel="noopener">这篇文章</a>，相应的 <a href="https://gitee.com/ichenpipi/cocos-case-wxsubcontext" target="_blank" rel="noopener">代码仓库</a>，<code>clone</code> 下来可以直接用。这个项目的 <code>cocos</code> 编辑器是 <code>2.3.3</code> ，如果升级到 <code>2.4.5</code> 会出现无法滚动的情况，谨慎升级。</p>
+<p>需要注意的一点是，当子项目的容器节点显示的时候，子项目才开始初始化，这就会导致主项目 <code>postMessage</code> 先调用，排行榜项目的<code>onMessage</code> 后调用，导致错失了消息。</p>
+<p>解决这个问题的话，我们的显藏可以通过设置透明度的方式实现，让子项目提前加载。</p>
+<h1 id="发布到微信"><a href="#发布到微信" class="headerlink" title="发布到微信"></a>发布到微信</h1><p>个人开发者提交的资料基本不用啥，有个自审资料网上找个模版在 <code>word</code> 填完截图就可以。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/%E8%87%AA%E6%9F%A5.jpg" alt="自查"></p>
+<p>但提交审核的道路比较坎坷，除了慢以外，甚至被拒了两次。</p>
+<p>第一次周日提交，周三还没有结果在微信社区平台催了一下审核，下午收到结果审核失败。</p>
+<blockquote>
+<p>小游戏涉嫌侵权，请参考示例截图标记点全面自查游戏内容，请于下个版本有效整改或举证，在微信公众平台-版本管理-提交审核-授权书/版本更新说明提交，包括但不限于游戏内容说明及对应截图、原创证明或有效授权书 主体信用分扣除-3分</p>
+</blockquote>
+<p>原因是一开始是准备仿 <code>Flappy bird</code> 的，直接用了相应的素材，就被驳回了，客服截图如下：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20221119103132834.png" alt="image-20221119103132834"></p>
+<p>第二次周三早上提交，周五晚上收到结果，又被拒了，这次就无法理解了：</p>
+<blockquote>
+<p>开发者你好，经平台审核，你的小游戏《挑战1024》未通过审核，具体原因如下：</p>
+<p>1、小游戏需具有完整的游戏玩法，不能为简单的素材堆砌</p>
+</blockquote>
+<p>网上搜了搜，可能是因为我的游戏只有一个界面，点击就开始了。据说加个菜单就会好，于是又改了改，不同场景也换了换背景。</p>
+<p>第三次周六晚上提交，周二晚上收到结果，同上次，审核被拒，原因为「小游戏需具有完整的游戏玩法，不能为简单的素材堆砌」。</p>
+<p>已经不知道该怎么改了，周三早上点了审核失败那里的提交反馈，写了一段感人肺腑的话（* 的内容这里就省略了）。</p>
+<blockquote>
+<p>本游戏为益智类游戏，需要分数吃到 1024 才能获得胜利。<br>游戏场景分为菜单、第一关、最终关、好友排行，不同关卡也会通过背景色来区分。<br>菜单提供了分享好友、查看排行的功能。<br>第一关主要是为了体验游戏流程，星星的分数都是×2，因此只需要不停的吃分即可取得胜利。<br>最终关需要通过自己的策略，除了躲避陨石，还需要吃到星星上不同的分数，才能获得胜利。<br>游戏过程中，星星的速度、分数的出现会实时通过当前的状态进行变化，主要涉及到一些算法，也是本游戏的核心。<br>虽然素材都是星星，但结合算法上边的分数会一直变化，同时星星和陨石的比例也在不断变化。<br>除此之外玩家还需要躲避陨石，同时设定了策略，如果******。<br>在用户挑战失败的时候，增设了复活功能、重开功能。<br>游戏名为「挑战1024」，属于*******，来最终取得胜利。<br>希望审核大大可以再看一下，设计整个流程和算法确实花了很多心思。</p>
+</blockquote>
+<p>周四早上显示反馈成功。</p>
+<blockquote>
+<p>开发者你好，感谢你向小游戏审核团队反馈异议，经平台评估：我们已更正你的历史审核记录，如有需求，可重新提交审核</p>
+</blockquote>
+<p>周五早上进行了重新提审，周二下午终于通过了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20221130083045661.png" alt="image-20221130083045661"></p>
+<p>小游戏相比于小程序审核严格好多，前前后后花了有半个多月了，简单游戏竟然不让上线，这是我想不通的。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>整体就是这样了，整个 <code>cocos</code> 项目可以理解为一棵树，整个树就是一个场景，根节点是一个包含 <code>Canvas</code> 组件的 <code>node</code> ，接下来可以创建自己的 <code>node</code> ，每个 <code>node</code> 又可以挂载想要的自带组件和用户脚本组件。</p>
+<p>希望对大家有帮助，如果错误也欢迎指出，也可以体验一下我这次开发的小游戏，哈哈：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/gh_dc7db84e6a20_258.jpg" alt="gh_dc7db84e6a20_258"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cocos/" rel="tag"># cocos</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/10/27/中后台系统提升质量和效率的一个思路/" rel="next" title="中后台系统提升质量和效率的一个思路">
+                <i class="fa fa-chevron-left"></i> 中后台系统提升质量和效率的一个思路
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编辑器"><span class="nav-number">2.</span> <span class="nav-text">编辑器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#场景-Scene"><span class="nav-number">3.</span> <span class="nav-text">场景/Scene</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#节点-Node"><span class="nav-number">4.</span> <span class="nav-text">节点/Node</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#组件"><span class="nav-number">5.</span> <span class="nav-text">组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Label-组件"><span class="nav-number">5.1.</span> <span class="nav-text">Label 组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图片组件"><span class="nav-number">5.2.</span> <span class="nav-text">图片组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本组件"><span class="nav-number">5.3.</span> <span class="nav-text">脚本组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Widget-组件"><span class="nav-number">5.4.</span> <span class="nav-text">Widget 组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#碰撞组件"><span class="nav-number">5.5.</span> <span class="nav-text">碰撞组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#刚体组件"><span class="nav-number">5.6.</span> <span class="nav-text">刚体组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动画组件"><span class="nav-number">5.7.</span> <span class="nav-text">动画组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#防穿透组件"><span class="nav-number">5.8.</span> <span class="nav-text">防穿透组件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#坐标系"><span class="nav-number">6.</span> <span class="nav-text">坐标系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#脚本组件属性"><span class="nav-number">7.</span> <span class="nav-text">脚本组件属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Prelab"><span class="nav-number">8.</span> <span class="nav-text">Prelab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Node-和-组件"><span class="nav-number">9.</span> <span class="nav-text">Node 和 组件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#显示隐藏"><span class="nav-number">10.</span> <span class="nav-text">显示隐藏</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译"><span class="nav-number">11.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#微信小游戏排行榜"><span class="nav-number">12.</span> <span class="nav-text">微信小游戏排行榜</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发布到微信"><span class="nav-number">13.</span> <span class="nav-text">发布到微信</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">14.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

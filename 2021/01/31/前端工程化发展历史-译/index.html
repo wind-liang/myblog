@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="毕业前对前端工程化一直没有什么切身的体会，现在工作也有半年多了，体会也越来越深，npm，yarn，Webpack ，gulp，Babel，ESlint，TypeScript 最近准备一一去深入了解一下，看到一篇不错的关于前端工程化的发展过程，就翻译了一下，How it feels to learn JavaScript in 2016，虽然说是 2016 年的文章，但现在看来依旧不过时，也侧面说明">
+<meta name="keywords" content="webpack,工程化,npm,node.js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端工程化发展历史(译)">
+<meta property="og:url" content="https://windliang.wang/2021/01/31/前端工程化发展历史-译/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="毕业前对前端工程化一直没有什么切身的体会，现在工作也有半年多了，体会也越来越深，npm，yarn，Webpack ，gulp，Babel，ESlint，TypeScript 最近准备一一去深入了解一下，看到一篇不错的关于前端工程化的发展过程，就翻译了一下，How it feels to learn JavaScript in 2016，虽然说是 2016 年的文章，但现在看来依旧不过时，也侧面说明">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.941Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端工程化发展历史(译)">
+<meta name="twitter:description" content="毕业前对前端工程化一直没有什么切身的体会，现在工作也有半年多了，体会也越来越深，npm，yarn，Webpack ，gulp，Babel，ESlint，TypeScript 最近准备一一去深入了解一下，看到一篇不错的关于前端工程化的发展过程，就翻译了一下，How it feels to learn JavaScript in 2016，虽然说是 2016 年的文章，但现在看来依旧不过时，也侧面说明">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2021/01/31/前端工程化发展历史-译/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>前端工程化发展历史(译) | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2021/01/31/前端工程化发展历史-译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">前端工程化发展历史(译)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-01-31 19:28:50" itemprop="dateCreated datePublished" datetime="2021-01-31T19:28:50+08:00">2021-01-31</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2021/01/31/前端工程化发展历史-译/" class="leancloud_visitors" data-flag-title="前端工程化发展历史(译)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>毕业前对前端工程化一直没有什么切身的体会，现在工作也有半年多了，体会也越来越深，<code>npm</code>，<code>yarn</code>，<code>Webpack</code> ，<code>gulp</code>，<code>Babel</code>，<code>ESlint</code>，<code>TypeScript</code> 最近准备一一去深入了解一下，看到一篇不错的关于前端工程化的发展过程，就翻译了一下，<a href="https://hackernoon.com/how-it-feels-to-learn-javascript-in-2016-d3a717dd577f" target="_blank" rel="noopener">How it feels to learn JavaScript in 2016</a>，虽然说是 <code>2016</code> 年的文章，但现在看来依旧不过时，也侧面说明了前端也渐渐趋于稳定了。</p>
+<p>以下是全文：</p>
+<hr>
+<blockquote>
+<p>hi，我准备写一个网页项目，但是说实话我已经很多年没有碰过代码了，听说现在行业变化很大。你是我们这里最与时俱进的网页开发者(<code>web dev</code>)了吧。</p>
+</blockquote>
+<p>对的，但更准确的说我是前端工程师(<code>Front End engineer</code>)。可视化、音乐播放器、足球游戏，凡是你能想到的都属于前端开发。我刚刚从<code>JS</code> 大会(<code>JsConf</code>)和 React 大会(<code>ReactConf</code>)回来，因此我知道创造 <code>Web apps</code> 最新的技术。</p>
+<blockquote>
+<p>太棒了！我现在需要写一个展示用户活动的页面，我需要通过 <code>RESTful</code> 接口获取数据，然后展示到可筛选的表格中。我是不是可以用 <code>jQuery</code> 去获取数据和展示？</p>
+</blockquote>
+<p>天哪，不不不，已经没有人再用 <code>jQuery</code> 了。你应该去学习 <code>React</code>，现在已经 <code>2016</code> 年了！</p>
+<blockquote>
+<p>啊，好吧，<code>React</code> 是什么呢？</p>
+</blockquote>
+<p>它是由 <code>Facebook</code> 几个大神创造的一个非常 <code>cool</code> 的框架，它能帮助你轻松的控制视图，更好的管理项目，提升性能。</p>
+<blockquote>
+<p>听起来不错，那我能使用 <code>React</code> 去展示来自服务端的数据吗？</p>
+</blockquote>
+<p>可以的，但你首先得在你的页面中引入 <code>React</code> 和 <code>React Dom</code> 这两个库。</p>
+<blockquote>
+<p>啥？为啥是两个库？</p>
+</blockquote>
+<p><code>React</code> 是它的核心库，而 <code>React Dom</code> 是用来操控 <code>Dom</code> 的，通常你需要用 <code>JSX</code> 去描述 <code>DOM</code>。</p>
+<blockquote>
+<p><code>JSX</code>？<code>JSX</code> 又是啥？</p>
+</blockquote>
+<p><code>JSX</code> 是一种 <code>JavaScript</code> 的语法扩展，看起来更像 <code>XML</code>。它是描述 <code>DOM</code> 的一种新的方式，比  <code>HTML</code> 会更好。</p>
+<blockquote>
+<p><code>HTML</code> 表示很无辜。</p>
+</blockquote>
+<p>孩子，已经 <code>2016</code> 年了，没有人直接去写 <code>HTML</code> 了。</p>
+<blockquote>
+<p>好吧，如果我添加了这两个库，是不是就能使用 <code>React</code> 了？</p>
+</blockquote>
+<p><code>emmm</code>，还不太行。你还需要添加 <code>Babel</code> 这个库。</p>
+<blockquote>
+<p>又一个库？<code>Babel</code> 是啥</p>
+</blockquote>
+<p><code>Babel</code> 是一个可以帮助你把任意版本的 <code>JavaScript</code> 代码转换成你要的版本。但如果你坚持只使用 <code>ES5</code> 的语法，<code>Babel</code> 也可以不引入。但现实点吧，现在是 <code>2016</code> 年了，你应该向大家一样，使用 <code>ES2016+</code> 的语法了。</p>
+<blockquote>
+<p><code>ES5</code>？<code>ES2016+</code>？我晕了，它们是些什么。</p>
+</blockquote>
+<p><code>ES5</code> 代表 <code>ECMAScript 5</code>，它是使用人数最多的一个版本，几乎所有浏览器都支持 <code>ES5</code> 的语法。</p>
+<blockquote>
+<p><code>ECMAScript</code>？</p>
+</blockquote>
+<p>它是在 <code>1999</code> 年提出的一个语言规范，<code>JavaScript</code> 属于其中的一种实现。 <code>JavaScript</code> 是 <code>1995</code> 年提出的，之前还叫过 <code>Livescript</code>，仅仅运行在网景的浏览器中。之前这些非常混乱，现在由于有 <code>ECMAScript</code> 的 <code>7</code> 个版本，一切都变得很清晰了，</p>
+<blockquote>
+<p>7 个版本？那 <code>ES5</code> 和 <code>ES2016+</code> 属于？</p>
+</blockquote>
+<p>分别是第 <code>5</code> 个和第 <code>7</code> 个版本。</p>
+<blockquote>
+<p>等等，第 <code>6</code> 个版本哪去了？</p>
+</blockquote>
+<p>你的意思是 <code>ES6</code>？由于每个版本相当于之前版本的超集，所以如果使用 <code>ES2016+</code>，之前版本 <code>ES6</code>、<code>ES5</code> 所有的特性你就都可以使用了。</p>
+<blockquote>
+<p>好吧，那我可以用 <code>ES6</code> 来编程吗？</p>
+</blockquote>
+<p>当然可以，但你不能使用一些最新的特性，比如 <code>async</code> 和 <code>await</code>。你只能通过 <code>ES6</code> 的生成器和协程来执行「同步」的形式异步请求，感兴趣的话可以看一下 <code>co</code> 框架。</p>
+<blockquote>
+<p>完全听不懂你在说什么了，这些名词我都没有听说过。让我理一理，我只想从服务器加载一段数据，过去我是从 <code>CDN</code> 中拿到 <code>jQuery</code> ，然后通过 <code>AJAX</code> 请求数据就可以了，现在怎么变得那么复杂了？</p>
+</blockquote>
+<p>大哥，已经 <code>2016</code> 年了，没有人再使用 <code>jQuery</code> 了，它只会让你写出意大利面条式的代码。</p>
+<blockquote>
+<p>好吧，所以我需要引入 <code>React</code> 、 <code>React Dom</code> 和 <code>Babel</code> 这三个库来拉取数据和展示 <code>HTML</code> 表格吗？</p>
+</blockquote>
+<p>是的，但你还需要用一个模块管理器把这三个库打包成一个文件。</p>
+<blockquote>
+<p>哦哦，那模块管理器又是啥？</p>
+</blockquote>
+<p>它的定义取决于语境，不过在 <code>Web</code> 中，只要支持 <code>AMD</code> 和 <code>CommonJS</code> 模块的话就可以称为模块管理器了。</p>
+<blockquote>
+<p>等等， <code>AMD</code> 和 <code>CommonJS</code> 是？</p>
+</blockquote>
+<p>按照定义来说，他们是描述不同的 <code>javaScript</code> 的库和类模块如何相互作用的不同规范，也就是常说的模块化。你听过 <code>exports</code> 和 <code>require</code> 吗？你可以通过 <code>AMD</code> 或者 <code>CommonJS</code> 编写不同的 <code>js</code> 模块，然后可以使用 <code>Browserify</code> 把这些文件打包起来。</p>
+<blockquote>
+<p>听起来很有道理，但是 <code>Browserify</code> 是什么？</p>
+</blockquote>
+<p>它是一个可以将我们工程依赖的、由 <code>CommonJS</code> 编写的 <code>js</code> 模块打包起来，使其可以运行在浏览器中的工具。之所以有这个工具，是因为我们所依赖的那些模块往往被发布在 <code>npm registry</code>  中。</p>
+<blockquote>
+<p><code>npm registry</code>？</p>
+</blockquote>
+<p>它是一个存放着世界各地的人们编写的代码模块的仓库。</p>
+<blockquote>
+<p>就像是 <code>CDN</code>？</p>
+</blockquote>
+<p>不太一样。它更像一个中心仓库，人们可以在上边发布和下载模块。你可以把模块下载下来在本地使用，也可以把它们上传至 <code>CDN</code> 上然后使用。</p>
+<blockquote>
+<p>明白了，就像是 <code>Bower</code>！</p>
+</blockquote>
+<p>是的，但现在是 <code>2016</code> 年了，没有人再使用 <code>Bower</code> 了。</p>
+<blockquote>
+<p>哦哦，明白了，那我用 <code>npm</code> 下载所需要的库文件就行了。</p>
+</blockquote>
+<p>是的，如果你想使用 <code>React</code>，你只需要下载 <code>React</code> 模块，然后 <code>import</code> 到你的代码中就可以了。你几乎可以使用 <code>npm</code> 下载现在所有流行的 <code>javaScprit</code> 库。</p>
+<blockquote>
+<p><code>Angular</code> 也在里边吧？</p>
+</blockquote>
+<p>是的，不过 <code>Augular</code> 是 <code>2015</code> 年的事情了。虽然 <code>Augular</code> 现在也还在用，但 <code>2016</code> 年有了 <code>VueJS</code> 或者 <code>RxJS</code> 这些新的库，你要学一学吗？</p>
+<blockquote>
+<p>算了算了，还是用 <code>React</code> 吧，毕竟我们已经谈了这么多了。所以我如果想使用 <code>React</code> ，只需要从 <code>npm</code> 下载相应的库，然后用 <code>Browserify</code> 打包就可以了吧？</p>
+</blockquote>
+<p>是的。</p>
+<blockquote>
+<p>但这看起来很复杂，需要下载那么多库，然后再它们打包起来。</p>
+</blockquote>
+<p>对，所以你需要使用一个任务管理器来自动化的运行 <code>Browserify</code>，例如 <code>Grunt</code>、<code>Gulp</code>  或者 <code>Broccoli</code> ，甚至可以使用 <code>Mimosa</code>。</p>
+<blockquote>
+<p><code>Grunt</code>？<code>Gulp</code> ？  <code>Broccoli</code> ？ <code>Mimosa</code>？我要疯了，这怎么一下这么多东西。</p>
+</blockquote>
+<p>它们都是任务管理器，但现在看起来一点都不 <code>cool</code> 了。我们在 <code>2015</code> 年的时候使用它们，之后还用过 <code>Makefiles</code> ，但是现在我们通过 <code>Webpack</code> 把所有功能都集成在一起了。</p>
+<blockquote>
+<p><code>Makefiles</code>？这些一般用在 <code>C/C++</code> 工程中吧？</p>
+</blockquote>
+<p>是的，但是你懂的，在 <code>Web</code> 领域，我们总是喜欢先把事情搞复杂，然后再回归起点。这些年我们总是这样，你等着吧，再过一两年我们肯定就能在 <code>web</code> 上写汇编代码了。</p>
+<blockquote>
+<p>唉，你刚刚讲的 <code>Webpack</code> 是什么呀？</p>
+</blockquote>
+<p>它是另一种浏览器的模块管理器，同时也是一种任务执行器(<code>task runner</code>)。他更像是 <code>Browserify</code> 的升级版。</p>
+<blockquote>
+<p>好吧，它是比 <code>Browserify</code> 更好吗？</p>
+</blockquote>
+<p>也许吧，它可以帮你更好的管理模块之间的依赖。<code>Webpack</code> 允许你使用不同的模块管理器，除了 <code>CommonJS</code> 类型的模块，最新的 <code>ES6</code> 的模块也是支持的。</p>
+<blockquote>
+<p>我完全被 <code>CommonJS/ES6</code> 这些东西搞晕了。</p>
+</blockquote>
+<p>大家都是这样，但通过 <code>SystemJS</code> 的话你就不用关心它们了。</p>
+<blockquote>
+<p>苍天啊，又一个 <code>js</code> 名词，所以 <code>SystemJS</code> 是啥？</p>
+</blockquote>
+<p>和 <code>Browserify</code> 以及 <code>Webpack 1.x</code> 不同，<code>SystemJS</code> 可以动态加载模块，允许你将不同模块打包成不同文件，而不是打包到一个大文件中。</p>
+<blockquote>
+<p>等等，我认为我们就是应该把所有库打包到一个大文件中，然后加载啊。</p>
+</blockquote>
+<p>是的，但由于 <code>HTTP/2</code> 的时代要来临了，它会支持请求多路复用。</p>
+<blockquote>
+<p>等等，所以我们不能只是把 <code>React</code> 依赖的库放到本地？？</p>
+</blockquote>
+<p>也不是。我的意思是我们可以把依赖的库作为外部的脚本从 <code>CDN</code> 中加载，但 <code>Babel</code> 库仍然需要加到本地的。</p>
+<blockquote>
+<p>唉，这听起来是不是不太好。</p>
+</blockquote>
+<p>对的，你需要引入整个 <code>babel-core</code>，对于线上环境来说效率很差。你需要做很多的前置动作才能让项目准备好，压缩资源、混淆代码、内联 <code>css</code> 、延迟加载 <code>js</code>，还有…</p>
+<blockquote>
+<p>明白了，明白了。所以如果不用 <code>CDN</code> 去加载库的话，你会怎么做？</p>
+</blockquote>
+<p>我会使用 <code>Webpack</code> + <code>SystemJS</code> + <code>Babel</code> 的组合从 <code>TypeScript</code> 转化。</p>
+<blockquote>
+<p><code>TypeScript</code>？我一直以为是用 <code>javaScript</code> 写代码。</p>
+</blockquote>
+<p><code>TypeScript</code> 就是 <code>javaScript</code>，更准确的说是 <code>javaScript</code> 的超集，或者说更具体点，是 <code>ES6</code> 版本的 <code>javaScript</code> 的超集。</p>
+<blockquote>
+<p> <code>ES2016+</code> 不已经是 <code>ES6</code> 的超集了，为什么我们还需要使用这个叫 <code>TypeScript</code> 的东西？</p>
+</blockquote>
+<p>因为它允许我们写 <code>javaScript</code> 的时候定义类型，从而减少运行时的错误。现在已经是 <code>2016</code> 年了，是时候在 <code>javaScript</code> 代码中添加类型了。</p>
+<blockquote>
+<p>哈哈，就像它的名字一样，<code>TypeScript</code>。</p>
+</blockquote>
+<p>虽然  <code>TypeScript</code> 是 <code>javaScript</code> 的超集，但它还需要编译成 <code>javaScript</code> 才能在浏览器运行。而另一种工具 <code>Flow</code> 就仅仅做类型检查，无需编译。</p>
+<blockquote>
+<p>等等，<code>Flow</code> 是啥？</p>
+</blockquote>
+<p>它是 <code>Facebook</code> 的几个人开发的一个静态类型检查器，他们使用 <code>OCaml</code> 语言去写的，因为函数式编程看起来很酷。</p>
+<blockquote>
+<p><code>OCaml</code>？函数式编程？</p>
+</blockquote>
+<p>这是如今那些 <code>cool kids</code> 使用的，函数式编程、高阶函数、柯里化、纯函数。</p>
+<blockquote>
+<p>哎，我一个也没听过。</p>
+</blockquote>
+<p>没有人一开始就会的。你只需要知道函数式编程比面向对象更好，并且这是 <code>2016</code> 该采取的方式就可以了。</p>
+<blockquote>
+<p>不对吧，我在大学学的是面向对象，这个会更好些吧？</p>
+</blockquote>
+<p>就像 <code>java</code> 被 <code>Oracle</code> 收购前一样好，哈哈，我意思是面向对象过去很辉煌，当然现在依旧很多人在使用。但是现在很多人都意识到修改对象状态是一个太危险的事情了，所以大家都转向了不可变对象和函数式编程。<code>Haskell</code> 语言已经这么做很多年了，但不要和我提 <code>Elm</code> 那些人。幸运的是，原生 <code>javaScript</code>  也可以通过 <code>Ramda</code> 这样的库进行函数式编程。</p>
+<blockquote>
+<p>你不要再罗列名词了，<code>Ramnda</code> 是什么呀？</p>
+</blockquote>
+<p>不，是 <code>Ramda</code>，和 <code>Lambda</code> 表达式类似，它是 <code>David Chambers</code> 创建的库。</p>
+<blockquote>
+<p><code>David</code>？是谁啊？</p>
+</blockquote>
+<p><code>David Chambers</code> ，一个大神，喜欢玩 <code>mean Coup game</code>，是 <code>Ramda</code> 的贡献者之一。如果你想更深入的了解函数式编程，你还需要知道 <code>Erik Meijer</code>。</p>
+<blockquote>
+<p><code>Erik Meijer</code> 是？</p>
+</blockquote>
+<p>另一个函数式编程的大神，他有很多演讲抨击过敏捷编程。当然感兴趣的话你还可以去了解 <code>Tj, Jash Kenas, Sindre Sorhus, Paul Irish, Addy Osmani--</code></p>
+<blockquote>
+<p>等等，对不起打断一下。目前这些对于我来说应该用不到，我只想拉取数据然后展示出来。让我们回到 <code>React</code>，我怎么用 <code>React</code> 从服务器获得数据？</p>
+</blockquote>
+<p><code>emmm</code>，你不是用 <code>React</code> 获取数据，你只是用它展示数据。</p>
+<blockquote>
+<p>阿西吧，那你通常用什么 <code>fetch the data</code> ？</p>
+</blockquote>
+<p>你可以用 <code>Fetch</code> 去从服务器 <code>fetch the data</code>。</p>
+<blockquote>
+<p>啥？用 <code>Fetch</code> 去从服务器 <code>fetch the data</code>？起这个名字的人真够简单粗暴。</p>
+</blockquote>
+<p><code>Fetch</code> 和 <code>XMLHttpRequests</code> 一样是浏览器的原生实现，是为了从服务器获取数据。</p>
+<blockquote>
+<p>那就是 <code>AJAX</code> 吧？</p>
+</blockquote>
+<p><code>AJAX</code> 只是基于 <code>XMLHttpRequests</code> 的封装，而 <code>Fetch</code> 可以让你使用 <code>Promise</code> 风格去异步请求数据，从而避免回调地狱。</p>
+<blockquote>
+<p>回调地狱？</p>
+</blockquote>
+<p>就是由于网络请求是异步的，你需要在回调函数里边去获取数据，如果此时又需要网络请求，那就需要在回调函数里再调用网络请求，然后再加回调函数，如果再请求网络…会变得越来越乱。</p>
+<blockquote>
+<p>嗯嗯，我知道这个，所以 <code>promise</code> 可以解决这个问题吗？</p>
+</blockquote>
+<p>是的，通过 <code>promise</code> 你可以更轻松的管理异步请求，写出易于理解的代码，同时调用多个网络请求。</p>
+<blockquote>
+<p>也就是用 <code>Fetch</code> 去写？</p>
+</blockquote>
+<p>是的，但是你得保证你用户的浏览器是最新的，否则你需要 <code>Fetch</code> 的 <code>polyfill</code>（兼容不能用 <code>Fetch</code> 的浏览器），或者使用 <code>Request</code>，<code>Bluebird</code> 或者 <code>Axios</code>。</p>
+<blockquote>
+<p>苍天啊，我到底需要知道多少库，怎么还有啊。</p>
+</blockquote>
+<p>这就是 <code>javaScript</code>，有成千上万个库去做同样的事情，当然我们可以从中选出一个最好用的。</p>
+<blockquote>
+<p>那你刚才说的那些库是干什么的呀？</p>
+</blockquote>
+<p>它们是基于 <code>XMLHttpRequests</code> 实现的 <code>promise</code> 风格的请求库。</p>
+<blockquote>
+<p><code>jQuery</code> 的 <code>AJAX</code> 方法不是也开始返回 <code>promise</code> 了吗？</p>
+</blockquote>
+<p>忘记 <code>jQuery</code> 吧，去用 <code>Fetch</code> + <code>polyfill</code>，或者  <code>Request</code>，<code>Bluebird</code>， <code>Axios</code>。我们可以通过它们在 <code>async</code> 函数中 <code>await</code> 异步请求，就像顺序编程一样。</p>
+<blockquote>
+<p>这是你第三次提到 <code>await</code> 了，但我完全不知道它是干啥的。</p>
+</blockquote>
+<p><code>await</code> 允许你阻塞异步请求，让你更好的控制异步请求，然后处理数据，大大增强了代码的可读性。这非常方便，但你记得要加 <code>stage-3 preset</code> 的 <code>Babel</code>，或者通过 <code>transform-async-to-generator</code> 插件使用 <code>syntax-async-functions</code>。</p>
+<blockquote>
+<p>这也太麻烦了。</p>
+</blockquote>
+<p>不不不，真正麻烦的地方在于首先要编译 <code>Typescript</code> 代码，然后再用 <code>Babel</code> 转化才能让 <code>await</code> 被浏览器认识。</p>
+<blockquote>
+<p>啥，<code>Typescript</code> 不支持 <code>await</code> 吗？</p>
+</blockquote>
+<p><code>1.7</code> 是不支持的，它只会被编译成 <code>ES6</code>，预计下一个版本才会支持。所以你只能先把<code>Typescript</code> 编译成 <code>ES6</code>，然后再通过 <code>Babel</code> 把它转换成 <code>ES5</code>，以便兼容更多的浏览器。</p>
+<blockquote>
+<p>我不知道我还能说什么。</p>
+</blockquote>
+<p>其实挺简单的。就是用 <code>Typescript</code> 写代码，所有模块都用 <code>Fetch</code> 去请求，加上 <code>Babel</code> 的 <code>stage-3 preset</code> ，然后使用 <code>SystemJS</code> 去加载它们。为了让 <code>Fetch</code> 兼容更多浏览器，记得加 <code>polyfill</code>，或者使用  <code>Request</code>，<code>Bluebird</code> 或者 <code>Axios</code>，并且使用 <code>await</code> 去等待所有的 <code>promise</code>。</p>
+<blockquote>
+<p>我们对简单的定义可能不太一样，，，所以现在我拿到了数据，我就可以用 <code>React</code> 展示数据了吧？</p>
+</blockquote>
+<p>你的应用要控制所有 <code>state</code> 的变化吗？</p>
+<blockquote>
+<p>我觉得不用，我只是需要展示数据。</p>
+</blockquote>
+<p>那太好了，不然我还得向你解释 <code>Flux</code> ，以及它的一些实现，比如 <code>Flummox, Alt, Fluxible</code>。但说实话， <code>Redux</code> 会更好用些。</p>
+<blockquote>
+<p>我不想再知道新的名字了，我只是想展示数据。</p>
+</blockquote>
+<p>哦哦，如果只是展示数据，你其实不需要 <code>React</code>，用一个模版引擎就好了。</p>
+<blockquote>
+<p>你在逗我吗？你觉得这很有趣吗，唉，感情淡了。</p>
+</blockquote>
+<p>我只是想告诉你你能用什么。</p>
+<blockquote>
+<p>那请你不要说了。</p>
+</blockquote>
+<p>其实如果用模版引擎的话，我还是推荐你继续使用 <code>Typescript + SystemJS + Babel</code> 的组合。</p>
+<blockquote>
+<p>那你有推荐的模版吗？</p>
+</blockquote>
+<p>有很多，你之前有用过什么吗？</p>
+<blockquote>
+<p>不太记得名字了，隔的时间太久了。</p>
+</blockquote>
+<p><code>jTemplates? jQote? PURE?</code></p>
+<blockquote>
+<p>没有用过，还有吗？</p>
+</blockquote>
+<p><code>Transparency? JSRender? MarkupJS? KnockoutJS?</code> 这一个支持双向绑定。</p>
+<blockquote>
+<p>还有吗？</p>
+</blockquote>
+<p><code>PlatesJS? jQuery-tmpl? Handlebars?</code>这些还有些人在用。</p>
+<blockquote>
+<p>有和最后一个比较像的吗？</p>
+</blockquote>
+<p><code>PlatesJS? jQuery-tmpl? Handlebars?</code> 甚至 <code>lodash</code> 都有一个模版引擎，但这已经是 <code>2014</code> 年的事情了。</p>
+<blockquote>
+<p>那有没有更新一些的？</p>
+</blockquote>
+<p><code>Jade? DustJS?</code></p>
+<blockquote>
+<p>没听说过。</p>
+</blockquote>
+<p><code>DotJS? EJS?</code></p>
+<blockquote>
+<p>没听说过。</p>
+</blockquote>
+<p><code>Nunjucks? ECT?</code></p>
+<blockquote>
+<p>没听说过。</p>
+</blockquote>
+<p>对的，应该没有人喜欢 <code>Coffeescript</code> 的语法了。那 <code>Jade</code>?</p>
+<blockquote>
+<p>你不是说过 <code>Jade</code> 了吗？</p>
+</blockquote>
+<p>我的意思是 <code>Pug</code>，也是 <code>Jade</code>。现在 <code>Jade</code> 叫 <code>Pug</code> 了。</p>
+<blockquote>
+<p>额，我想不起来我用过啥了，你现在用什么模版引擎？</p>
+</blockquote>
+<p>也许会用 <code>ES6</code> 支持的原生模版字符串。</p>
+<blockquote>
+<p>那我捋捋。只有 <code>ES6</code> 支持？</p>
+</blockquote>
+<p>对的。</p>
+<blockquote>
+<p>那我需要用 <code>Babel</code> 来兼容更多的浏览器。</p>
+</blockquote>
+<p>对的。</p>
+<blockquote>
+<p>我需要从 <code>npm</code> 加载它的核心库？</p>
+</blockquote>
+<p>对的。</p>
+<blockquote>
+<p>我还需要 <code>Browerify</code> 或者 <code>Webpack</code> 或者 <code>SystemJS</code> 来管理这些模块？</p>
+</blockquote>
+<p>对的。</p>
+<blockquote>
+<p>除非直接用 <code>Webpack</code> ，不然的话我还需要一个任务管理器。</p>
+</blockquote>
+<p>对的。</p>
+<blockquote>
+<p>由于我要用函数式编程以及强类型的语言，我还需要 <code>Typescript</code> 或者 <code>Flow</code>。</p>
+</blockquote>
+<p>对的。</p>
+<blockquote>
+<p>如果要用 <code>await</code> ，<code>Babel</code> 需要进行相应的配置。</p>
+</blockquote>
+<p>对的。</p>
+<blockquote>
+<p>这样我就能使用 <code>Fetch</code> ，<code>Promise</code> 这些神奇的东西了。</p>
+</blockquote>
+<p>对，记得不要忘记给 <code>Fetch</code> 加上 <code>polyfill</code>，有些浏览器目前还不支持这个特性。</p>
+<blockquote>
+<p>好吧，我疯了，今天到这里吧。我不要再碰 <code>Web</code> 了，不要再和我提 <code>javsScript</code> 了。</p>
+</blockquote>
+<p>问题不大，也许未来我们就会使用 <code>Elm</code> 或者 <code>WebAssembly</code> 了。</p>
+<blockquote>
+<p>我还是去写我的后端吧。我觉得我追不上这么多的变化，各种版本号，还有各种编译器和转换器。<code>javaScript</code> 社区真是太疯狂了，它觉得每个人能跟上这么快的变化吗。</p>
+</blockquote>
+<p>哈哈，你应该去了解一下 <code>Python</code> 社区。</p>
+<blockquote>
+<p>为什么？</p>
+</blockquote>
+<p>听过 <code>Python 3</code> 吗？（ <code>python 3</code> 没有向前兼容 <code>pyhon 2</code>，差异巨大）</p>
+<hr>
+<p>总结一下，前端之所以发生这么大的变化，我觉得一个很关键的点就是 <code>Node.js</code> 的出现。它使得 <code>js</code> 可以脱离浏览器去运行，还提供了读写文件的能力。从而可以在本地进行编译、转换 <code>js</code> 文件，将打包完成的文件运行在浏览器中。</p>
+<p>我们可以不去考虑浏览器支持的语法，各种模块化、<code>ES</code> 的新特性，放心大胆的用就可以了，大不了最后再转换就可以了。</p>
+<p>此外 <code>node.js</code> 也使得 <code>javaScript</code> 可以写一些服务器端的应用，自己只用它写过一些 <code>Web</code> 接口，其他的了解不多。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/webpack/" rel="tag"># webpack</a>
+          
+            <a href="/tags/工程化/" rel="tag"># 工程化</a>
+          
+            <a href="/tags/npm/" rel="tag"># npm</a>
+          
+            <a href="/tags/node-js/" rel="tag"># node.js</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/18/WebAssembly入门-未来可能发生的巨变/" rel="next" title="WebAssembly入门-未来可能发生的巨变">
+                <i class="fa fa-chevron-left"></i> WebAssembly入门-未来可能发生的巨变
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/03/09/苹果手机大小周闹钟设置/" rel="prev" title="苹果手机大小周闹钟设置">
+                苹果手机大小周闹钟设置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

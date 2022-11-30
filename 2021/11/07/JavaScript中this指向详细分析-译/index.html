@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前端开发中，每天和我们见面最多的也许就是 this 关键字了，一直想总结一篇 this 的文章，然后看到了 Gentle Explanation of “this” in JavaScript ，总结的太好了，这里就翻译一下吧。  神秘的thisthis 关键词已经折磨我很久很久了。 对于 Java、PHP 这类标准语言，this 表示当前类的实例化对象，它不能够在类的方法外使用，简单直接，因此并">
+<meta name="keywords" content="前端,this">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript中this指向详细分析(译)">
+<meta property="og:url" content="https://windliang.wang/2021/11/07/JavaScript中this指向详细分析-译/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="前端开发中，每天和我们见面最多的也许就是 this 关键字了，一直想总结一篇 this 的文章，然后看到了 Gentle Explanation of “this” in JavaScript ，总结的太好了，这里就翻译一下吧。  神秘的thisthis 关键词已经折磨我很久很久了。 对于 Java、PHP 这类标准语言，this 表示当前类的实例化对象，它不能够在类的方法外使用，简单直接，因此并">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11071.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11072.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11073.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11074.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11075.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11076.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11077.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11078.jpg">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.931Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript中this指向详细分析(译)">
+<meta name="twitter:description" content="前端开发中，每天和我们见面最多的也许就是 this 关键字了，一直想总结一篇 this 的文章，然后看到了 Gentle Explanation of “this” in JavaScript ，总结的太好了，这里就翻译一下吧。  神秘的thisthis 关键词已经折磨我很久很久了。 对于 Java、PHP 这类标准语言，this 表示当前类的实例化对象，它不能够在类的方法外使用，简单直接，因此并">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11071.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2021/11/07/JavaScript中this指向详细分析-译/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>JavaScript中this指向详细分析(译) | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2021/11/07/JavaScript中this指向详细分析-译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JavaScript中this指向详细分析(译)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-11-07 08:59:10" itemprop="dateCreated datePublished" datetime="2021-11-07T08:59:10+08:00">2021-11-07</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2021/11/07/JavaScript中this指向详细分析-译/" class="leancloud_visitors" data-flag-title="JavaScript中this指向详细分析(译)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前端开发中，每天和我们见面最多的也许就是 <code>this</code> 关键字了，一直想总结一篇 <code>this</code> 的文章，然后看到了 <a href="https://dmitripavlutin.com/gentle-explanation-of-this-in-javascript/" target="_blank" rel="noopener">Gentle Explanation of “this” in JavaScript</a> ，总结的太好了，这里就翻译一下吧。</p>
+<hr>
+<h1 id="神秘的this"><a href="#神秘的this" class="headerlink" title="神秘的this"></a>神秘的this</h1><p><code>this</code> 关键词已经折磨我很久很久了。</p>
+<p>对于 <code>Java</code>、<code>PHP</code> 这类<em>标准语言</em>，<code>this</code> 表示当前类的实例化对象，它不能够在类的方法外使用，简单直接，因此并不会让人产生困惑。</p>
+<p>但在 <code>JavaScript</code> 中情况就比较复杂了：<strong><code>this</code> 指向当前函数调用的执行上下文(<code>context</code>)</strong>，有四种函数调用类型：</p>
+<ul>
+<li>函数直接调用(<code>function invocation</code>：<code>alert(&#39;Hello World!&#39;)</code></li>
+<li>方法调用(<code>method invocation</code>：<code>console.log(&#39;Hello World!&#39;)</code></li>
+<li>构造函数调用(<code>constructor invocation</code>：<code>new RegExp(&#39;\\d&#39;)</code></li>
+<li>间接调用(<code>indirect invocation</code>：<code>alert.call(undefined, &#39;Hello World!&#39;)</code></li>
+</ul>
+<p>每种调用方式都产生了各自不同的上下文，因此 <code>this</code> 有时候可能并不是我们所期待的。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11071.jpg" alt="img" style="width:50%;"></p>
+<p>此外，严格模式（<code>strict mode</code>）也会影响到 <code>this</code> 的指向。</p>
+<blockquote>
+<p>弄清 <code>this</code> 指向的关键就是对上边函数调用类型有一个清楚的判断</p>
+</blockquote>
+<p>下边会详细介绍每一种调用类型的区别，以及它们是怎么影响 <code>this</code> 指向的，同时会举例说明一些容易判断出错的陷阱。</p>
+<h1 id="1-函数直接调用-function-invocation"><a href="#1-函数直接调用-function-invocation" class="headerlink" title="1. 函数直接调用(function invocation)"></a>1. 函数直接调用(function invocation)</h1><p><em>定义：一个可以解析成函数对象的表达式，紧跟着左括号，然后是逗号分割的参数，最后是右括号。例如 <code>parseInt(&#39;18&#39;)</code>。</em></p>
+<p>下边看一个简单的函数直接调用的例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">hello</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">'Hello '</span> + name + <span class="string">'!'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Function invocation</span></span><br><span class="line"><span class="keyword">const</span> message = hello(<span class="string">'World'</span>);</span><br></pre></td></tr></table></figure>
+<p><code>hello(&#39;World&#39;)</code> 就是一个函数直接调用：<code>hello</code>可以解析成一个函数对象，紧跟着是用括号括起来的 <code>World</code> 参数。</p>
+<p>函数直接调用和通过对象属性 <code>obj.myFunc()</code> 是不同的，它叫做方法调用 <code>method invocation</code>（后边介绍的第 <code>2</code> 种类型）。比如 <code>[1,5].join(&#39;,&#39;)</code> 这种不是一个函数直接调用，而是方法调用。<strong>这两种是最容易混淆的，需要特别注意</strong>。</p>
+<p>此外，一个 <code>IIFE(immediately-invoked function expression)</code> 也属于函数直接调用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// IIFE</span></span><br><span class="line"><span class="keyword">const</span> message = (<span class="function"><span class="keyword">function</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">'Hello '</span> + name + <span class="string">'!'</span>;</span><br><span class="line">&#125;)(<span class="string">'World'</span>);</span><br></pre></td></tr></table></figure>
+<p>第一对括号内的 <code>(function(name) {...})</code> 是一个可以解析成函数对象的表达式，接下来的一对括号中 <code>(&#39;World&#39;)</code> 括的就是参数列表。</p>
+<h2 id="1-1-函数直接调用中的-this-指向"><a href="#1-1-函数直接调用中的-this-指向" class="headerlink" title="1.1 函数直接调用中的 this 指向"></a>1.1 函数直接调用中的 <code>this</code> 指向</h2><p>首先需要知道全局对象是什么，不同执行环境中全局对象不同。在浏览器中全局对象是 <code>window</code>，<code>Node.js</code> 中的全局对象是 <code>global</code>。下边主要以浏览器的执行环境来分析。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11072.jpg" alt="img" style="width:50%;"></p>
+<p>在「函数直接调用」中，执行上下文就是全局对象，也就是 <code>this</code> 的指向。</p>
+<p>让我们看下边的例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sum</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span> === <span class="built_in">window</span>); <span class="comment">// =&gt; true</span></span><br><span class="line">  <span class="keyword">this</span>.myNumber = <span class="number">20</span>; <span class="comment">// add 'myNumber' property to global object</span></span><br><span class="line">  <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// sum() is invoked as a function</span></span><br><span class="line"><span class="comment">// this in sum() is a global object (window)</span></span><br><span class="line">sum(<span class="number">15</span>, <span class="number">16</span>);     <span class="comment">// =&gt; 31</span></span><br><span class="line"><span class="built_in">window</span>.myNumber; <span class="comment">// =&gt; 20</span></span><br></pre></td></tr></table></figure>
+<p>当调用 <code>sum(15, 16)</code> 的时候，<code>JavaScript</code> 会自动将 <code>this</code> 指向全局对象（浏览器中的 <code>window</code>）。</p>
+<p>当 <code>this</code> 在函数外的顶级作用域中使用的时候，同样也是指向全局对象的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span> === <span class="built_in">window</span>); <span class="comment">// =&gt; true</span></span><br><span class="line"><span class="keyword">this</span>.myString = <span class="string">'Hello World!'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.myString); <span class="comment">// =&gt; 'Hello World!'</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>html</code> 中的 <code>script</code> 中也是一样的。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- In an html file --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"> <span class="built_in">console</span>.log(<span class="keyword">this</span> === <span class="built_in">window</span>); <span class="comment">// =&gt; true</span></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="1-2-函数直接调用中的-this-指向（严格模式）"><a href="#1-2-函数直接调用中的-this-指向（严格模式）" class="headerlink" title="1.2  函数直接调用中的 this 指向（严格模式）"></a>1.2  函数直接调用中的 <code>this</code> 指向（严格模式）</h2><blockquote>
+<p>严格模式下，函数直接调用中的 <code>this</code> 是 <code>undefined</code>。</p>
+</blockquote>
+<p>严格模式在<a href="http://www.ecma-international.org/ecma-262/5.1/#sec-10.1.1" target="_blank" rel="noopener">ECMAScript 5.1</a> 出现，对 <code>js</code> 一些语法进行了限制，可以提供一个更加安全、健壮的错误检查机制。</p>
+<p>在函数体顶部加入 <code>&#39;user strict&#39;</code> 即可使用严格模式。</p>
+<p>严格模式会影响当前上下文环境（<code>context</code>)，在函数直接调用场景中，<code>this</code> 会变为 <code>undefind</code>，而不是上边介绍的全局对象。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11073.jpg" alt="img" style="width:50%;"></p>
+<p>下边举一个使用严格模式的例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">multiply</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line"><span class="meta">  'use strict'</span>; <span class="comment">// enable the strict mode</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span> === <span class="literal">undefined</span>); <span class="comment">// =&gt; true</span></span><br><span class="line">  <span class="keyword">return</span> a * b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// multiply() function invocation with strict mode enabled</span></span><br><span class="line"><span class="comment">// this in multiply() is undefined</span></span><br><span class="line">multiply(<span class="number">2</span>, <span class="number">5</span>); <span class="comment">// =&gt; 10</span></span><br></pre></td></tr></table></figure>
+<p> 当使用严格模式调用 <code>multiply(2, 5)</code> 的时候，<code>this</code> 就是 <code>undefined</code>。</p>
+<p>严格模式不仅对当前作用域有效，它内部的作用域（当前作用域内定义的函数内）也会是严格模式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">execute</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="meta">  'use strict'</span>;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">concat</span>(<span class="params">str1, str2</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// the strict mode is enabled too</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === <span class="literal">undefined</span>); <span class="comment">// =&gt; true</span></span><br><span class="line">    <span class="keyword">return</span> str1 + str2;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span> === <span class="literal">undefined</span>); <span class="comment">// =&gt; true</span></span><br><span class="line">  <span class="comment">// concat() is invoked as a function in strict mode</span></span><br><span class="line">  <span class="comment">// this in concat() is undefined</span></span><br><span class="line">  concat(<span class="string">'Hello'</span>, <span class="string">' World!'</span>); <span class="comment">// =&gt; "Hello World!"</span></span><br><span class="line">&#125;</span><br><span class="line">execute();</span><br></pre></td></tr></table></figure>
+<p>上边的代码中，<code>use strict</code> 是写在 <code>execute</code> 函数体的头部，函数内部的 <code>this</code> 会是 <code>undefined</code>。同时，因为 <code>concat</code> 是定义在 <code>execute</code> 内部，它也会继承严格模式。因此 <code>concat(&#39;Hello&#39;, &#39; World!&#39;)</code> 的调用，其内部的 <code>this</code> 也会指向 <code>undefined</code>。</p>
+<p>一个单独 <code>js</code> 文件可能包含多个作用域，因此不同的作用域可能分别处于非严格模式和严格模式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">nonStrictSum</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// non-strict mode</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span> === <span class="built_in">window</span>); <span class="comment">// =&gt; true</span></span><br><span class="line">  <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">strictSum</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line"><span class="meta">  'use strict'</span>;</span><br><span class="line">  <span class="comment">// strict mode is enabled</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span> === <span class="literal">undefined</span>); <span class="comment">// =&gt; true</span></span><br><span class="line">  <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// nonStrictSum() is invoked as a function in non-strict mode</span></span><br><span class="line"><span class="comment">// this in nonStrictSum() is the window object</span></span><br><span class="line">nonStrictSum(<span class="number">5</span>, <span class="number">6</span>); <span class="comment">// =&gt; 11</span></span><br><span class="line"><span class="comment">// strictSum() is invoked as a function in strict mode</span></span><br><span class="line"><span class="comment">// this in strictSum() is undefined</span></span><br><span class="line">strictSum(<span class="number">8</span>, <span class="number">12</span>); <span class="comment">// =&gt; 20</span></span><br></pre></td></tr></table></figure>
+<h2 id="1-3-陷阱：内部函数的-this-指向"><a href="#1-3-陷阱：内部函数的-this-指向" class="headerlink" title="1.3 陷阱：内部函数的 this 指向"></a>1.3 陷阱：内部函数的 <code>this</code> 指向</h2><p>⚠️一个很普遍的陷阱：对于函数直接调用，可能会认为如果是函数内部定义的函数，它的 <code>this</code> 会指向外部函数的上下文。</p>
+<p>👍要始终记得，内部函数的 <code>this</code> 指向（除了箭头函数）只和它的调用类型相关（也就是本文介绍的几种类型），而不是它所在函数的上下文。</p>
+<p>为了使 <code>this</code> 变成我们所期待的值，我们可以通过间接调用来实现（比如 <code>.call()</code> 或者 <code>.apply()</code>，下边第 <code>4</code> 节会介绍），或者创造一个绑定函数（使用 <code>.bind()</code>，下边第 <code>5</code> 节会介绍）。</p>
+<p>看一下下边两数相加的例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = &#123;</span><br><span class="line">  numberA: <span class="number">5</span>,</span><br><span class="line">  numberB: <span class="number">10</span>,</span><br><span class="line">  sum: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === numbers); <span class="comment">// =&gt; true</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">calculate</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="comment">// this is window or undefined in strict mode</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span> === numbers); <span class="comment">// =&gt; false</span></span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.numberA + <span class="keyword">this</span>.numberB;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> calculate();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">numbers.sum(); <span class="comment">// =&gt; NaN or throws TypeError in strict mode</span></span><br></pre></td></tr></table></figure>
+<p>⚠️ <code>numbers.sum()</code> 属于对象的一个方法调用，下一小节会讲。从代码分析，这里 <code>calculate()</code> 的结果其实就是  <code>numbers.sum()</code> 的结果 。因为 <code>calculate</code> 函数定义在 <code>sum</code> 中，<code>sum</code> 是 <code>numbers</code> 对象的属性，因此当调用 <code>numbers.sum()</code>， 我们会觉得 <code>calculate</code> 中的 <code>this</code> 也指向 <code>numbers</code> 对象。</p>
+<p>重点来了，由于 <code>calculate()</code> 属于我们这一小节中讲的「函数直接调用」的类型，而不是下一小节的「方法调用」。所以 <code>calculate</code> 中的 <code>this</code> 指向全局对象 <code>window</code>，或者严格模式下的 <code>undefined</code>。即使在 <code>numbers.sum()</code> 中的 <code>this</code> 指向当前对象 <code>numbers</code>，但是它并不会影响 <code>calculate</code> 中的 <code>this</code>。</p>
+<p>因此 <code>numbers.sum()</code> 的调用结果是 <code>NaN</code> （或者在严格模式下抛出一个错误 <code>TypeError: Cannot read property &#39;numberA&#39; of undefined</code>)。而不是我们所期待的 <code>5 + 10 = 15</code>    。</p>
+<p>👍 为了解决这个问题，<code>calculate()</code> 函数必须拥有和 <code>numbers.sum()</code> 相同的 <code>this</code> 指向，这样在 <code>calculate</code> 中才能访问到 <code>this.numberA</code> 和 <code>this.numberB</code>。</p>
+<p>一种解决方法就是使用 <code>call</code> 方法来手动改变 <code>calculate()</code> 中的 <code>this</code> 指向。（第 <code>4</code> 节的时候会介绍「间接调用」这种类型）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = &#123;</span><br><span class="line">  numberA: <span class="number">5</span>,</span><br><span class="line">  numberB: <span class="number">10</span>,</span><br><span class="line">  sum: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === numbers); <span class="comment">// =&gt; true</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">calculate</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span> === numbers); <span class="comment">// =&gt; true</span></span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.numberA + <span class="keyword">this</span>.numberB;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// use .call() method to modify the context</span></span><br><span class="line">    <span class="keyword">return</span> calculate.call(<span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">numbers.sum(); <span class="comment">// =&gt; 15</span></span><br></pre></td></tr></table></figure>
+<p><code>calculate.call(this)</code> 会正常执行 <code>calculate()</code>函数，同时会将它的执行上下文变为所传入的第一个参数。</p>
+<p>现在 <code>this.numberA + this.numberB</code> 就相当于 <code>number.numberA + numbers.numberB</code> 了，所以结果就是 <code>5 + 10 = 15</code> 了。</p>
+<p>另外一种解决方法看起来会更好，那就是通过箭头函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = &#123;</span><br><span class="line">  numberA: <span class="number">5</span>,</span><br><span class="line">  numberB: <span class="number">10</span>,</span><br><span class="line">  sum: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === numbers); <span class="comment">// =&gt; true</span></span><br><span class="line">    <span class="keyword">const</span> calculate = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span> === numbers); <span class="comment">// =&gt; true</span></span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.numberA + <span class="keyword">this</span>.numberB;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> calculate();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">numbers.sum(); <span class="comment">// =&gt; 15</span></span><br></pre></td></tr></table></figure>
+<p>箭头函数中的 <code>this</code> 会指向它所定义的地方，这里就是 <code>numbers.sum</code> 中的 <code>this</code>，会在第 <code>6</code> 讲中继续讲箭头函数。</p>
+<h1 id="2-方法调用"><a href="#2-方法调用" class="headerlink" title="2 方法调用"></a>2 方法调用</h1><p>对象中的某个属性如果是函数，我们称其为方法。例如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> myObject = &#123;</span><br><span class="line">  <span class="comment">// helloMethod is a method</span></span><br><span class="line">  helloMethod: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'Hello World!'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> message = myObject.helloMethod();</span><br></pre></td></tr></table></figure>
+<p><code>helloMethod</code> 是 <code>myObject</code> 的一个方法。使用属性访问器 <code>myObject.helloMethod</code> 可以调用这个方法。</p>
+<p><em>方法调用定义：通过属性访问器得到一个函数对象，紧跟着左括号，然后是逗号分割的参数，最后是右括号。例如上边的例子 <code>myObject.helloMethod()</code>。</em></p>
+<p>更多其他的例子：<code>[1, 2].join(&#39;,&#39;)</code> or <code>/\s/.test(&#39;beautiful world&#39;)</code>。</p>
+<p>再强调一遍，区分上一节介绍的「函数直接调用」类型和这一节介绍的「方法调用」非常重要。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> words = [<span class="string">'Hello'</span>, <span class="string">'World'</span>];</span><br><span class="line">words.join(<span class="string">', '</span>);   <span class="comment">// method invocation</span></span><br><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">  myMethod() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Date</span>().toString();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.myMethod();     <span class="comment">// method invocation</span></span><br><span class="line"><span class="keyword">const</span> func = obj.myMethod;</span><br><span class="line">func();             <span class="comment">// function invocation</span></span><br><span class="line"><span class="built_in">parseFloat</span>(<span class="string">'16.6'</span>); <span class="comment">// function invocation</span></span><br><span class="line"><span class="built_in">isNaN</span>(<span class="number">0</span>);           <span class="comment">// function invocation</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-1-方法调用中的-this-指向"><a href="#2-1-方法调用中的-this-指向" class="headerlink" title="2.1 方法调用中的 this 指向"></a>2.1 方法调用中的 <code>this</code> 指向</h2><blockquote>
+<p>在方法调用中，<code>this</code> 指向拥有这个方法的对象。</p>
+</blockquote>
+<p>当我们调用对象中的一个方法时，<code>this</code> 指向拥有这个方法的对象。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11074.jpg" alt="img" style="width:50%;"></p>
+<p>我们来看一个增加数字的例子。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> calc = &#123;</span><br><span class="line">  num: <span class="number">0</span>,</span><br><span class="line">  increment() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === calc); <span class="comment">// =&gt; true</span></span><br><span class="line">    <span class="keyword">this</span>.num += <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.num;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// method invocation. this is calc</span></span><br><span class="line">calc.increment(); <span class="comment">// =&gt; 1</span></span><br><span class="line">calc.increment(); <span class="comment">// =&gt; 2</span></span><br></pre></td></tr></table></figure>
+<p>通过方法调用的方式 <code>calc.increment()</code>，使得 <code>increment</code> 内部的 <code>this</code> 指向了 <code>cals</code> 对象，因此 <code>this.num</code> 会成功增加 <code>num</code> 属性的值。</p>
+<p>让我们再看一个例子。对象通过原型继承一个方法，当方法通过属性访问器调用的时候，所继承的这个方法中的 <code>this</code> 也是指向对象本身：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> myDog = <span class="built_in">Object</span>.create(&#123;</span><br><span class="line">  sayName() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === myDog); <span class="comment">// =&gt; true</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line">myDog.name = <span class="string">'Milo'</span>;</span><br><span class="line"><span class="comment">// method invocation. this is myDog</span></span><br><span class="line">myDog.sayName(); <span class="comment">// =&gt; 'Milo'</span></span><br></pre></td></tr></table></figure>
+<p>上边代码中，<code>Object.create()</code> 返回一个新对象 <code>myDog</code>，并且将它的原型对象指向第一个参数。<code>myDog</code> 对象会继承 <code>SayName</code> 方法。</p>
+<p>在 <code>ECMAScript 2015</code> 中的 <code>class</code> 关键词里，方法调用中的上下文，也就是 <code>this</code> 同样指向它本身。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Planet</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(name) &#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">  &#125;</span><br><span class="line">  getName() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === earth); <span class="comment">// =&gt; true</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.name;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> earth = <span class="keyword">new</span> Planet(<span class="string">'Earth'</span>);</span><br><span class="line"><span class="comment">// method invocation. the context is earth</span></span><br><span class="line">earth.getName(); <span class="comment">// =&gt; 'Earth'</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-2-陷阱：将对象中的方法抽离"><a href="#2-2-陷阱：将对象中的方法抽离" class="headerlink" title="2.2 陷阱：将对象中的方法抽离"></a>2.2 陷阱：将对象中的方法抽离</h2><p>⚠️ 我们可以将对象中的方法提取出来做为一个独立的变量 <code>const alone = myObj.myMethod</code>。当调用函数的时候 <code>alone()</code>，由于它是从原来对象拆出来的，所以可能会认为函数中的 <code>this</code> 会指向 <code>myObject</code>。</p>
+<p>👍 然而，如果一个方法没有经过对象的属性访问器调用，那它就属于第一节介绍的「函数直接调用」类型，这里的 <code>this</code> 会指向全局对象 <code>window</code> 或者严格模式下的 <code>undefined</code>。</p>
+<p>我们可以通过 <code>bind</code> 方法来修正这种情况，<code>const alone = myObj.myMethod.bind(myObj)</code>。</p>
+<p>再看一个例子，我们通过构造函数 <code>Pet</code> 得到一个实例化对象 <code>myCat</code>。然后通过 <code>setTimeout()</code> 在一秒后打印对象内部的信息。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Pet</span>(<span class="params">type, legs</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.type = type;</span><br><span class="line">  <span class="keyword">this</span>.legs = legs;</span><br><span class="line">  <span class="keyword">this</span>.logInfo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === myCat); <span class="comment">// =&gt; false</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`The <span class="subst">$&#123;<span class="keyword">this</span>.type&#125;</span> has <span class="subst">$&#123;<span class="keyword">this</span>.legs&#125;</span> legs`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> myCat = <span class="keyword">new</span> Pet(<span class="string">'Cat'</span>, <span class="number">4</span>);</span><br><span class="line"><span class="comment">// logs "The undefined has undefined legs"</span></span><br><span class="line"><span class="comment">// or throws a TypeError in strict mode</span></span><br><span class="line">setTimeout(myCat.logInfo, <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+<p>⚠️ 你也许会认为 <code>setTimeout(myCat.logInfo, 1000)</code> 将会调用 <code>myCat.logInfo()</code>，然后打印 <code>myCat</code> 的 <code>type</code> 和 <code>legs</code>。</p>
+<p>但事与愿违，方法是从对象中抽离然后做为了一个参数，<code>setTimout(myCat.logInfo)</code> 等价于下边的代码。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(myCat.logInfo);</span><br><span class="line"><span class="comment">// is equivalent to:</span></span><br><span class="line"><span class="keyword">const</span> extractedLogInfo = myCat.logInfo;</span><br><span class="line">setTimeout(extractedLogInfo);</span><br></pre></td></tr></table></figure>
+<p>当调用提取的 <code>logInfo</code> 的时候其实属于「函数直接调用」类型，所以 <code>this</code> 会指向全局对象 <code>window</code> 或者严格模式下的<code>undefined</code> ，而不会是 <code>myCat</code> 对象。因此 <code>logInfo</code> 函数并不能正确的打印相关的信息。</p>
+<p>👍 同样的，这种情况下我们可以使用 <code>bind</code> 来修复。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Pet</span>(<span class="params">type, legs</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.type = type;</span><br><span class="line">  <span class="keyword">this</span>.legs = legs;</span><br><span class="line">  <span class="keyword">this</span>.logInfo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === myCat); <span class="comment">// =&gt; true</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`The <span class="subst">$&#123;<span class="keyword">this</span>.type&#125;</span> has <span class="subst">$&#123;<span class="keyword">this</span>.legs&#125;</span> legs`</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> myCat = <span class="keyword">new</span> Pet(<span class="string">'Cat'</span>, <span class="number">4</span>);</span><br><span class="line"><span class="comment">// Create a bound function</span></span><br><span class="line"><span class="keyword">const</span> boundLogInfo = myCat.logInfo.bind(myCat);</span><br><span class="line"><span class="comment">// logs "The Cat has 4 legs"</span></span><br><span class="line">setTimeout(boundLogInfo, <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+<p><code>myCat.logInfo.bind(myCat)</code> 会返回一个新的函数，会像 <code>logInfo</code> 那样执行，同时 <code>this</code> 会指向 <code>myCat</code>，即使我们是通过 「函数直接调用」。</p>
+<p>当然，我们也可以使用箭头函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Pet</span>(<span class="params">type, legs</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.type = type;</span><br><span class="line">  <span class="keyword">this</span>.legs = legs;</span><br><span class="line">  <span class="keyword">this</span>.logInfo = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === myCat); <span class="comment">// =&gt; true</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`The <span class="subst">$&#123;<span class="keyword">this</span>.type&#125;</span> has <span class="subst">$&#123;<span class="keyword">this</span>.legs&#125;</span> legs`</span>);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> myCat = <span class="keyword">new</span> Pet(<span class="string">'Cat'</span>, <span class="number">4</span>);</span><br><span class="line"><span class="comment">// logs "The Cat has 4 legs"</span></span><br><span class="line">setTimeout(myCat.logInfo, <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+<p>如果你使用了 <code>class</code>，为了防止上边的问题，我们可以将箭头函数做为一个类属性。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pet</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(type, legs) &#123;</span><br><span class="line">    <span class="keyword">this</span>.type = type;</span><br><span class="line">    <span class="keyword">this</span>.legs = legs;</span><br><span class="line">  &#125;</span><br><span class="line">  logInfo = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === myCat); <span class="comment">// =&gt; true</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`The <span class="subst">$&#123;<span class="keyword">this</span>.type&#125;</span> has <span class="subst">$&#123;<span class="keyword">this</span>.legs&#125;</span> legs`</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> myCat = <span class="keyword">new</span> Pet(<span class="string">'Cat'</span>, <span class="number">4</span>);</span><br><span class="line"><span class="comment">// logs "The Cat has 4 legs"</span></span><br><span class="line">setTimeout(myCat.logInfo, <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+<h1 id="3-构造函数调用"><a href="#3-构造函数调用" class="headerlink" title="3. 构造函数调用"></a>3. 构造函数调用</h1><p><em>定义：以 <code>new</code> 关键词开头，接着是一个可以解析成函数对象的表达式，紧跟着左括号，然后是逗号分割的参数，最后是右括号。例如 <code>new Pet(&#39;cat&#39;, 4)</code>、 <code>new RegExp(&#39;\\d&#39;)</code>。</em></p>
+<p>让我们定义 <code>Country</code> 函数，然后通过构造函数的方式调用：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Country</span>(<span class="params">name, traveled</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name ? name : <span class="string">'United Kingdom'</span>;</span><br><span class="line">  <span class="keyword">this</span>.traveled = <span class="built_in">Boolean</span>(traveled); <span class="comment">// transform to a boolean</span></span><br><span class="line">&#125;</span><br><span class="line">Country.prototype.travel = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.traveled = <span class="literal">true</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// Constructor invocation</span></span><br><span class="line"><span class="keyword">const</span> france = <span class="keyword">new</span> Country(<span class="string">'France'</span>, <span class="literal">false</span>);</span><br><span class="line"><span class="comment">// Constructor invocation</span></span><br><span class="line"><span class="keyword">const</span> unitedKingdom = <span class="keyword">new</span> Country;</span><br><span class="line">france.travel(); <span class="comment">// Travel to France</span></span><br></pre></td></tr></table></figure>
+<p><code>new Country(&#39;France&#39;, false)</code> 这种调用方式会创建一个新对象，它的 <code>name</code> 属性是 <code>France</code>。</p>
+<p>如果构造函数不需要传递参数，我们可以省略到它的括号，<code>new Country</code>。</p>
+<p>从 <code>ECMAScript 2015</code> 开始，<code>Js</code> 允许我们通过 <code>class</code> 关键词来定义构造函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">City</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(name, traveled) &#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.traveled = <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  travel() &#123;</span><br><span class="line">    <span class="keyword">this</span>.traveled = <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Constructor invocation</span></span><br><span class="line"><span class="keyword">const</span> paris = <span class="keyword">new</span> City(<span class="string">'Paris'</span>, <span class="literal">false</span>);</span><br><span class="line">paris.travel();</span><br></pre></td></tr></table></figure>
+<p><code>new City(&#39;Paris&#39;)</code> 就是「构造函数调用」类型。创建的对象通过类中一个特殊的方法 <code>constructor</code> 来初始化，其中 <code>this</code> 就指向当前创建的新对象。</p>
+<p>如果属性访问器 <code>myObject.myFunction</code> 通过 <code>new</code> 调用，那么这种就属于「构造函数调用」，而不再是「方法调用」。</p>
+<p>举个例子，<code>new myObject.myFunction()</code>：相当于先通过属性访问器抽离函数 <code>extractedFunction = myObject.myFunction</code>，然后通过构造函数的方法创建一个新对象 <code>new extractedFunction()</code>。</p>
+<h2 id="3-1-构造函数调用中的-this-指向"><a href="#3-1-构造函数调用中的-this-指向" class="headerlink" title="3.1 构造函数调用中的 this 指向"></a>3.1 构造函数调用中的 <code>this</code> 指向</h2><blockquote>
+<p>this 指向通过构造函数创建的新对象</p>
+</blockquote>
+<p>构造函数的上下文是新创建的对象。构造函数通过传来的参数进行初始化对象，设置初始值、绑定事件监听函数等等。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11075.jpg" alt="img" style="width:50%;"></p>
+<p>看一下下边的例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Foo</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// this is fooInstance</span></span><br><span class="line">  <span class="keyword">this</span>.property = <span class="string">'Default Value'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Constructor invocation</span></span><br><span class="line"><span class="keyword">const</span> fooInstance = <span class="keyword">new</span> Foo();</span><br><span class="line">fooInstance.property; <span class="comment">// =&gt; 'Default Value'</span></span><br></pre></td></tr></table></figure>
+<p> <code>new Foo()</code> 通过构造函数的方式调用，其中的 <code>this</code> 就指向当前的对象 <code>fooInstance</code>，<code>this.property</code> 被初始化了一个值。</p>
+<p>同样的情况在 <code>class</code>  中也是一样的，只不过初始化发生在 <code>constructor</code> 中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bar</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="comment">// this is barInstance</span></span><br><span class="line">    <span class="keyword">this</span>.property = <span class="string">'Default Value'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Constructor invocation</span></span><br><span class="line"><span class="keyword">const</span> barInstance = <span class="keyword">new</span> Bar();</span><br><span class="line">barInstance.property; <span class="comment">// =&gt; 'Default Value'</span></span><br></pre></td></tr></table></figure>
+<h2 id="3-2-陷阱：忘记使用-new"><a href="#3-2-陷阱：忘记使用-new" class="headerlink" title="3.2 陷阱：忘记使用 new"></a>3.2 陷阱：忘记使用 <code>new</code></h2><p>有些 <code>JavaScript</code> 的函数除了可以通过构造函数创建对象，也可以通过函数直接调用的方式，比如 <code>RegExp</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> reg1 = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">'\\w+'</span>);</span><br><span class="line"><span class="keyword">const</span> reg2 = <span class="built_in">RegExp</span>(<span class="string">'\\w+'</span>);</span><br><span class="line">reg1 <span class="keyword">instanceof</span> <span class="built_in">RegExp</span>; <span class="comment">// =&gt; true</span></span><br><span class="line">reg2 <span class="keyword">instanceof</span> <span class="built_in">RegExp</span>; <span class="comment">// =&gt; true</span></span><br><span class="line">reg1.source === reg2.source; <span class="comment">// =&gt; true</span></span><br></pre></td></tr></table></figure>
+<p>执行 <code>new RegExp(&#39;\\w+&#39;)</code> 和 <code>RegExp(&#39;\\w+&#39;)</code> ，<code>Js</code> 创建了等价的正则表达式对象。</p>
+<p>⚠️ 通过函数直接调用的方式去创建对象可能会有潜在风险，因为如果不使用 <code>new</code> 关键词 一些构造函数可能会忽略掉属性的初始化。</p>
+<p>看一下下边的例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Vehicle</span>(<span class="params">type, wheelsCount</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.type = type;</span><br><span class="line">  <span class="keyword">this</span>.wheelsCount = wheelsCount;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Function invocation</span></span><br><span class="line"><span class="keyword">const</span> car = Vehicle(<span class="string">'Car'</span>, <span class="number">4</span>);</span><br><span class="line">car.type; <span class="comment">// =&gt; 'Car'</span></span><br><span class="line">car.wheelsCount <span class="comment">// =&gt; 4</span></span><br><span class="line">car === <span class="built_in">window</span> <span class="comment">// =&gt; true</span></span><br></pre></td></tr></table></figure>
+<p><code>Vehicle</code> 在上下文对象中会初始化 <code>type</code> 和 <code>wheelsCount</code> 属性。当执行 <code>Vehicle(&#39;Car&#39;, 4)</code> 的时候将 <code>car</code> 对象返回，拥有正确的属性 <code>car.type</code> 和 <code>car.wheelCount</code> 。</p>
+<p>上边看起来就是按照我们需要的样子进行的初始化，打印出来的值也都是正确的。</p>
+<p>然而，<code>Vehicle(&#39;Car&#39;, 4)</code> 属于「函数直接调用类型」，因此它的 <code>this</code> 指向 <code>window</code>。所以，上边返回的 <code>car</code> 其实是 <code>window</code> 对象，将 <code>type</code> 和 <code>wheelCount</code> 属性都挂在了 <code>window</code> 上。</p>
+<p>👍 为了确保在使用构造函数的时候加上了 <code>new</code> 关键词，我们可以做一些改进：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Vehicle</span>(<span class="params">type, wheelsCount</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!(<span class="keyword">this</span> <span class="keyword">instanceof</span> Vehicle)) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="built_in">Error</span>(<span class="string">'Error: Incorrect invocation'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">this</span>.type = type;</span><br><span class="line">  <span class="keyword">this</span>.wheelsCount = wheelsCount;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Constructor invocation</span></span><br><span class="line"><span class="keyword">const</span> car = <span class="keyword">new</span> Vehicle(<span class="string">'Car'</span>, <span class="number">4</span>);</span><br><span class="line">car.type               <span class="comment">// =&gt; 'Car'</span></span><br><span class="line">car.wheelsCount        <span class="comment">// =&gt; 4</span></span><br><span class="line">car <span class="keyword">instanceof</span> Vehicle <span class="comment">// =&gt; true</span></span><br><span class="line"><span class="comment">// Function invocation. Throws an error.</span></span><br><span class="line"><span class="keyword">const</span> brokenCar = Vehicle(<span class="string">'Broken Car'</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+<p>通过判断 <code>this instanceof Vehicle</code> ，我们就可以保证当前的执行上下文环境是当前创建的新对象，保证 <code>this</code> 指向正确。</p>
+<h1 id="4-间接调用"><a href="#4-间接调用" class="headerlink" title="4. 间接调用"></a>4. 间接调用</h1><blockquote>
+<p><code>this</code> 指向 <code>.call()</code> 或者 <code>.apply()</code> 所传的第一个参数</p>
+</blockquote>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11076.jpg" alt="img" style="width:50%;"></p>
+<p>下边看一个例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> rabbit = &#123; <span class="attr">name</span>: <span class="string">'White Rabbit'</span> &#125;;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">concatName</span>(<span class="params">string</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span> === rabbit); <span class="comment">// =&gt; true</span></span><br><span class="line">  <span class="keyword">return</span> string + <span class="keyword">this</span>.name;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Indirect invocations</span></span><br><span class="line">concatName.call(rabbit, <span class="string">'Hello '</span>);  <span class="comment">// =&gt; 'Hello White Rabbit'</span></span><br><span class="line">concatName.apply(rabbit, [<span class="string">'Bye '</span>]); <span class="comment">// =&gt; 'Bye White Rabbit'</span></span><br></pre></td></tr></table></figure>
+<p>间接调用方式对于修正函数的上下文执行环境很有用，例如上边我们介绍过的很多例子，当通过「函数直接调用」方式时，<code>this</code> 会指向 <code>window</code> 或者严格模式下的 <code>undefined</code>。此时我们就可以通过 <code>.call()</code> 或者 <code>.apply()</code> 将 <code>this</code> 指向我们需要的对象。</p>
+<p>另一个经典的例子就是 <code>ES5</code> 中调用父类的构造函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Runner</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span> <span class="keyword">instanceof</span> Rabbit); <span class="comment">// =&gt; true</span></span><br><span class="line">  <span class="keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Rabbit</span>(<span class="params">name, countLegs</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span> <span class="keyword">instanceof</span> Rabbit); <span class="comment">// =&gt; true</span></span><br><span class="line">  <span class="comment">// Indirect invocation. Call parent constructor.</span></span><br><span class="line">  Runner.call(<span class="keyword">this</span>, name);</span><br><span class="line">  <span class="keyword">this</span>.countLegs = countLegs;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> myRabbit = <span class="keyword">new</span> Rabbit(<span class="string">'White Rabbit'</span>, <span class="number">4</span>);</span><br><span class="line">myRabbit; <span class="comment">// &#123; name: 'White Rabbit', countLegs: 4 &#125;</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>Rabbit</code> 中调用 <code>Runner.call(this, name)</code> 使得在父函数中的 <code>this</code> 是当前子类相应的对象。</p>
+<h1 id="5-绑定函数"><a href="#5-绑定函数" class="headerlink" title="5. 绑定函数"></a>5. 绑定函数</h1><p><em>定义：执行上下文或者参数被绑定了具体值的函数。可以通过 <code>.bind()</code> 进行创建。原始函数和新的函数共享了相同的代码和作用域，但是执行的时候拥有不同的执行上下文和参数。</em></p>
+<p><code>myFunc.bind(thisArg[, arg1, arg2, ...)</code> 的第一个参数 <code>thisArg</code> 作为执行上下文，后边的 <code>arg1, arg2, ...</code> 是要预置的参数值。</p>
+<p>看一下下边的例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">multiply</span>(<span class="params">number</span>) </span>&#123;</span><br><span class="line"><span class="meta">  'use strict'</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span> * number;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// create a bound function with context</span></span><br><span class="line"><span class="keyword">const</span> double = multiply.bind(<span class="number">2</span>);</span><br><span class="line"><span class="comment">// invoke the bound function</span></span><br><span class="line">double(<span class="number">3</span>); <span class="comment">// =&gt; 6</span></span><br><span class="line">double(<span class="number">10</span>); <span class="comment">// =&gt; 20</span></span><br></pre></td></tr></table></figure>
+<p><code>multiply.bind(2)</code> 返回了一个新函数 <code>double</code>，相当于 <code>2.multiply</code>。</p>
+<p><code>.bind()</code> 和  <code>.apply()</code> 和 <code>.call()</code> 最大的不同就是，<code>.bind()</code> 是返回一个拥有预设的 <code>this</code> 和参数的新函数，后边还需要被调用才会执行。而 <code>.apply()</code> 和 <code>.call()</code>  是调用的时候就执行了。</p>
+<h2 id="5-1-绑定函数中的-this-指向"><a href="#5-1-绑定函数中的-this-指向" class="headerlink" title="5.1 绑定函数中的 this 指向"></a>5.1 绑定函数中的 <code>this</code> 指向</h2><blockquote>
+<p>当执行一个绑定函数的时候，<code>this</code> 指向创建绑定函数 <code>myFunc.bind(thisArg)</code> 时候传的第一个参数。</p>
+</blockquote>
+<p><code>.bind()</code> 函数的作用就是创建一个新的函数，我们需要将要绑定的上下文环境作为第一个参数传给它。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11077.jpg" alt="img" style="width:50%;"></p>
+<p>让我们看一下例子。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = &#123;</span><br><span class="line">  array: [<span class="number">3</span>, <span class="number">5</span>, <span class="number">10</span>],</span><br><span class="line">  getNumbers() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.array;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// Create a bound function</span></span><br><span class="line"><span class="keyword">const</span> boundGetNumbers = numbers.getNumbers.bind(numbers);</span><br><span class="line">boundGetNumbers(); <span class="comment">// =&gt; [3, 5, 10]</span></span><br><span class="line"><span class="comment">// Extract method from object</span></span><br><span class="line"><span class="keyword">const</span> simpleGetNumbers = numbers.getNumbers;</span><br><span class="line">simpleGetNumbers(); <span class="comment">// =&gt; undefined or throws an error in strict mode</span></span><br></pre></td></tr></table></figure>
+<p>通过 <code>bind</code> 绑定后返回的 <code>boundGetNumbers</code> 函数中 <code>this</code> 指向了传入的 <code>numbers</code>，因此当执行的时候返回的是传入的数组。</p>
+<p>如果是简单的将 <code>numbers.getNumbers</code> 抽离出来作为一个新函数 <code>simpleGetNumbers</code> ，此时属于「函数直接调用类型」，因此 <code>this</code> 指向 <code>window</code> ，执行的时候就不是我们所期待的了。</p>
+<h2 id="5-2-牢固的上下文绑定"><a href="#5-2-牢固的上下文绑定" class="headerlink" title="5.2 牢固的上下文绑定"></a>5.2 牢固的上下文绑定</h2><p><code>.bind()</code> 会创造一个永久的上下文绑定，其中的 <code>this</code> 指向不会再发生改变。我们无法再通过 <code>.call()</code>、<code>.apply()</code> 或者 <code>.bind()</code> 来改变 <code>this</code> 指向。</p>
+<p>唯一能够改变的方式就是通过构造函数调用，但平常开发中不建议采用这种调用方式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getThis</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="meta">  'use strict'</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> one = getThis.bind(<span class="number">1</span>);</span><br><span class="line">one();         <span class="comment">// =&gt; 1</span></span><br><span class="line">one.call(<span class="number">2</span>);   <span class="comment">// =&gt; 1</span></span><br><span class="line">one.apply(<span class="number">2</span>);  <span class="comment">// =&gt; 1</span></span><br><span class="line">one.bind(<span class="number">2</span>)(); <span class="comment">// =&gt; 1</span></span><br><span class="line"><span class="keyword">new</span> one();     <span class="comment">// =&gt; Object</span></span><br></pre></td></tr></table></figure>
+<p>可以看一下上边的结果，只有 <code>new one()</code> 中的 <code>this</code> 指向来一个新对象，而其他方式中的 <code>this</code> 都是最初绑定的 <code>1</code>。</p>
+<h1 id="6-箭头函数"><a href="#6-箭头函数" class="headerlink" title="6 箭头函数"></a>6 箭头函数</h1><p><em>定义：箭头函数是定义函数的一种简写形式，并且它绑定的上下文是词法作用域确定的（简单理解就是 <code>this</code>  指向它定义位置的上下文）。</em></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hello = <span class="function">(<span class="params">name</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">'Hello '</span> + name;</span><br><span class="line">&#125;;</span><br><span class="line">hello(<span class="string">'World'</span>); <span class="comment">// =&gt; 'Hello World'</span></span><br><span class="line"><span class="comment">// Keep only even numbers</span></span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">6</span>].filter(<span class="function"><span class="params">item</span> =&gt;</span> item % <span class="number">2</span> === <span class="number">0</span>); <span class="comment">// =&gt; [2, 6]</span></span><br></pre></td></tr></table></figure>
+<h2 id="6-1-箭头函数中的-this"><a href="#6-1-箭头函数中的-this" class="headerlink" title="6.1 箭头函数中的 this"></a>6.1 箭头函数中的 <code>this</code></h2><blockquote>
+<p><code>this</code> 指向定义箭头函数位置的上下文。</p>
+</blockquote>
+<p>箭头函数不会创建自己的执行上下文，而是将 <code>this</code> 指向外部函数已经创建的执行上下文。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/this11078.jpg" alt="img" style="width:50%;"></p>
+<p>看一下例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(x, y) &#123;</span><br><span class="line">    <span class="keyword">this</span>.x = x;</span><br><span class="line">    <span class="keyword">this</span>.y = y;</span><br><span class="line">  &#125;</span><br><span class="line">  log() &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === myPoint); <span class="comment">// =&gt; true</span></span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span> === myPoint);      <span class="comment">// =&gt; true</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="keyword">this</span>.x + <span class="string">':'</span> + <span class="keyword">this</span>.y); <span class="comment">// =&gt; '95:165'</span></span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> myPoint = <span class="keyword">new</span> Point(<span class="number">95</span>, <span class="number">165</span>);</span><br><span class="line">myPoint.log();</span><br></pre></td></tr></table></figure>
+<p><code>setTimeout()</code> 调用箭头函数的时候，它的 <code>this</code> 会指向外部的执行上下文，也就是 <code>myPoint</code>。</p>
+<p>如果箭头函数是定义在顶级作用域内（也就是函数外），<code>this</code> 将指向浏览器的全局对象 <code>window</code>，严格模式下也是一样的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> getContext = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line"> <span class="built_in">console</span>.log(<span class="keyword">this</span> === <span class="built_in">window</span>); <span class="comment">// =&gt; true</span></span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">console</span>.log(getContext() === <span class="built_in">window</span>); <span class="comment">// =&gt; true</span></span><br></pre></td></tr></table></figure>
+<p>箭头函数和 <code>bind</code> 函数一样，一旦确定了 <code>this</code> 指向就无法再改变了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numbers = [<span class="number">1</span>, <span class="number">2</span>];</span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">  <span class="keyword">const</span> get = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === numbers); <span class="comment">// =&gt; true</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span> === numbers); <span class="comment">// =&gt; true</span></span><br><span class="line">  get(); <span class="comment">// =&gt; [1, 2]</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Try to change arrow function context manually</span></span><br><span class="line">  get.call([<span class="number">0</span>]);  <span class="comment">// =&gt; [1, 2]</span></span><br><span class="line">  get.apply([<span class="number">0</span>]); <span class="comment">// =&gt; [1, 2]</span></span><br><span class="line">  </span><br><span class="line">  get.bind([<span class="number">0</span>])(); <span class="comment">// =&gt; [1, 2]</span></span><br><span class="line">&#125;).call(numbers);</span><br></pre></td></tr></table></figure>
+<p>不论我们如何调用箭头函数，最终输出的依旧是最开始的绑定的 <code>[1, 2]</code>。</p>
+<p>那构造函数可以改变 <code>this</code> 指向吗？不会的，调用箭头函数作为构造函数会抛出错误，<code>TypeError: get is not a constructor</code>。</p>
+<h2 id="6-2-陷阱：用箭头函数作为一个对象方法"><a href="#6-2-陷阱：用箭头函数作为一个对象方法" class="headerlink" title="6.2 陷阱：用箭头函数作为一个对象方法"></a>6.2 陷阱：用箭头函数作为一个对象方法</h2><p>⚠️ 既然箭头函数这么简洁方便，你可能想将对象的一个方法来用箭头函数声明，<code>(param) =&gt; {...}</code> 来代替 <code>function(param) {..}</code>。</p>
+<p>看一下下边的例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Period</span> (<span class="params">hours, minutes</span>) </span>&#123; </span><br><span class="line">  <span class="keyword">this</span>.hours = hours;</span><br><span class="line">  <span class="keyword">this</span>.minutes = minutes;</span><br><span class="line">&#125;</span><br><span class="line">Period.prototype.format = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span> === <span class="built_in">window</span>); <span class="comment">// =&gt; true</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.hours + <span class="string">' hours and '</span> + <span class="keyword">this</span>.minutes + <span class="string">' minutes'</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> walkPeriod = <span class="keyword">new</span> Period(<span class="number">2</span>, <span class="number">30</span>);</span><br><span class="line">walkPeriod.format(); <span class="comment">// =&gt; 'undefined hours and undefined minutes'</span></span><br></pre></td></tr></table></figure>
+<p>因为 <code>format</code> 是一个箭头函数，所以它的 <code>this</code> 指向它定义地方的执行上下文，也就是这里的 <code>window</code>。</p>
+<p>即使 <code>format</code> 是通过「方法调用」的形式 <code>walkPeriod.format()</code>，函数中的 <code>this</code> 依旧是指向最初定义时候的 <code>window</code> ，而不会改变成当前对象。</p>
+<p>因此我们需要用 <code>function</code> 来定义函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Period</span> (<span class="params">hours, minutes</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.hours = hours;</span><br><span class="line">  <span class="keyword">this</span>.minutes = minutes;</span><br><span class="line">&#125;</span><br><span class="line">Period.prototype.format = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">this</span> === walkPeriod); <span class="comment">// =&gt; true</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.hours + <span class="string">' hours and '</span> + <span class="keyword">this</span>.minutes + <span class="string">' minutes'</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> walkPeriod = <span class="keyword">new</span> Period(<span class="number">2</span>, <span class="number">30</span>);</span><br><span class="line">walkPeriod.format(); <span class="comment">// =&gt; '2 hours and 30 minutes'</span></span><br></pre></td></tr></table></figure>
+<p><code>walkPeriod.format()</code> 属于第 <code>2</code> 节介绍「方法调用」类型，所以 <code>this</code> 会指向调用它的对象 <code>walkPeriod</code>，最终也会打印正确的结果。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过上边的分析，我们发现影响 <code>this</code> 指向的其实是函数的调用类型，因此从现在起不要再问自己：</p>
+<blockquote>
+<p>这个 <code>this</code> 是怎么得到的？</p>
+</blockquote>
+<p>而是问自己：</p>
+<blockquote>
+<p>这个函数是属于哪种调用类型？</p>
+<p>「函数直接调用」？「方法调用」？「构造函数调用」？「间接调用」？</p>
+</blockquote>
+<p>如果是绑定函数就问自己：</p>
+<blockquote>
+<p>这个函数 <code>bind</code> 的时候传的什么参数？</p>
+</blockquote>
+<p>如果是箭头函数就问自己：</p>
+<blockquote>
+<p>箭头函数是在哪里定义的，它外部的执行上下文是什么？</p>
+</blockquote>
+<p>通过上边的思路，可以使你不再对 <code>this</code> 感到头疼！</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+            <a href="/tags/this/" rel="tag"># this</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/10/31/用TypeScript实现斐波那契数列/" rel="next" title="用 TypeScript 实现斐波那契数列">
+                <i class="fa fa-chevron-left"></i> 用 TypeScript 实现斐波那契数列
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/11/28/flex布局详解/" rel="prev" title="flex 布局详解">
+                flex 布局详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#神秘的this"><span class="nav-number">1.</span> <span class="nav-text">神秘的this</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-函数直接调用-function-invocation"><span class="nav-number">2.</span> <span class="nav-text">1. 函数直接调用(function invocation)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-函数直接调用中的-this-指向"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 函数直接调用中的 this 指向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-函数直接调用中的-this-指向（严格模式）"><span class="nav-number">2.2.</span> <span class="nav-text">1.2  函数直接调用中的 this 指向（严格模式）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-陷阱：内部函数的-this-指向"><span class="nav-number">2.3.</span> <span class="nav-text">1.3 陷阱：内部函数的 this 指向</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-方法调用"><span class="nav-number">3.</span> <span class="nav-text">2 方法调用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-方法调用中的-this-指向"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 方法调用中的 this 指向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-陷阱：将对象中的方法抽离"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 陷阱：将对象中的方法抽离</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-构造函数调用"><span class="nav-number">4.</span> <span class="nav-text">3. 构造函数调用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-构造函数调用中的-this-指向"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 构造函数调用中的 this 指向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-陷阱：忘记使用-new"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 陷阱：忘记使用 new</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-间接调用"><span class="nav-number">5.</span> <span class="nav-text">4. 间接调用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-绑定函数"><span class="nav-number">6.</span> <span class="nav-text">5. 绑定函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-绑定函数中的-this-指向"><span class="nav-number">6.1.</span> <span class="nav-text">5.1 绑定函数中的 this 指向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-牢固的上下文绑定"><span class="nav-number">6.2.</span> <span class="nav-text">5.2 牢固的上下文绑定</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-箭头函数"><span class="nav-number">7.</span> <span class="nav-text">6 箭头函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-箭头函数中的-this"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 箭头函数中的 this</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-陷阱：用箭头函数作为一个对象方法"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 陷阱：用箭头函数作为一个对象方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

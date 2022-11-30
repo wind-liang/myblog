@@ -1,0 +1,1884 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="git 历史linux 之父 Linus Torvalds 大家应该都知道，而 git 也是由 Linus 开发的。从 1991 年发布了第一版的 linux 内核，Linux 内核开源项目有着众多的参与者，但绝大多数的 Linux 内核维护工作都花在了提交补丁和保存归档的繁琐事务上（1991－2002年间）。到 2002 年，整个项目组开始启用一个专有的分布式版本控制系统 BitKeeper 来">
+<meta name="keywords" content="git原理,git目录">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git原理浅析">
+<meta property="og:url" content="https://windliang.wang/2020/07/20/git原理浅析/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="git 历史linux 之父 Linus Torvalds 大家应该都知道，而 git 也是由 Linus 开发的。从 1991 年发布了第一版的 linux 内核，Linux 内核开源项目有着众多的参与者，但绝大多数的 Linux 内核维护工作都花在了提交补丁和保存归档的繁琐事务上（1991－2002年间）。到 2002 年，整个项目组开始启用一个专有的分布式版本控制系统 BitKeeper 来">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/git1.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/git2.png">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.934Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="git原理浅析">
+<meta name="twitter:description" content="git 历史linux 之父 Linus Torvalds 大家应该都知道，而 git 也是由 Linus 开发的。从 1991 年发布了第一版的 linux 内核，Linux 内核开源项目有着众多的参与者，但绝大多数的 Linux 内核维护工作都花在了提交补丁和保存归档的繁琐事务上（1991－2002年间）。到 2002 年，整个项目组开始启用一个专有的分布式版本控制系统 BitKeeper 来">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/git1.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2020/07/20/git原理浅析/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>git原理浅析 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2020/07/20/git原理浅析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">git原理浅析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-07-20 22:35:10" itemprop="dateCreated datePublished" datetime="2020-07-20T22:35:10+08:00">2020-07-20</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/git/" itemprop="url" rel="index"><span itemprop="name">git</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2020/07/20/git原理浅析/" class="leancloud_visitors" data-flag-title="git原理浅析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="git-历史"><a href="#git-历史" class="headerlink" title="git 历史"></a>git 历史</h1><p><code>linux</code> 之父 <code>Linus Torvalds</code> 大家应该都知道，而 <code>git</code> 也是由 <code>Linus</code> 开发的。从 <code>1991</code> 年发布了第一版的 <code>linux</code> 内核，Linux 内核开源项目有着众多的参与者，但绝大多数的 <code>Linux</code> 内核维护工作都花在了提交补丁和保存归档的繁琐事务上（<code>1991</code>－<code>2002</code>年间）。到 <code>2002</code> 年，整个项目组开始启用一个专有的分布式版本控制系统 <code>BitKeeper</code> 来管理和维护代码，之前市面上也有其他的版本管理系统，比如 <code>CSV</code>、<code>SVN</code>，但是 <code>Linus</code> 觉得它们很蠢，直到有了 <code>BitKeeper</code> 才开始使用版本管理系统。</p>
+<p>至于为什么又自己开发了 <code>git</code> ，看完下边对 <code>Linus</code> 的采访就明白了。</p>
+<blockquote>
+<p>你为什么要开发 Git？</p>
+<p>Torvalds：我从来没有想过去做版本控制软件，因为在我看来那是计算机世界里最无聊的事了（如果数据库除外的话 ;^），我天生就不喜欢 source-control management (SCM)。但是 BitKeeper(BK) 的诞生改变了我对版本控制的认识。BK 在大多数方面是正确的，在本地保存一个仓库的副本，分布式合并确实是一大创新。这个分布式版本控制的创新完美地解决了 SCM 的通病：“谁可以修改代码”的难题。BK 告诉我们，你只要给每个人一个仓库，问题就解决了。但是 BK 也存在一些问题，技术上的问题（例如重命名很麻烦）还不算什么，它最大的坏处是不开源，很多人因为这个不使用它。所以即使我们有几个核心维护者使用 BK——开源项目可以免费使用——但它也没有普及。虽然它帮助过我们开发内核，但依然有不少痛点没有解决。</p>
+<p>当 Tridge 违反 BK 的使用协议反编译 BK 的时候，我们到达了紧急关头。我花了几个周（还是几个月来着？）试图调解 Tridge 和 Larry McVoy（注：他是 Bitkeeper 的 老大），最后也没有成功。我意识到我不能继续使用 BK 了，但我真的不想回到没有 BK 的黑暗时代。遗憾的是，我们想用其他 SCM 来代替它，却没有找到能在远程方面工作得好的。现有的软件不能满足我对远程方面的需求，我又担心整个流程和代码的完整性，所以最后我决定自己写一个。</p>
+</blockquote>
+<p>总结就是，本来 <code>BK</code> 免费给他们用，但是有 <code>linux</code> 内核有成员开始反编译 <code>BK</code>，<code>BK</code> 就不让他们用了，然后 <code>Linus</code> 就用了几周的时间自己写了一个，<code>git</code> 就此诞生。。。然后 <code>linus</code> 就专心又去搞 <code>linux</code> 了，把 <code>git</code> 交给团队成员 <code>Junio Hamano</code> 进行后期的迭代维护。</p>
+<h1 id="git-原理浅析"><a href="#git-原理浅析" class="headerlink" title="git 原理浅析"></a>git 原理浅析</h1><p>首先在一个空文件夹中执行 <code>git init</code> 命令初始化 <code>git</code> 仓库，然后会自动生成一个隐藏文件夹 <code>.git</code> ，目录树如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">.git</span><br><span class="line">├── HEAD</span><br><span class="line">├── config</span><br><span class="line">├── description</span><br><span class="line">├── hooks</span><br><span class="line">│   ├── applypatch-msg.sample</span><br><span class="line">│   ├── commit-msg.sample</span><br><span class="line">│   ├── fsmonitor-watchman.sample</span><br><span class="line">│   ├── post-update.sample</span><br><span class="line">│   ├── pre-applypatch.sample</span><br><span class="line">│   ├── pre-commit.sample</span><br><span class="line">│   ├── pre-merge-commit.sample</span><br><span class="line">│   ├── pre-push.sample</span><br><span class="line">│   ├── pre-rebase.sample</span><br><span class="line">│   ├── pre-receive.sample</span><br><span class="line">│   ├── prepare-commit-msg.sample</span><br><span class="line">│   └── update.sample</span><br><span class="line">├── info</span><br><span class="line">│   └── exclude</span><br><span class="line">├── objects</span><br><span class="line">│   ├── info</span><br><span class="line">│   └── pack</span><br><span class="line">└── refs</span><br><span class="line">    ├── heads</span><br><span class="line">    └── tags</span><br></pre></td></tr></table></figure>
+<p>下边依次分析下上边的文件。</p>
+<h2 id="description-文件"><a href="#description-文件" class="headerlink" title="description 文件"></a>description 文件</h2><p> <code>description</code> 文件仅供 <code>GitWeb</code> 程序使用，一般用不到。</p>
+<h2 id="info文件夹"><a href="#info文件夹" class="headerlink" title="info文件夹"></a>info文件夹</h2><p> <code>info</code> 目录包含一个全局性排除（global exclude）文件， 用以放置那些不希望被记录在 <code>.gitignore</code> 文件中的忽略模式（ignored patterns），和 <code>.gitignore</code>文件是 一个作用。</p>
+<h2 id="config-文件"><a href="#config-文件" class="headerlink" title="config 文件"></a>config 文件</h2><p>默认的配置文件，打开后显示的是下边的内容。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[core]</span><br><span class="line">        repositoryformatversion = <span class="number">0</span></span><br><span class="line">        filemode = <span class="keyword">true</span></span><br><span class="line">        bare = <span class="keyword">false</span></span><br><span class="line">        logallrefupdates = <span class="keyword">true</span></span><br><span class="line">        ignorecase = <span class="keyword">true</span></span><br><span class="line">        precomposeunicode = <span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<p>主要是当前仓库的一些配置，<code>git</code> 除了在这里有配置文件，还存在于 <code>~/.gitconfig</code> ，打开后看一下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[http]</span><br><span class="line">        proxy = socks5:<span class="comment">//127.0.0.1:1080</span></span><br><span class="line">[https]</span><br><span class="line">        proxy = socks5:<span class="comment">//127.0.0.1:1080</span></span><br><span class="line">[user]</span><br><span class="line">        name = windliang</span><br><span class="line">        email = <span class="number">6489178757</span><span class="meta">@qq</span>.com</span><br></pre></td></tr></table></figure>
+<p> <code>/etc/gitconfig</code> 也是 <code>git</code> 的一个配置文件，但由于没有配置过这个文件，所以我电脑里这个文件不存在。</p>
+<p><code>git</code> 为我们提供了 <code>config</code> 命令用来配置上边的文件。</p>
+<p><code>git config --list</code> 是展示配置文件中已有的配置项，输出如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">http.proxy=socks5:<span class="comment">//127.0.0.1:1080</span></span><br><span class="line">https.proxy=socks5:<span class="comment">//127.0.0.1:1080</span></span><br><span class="line">user.name=windliang</span><br><span class="line">user.email=<span class="number">6489178757</span><span class="meta">@qq</span>.com</span><br><span class="line">core.repositoryformatversion=<span class="number">0</span></span><br><span class="line">core.filemode=<span class="keyword">true</span></span><br><span class="line">core.bare=<span class="keyword">false</span></span><br><span class="line">core.logallrefupdates=<span class="keyword">true</span></span><br><span class="line">core.ignorecase=<span class="keyword">true</span></span><br><span class="line">core.precomposeunicode=<span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<p>可以看到就是把之前两个配置文件的内容按一定的格式输出。</p>
+<p>上边讲到配置文件分布在三个文件中，<code>git</code> 为我们提供了三个参数 <code>--local</code>，<code>--global</code>，<code>--system</code> ，分别处理 <code>git</code> 当前仓库下的 <code>config</code> 文件、 <code>~/.gitconfig</code> 、以及<code>/etc/gitconfig</code>，如果存在同名的配置项，当前仓库下的配置文件优先级最高，其次是<code>~/.gitconfig</code> ，<code>/etc/gitconfig</code> 优先级最低。</p>
+<p>举几个例子。</p>
+<p>比如我们只想查看当前仓库下配置文件的配置项，可以执行 <code>git config --local --list</code> ，输出如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">core.repositoryformatversion=<span class="number">0</span></span><br><span class="line">core.filemode=<span class="keyword">true</span></span><br><span class="line">core.bare=<span class="keyword">false</span></span><br><span class="line">core.logallrefupdates=<span class="keyword">true</span></span><br><span class="line">core.ignorecase=<span class="keyword">true</span></span><br><span class="line">core.precomposeunicode=<span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<p>在  <code>~/.gitconfig</code> 中增加一个配置项，<code>git config --global alias.ss status</code>，执行后再打开   <code>~/.gitconfig</code> ，可以看到就增加了一个配置项。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[http]</span><br><span class="line">        proxy = socks5:<span class="comment">//127.0.0.1:1080</span></span><br><span class="line">[https]</span><br><span class="line">        proxy = socks5:<span class="comment">//127.0.0.1:1080</span></span><br><span class="line">[user]</span><br><span class="line">        name = windliang</span><br><span class="line">        email = <span class="number">6489178757</span><span class="meta">@qq</span>.com</span><br><span class="line">[alias]</span><br><span class="line">        ss = status</span><br></pre></td></tr></table></figure>
+<p>通过上边 <code>alias</code> 的配置，下次如果我们想执行 <code>git status</code> 只需要输入 <code>git ss</code> 就可以了，也就是别名。</p>
+<p>如果想删除某个配置项，可以添加 <code>--unset</code> 参数，比如执行 <code>git config --global --unset alias.ss</code>。</p>
+<p>也可以单独查看某个配置项，例如输入 <code>git config --global user.name</code>，输出如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">windliang</span><br></pre></td></tr></table></figure>
+<h2 id="底层命令和上层命令"><a href="#底层命令和上层命令" class="headerlink" title="底层命令和上层命令"></a>底层命令和上层命令</h2><p>我们经常使用的命令其实是上层命令(porcelain commands)，参考下边的表格。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">git-add                 git-rebase              git-cherry</span><br><span class="line">git-am                  git-reset               git-count-objects</span><br><span class="line">git-archive             git-revert              git-difftool</span><br><span class="line">git-bisect              git-rm                  git-fsck</span><br><span class="line">git-branch              git-shortlog            git-get-tar-commit-id</span><br><span class="line">git-bundle              git-show                git-help</span><br><span class="line">git-checkout            git-stash               git-instaweb</span><br><span class="line">git-cherry-pick         git-status              git-merge-tree</span><br><span class="line">git-citool              git-submodule           git-rerere</span><br><span class="line">git-clean               git-tag                 git-rev-parse</span><br><span class="line">git-clone               git-worktree            git-show-branch</span><br><span class="line">git-commit              gitk                    git-verify-commit</span><br><span class="line">git-describe            git-config              git-verify-tag</span><br><span class="line">git-diff                git-fast-export         git-whatchanged</span><br><span class="line">git-fetch               git-fast-import         gitweb</span><br><span class="line">git-format-patch        git-filter-branch       git-archimport</span><br><span class="line">git-gc                  git-mergetool           git-cvsexportcommit</span><br><span class="line">git-grep                git-pack-refs           git-cvsimport</span><br><span class="line">git-gui                 git-prune               git-cvsserver</span><br><span class="line">git-init                git-reflog              git-imap-send</span><br><span class="line">git-log                 git-relink              git-p4</span><br><span class="line">git-merge               git-remote              git-quiltimport</span><br><span class="line">git-mv                  git-repack              git-request-pull</span><br><span class="line">git-notes               git-replace             git-send-email</span><br><span class="line">git-pull                git-annotate            git-svn</span><br><span class="line">git-push                git-blame</span><br></pre></td></tr></table></figure>
+<p>其实还有我们没有用过的底层命令(plumbing commands)，多数底层命令并不面向最终用户，它们更适合作为新工具的组件和自定义脚本的组成部分。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">git-apply               git-for-each-ref        git-receive-pack</span><br><span class="line">git-checkout-index      git-ls-files            git-shell</span><br><span class="line">git-commit-tree         git-ls-remote           git-upload-archive</span><br><span class="line">git-hash-object         git-ls-tree             git-upload-pack</span><br><span class="line">git-index-pack          git-merge-base          git-check-attr</span><br><span class="line">git-merge-file          git-name-rev            git-check-ignore</span><br><span class="line">git-merge-index         git-pack-redundant      git-check-mailmap</span><br><span class="line">git-mktag               git-rev-list            git-check-ref-format</span><br><span class="line">git-mktree              git-show-index          git-column</span><br><span class="line">git-pack-objects        git-show-ref            git-credential</span><br><span class="line">git-prune-packed        git-unpack-file         git-credential-cache</span><br><span class="line">git-read-tree           git-var                 git-credential-store</span><br><span class="line">git-symbolic-ref        git-verify-pack         git-fmt-merge-msg</span><br><span class="line">git-unpack-objects      git-daemon              git-interpret-trailers</span><br><span class="line">git-update-index        git-fetch-pack          git-mailinfo</span><br><span class="line">git-update-ref          git-http-backend        git-mailsplit</span><br><span class="line">git-write-tree          git-send-pack           git-merge-one-file</span><br><span class="line">git-cat-file            git-update-server-info  git-patch-id</span><br><span class="line">git-diff-files          git-http-fetch          git-sh-i18n</span><br><span class="line">git-diff-index          git-http-push           git-sh-setup</span><br><span class="line">git-diff-tree           git-parse-remote        git-stripspace</span><br></pre></td></tr></table></figure>
+<p>下边用底层命令来进行 <code>git</code> 的相关操作，以便对 <code>git</code> 原理有个更深的了解。</p>
+<h2 id="objects-文件夹"><a href="#objects-文件夹" class="headerlink" title="objects 文件夹"></a>objects 文件夹</h2><p>这个文件夹顾名思义，就是存储对象的。<code>git</code> 主要有三种对象，<code>blob</code> 对象，<code>tree</code> 对象，<code>commit</code> 对象。和文件有关的东西都会存到这个文件夹中，相当于一个键值对的数据库。</p>
+<h3 id="blob-对象"><a href="#blob-对象" class="headerlink" title="blob 对象"></a>blob 对象</h3><p>首先新建一个 <code>test.txt</code>，写入 <code>hello world</code>，<code>echo &#39;hello world&#39; &gt; test.txt</code>。</p>
+<p>然后执行 <code>git hash-object -w test.txt</code> 命令，得到</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3</span>b18e512dba79e4c8300dd08aeb37f8e728b8dad</span><br></pre></td></tr></table></figure>
+<p><code>hash-object</code> 命令会返回生成对象的键值，<code>-w</code> 会把该对象写入数据库，也就是 <code>objects</code> 文件夹中。</p>
+<p>键值其实就是【头部信息】加上【文件原始内容】做了 <code>SHA-1</code> 得到的 <code>40</code> 位的哈希值，其中「头部信息」指的是 <code>对象类型+空格+数据的字节数+空字节</code>。</p>
+<p>我们来看一下 <code>objects</code> 文件夹的变化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">objects</span><br><span class="line">├── <span class="number">3</span>b</span><br><span class="line">│   └── <span class="number">18e512</span>dba79e4c8300dd08aeb37f8e728b8dad</span><br><span class="line">├── info</span><br><span class="line">└── pack</span><br></pre></td></tr></table></figure>
+<p>可以看到多了一个文件夹 <code>3b</code> 和一个文件 <code>18e512dba79e4c8300dd08aeb37f8e728b8dadf</code> ，组合起来刚好就是我们得到的键值。</p>
+<p>通过指令 <code>git cat-file -p 3b18e512d</code> 看一下该文件的内容。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello world</span><br></pre></td></tr></table></figure>
+<p><code>cat-file</code> 可以解码刚刚生成的对象，<code>-p</code> 参数会自动选择内容的编码，<code>3b18e512d</code> 是键值的前几位。</p>
+<p>然后我们修改一下文件的内容，<code>echo &#39;hello world 2&#39; &gt; test.txt</code>，再次执行 <code>git hash-object -w test.txt</code>。</p>
+<p>再看一下 <code>objects</code> 文件夹。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">objects</span><br><span class="line">├── <span class="number">3</span>b</span><br><span class="line">│   └── <span class="number">18e512</span>dba79e4c8300dd08aeb37f8e728b8dad</span><br><span class="line">├── d0</span><br><span class="line">│   └── e1e95455754bd31d56260d19a7774fd7aebe5d</span><br><span class="line">├── info</span><br><span class="line">└── pack</span><br></pre></td></tr></table></figure>
+<p>可以看到我们又多了一个对象，此时我们把本地的 <code>test.txt</code> 文件删除，<code>rm test.txt</code>。</p>
+<p>然后看一下之前写的内容还在不在，<code>git cat-file -p d0e1e954557</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello world <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>可以看到还是能取到之前的内容，<code>git</code> 把之前所有的内容都存了起来，这就是简单的版本管理。但有个问题就是，当前我们只存了键值，并没有存文件名，这种类型的对象我们叫做「数据对象」<code>blob object</code>，通过 <code>git cat-file -t</code> 命令加上 <code>SHA-1</code> 的键值前几位，就能查看该对象的内部类型。<code>git cat-file -t d0e1e954557</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">blob</span><br></pre></td></tr></table></figure>
+<h3 id="tree-对象"><a href="#tree-对象" class="headerlink" title="tree 对象"></a>tree 对象</h3><p><code>tree</code> 对象记录了文件名以及文件之间的关系，相当于就是文件夹的作用，可以理解为下边的图。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/git1.png" alt=""></p>
+<p>下边演示如何用底层命令生成一个 <code>tree</code> 对象。</p>
+<p>生成 <code>tree</code> 对象之前，我们需要将文件加入到暂存区。</p>
+<p>新建一个空项目，然后 <code>git init</code>，新建文件 <code>test.txt</code>。</p>
+<p>执行 <code>git update-index --add test.txt</code>，这个命令会生成相应的对象存入 <code>objects</code> 文件夹中，并将 <code>test.txt</code> 加入暂存区，</p>
+<p>可以执行 <code>git status</code> 看一下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">On branch master</span><br><span class="line"></span><br><span class="line">No commits yet</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use <span class="string">"git rm --cached &lt;file&gt;..."</span> to unstage)</span><br><span class="line">	<span class="keyword">new</span> file:   test.txt</span><br></pre></td></tr></table></figure>
+<p>同时可以看到 <code>objects</code> 文件夹中多了一个文件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">objects</span><br><span class="line">├── <span class="number">95</span></span><br><span class="line">│   └── d09f2b10159347eece71399a7e2e907ea3df4f</span><br><span class="line">├── info</span><br><span class="line">└── pack</span><br></pre></td></tr></table></figure>
+<p>暂存区有了文件以后，就可以生成一个 <code>tree</code> 对象了，执行 <code>git write-tree</code>，生成当前暂存区的一个快照，返回值如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f03546f10f086a5cbc7b8580632ca6db2ba9411d</span><br></pre></td></tr></table></figure>
+<p>会返回 <code>tree</code> 对象的 <code>key</code> 值，看一下 <code>objects</code> 文件夹，新生成了一个文件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">objects</span><br><span class="line">├── <span class="number">95</span></span><br><span class="line">│   └── d09f2b10159347eece71399a7e2e907ea3df4f</span><br><span class="line">├── f0</span><br><span class="line">│   └── <span class="number">3546f</span>10f086a5cbc7b8580632ca6db2ba9411d</span><br><span class="line">├── info</span><br><span class="line">└── pack</span><br></pre></td></tr></table></figure>
+<p>然后我们通过 <code>git cat-file -p f0354</code> 看一下 <code>tree</code> 对象的内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">100644 blob 95d09f2b10159347eece71399a7e2e907ea3df4f	test.txt</span><br></pre></td></tr></table></figure>
+<p>可以看到当前 <code>tree</code> 对象包含有一个 <code>blob</code> 对象，文件名是 <code>test.txt</code>，<code>100644</code> 表示普通文件，还包括：<code>100755</code>，表示一个可执行文件；<code>120000</code>，表示一个符号链接。 </p>
+<p>有了 <code>tree</code> 对象我们就有了文件名，以及文件之间的关系，但是更改文件后我们可能还需要一些注释，如果是多人合作，还需要指明是谁生成的快照。因此我们需要将当前 <code>tree</code> 对象再包装一层，生成 <code>commit</code> 对象。</p>
+<h3 id="commit-对象"><a href="#commit-对象" class="headerlink" title="commit 对象"></a>commit 对象</h3><p>执行 <code>echo &#39;first commit&#39; | git commit-tree f0354</code> 将之前的 <code>tree</code> 对象包装成一个 <code>commit</code> 对象。<code>f0354</code> 是之前 <code>tree</code> 对象的 <code>key</code>，返回值如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">84340</span>eaeccbc0854bdec82f6b07f05eb01bd4dcd</span><br></pre></td></tr></table></figure>
+<p>同样的给我们返回了 <code>commit</code> 对象的 <code>key</code>，同时看一下 <code>objects</code> 文件夹，也会多一个文件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">objects</span><br><span class="line">├── <span class="number">84</span></span><br><span class="line">│   └── <span class="number">340</span>eaeccbc0854bdec82f6b07f05eb01bd4dcd</span><br><span class="line">├── <span class="number">95</span></span><br><span class="line">│   └── d09f2b10159347eece71399a7e2e907ea3df4f</span><br><span class="line">├── f0</span><br><span class="line">│   └── <span class="number">3546f</span>10f086a5cbc7b8580632ca6db2ba9411d</span><br><span class="line">├── info</span><br><span class="line">└── pack</span><br></pre></td></tr></table></figure>
+<p>我们看一下这个 <code>commit</code> 对象的内容，<code>git cat-file -p 8434</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tree f03546f10f086a5cbc7b8580632ca6db2ba9411d</span><br><span class="line">author windliang &lt;<span class="number">6489178757</span><span class="meta">@qq</span>.com&gt; <span class="number">1594200559</span> +<span class="number">0800</span></span><br><span class="line">committer windliang &lt;<span class="number">6489178757</span><span class="meta">@qq</span>.com&gt; <span class="number">1594200559</span> +<span class="number">0800</span></span><br><span class="line"></span><br><span class="line">first commit</span><br></pre></td></tr></table></figure>
+<p>此外 <code>git commit-tree</code> 还有一个 <code>-p</code> 参数，用来指定当前 <code>commit</code> 对象的父 <code>commit</code> 对象。</p>
+<p>比如我们修改一下文件，再生成新的 <code>tree</code> 对象，依次执行下边的命令。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo <span class="string">'hello world2'</span> &gt; test2.txt </span><br><span class="line">git update-index --add test2.txt</span><br><span class="line">git write-tree</span><br></pre></td></tr></table></figure>
+<p>此时就得到了一个 <code>tree</code> 对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab00cb505b3f955ab5fb245b7ca155a5820d2cd4</span><br></pre></td></tr></table></figure>
+<p>接下再生成新的 <code>commit</code> 对象，并且指定父 <code>commit</code> 对象，<code>echo &#39;second commit&#39; | git commit-tree ab00 -p 8434</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">44</span>d318147e6b7bf2c3a5268018390440b2beae56</span><br></pre></td></tr></table></figure>
+<p>然后我们通过这个 <code>commit</code> 对象的 <code>key</code> 查看一下 <code>log</code> ，<code>git log 44d3</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">commit <span class="number">44</span>d318147e6b7bf2c3a5268018390440b2beae56</span><br><span class="line">Author: windliang &lt;<span class="number">6489178757</span><span class="meta">@qq</span>.com&gt;</span><br><span class="line">Date:   Wed Jul <span class="number">8</span> <span class="number">17</span>:<span class="number">47</span>:<span class="number">31</span> <span class="number">2020</span> +<span class="number">0800</span></span><br><span class="line"></span><br><span class="line">    second commit</span><br><span class="line"></span><br><span class="line">commit <span class="number">84340</span>eaeccbc0854bdec82f6b07f05eb01bd4dcd</span><br><span class="line">Author: windliang &lt;<span class="number">6489178757</span><span class="meta">@qq</span>.com&gt;</span><br><span class="line">Date:   Wed Jul <span class="number">8</span> <span class="number">17</span>:<span class="number">29</span>:<span class="number">19</span> <span class="number">2020</span> +<span class="number">0800</span></span><br><span class="line"></span><br><span class="line">    first commit</span><br></pre></td></tr></table></figure>
+<p>因为设置了父 <code>commit</code> 对象，所以第一次的提交也可以看到。</p>
+<h2 id="refs-文件夹，HEAD-文件"><a href="#refs-文件夹，HEAD-文件" class="headerlink" title="refs 文件夹，HEAD 文件"></a>refs 文件夹，HEAD 文件</h2><h3 id="heads"><a href="#heads" class="headerlink" title="heads"></a>heads</h3><p>我们刚刚执行 <code>git log</code> 命令的时候，写的是 <code>git log 44d3</code>，多加了 <code>commit</code> 对象的 <code>key</code> 值 <code>44d3</code>，写起来很麻烦，我们可以给它起一个别名，这个别名就是我们一直用的分支了。</p>
+<p>我们将 <code>commit</code> 对象的 <code>key</code> 值写入 <code>.git/refs/heads/master</code> 文件中</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 44d318147e6b7bf2c3a5268018390440b2beae56 &gt; .git/refs/heads/master</span><br></pre></td></tr></table></figure>
+<p>然后执行 <code>git log master</code> 就可以看到 <code>log</code> 了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">commit <span class="number">44</span>d318147e6b7bf2c3a5268018390440b2beae56 (HEAD -&gt; master)</span><br><span class="line">Author: windliang &lt;<span class="number">6489178757</span><span class="meta">@qq</span>.com&gt;</span><br><span class="line">Date:   Wed Jul <span class="number">8</span> <span class="number">17</span>:<span class="number">47</span>:<span class="number">31</span> <span class="number">2020</span> +<span class="number">0800</span></span><br><span class="line"></span><br><span class="line">    second commit</span><br><span class="line"></span><br><span class="line">commit <span class="number">84340</span>eaeccbc0854bdec82f6b07f05eb01bd4dcd</span><br><span class="line">Author: windliang &lt;<span class="number">6489178757</span><span class="meta">@qq</span>.com&gt;</span><br><span class="line">Date:   Wed Jul <span class="number">8</span> <span class="number">17</span>:<span class="number">29</span>:<span class="number">19</span> <span class="number">2020</span> +<span class="number">0800</span></span><br><span class="line"></span><br><span class="line">    first commit</span><br></pre></td></tr></table></figure>
+<p>可以省略 <code>master</code> ，直接执行 <code>git log</code> ，默认查询的就是当前分支的 <code>log</code>。</p>
+<p>我们也可以给另外一个 <code>commit</code> 对象创建一个别名，换句话说创建一个新的分支。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo <span class="number">84340</span>eaeccbc0854bdec82f6b07f05eb01bd4dcd &gt; .git/refs/heads/dev</span><br></pre></td></tr></table></figure>
+<p>然后执行 <code>git checkout dev</code> 会发现可以成功的切换分支，说明分支创建成功了。</p>
+<p>这里我们直接操控了文件，<code>git</code> 其实给我提供了一个命令，会更加安全</p>
+<p><code>git update-ref refs/heads/dev 84340eaeccbc0854bdec82f6b07f05eb01bd4dcd</code></p>
+<p>回想一下我们之前创建分支的命令，会执行 <code>git branch fix</code> ，注意到我们并没有指定 <code>commit</code> 对象的 <code>key</code> 值，为什么可以成功创建分支呢？</p>
+<p><code>HEAD</code> 文件！它里边始终保存着最新的 <code>commit</code> 对象的 <code>key</code> 值，当有新的 <code>commit</code> 的时候它会更新，当切换分支的时候它也会更新。</p>
+<p>打开 <code>HEAD</code> 文件可以看一下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ref: refs/heads/master</span><br></pre></td></tr></table></figure>
+<p>他保存了一个引用，<code>refs/heads/master</code> 文件保存的就是当前分支最新的 <code>commit</code> 对象的 <code>key</code> 值。</p>
+<p>如果我们切换分支，<code>git checkout dev</code> ，可以看到 <code>HEAD</code> 中的值也会相应的变化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ref: refs/heads/dev</span><br></pre></td></tr></table></figure>
+<h3 id="tags"><a href="#tags" class="headerlink" title="tags"></a>tags</h3><p>上边介绍了 <code>blob</code> 对象，<code>tree</code> 对象，<code>commit</code> 对象。<code>commit</code> 对象是包装了 <code>tree</code> 对象，还有个 <code>tag</code> 对象，通常是对 <code>commit</code> 对象的包装。</p>
+<p>标签的话主要分为附注标签和轻量标签。 可以像创建分支那样创建一个轻量标签：</p>
+<p><code>git update-ref refs/tags/v1.0 44d318147e6b7bf2c3a5268018390440b2beae56</code></p>
+<p>轻量标签的话相当于就是对 <code>commit</code> 的一个引用，没有创建新的对象。</p>
+<p>我们再来创建一个附录对象，可以添加一些注释。</p>
+<p><code>git tag -a v1.1 84340eaeccbc0854bdec82f6b07f05eb01bd4dcd  -m &#39;test tag&#39;</code></p>
+<p>看一下新创建对象的 <code>key</code> 值，<code>cat .git/refs/tags/v1.1</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b518af197d2a925b668043edf1af88b82664e19f</span><br></pre></td></tr></table></figure>
+<p>然后查看一下该对象，<code>git cat-file -p b518</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">object <span class="number">84340</span>eaeccbc0854bdec82f6b07f05eb01bd4dcd</span><br><span class="line">type commit</span><br><span class="line">tag v1.1</span><br><span class="line">tagger windliang &lt;<span class="number">6489178757</span><span class="meta">@qq</span>.com&gt; <span class="number">1594208408</span> +<span class="number">0800</span></span><br><span class="line"></span><br><span class="line">test tag</span><br></pre></td></tr></table></figure>
+<p>我们顺便看一下这个对象的类型，<code>git cat-file -t b518</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tag</span><br></pre></td></tr></table></figure>
+<p>另外要注意的是，标签对象并非必须指向某个 <code>commit</code> 对象，它可以对任意类型的 <code>git</code> 对象打标签。</p>
+<h3 id="remotes"><a href="#remotes" class="headerlink" title="remotes"></a>remotes</h3><p>如果有远程仓库，并对其执行过推送操作，<code>git</code> 会记录下最近一次推送操作时的分支，并保存在 <code>refs/remotes</code> 目录下。 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ git remote add origin git<span class="meta">@github</span>.com:wind-liang/test.git</span><br><span class="line">$ git push -u origin master</span><br><span class="line">Enumerating objects: <span class="number">6</span>, done.</span><br><span class="line">Counting objects: <span class="number">100</span>% (<span class="number">6</span>/<span class="number">6</span>), done.</span><br><span class="line">Delta compression using up to <span class="number">12</span> threads</span><br><span class="line">Compressing objects: <span class="number">100</span>% (<span class="number">3</span>/<span class="number">3</span>), done.</span><br><span class="line">Writing objects: <span class="number">100</span>% (<span class="number">6</span>/<span class="number">6</span>), <span class="number">467</span> bytes | <span class="number">467.00</span> KiB/s, done.</span><br><span class="line">Total <span class="number">6</span> (delta <span class="number">0</span>), reused <span class="number">0</span> (delta <span class="number">0</span>)</span><br><span class="line">To github.com:wind-liang/test.git</span><br><span class="line"> * [<span class="keyword">new</span> branch]      master -&gt; master</span><br><span class="line">Branch <span class="string">'master'</span> set up to track remote branch <span class="string">'master'</span> from <span class="string">'origin'</span>.</span><br></pre></td></tr></table></figure>
+<p>然后查看 <code>remotes</code> 里的文件，<code>cat .git/refs/remotes/origin/master</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">44</span>d318147e6b7bf2c3a5268018390440b2beae56</span><br></pre></td></tr></table></figure>
+<p>这个值就是最新的 <code>commit</code> 对象的 <code>key</code> 值。远程引用和分支（位于 <code>refs/heads</code> 目录下的引用）之间最主要的区别在于，远程引用是只读的。 虽然可以 <code>git checkout</code> 到某个远程引用，但是 <code>Git</code> 并不会将 <code>HEAD</code> 引用指向该远程引用。</p>
+<h2 id="objects-pack"><a href="#objects-pack" class="headerlink" title="objects/pack"></a>objects/pack</h2><p>前边我们讲了每一个文件都作为一个对象存到 <code>objects</code> 目录下，如果只修改了文件的某一行，然后进行提交，依旧会新生成一个 <code>object</code>。如果 <code>git</code> 只保存其中一个，再保存另一个对象与之前版本的差异内容，不是能省些空间吗？</p>
+<p>事实上 <code>Git</code> 可以那样做。 但 <code>Git</code> 最初向磁盘中存储对象时所使用的格式被称为「松散（loose）」对象格式。 <code>Git</code> 会时不时地将多个这些对象打包成一个称为“包文件（packfile）”的二进制文件，以节省空间和提高效率。 当版本库中有太多的松散对象，或者手动执行 <code>git gc</code> 命令，或者你向远程服务器执行推送时，<code>Git</code> 都会这样做。 </p>
+<p><code>Git</code> 打包对象时，会查找命名及大小相近的文件，并只保存文件不同版本之间的差异内容。可以找一个项目看一下 <code>pack</code> 下的目录。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">pack</span><br><span class="line">├── pack-<span class="number">0</span>efa08fc30b8d98dff42203c71c6afe0533ce468.idx</span><br><span class="line">├── pack-<span class="number">0</span>efa08fc30b8d98dff42203c71c6afe0533ce468.pack</span><br><span class="line">├── pack-<span class="number">19571818</span>da01df976f52298facf362dc93d61026.idx</span><br><span class="line">├── pack-<span class="number">19571818</span>da01df976f52298facf362dc93d61026.pack</span><br><span class="line">├── pack-<span class="number">725</span>ab685133ed6e35083c5b3dcaf02ebc238489c.idx</span><br><span class="line">├── pack-<span class="number">725</span>ab685133ed6e35083c5b3dcaf02ebc238489c.pack</span><br><span class="line">├── pack-<span class="number">7</span>c01d29f0cb068c617aa49471cbf9f6eb1cb2156.idx</span><br><span class="line">├── pack-<span class="number">7</span>c01d29f0cb068c617aa49471cbf9f6eb1cb2156.pack</span><br><span class="line">├── pack-a59c4fce103fb83cec0f513ab32cd92e6122e7a4.idx</span><br><span class="line">├── pack-a59c4fce103fb83cec0f513ab32cd92e6122e7a4.pack</span><br><span class="line">├── pack-db0d185ea0e7d96bbad911bb371c67869d8599b0.idx</span><br><span class="line">├── pack-db0d185ea0e7d96bbad911bb371c67869d8599b0.pack</span><br><span class="line">├── pack-f07ea07e30bb0aa4dfbb1fcb08da4cd5e5e5f793.idx</span><br><span class="line">└── pack-f07ea07e30bb0aa4dfbb1fcb08da4cd5e5e5f793.pack</span><br></pre></td></tr></table></figure>
+<p>可以是两种类型，一种是打包文件，另一种就是索引文件，用来记录不同版本之间的差异。更详细的可以看一下 <a href="https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-%E5%8C%85%E6%96%87%E4%BB%B6" target="_blank" rel="noopener">Git 内部原理 - 包文件</a>。</p>
+<h2 id="packed-refs文件"><a href="#packed-refs文件" class="headerlink" title="packed-refs文件"></a>packed-refs文件</h2><p>执行 <code>gc</code> 以后，会将 <code>refs</code> 文件夹中的引用打包到这个文件中。</p>
+<h2 id="index"><a href="#index" class="headerlink" title="index"></a>index</h2><p>当我们执行了 <code>git add</code> 或者上边讲到的 <code>git update-index --add</code> 命令，我们就会发现 <code>.git</code> 目录下增加了一个 <code>index</code> 文件。这个文件存储的东西就是我们常说的「暂存区」。它主要存储了每个文件的索引，也就是在 <code>objects</code> 目录下生成的对象的 <code>SHA-1</code> 哈希值。还有生成 <code>tree</code> 对象的一些信息，比如文件名以及文件之间的关系，为下一步生成 <code>tree</code> 对象做准备。</p>
+<h2 id="hooks-文件夹"><a href="#hooks-文件夹" class="headerlink" title="hooks 文件夹"></a>hooks 文件夹</h2><p>这里主要是 <code>git</code> 为我们提供了一些钩子函数，把下边的 <code>.sample</code> 去掉，当前钩子就会生效。可以编辑各个钩子文件，就可以在执行 <code>push</code>、<code>commit</code> 等操作时完成一些自己想要的一些动作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">hooks</span><br><span class="line">├── applypatch-msg.sample</span><br><span class="line">├── commit-msg.sample</span><br><span class="line">├── fsmonitor-watchman.sample</span><br><span class="line">├── post-update.sample</span><br><span class="line">├── pre-applypatch.sample</span><br><span class="line">├── pre-commit.sample</span><br><span class="line">├── pre-merge-commit.sample</span><br><span class="line">├── pre-push.sample</span><br><span class="line">├── pre-rebase.sample</span><br><span class="line">├── pre-receive.sample</span><br><span class="line">├── prepare-commit-msg.sample</span><br><span class="line">└── update.sample</span><br></pre></td></tr></table></figure>
+<p>通过钩子，可以实现提交代码前自动格式化代码、规范化 <code>commit-msg</code> 等功能，还可以做到当远程仓库 <code>github</code> 更新后，让服务器端自动拉取最新项目，实现一些 <code>web</code> 项目的自动更新。</p>
+<h2 id="COMMIT-EDITMSG"><a href="#COMMIT-EDITMSG" class="headerlink" title="COMMIT_EDITMSG"></a>COMMIT_EDITMSG</h2><p>存储最后一次提交的信息内容。<code>git commit</code> 命令之后打开的编辑器就是在编辑此文件，退出编辑器保存后，<code>git</code> 会把此文件内容写入 <code>commit</code> 记录。一般直接在 <code>commit</code> 命令后添加 <code>-m</code> 选项，附加提交信息。</p>
+<h2 id="ORIG-HEAD-文件"><a href="#ORIG-HEAD-文件" class="headerlink" title="ORIG_HEAD 文件"></a>ORIG_HEAD 文件</h2><p>相当于 <code>HEAD</code> 文件的一个备份，会指向 <code>HEAD</code> 之前的一个 <code>commit</code> 对象。当执行一些危险的操作，比如 <code>git rebase</code> 等，需要先记录 <code>ORIG_HEAD</code> 再执行其他的操作。</p>
+<h2 id="FETCH-HEAD-文件"><a href="#FETCH-HEAD-文件" class="headerlink" title="FETCH_HEAD 文件"></a>FETCH_HEAD 文件</h2><p><code>FETCH_HEAD</code> 记录了 <code>fetch</code> 时候远程分支的 <code>key</code> 值，也就是 <code>commit</code> 对象的 <code>SHA-1</code> 哈希值。当执行 <code>git pull</code> 的时候相当于先执行 <code>git fetch</code> ，然后执行 <code>git merge FETCH_HEAD</code> ，也就是和拉取下来的远程分支合并。</p>
+<p>打开 <code>FETCH_HEAD</code> 文件，第一行就是 <code>FETCH_HEAD</code> 的值，用于 <code>merge</code>，其它行是同时拉取下来的分支。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">d6a81fdb23503d5e85cb8f74ea77cd4ab20e0659		branch <span class="string">'master'</span> of ssh:<span class="comment">//git.github.com/ed-f2e/test</span></span><br><span class="line"><span class="number">5</span>ce98b8e6f832382417c5a1ef55f1f1ca303f86d	not-<span class="keyword">for</span>-merge	branch <span class="string">'foodsafetab-20200701'</span> of ssh:<span class="comment">//git.github.com/ed-f2e/test</span></span><br><span class="line">d46bec5fea5af996d75497b05592802ef31fe63b	not-<span class="keyword">for</span>-merge	branch <span class="string">'overview-20200601'</span> of ssh:<span class="comment">//git.github.com/ed-f2e/test</span></span><br><span class="line"><span class="number">005</span>ef114aa680401681f582b8f71dfe020417989	not-<span class="keyword">for</span>-merge	branch <span class="string">'visual-20200622'</span> of ssh:<span class="comment">//git.github.com/ed-f2e/test</span></span><br></pre></td></tr></table></figure>
+<p>关键字 <code>not-for-merge</code>，表明 <code>git pull</code> 时只 <code>fetch</code>，不 <code>merge</code>。</p>
+<h2 id="logs-文件夹"><a href="#logs-文件夹" class="headerlink" title="logs 文件夹"></a>logs 文件夹</h2><p>记录了操作信息，<code>git reflog</code> 命令以及像 <code>HEAD@{1}</code> 形式的路径会用到。如果删除此文件夹，那么依赖于 <code>reflog</code> 的命令就会报错。</p>
+<h2 id="文件夹总"><a href="#文件夹总" class="headerlink" title="文件夹总"></a>文件夹总</h2><p>基本上把 <code>.git</code> 目录总结完了，下边汇总一下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── COMMIT_EDITMSG <span class="comment">// git commit 时候编辑的文件</span></span><br><span class="line">├── FETCH_HEAD <span class="comment">// git fetch 保存从远程仓库抓取下来的 commit 对象的键值</span></span><br><span class="line">├── HEAD <span class="comment">// 保存当前 commit 对象的键值</span></span><br><span class="line">├── ORIG_HEAD <span class="comment">// 执行危险操作时 HEAD 的备份</span></span><br><span class="line">├── config <span class="comment">// 当前 git 仓库的相关配置，优先级最高</span></span><br><span class="line">├── description <span class="comment">// 仅供 GitWeb 程序使用</span></span><br><span class="line">├── hooks <span class="comment">// 保存 git 的所有钩子</span></span><br><span class="line">│   ├── applypatch-msg.sample</span><br><span class="line">│   ├── commit-msg</span><br><span class="line">│   ├── commit-msg.git-flow</span><br><span class="line">│   ├── commit-msg.sample</span><br><span class="line">│   ├── fsmonitor-watchman.sample</span><br><span class="line">│   ├── post-update.sample</span><br><span class="line">│   ├── pre-applypatch.sample</span><br><span class="line">│   ├── pre-commit</span><br><span class="line">│   ├── pre-commit.git-flow</span><br><span class="line">│   ├── pre-commit.mt-eslint-check</span><br><span class="line">│   ├── pre-commit.sample</span><br><span class="line">│   ├── pre-merge-commit.sample</span><br><span class="line">│   ├── pre-push</span><br><span class="line">│   ├── pre-push.git-flow</span><br><span class="line">│   ├── pre-push.sample</span><br><span class="line">│   ├── pre-rebase.sample</span><br><span class="line">│   ├── pre-receive.sample</span><br><span class="line">│   ├── prepare-commit-msg.sample</span><br><span class="line">│   └── update.sample</span><br><span class="line">├── index <span class="comment">// 暂存区，保存对象的索引和 tree 对象的相关信息</span></span><br><span class="line">├── info</span><br><span class="line">│   └── exclude <span class="comment">// 和 .gitignore 一样的作用</span></span><br><span class="line">├── logs <span class="comment">// 记录历史的一些操作，git reflog 命令依赖于此目录</span></span><br><span class="line">├── objects <span class="comment">// git 的数据库，存放所有对象</span></span><br><span class="line">│   ├── <span class="number">0f</span></span><br><span class="line">│   │   ├── <span class="number">01</span>ae962d3a527bfd692175ee5600501eef43fb</span><br><span class="line">│   │   ├── <span class="number">5</span>ef114aa680401681f582b8f71dfe020417989</span><br><span class="line">│   │   ├── <span class="number">71685e674</span>a8190ba2f94391cae5f99ea4854fb</span><br><span class="line">│   │   └── cef7d6ec44ae5ffabf2514bd19ccb1ec303eb4</span><br><span class="line">│   ├── <span class="number">34</span></span><br><span class="line">│   │   ├── <span class="number">621</span>a5fb9cdb057a09c559586702a4d20388c71</span><br><span class="line">│   │   └── <span class="number">6e1</span>d53b34578f0bfcef11dd2d59dc25072e79e</span><br><span class="line">│   ├── <span class="number">55</span></span><br><span class="line">│   │   ├── <span class="number">137e5</span>e9f4e37218033af62bc9fcc2fded5545b</span><br><span class="line">│   │   ├── c0d6f9e2d8df065ccb512d45cbbd61d327e7fd</span><br><span class="line">│   │   └── eeddf196be55abc4292f562b8bd4fb19bbb2d4</span><br><span class="line">│   ├── info</span><br><span class="line">│   └── pack</span><br><span class="line">│       ├── pack-<span class="number">679830</span>bc13d16192a07ddaa0f51f49b0163b7578.idx</span><br><span class="line">│       └── pack-<span class="number">679830</span>bc13d16192a07ddaa0f51f49b0163b7578.pack</span><br><span class="line">├── packed-refs <span class="comment">// 执行 gc 以后，将 refs 中的引用进行打包</span></span><br><span class="line">└── refs <span class="comment">// 对 commit 对象的引用</span></span><br><span class="line">    ├── heads <span class="comment">//所有分支</span></span><br><span class="line">    │   ├── master</span><br><span class="line">    ├── remotes <span class="comment">// 远程分支所对应的 key 值</span></span><br><span class="line">    │   └── origin</span><br><span class="line">    │       ├── HEAD</span><br><span class="line">    │       └── master</span><br><span class="line">    └── tags <span class="comment">// 所有标签</span></span><br></pre></td></tr></table></figure>
+<h2 id="对象总结"><a href="#对象总结" class="headerlink" title="对象总结"></a>对象总结</h2><p>主要包括 <code>blob</code> 对象，<code>tree</code> 对象，<code>commit</code> 对象，还有 <code>tag</code> 对象。通过 <code>commit</code> 对象以链表的形式连接在了一起。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/git2.png" alt=""></p>
+<p>可以看到第一次 <code>commit</code> 的时候，创建了 <code>README.md</code>，<code>index.html</code>，<code>js</code> 文件夹以及 <code>index.js</code>。</p>
+<p>第二次 <code>commit</code> 的时候，仅仅修改了 <code>index.html</code>，其他文件仍旧指向原来的对象。并且用当前 <code>commit</code> 包装了一个 <code>tag</code> 对象。</p>
+<p>第三次 <code>commit</code> 的时候，增加了 <code>index.css</code> 文件，其他文件仍旧指向原来的对象。此外当前 <code>commit</code> 对象是当前操作的对象，所以 <code>HEAD</code> 指向当前 <code>commit</code> 对象，另外 <code>mater</code> 分支也指向当前 <code>commit</code> 对象。</p>
+<h1 id="换一种眼光看命令"><a href="#换一种眼光看命令" class="headerlink" title="换一种眼光看命令"></a>换一种眼光看命令</h1><p>这一节回顾一下 <code>git</code> 经常用的命令和上边介绍的文件的一些关系。为了方便监测每个命令改变了哪些文件，我们在 <code>.git</code> 目录中再执行一次 <code>git init</code>，也就是将 <code>.git</code> 目录看作我们的另外一个项目，操作如下：</p>
+<p>新建一个目录，<code>learnGit</code>，在里边新建 <code>index.html</code>，<code>README.md</code>，<code>js</code> 文件夹，<code>js</code> 文件夹中新建 <code>index.js</code>。目录结构如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── README.md</span><br><span class="line">├── index.html</span><br><span class="line">└── js</span><br><span class="line">    └── index.js</span><br></pre></td></tr></table></figure>
+<p>然后初始化当前目录为 <code>git</code> 仓库。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">learnGit % git init</span><br><span class="line">Initialized empty Git repository in /Users/learnGit/.git/</span><br></pre></td></tr></table></figure>
+<p>此时就会自动生成 <code>.git</code> 目录，进入 <code>.git</code> 目录再执行一次 <code>git init</code> ，<code>git add .</code> ，<code>git commit -m &quot;init&quot;</code>，来监测后续  <code>.git</code> 目录的变化情况。然后回到我们的根目录<code>learnGit</code> 中进行下边的实验。</p>
+<h2 id="git-add"><a href="#git-add" class="headerlink" title="git add ."></a>git add .</h2><p>此时会发现每个文件会生成一个对象，因此 <code>objects</code> 文件夹中多了 <code>3</code> 个文件（如果是 <code>mac</code> 系统会发现多了 <code>4</code> 个文件，原因是系统自动生成了一个 <code>.DS_Store</code> 文件，这里就不考虑了），也就是 <code>3</code> 个 <code>blob</code> 对象。此外，增加了 <code>index</code> 文件，也就是暂存区，会存储每个 <code>commit</code> 对象的索引，以及生成 <code>tree</code> 对象的相关信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">create mode 100644 index</span><br><span class="line">create mode 100644 objects/4d/7a16a7949cf8206f6f910535fd6811d4a5e3d2</span><br><span class="line">create mode 100644 objects/94/a127e7307c6562a2bdbf2d156589572c31963e</span><br><span class="line">create mode 100644 objects/c3/b573586becc940e02cd0914ef2eaf6d1ff7a28</span><br></pre></td></tr></table></figure>
+<p>相当于执行了 <code>git hash-object -w 文件名</code> 生成对象，以及 <code>git update-index --add 文件名</code> 命令，将文件加入暂存区。</p>
+<h2 id="git-commit-m"><a href="#git-commit-m" class="headerlink" title="git commit -m"></a>git commit -m</h2><p>执行 <code>git commit -m &quot;first&quot;</code>，文件变化情况如下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">create mode 100644 COMMIT_EDITMSG</span><br><span class="line">create mode 100644 logs/HEAD</span><br><span class="line">create mode 100644 logs/refs/heads/master</span><br><span class="line">create mode 100644 objects/74/900affe800f97c02e9cad8a9b2304e21f0a412 //commit 对象</span><br><span class="line">create mode 100644 objects/bc/4a821da58aa317d1790199b98b1e1b638baebb //tree 对象</span><br><span class="line">create mode 100644 objects/d2/eb8f97312f90fe39586e6deefb6b41b4d8340f //tree 对象</span><br><span class="line">create mode 100644 refs/heads/master</span><br></pre></td></tr></table></figure>
+<p>会发现 <code>objects</code> 文件夹中多了三个文件，其中两个是 <code>tree</code> 对象，因为我们的目录有两个文件夹。另一个就是包装了 <code>tree</code> 对象的 <code>commit</code> 对象。</p>
+<p>增加了 <code>COMMIT_EDITMSG</code>，也就是 <code>commit</code> 时候写的提交信息，在这里的话里边内容就是 “first”。</p>
+<p><code>logs</code> 目录发生了一些变化，<code>reflog</code> 命令依赖这里的文件。</p>
+<p>自动为我们创建了 <code>mater</code> 分支，因此增加了 <code>refs/heads/master</code> 文件，里边的内容就是我们刚刚生成的 <code>commit</code> 对象的 <code>hash</code> 值，也就是 <code>74900affe800f97c02」9cad8a9b2304e21f0a412</code>。</p>
+<h2 id="git-push"><a href="#git-push" class="headerlink" title="git push"></a>git push</h2><p>我们先执行 <code>git remote add origin git@github.com:wind-liang/learnGit.git</code> 添加一个远程仓库。此时 <code>config</code> 文件多了三行，记录了远程仓库。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[remote <span class="string">"origin"</span>]</span><br><span class="line">	url = git<span class="meta">@github</span>.com:wind-liang/learnGit.git</span><br><span class="line">	fetch = +refs/heads<span class="comment">/*:refs/remotes/origin/*</span></span><br></pre></td></tr></table></figure>
+<p>记录了远程仓库的名字 <code>origin</code>，以及 <code>url</code> 地址，还有就是执行 <code>fetch</code> 时候的默认操作，从远程取回所有分支的更新，可以看下一节<code>fetch</code> 命令的介绍。</p>
+<p>格式：<code>git push &lt;远程主机名&gt; &lt;本地分支名&gt;:&lt;远程分支名&gt;</code>。</p>
+<p>我们执行 <code>git push origin master</code>，可以省略远程分支名，默认和本地分支名一致。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create mode <span class="number">100644</span> logs/refs/remotes/origin/master</span><br><span class="line">create mode <span class="number">100644</span> refs/remotes/origin/master</span><br></pre></td></tr></table></figure>
+<p><code>logs</code> 就不说了。会发现本地新建了一个远程分支 <code>origin/master</code>，里边内容就是我们刚刚推送的本地 <code>mater</code> 分支指向的 <code>commit</code> 对象的 <code>hash</code> 值，也就是 <code>74900affe800f97c02e9cad8a9b2304e21f0a412</code> 。</p>
+<p>此时我们修改 <code>index.html</code> ，然后执行 <code>git add .</code> 加到暂存区。看一下文件的变化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">index                                             | Bin <span class="number">396</span> -&gt; <span class="number">377</span> bytes</span><br><span class="line">objects/<span class="number">07</span>/<span class="number">51</span>aaed4e8f37c1f84eb7780ca08989029ec504 | Bin <span class="number">0</span> -&gt; <span class="number">247</span> bytes</span><br></pre></td></tr></table></figure>
+<p>此时会多一个对象，也就是新一版的 <code>index.html</code> ，以及 <code>index</code> 文件会发生变化。</p>
+<p>接着执行 <code>git commit -m &quot;second&quot;</code>，会根据暂存区的信息生成当前的树对象以及 <code>commit</code> 对象，<code>objects</code> 文件夹中应该会增加两个对象，一个 <code>tree</code> 对象，一个 <code>commit</code> 对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">COMMIT_EDITMSG                                    |   <span class="number">2</span> +-</span><br><span class="line">index                                             | Bin <span class="number">377</span> -&gt; <span class="number">396</span> bytes</span><br><span class="line">logs/HEAD                                         |   <span class="number">1</span> +</span><br><span class="line">logs/refs/heads/master                            |   <span class="number">1</span> +</span><br><span class="line">objects/<span class="number">63</span>/<span class="number">53</span>b5966f6bbf3f6a840b1261030519b67fdf51 | Bin <span class="number">0</span> -&gt; <span class="number">150</span> bytes</span><br><span class="line">objects/af/f7b5ebae94eba99e5fa0ef245595c21686562b | Bin <span class="number">0</span> -&gt; <span class="number">154</span> bytes</span><br><span class="line">refs/heads/master                                 |   <span class="number">2</span> +-</span><br></pre></td></tr></table></figure>
+<p><code>refs/heads/master</code> 也会更新，指向最新的 <code>commit</code> 对象。</p>
+<p>如果我们想把当前改变再推送到远程仓库，又需要执行 <code>git push origin master</code> ，有些长。<code>git</code> 为我们提供了 <code>--set-upstream</code> 参数，简写是 <code>-u</code>，可以让本地分支关联都某个远程分支，这样的话如果下次想把当前分支推送到远程，只需要执行 <code>git push</code> 就可以了。</p>
+<p>我们执行一下 <code>git push -u origin master</code> ，看一下哪些文件会变化。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">config                          | 3 +++</span><br><span class="line">logs/refs/remotes/origin/master | 1 +</span><br><span class="line">refs/remotes/origin/master      | 2 +-</span><br></pre></td></tr></table></figure>
+<p>看一下 <code>config</code> 文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[core]</span><br><span class="line">	repositoryformatversion = 0</span><br><span class="line">	filemode = <span class="literal">true</span></span><br><span class="line">	bare = <span class="literal">false</span></span><br><span class="line">	logallrefupdates = <span class="literal">true</span></span><br><span class="line">	ignorecase = <span class="literal">true</span></span><br><span class="line">	precomposeunicode = <span class="literal">true</span></span><br><span class="line">[remote <span class="string">"origin"</span>]</span><br><span class="line">	url = git@github.com:wind-liang/learnGit.git</span><br><span class="line">	fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[branch <span class="string">"master"</span>]</span><br><span class="line">	remote = origin</span><br><span class="line">	merge = refs/heads/master</span><br></pre></td></tr></table></figure>
+<p>可以看到，它记录了本地 <code>mater</code> 分支和远程仓库 <code>origin</code> 中的 <code>refs/heads/mater</code> 关联。除了在 <code>git push</code> 起作用，<code>git fetch</code> 和 <code>git pull</code> 的默认操作也会依赖这里的配置，可以继续看下边的小节。</p>
+<p>此外，这里建立的远程分支必须要和本地分支同名，因为在 <code>Git 2.0</code> 之后 <code>git push</code> 不加任何参数的话，默认模式为 <code>simple</code>，推送当前分支到<code>upstream</code> 分支上，必须保证本地分支与 <code>upstream</code> 分支同名，不然的话 <code>git push</code> 是没有用的。</p>
+<p>比如我们将 <code>mater</code> 分支和远程仓库的 <code>dev</code> 分支关联，执行 <code>git branch -u origin/dev</code>，再执行 <code>git push</code> 就会得到下边的提示。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">fatal: The upstream branch of your current branch does not match</span><br><span class="line">the name of your current branch.  To push to the upstream branch</span><br><span class="line">on the remote, use</span><br><span class="line"></span><br><span class="line">    git push origin HEAD:dev</span><br><span class="line"></span><br><span class="line">To push to the branch of the same name on the remote, use</span><br><span class="line"></span><br><span class="line">    git push origin HEAD</span><br><span class="line"></span><br><span class="line">To choose either option permanently, see push.<span class="keyword">default</span> in <span class="string">'git help config'</span>.</span><br></pre></td></tr></table></figure>
+<p>还有其他的模式，<code>nothing, current, upstream,  matching</code>，一般就用默认的 <code>simple</code>，这里就不介绍了。</p>
+<h2 id="git-fetch"><a href="#git-fetch" class="headerlink" title="git fetch"></a>git fetch</h2><p>为了更详细的看 <code>git fetch</code> 命令的作用。我新建了另一个远程仓库 <code>origin2</code>，关联到了当前本地仓库，并且在远程仓库中添加了 <code>index2.txt</code>。</p>
+<p>同时在原来 <code>origin</code> 的远程仓库中，在 <code>mater</code> 分支新增了 <code>index.css</code> 文件。增加了 <code>dev</code> 分支，并且修改了 <code>index.html</code> 。</p>
+<p>当前本地仓库的配置文件如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[core]</span><br><span class="line">	repositoryformatversion = 0</span><br><span class="line">	filemode = <span class="literal">true</span></span><br><span class="line">	bare = <span class="literal">false</span></span><br><span class="line">	logallrefupdates = <span class="literal">true</span></span><br><span class="line">	ignorecase = <span class="literal">true</span></span><br><span class="line">	precomposeunicode = <span class="literal">true</span></span><br><span class="line">[remote <span class="string">"origin"</span>]</span><br><span class="line">	url = git@github.com:wind-liang/learnGit.git</span><br><span class="line">	fetch = +refs/heads/*:refs/remotes/origin/*</span><br><span class="line">[branch <span class="string">"master"</span>]</span><br><span class="line">	remote = origin</span><br><span class="line">	merge = refs/heads/master</span><br><span class="line">[remote <span class="string">"origin2"</span>]</span><br><span class="line">	url = git@github.com:wind-liang/learnGit2.git</span><br><span class="line">	fetch = +refs/heads/*:refs/remotes/origin2/*</span><br></pre></td></tr></table></figure>
+<p> <code>git fetch</code>  的命令格式为 <code>git fetch &lt;远程主机名&gt; &lt;分支名&gt;</code>。</p>
+<p>我们不加参数，只执行 <code>git fetch</code> 看一下效果。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">FETCH_HEAD                                        |   2 ++</span><br><span class="line">logs/refs/remotes/origin/dev                      |   1 +</span><br><span class="line">logs/refs/remotes/origin/master                   |   1 +</span><br><span class="line">objects/08/f4162aa74066285166b9b46f845ea648941943 | Bin 0 -&gt; 151 bytes</span><br><span class="line">objects/36/619ae122d6e01b7c82838247754173c1b6930a | Bin 0 -&gt; 177 bytes</span><br><span class="line">objects/88/688aebd84396af325f55f82a4bdf0e283a8e4a | Bin 0 -&gt; 251 bytes</span><br><span class="line">objects/b1/be33b8a27e1fcfa2c9f01b0fcb76a28b091071 |   2 ++</span><br><span class="line">objects/be/5678cb94b6da6f94cad10077739a850cd893b5 | Bin 0 -&gt; 38 bytes</span><br><span class="line">objects/ff/383d0247ea2c27dd2d44753dd5b18ca4ecfeaf | Bin 0 -&gt; 177 bytes</span><br><span class="line">refs/remotes/origin/dev                           |   1 +</span><br><span class="line">refs/remotes/origin/master                        |   2 +-</span><br><span class="line">11 files changed, 8 insertions(+), 1 deletion(-)</span><br></pre></td></tr></table></figure>
+<p>默认抓取了远程仓库 <code>origin</code> 的两个分支。由于远程仓库新增了 <code>index.css</code> 文件，并且修改了 <code>dev</code> 分支中的 <code>index.html</code> ，所以是 <code>2</code> 个 <code>blob</code> 对象，<code>2</code> 个 <code>tree</code> 对象，<code>2</code>  个 <code>commit</code> 对象，所以 <code>objects</code> 文件中增加了 <code>6</code> 个对象。</p>
+<p><code>FETCH_HEAD</code> 记录了两个分支指向的最新 <code>commit</code> 对象的 <code>hash</code> 值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">b1be33b8a27e1fcfa2c9f01b0fcb76a28b091071		branch <span class="string">'master'</span> of github.com:wind-liang/learnGit</span><br><span class="line"><span class="number">08f</span>4162aa74066285166b9b46f845ea648941943	not-<span class="keyword">for</span>-merge	branch <span class="string">'dev'</span> of github.com:wind-liang/learnGit</span><br></pre></td></tr></table></figure>
+<p><code>refs/remotes/origin/dev</code> 和 <code>refs/remotes/origin/master</code> 分别记录了分支所对应的 <code>commit</code> 对象。</p>
+<h2 id="git-merge"><a href="#git-merge" class="headerlink" title="git merge"></a>git merge</h2><p><code>git fetch</code> 仅仅把远程分支拉取了下来，我们还需要通过 <code>git merge</code> 将远程分支的内容和本地内容进行合并。</p>
+<p>我们将本地的 <code>mater</code> 分支和远程的 <code>mater</code> 分支进行合并。</p>
+<p>首先可以执行 <code>git diff origin/mater</code> 看一下和远程仓库代码的区别。</p>
+<p>然后可以执行 <code>git merge origin/master</code> 将刚刚拉下来的远端分支和当前分支合并。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ORIG_HEAD              |   1 +</span><br><span class="line">index                  | Bin 396 -&gt; 468 bytes</span><br><span class="line">logs/HEAD              |   1 +</span><br><span class="line">logs/refs/heads/master |   1 +</span><br><span class="line">refs/heads/master      |   2 +-</span><br><span class="line">5 files changed, 4 insertions(+), 1 deletion(-)</span><br></pre></td></tr></table></figure>
+<p>可以看到 <code>index</code> 文件进行了更新，也就是更新了暂存区。<code>refs/heads/master</code> 文件进行了更新，也就是将 <code>mater</code> 分支指向了最新的 <code>commit</code> 对象。查看 <code>refs/heads/master</code> 文件中的内容是 <code>b1be33b8a27e1fcfa2c9f01b0fcb76a28b091071</code> ，和我们刚刚 <code>FETCH_HEAD</code> 中远端 <code>mater</code> 分支的 <code>commit</code> 对象的 <code>hash</code> 值一致。新增的 <code>ORIG_HEAD</code> 文件是 <code>HEAD</code> 的备份。</p>
+<p>这种合并方式属于 <code>Fast Forward</code>，合并的时候直接将 <code>mater</code> 分支指向了最新的提交。是因为要合并过来的分支是之前 <code>mater</code> 分出去的，并且分出去之后 <code>mater</code> 分支没有再产生新的 <code>commit</code> 对象，也就是下面的情况。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">       ------------ origin/master</span><br><span class="line">      /</span><br><span class="line">-----master</span><br></pre></td></tr></table></figure>
+<p>这种情况合并的话，直接把 <code>mater</code> 指向 <code>origin/master</code> 即可。</p>
+<p>还有另外一种情况，如下图。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">       ------------ origin/master</span><br><span class="line">      /</span><br><span class="line">-------------master</span><br></pre></td></tr></table></figure>
+<p>分出去以后，<code>mater</code> 分支又进行了几次提交，此时我们再执行 <code>git merge origin/master</code> 看一下会是什么情况。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Merge remote-tracking branch <span class="string">'origin/master'</span></span><br><span class="line"># Please enter a commit message to explain why this merge is necessary,</span><br><span class="line"># especially if it merges an updated upstream into a topic branch.</span><br><span class="line">#</span><br><span class="line"># Lines starting with '#' will be ignored, and an empty message aborts</span><br><span class="line"># the commit.</span><br><span class="line">~</span><br></pre></td></tr></table></figure>
+<p>此时会进入一个编辑文件，让我们填写 <code>commit</code> 对象的信息，填写退出后，文件变化如下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ORIG_HEAD                                         |   2 +-</span><br><span class="line">index                                             | Bin 468 -&gt; 468 bytes</span><br><span class="line">logs/HEAD                                         |   1 +</span><br><span class="line">logs/refs/heads/master                            |   1 +</span><br><span class="line">objects/09/1d34a18801e88da14b609d29ac6d6ee8ea9079 | Bin 0 -&gt; 209 bytes</span><br><span class="line">objects/dd/c0e866456daf833034119e6a797eb63614cb4a | Bin 0 -&gt; 178 bytes</span><br><span class="line">refs/heads/master                                 |   2 +-</span><br></pre></td></tr></table></figure>
+<p>相比之前的 <code>Fast Forward</code> 模式，这里我们相当于多进行了一个 <code>commit</code> 操作，增加了 <code>tree</code> 对象和 <code>commit</code> 对象。</p>
+<p>而且这个 <code>commit</code> 对象比较特殊，它有两个 <code>parent</code> 对象， 通过命令 <code>git cat-file -p 091d</code> 来看一下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tree ddc0e866456daf833034119e6a797eb63614cb4a</span><br><span class="line">parent b9ba3b492e1fad20acd003ea4dad463a012b357a</span><br><span class="line">parent <span class="number">5f</span>4cfe0f32a1580924a1b5a2d2673d6e6b13639c</span><br><span class="line">author windliang &lt;<span class="number">6489178757</span><span class="meta">@qq</span>.com&gt; <span class="number">1595149755</span> +<span class="number">0800</span></span><br><span class="line">committer windliang &lt;<span class="number">6489178757</span><span class="meta">@qq</span>.com&gt; <span class="number">1595149755</span> +<span class="number">0800</span></span><br><span class="line"></span><br><span class="line">Merge remote-tracking branch <span class="string">'origin/master'</span></span><br></pre></td></tr></table></figure>
+<p>所以最后合并后的情况相当于下边的样子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">       ------------ origin/master</span><br><span class="line">      /            \</span><br><span class="line">		            - master</span><br><span class="line">-------------      /</span><br></pre></td></tr></table></figure>
+<h2 id="git-pull"><a href="#git-pull" class="headerlink" title="git pull"></a>git pull</h2><p>在 <code>dev</code> 分支下执行 <code>git pull</code> 命令。</p>
+<p>理解了 <code>git fetch</code> 和 <code>git merge</code>，<code>git pull</code> 就好说了。它相当于先执行 <code>git fetch</code> 拉取下了所有分支，然后再执行 <code>git merge FETCH_HEAD</code>。<code>FETCH_HEAD</code> 就是当前分支跟踪的远程分支的 <code>commit</code> 对象的 <code>HASH</code> 值。它怎么知道当前分支追踪的远程分支是哪个呢？就是我们之前 <code>git push</code> 设置的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[branch <span class="string">"dev"</span>]</span><br><span class="line">	remote = origin</span><br><span class="line">	merge = refs/heads/dev</span><br></pre></td></tr></table></figure>
+<p>这样的话，如下所示，<code>FETCH_HEAD</code> 文件第一行存储的是远端 <code>dev</code> 分支的 <code>commit</code> 对象的 <code>HASH</code> 值，做为 <code>FETCH_HEAD</code> 的引用，用于接下来的 <code>git merge FETCH_HEAD</code> 操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cc28c96446ecf074671a0521c917025d5942ef9c		branch <span class="string">'dev'</span> of github.com:wind-liang/learnGit</span><br><span class="line"><span class="number">0932e6</span>eb2fc387f7eeb94147a98cf16f8a0c27b8	not-<span class="keyword">for</span>-merge	branch <span class="string">'master'</span> of github.com:wind-liang/learnGit</span><br></pre></td></tr></table></figure>
+<p>如果我们执行<code>git branch -u origin/master</code> ，让当前分支 <code>dev</code> 去追踪远程仓库的 <code>master</code> 分支。此时再执行 <code>git fetch</code> 。 <code>FETCH_HEAD</code> 第一行记录的就是远程仓库 <code>mater</code> 分支了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a2837cd3f45d3f9ebe7d5d6a3f90ff633938a40b		branch <span class="string">'master'</span> of github.com:wind-liang/learnGit</span><br><span class="line">79d8411ee2466e7e6f361a18601b81d5b7a98156	not-for-merge	branch <span class="string">'dev'</span> of github.com:wind-liang/learnGit</span><br></pre></td></tr></table></figure>
+<p>上边是 <code>git pull/fetch</code> 的默认操作，<code>git pull</code> 的完整格式为 <code>git pull &lt;远程主机名&gt; &lt;远程分支名&gt;:&lt;本地分支名&gt;</code>。如果不指定本地分支名，则默认为当前分支。</p>
+<p>如果我们指定了远程的分支，执行<code>git pull origin mater</code> ，就相当于先执行 <code>git fetch origin master</code>，此时就不会拉取所有分支，<code>FETCH_HEAD</code> 就指向这个唯一拉下来的分支了。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>主要从两个角度介绍了 <code>git</code> ，一方面介绍了 <code>.git</code> 目录中每个文件的作用以及相关的底层命令，另一方面介绍了常用的一些命令对 <code>.git</code> 目录的影响。花了不少时间总结下来，自己对 <code>git</code> 有了更深的理解，希望对大家也能够有所帮助。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接:"></a>参考链接:</h1><p><a href="https://en.wikipedia.org/wiki/Git" target="_blank" rel="noopener">Git维基百科</a></p>
+<p><a href="https://linuxstory.org/10-years-of-git-an-interview-with-git-creator-linus-torvalds/" target="_blank" rel="noopener">Git 10 周年访谈：Linus Torvalds 讲述背后故事</a></p>
+<p><a href="https://www.linux.com/news/10-years-git-interview-git-creator-linus-torvalds/" target="_blank" rel="noopener">10 Years of Git: An Interview with Git Creator Linus Torvalds</a></p>
+<p><a href="https://www.zensoftware.nl/nl/3412-2/" target="_blank" rel="noopener">Torvalds on Version Control: Git good, SVN terrible!</a></p>
+<p><a href="https://cloud.tencent.com/developer/article/1565474" target="_blank" rel="noopener">探秘git隐藏文件夹</a></p>
+<p><a href="https://tonybai.com/2020/04/07/illustrated-tale-of-git-internal-key-concepts/" target="_blank" rel="noopener">图解git原理的几个关键概念</a> </p>
+<p> <a href="[https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-%E5%BA%95%E5%B1%82%E5%91%BD%E4%BB%A4%E4%B8%8E%E4%B8%8A%E5%B1%82%E5%91%BD%E4%BB%A4](https://git-scm.com/book/zh/v2/Git-内部原理-底层命令与上层命令">Git 内部原理 - 底层命令与上层命令</a>)</p>
+<p><a href="https://stackoverflow.com/questions/39847781/which-are-the-plumbing-and-porcelain-commands" target="_blank" rel="noopener">Which are the plumbing and porcelain commands?</a></p>
+<p><a href="https://cjting.me/2017/05/13/how-git-generate-diff/" target="_blank" rel="noopener">Git 是怎样生成 diff 的：Myers 算法</a></p>
+<p><a href="http://www.ruanyifeng.com/blog/2018/10/git-internals.html" target="_blank" rel="noopener">Git 原理入门</a></p>
+<p><a href="https://developer.aliyun.com/article/716483" target="_blank" rel="noopener">.git文件夹探秘，理解git运作机制</a></p>
+<p><a href="https://github.com/git/git/blob/master/Documentation/technical/racy-git.txt?spm=a2c6h.12873639.0.0.592469418daUIL&amp;file=racy-git.txt" target="_blank" rel="noopener">Use of index and Racy Git problem</a></p>
+<p><a href="https://github.com/git/git/blob/master/Documentation/technical/index-format.txt?spm=a2c6h.12873639.0.0.592469418daUIL&amp;file=index-format.txt" target="_blank" rel="noopener">Git index format</a></p>
+<p><a href="https://www.atlassian.com/git/tutorials/refs-and-the-reflog" target="_blank" rel="noopener">Refs and the Reflog</a></p>
+<p><a href="Git中的push和pull的默认行为">Git中的push和pull的默认行为</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/git原理/" rel="tag"># git原理</a>
+          
+            <a href="/tags/git目录/" rel="tag"># git目录</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/31/极客时间优惠红包返现/" rel="next" title="极客时间优惠红包返现">
+                <i class="fa fa-chevron-left"></i> 极客时间优惠红包返现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/16/html的lang属性有什么用吗/" rel="prev" title="html的lang属性有什么用吗">
+                html的lang属性有什么用吗 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#git-历史"><span class="nav-number">1.</span> <span class="nav-text">git 历史</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git-原理浅析"><span class="nav-number">2.</span> <span class="nav-text">git 原理浅析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#description-文件"><span class="nav-number">2.1.</span> <span class="nav-text">description 文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#info文件夹"><span class="nav-number">2.2.</span> <span class="nav-text">info文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#config-文件"><span class="nav-number">2.3.</span> <span class="nav-text">config 文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#底层命令和上层命令"><span class="nav-number">2.4.</span> <span class="nav-text">底层命令和上层命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#objects-文件夹"><span class="nav-number">2.5.</span> <span class="nav-text">objects 文件夹</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#blob-对象"><span class="nav-number">2.5.1.</span> <span class="nav-text">blob 对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tree-对象"><span class="nav-number">2.5.2.</span> <span class="nav-text">tree 对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#commit-对象"><span class="nav-number">2.5.3.</span> <span class="nav-text">commit 对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#refs-文件夹，HEAD-文件"><span class="nav-number">2.6.</span> <span class="nav-text">refs 文件夹，HEAD 文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#heads"><span class="nav-number">2.6.1.</span> <span class="nav-text">heads</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tags"><span class="nav-number">2.6.2.</span> <span class="nav-text">tags</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#remotes"><span class="nav-number">2.6.3.</span> <span class="nav-text">remotes</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#objects-pack"><span class="nav-number">2.7.</span> <span class="nav-text">objects/pack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#packed-refs文件"><span class="nav-number">2.8.</span> <span class="nav-text">packed-refs文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#index"><span class="nav-number">2.9.</span> <span class="nav-text">index</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hooks-文件夹"><span class="nav-number">2.10.</span> <span class="nav-text">hooks 文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#COMMIT-EDITMSG"><span class="nav-number">2.11.</span> <span class="nav-text">COMMIT_EDITMSG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ORIG-HEAD-文件"><span class="nav-number">2.12.</span> <span class="nav-text">ORIG_HEAD 文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FETCH-HEAD-文件"><span class="nav-number">2.13.</span> <span class="nav-text">FETCH_HEAD 文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#logs-文件夹"><span class="nav-number">2.14.</span> <span class="nav-text">logs 文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件夹总"><span class="nav-number">2.15.</span> <span class="nav-text">文件夹总</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对象总结"><span class="nav-number">2.16.</span> <span class="nav-text">对象总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#换一种眼光看命令"><span class="nav-number">3.</span> <span class="nav-text">换一种眼光看命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#git-add"><span class="nav-number">3.1.</span> <span class="nav-text">git add .</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-commit-m"><span class="nav-number">3.2.</span> <span class="nav-text">git commit -m</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-push"><span class="nav-number">3.3.</span> <span class="nav-text">git push</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-fetch"><span class="nav-number">3.4.</span> <span class="nav-text">git fetch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-merge"><span class="nav-number">3.5.</span> <span class="nav-text">git merge</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-pull"><span class="nav-number">3.6.</span> <span class="nav-text">git pull</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">4.</span> <span class="nav-text">总</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考链接"><span class="nav-number">5.</span> <span class="nav-text">参考链接:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

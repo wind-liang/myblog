@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="继续打开 github 看一下最初的版本的 babel 是怎么实现的，了解它的基本原理。  git clone git@github.com:babel/babel.git 并且 git checkout v1.7.7 ，npm i 安装一下相应的 node 包。其实还可以找到更早的 tag ，但由于之前的一些依赖包现在已经下载不下来了，程序跑不起来不好调试所以就没用了。 看一下 package.">
+<meta name="keywords" content="babel,ast">
+<meta property="og:type" content="article">
+<meta property="og:title" content="babel源码详解-v1.7.8">
+<meta property="og:url" content="https://windliang.wang/2021/09/26/babel-v1-7-8做了什么/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="继续打开 github 看一下最初的版本的 babel 是怎么实现的，了解它的基本原理。  git clone git@github.com:babel/babel.git 并且 git checkout v1.7.7 ，npm i 安装一下相应的 node 包。其实还可以找到更早的 tag ，但由于之前的一些依赖包现在已经下载不下来了，程序跑不起来不好调试所以就没用了。 看一下 package.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/babel1.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/babel4.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/babel3.jpg">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.933Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="babel源码详解-v1.7.8">
+<meta name="twitter:description" content="继续打开 github 看一下最初的版本的 babel 是怎么实现的，了解它的基本原理。  git clone git@github.com:babel/babel.git 并且 git checkout v1.7.7 ，npm i 安装一下相应的 node 包。其实还可以找到更早的 tag ，但由于之前的一些依赖包现在已经下载不下来了，程序跑不起来不好调试所以就没用了。 看一下 package.">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/babel1.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2021/09/26/babel-v1-7-8做了什么/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>babel源码详解-v1.7.8 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2021/09/26/babel-v1-7-8做了什么/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">babel源码详解-v1.7.8
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-09-26 08:20:57" itemprop="dateCreated datePublished" datetime="2021-09-26T08:20:57+08:00">2021-09-26</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2021/09/26/babel-v1-7-8做了什么/" class="leancloud_visitors" data-flag-title="babel源码详解-v1.7.8">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>继续打开 <code>github</code> 看一下最初的版本的 <code>babel</code> 是怎么实现的，了解它的基本原理。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/babel1.jpg" style="width:80%;"></p>
+<p><code>git clone git@github.com:babel/babel.git</code> 并且 <code>git checkout v1.7.7</code> ，<code>npm i</code> 安装一下相应的 <code>node</code> 包。其实还可以找到更早的 <code>tag</code> ，但由于之前的一些依赖包现在已经下载不下来了，程序跑不起来不好调试所以就没用了。</p>
+<p>看一下 <code>package.json</code>。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"6to5"</span>,</span><br><span class="line">  <span class="attr">"description"</span>: <span class="string">"Turn ES6 code into vanilla ES5 with source maps and no runtime"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"1.7.7"</span>,</span><br><span class="line">  <span class="attr">"author"</span>: <span class="string">"Sebastian McKenzie &lt;sebmck@gmail.com&gt;"</span>,</span><br><span class="line">  <span class="attr">"homepage"</span>: <span class="string">"https://github.com/sebmck/6to5"</span>,</span><br><span class="line">  <span class="attr">"repository"</span>: &#123;</span><br><span class="line">    <span class="attr">"type"</span>: <span class="string">"git"</span>,</span><br><span class="line">    <span class="attr">"url"</span>: <span class="string">"https://github.com/sebmck/6to5.git"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"bugs"</span>: &#123;</span><br><span class="line">    <span class="attr">"url"</span>: <span class="string">"https://github.com/sebmck/6to5/issues"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"preferGlobal"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"main"</span>: <span class="string">"lib/6to5/node.js"</span>,</span><br><span class="line">  <span class="attr">"bin"</span>: &#123;</span><br><span class="line">    <span class="attr">"6to5"</span>: <span class="string">"./bin/6to5"</span>,</span><br><span class="line">    <span class="attr">"6to5-node"</span>: <span class="string">"./bin/6to5-node"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"keywords"</span>: [</span><br><span class="line">    <span class="string">"es6-transpiler"</span>,</span><br><span class="line">    <span class="string">"scope"</span>,</span><br><span class="line">    <span class="string">"harmony"</span>,</span><br><span class="line">    <span class="string">"blockscope"</span>,</span><br><span class="line">    <span class="string">"block-scope"</span>,</span><br><span class="line">    <span class="string">"let"</span>,</span><br><span class="line">    <span class="string">"const"</span>,</span><br><span class="line">    <span class="string">"var"</span>,</span><br><span class="line">    <span class="string">"es6"</span>,</span><br><span class="line">    <span class="string">"transpile"</span>,</span><br><span class="line">    <span class="string">"transpiler"</span>,</span><br><span class="line">    <span class="string">"traceur"</span>,</span><br><span class="line">    <span class="string">"6to5"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"bench"</span>: <span class="string">"make bench"</span>,</span><br><span class="line">    <span class="attr">"test"</span>: <span class="string">"make test"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"ast-types"</span>: <span class="string">"0.5.0"</span>,</span><br><span class="line">    <span class="attr">"commander"</span>: <span class="string">"2.3.0"</span>,</span><br><span class="line">    <span class="attr">"fs-readdir-recursive"</span>: <span class="string">"0.0.2"</span>,</span><br><span class="line">    <span class="attr">"lodash"</span>: <span class="string">"2.4.1"</span>,</span><br><span class="line">    <span class="attr">"mkdirp"</span>: <span class="string">"0.5.0"</span>,</span><br><span class="line">    <span class="attr">"es6-shim"</span>: <span class="string">"0.18.0"</span>,</span><br><span class="line">    <span class="attr">"es6-symbol"</span>: <span class="string">"0.1.1"</span>,</span><br><span class="line">    <span class="attr">"regexpu"</span>: <span class="string">"0.2.2"</span>,</span><br><span class="line">    <span class="attr">"recast"</span>: <span class="string">"0.8.0"</span>,</span><br><span class="line">    <span class="attr">"source-map"</span>: <span class="string">"0.1.40"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"es6-transpiler"</span>: <span class="string">"0.7.17"</span>,</span><br><span class="line">    <span class="attr">"istanbul"</span>: <span class="string">"0.3.2"</span>,</span><br><span class="line">    <span class="attr">"matcha"</span>: <span class="string">"0.5.0"</span>,</span><br><span class="line">    <span class="attr">"mocha"</span>: <span class="string">"1.21.4"</span>,</span><br><span class="line">    <span class="attr">"traceur"</span>: <span class="string">"0.0.66"</span>,</span><br><span class="line">    <span class="attr">"esnext"</span>: <span class="string">"0.11.1"</span>,</span><br><span class="line">    <span class="attr">"es6now"</span>: <span class="string">"0.8.11"</span>,</span><br><span class="line">    <span class="attr">"jstransform"</span>: <span class="string">"6.3.2"</span>,</span><br><span class="line">    <span class="attr">"uglify-js"</span>: <span class="string">"2.4.15"</span>,</span><br><span class="line">    <span class="attr">"browserify"</span>: <span class="string">"6.0.3"</span>,</span><br><span class="line">    <span class="attr">"proclaim"</span>: <span class="string">"2.0.0"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当时的名字还叫 <code>6to5</code> ，依赖的包很多，就不能像 <a href="https://mp.weixin.qq.com/s/zaIx2CWf_z_Hwwiuw6qZVw" target="_blank" rel="noopener">eslint-v0.0.2做了什么</a> 那样一个一个包讲了，这里只记录一下主流程依赖的一些包。</p>
+<h1 id="运行调试"><a href="#运行调试" class="headerlink" title="运行调试"></a>运行调试</h1><p>我们可以写一个简单的 <code>input.js</code> 然后试一下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// input.js</span></span><br><span class="line"><span class="keyword">const</span> data = <span class="string">"test"</span>;</span><br></pre></td></tr></table></figure>
+<p>执行一下 <code>./bin/6to5 -h</code> 看一下帮助。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Usage: 6to5 [options] &lt;files ...&gt;</span><br><span class="line"></span><br><span class="line">Options:</span><br><span class="line"></span><br><span class="line">  -h, --<span class="built_in">help</span>                   output usage information</span><br><span class="line">  -t, --<span class="built_in">source</span>-maps-inline     Append sourceMappingURL comment to bottom of code</span><br><span class="line">  -s, --<span class="built_in">source</span>-maps            Save <span class="built_in">source</span> map alongside the compiled code when using --out-file and --out-dir flags</span><br><span class="line">  -w, --whitelist [whitelist]  Whitelist</span><br><span class="line">  -b, --blacklist [blacklist]  Blacklist</span><br><span class="line">  -o, --out-file [out]         Compile all input files into a single file</span><br><span class="line">  -d, --out-dir [out]          Compile an input directory of modules into an output directory</span><br><span class="line">  -V, --version                output the version number</span><br></pre></td></tr></table></figure>
+<p><code>-o</code> 是指定输出的文件，测试一下，<code>./bin/6to5 -o output.js input.js</code> 。然后就得到了 <code>output.js</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//output.js</span></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> data = <span class="string">"a"</span>;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>帮我们把 <code>const</code> 换成了 <code>var</code>，同时通过自执行函数包了一层作用域。</p>
+<p>在 <code>Vscode</code> 新建一个 <code>launch.json</code> ，选择 <code>Node.js</code> 。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/babel4.jpg" style="width:80%;"></p>
+<p>把默认生成的 <code>program</code> 字段去掉，加上 <code>args</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="comment">// Use IntelliSense to learn about possible attributes.</span></span><br><span class="line">  <span class="comment">// Hover to view descriptions of existing attributes.</span></span><br><span class="line">  <span class="comment">// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387</span></span><br><span class="line">  <span class="string">"version"</span>: <span class="string">"0.2.0"</span>,</span><br><span class="line">  <span class="string">"configurations"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"pwa-node"</span>,</span><br><span class="line">      <span class="string">"request"</span>: <span class="string">"launch"</span>,</span><br><span class="line">      <span class="string">"name"</span>: <span class="string">"debug Program"</span>,</span><br><span class="line">      <span class="string">"skipFiles"</span>: [<span class="string">"&lt;node_internals&gt;/**"</span>],</span><br><span class="line">      <span class="string">"runtimeExecutable"</span>: <span class="string">"node"</span>,</span><br><span class="line">      <span class="string">"args"</span>: [<span class="string">"./bin/6to5"</span>, <span class="string">"-o"</span>, <span class="string">"output.js"</span>, <span class="string">"input.js"</span>]</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>添加相应的断点，然后 <code>F5</code> 就可以愉快的调试了。</p>
+<p>命令行框架用的是 <code>commander</code> ，<a href="https://github.com/tj/commander.js/blob/master/Readme_zh-CN.md" target="_blank" rel="noopener">github</a> 有超详细的使用方法，这里就不再说了，下边介绍 <code>babel</code> 相关的主要原理。</p>
+<h1 id="主要原理"><a href="#主要原理" class="headerlink" title="主要原理"></a>主要原理</h1><p>通过不断的运行调试，渐渐了解了主流程，但直到看到尤大推荐的这个 <code>mini</code> 编译器才对整个框架有了更深的了解。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/babel3.jpg" style="width:80%;"></p>
+<p>强烈推荐先过去 <a href="https://github.com/jamiebuilds/the-super-tiny-compiler" target="_blank" rel="noopener">看一下</a>，对 <code>babel</code> 可以有一个更直接的了解。</p>
+<p><code>babel</code> 本质上还是对 <code>AST</code> 的操控，可以认为是一个编译器了，只不过是 <code>js</code> 到 <code>js</code> 的转换。</p>
+<p>一个编译器主要是三个步骤，解析（词法分析、语法分析）-&gt; 转换 -&gt; 生成目标代码。</p>
+<p>第一步「解析」就是去生成一个 <code>AST</code>，主要分两步。</p>
+<ul>
+<li><p>词法分析，分词</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">对于 <span class="keyword">const</span> data = <span class="string">"test"</span>; 经过分词就是下边的结果</span><br><span class="line">[</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Keyword'</span>, <span class="attr">value</span>: <span class="string">'const'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Identifier'</span>, <span class="attr">value</span>: <span class="string">'data'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Punctuator'</span>, <span class="attr">value</span>: <span class="string">'='</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'String'</span>, <span class="attr">value</span>: <span class="string">'"test"'</span> &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>语法分析，生成抽象语法树<code>(AST)</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">通过上边分词，然后就可以生成一个 AST 树</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"type"</span>: <span class="string">"Program"</span>,</span><br><span class="line">  <span class="string">"body"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"VariableDeclaration"</span>,</span><br><span class="line">      <span class="string">"declarations"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="string">"type"</span>: <span class="string">"VariableDeclarator"</span>,</span><br><span class="line">          <span class="string">"id"</span>: &#123;</span><br><span class="line">            <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">            <span class="string">"name"</span>: <span class="string">"data"</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="string">"init"</span>: &#123;</span><br><span class="line">            <span class="string">"type"</span>: <span class="string">"Literal"</span>,</span><br><span class="line">            <span class="string">"value"</span>: <span class="string">"test"</span>,</span><br><span class="line">            <span class="string">"raw"</span>: <span class="string">"\"test\""</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ],</span><br><span class="line">      <span class="string">"kind"</span>: <span class="string">"const"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>第二步「转换」就是基于上边的 <code>AST</code> 再进行增删改，或者基于它生成一个新的 <code>AST</code>。</p>
+<p>第三步「生成目标代码」就是基于新的 <code>AST</code> 来构建新的代码即可。</p>
+<p>对于 <code>Babel</code> 的话，第一步是直接使用了 <code>recast</code> 包的 <code>parse</code> 方法，传入源码可以直接帮我们返回一个 <code>AST</code> 树。</p>
+<p>第三步也可以直接使用 <code>recast</code> 包的 <code>print</code> 方法，传入 <code>AST</code> 树返回源码。</p>
+<p>所以 <code>babel</code> 的核心就在于第二步，通过遍历旧的 <code>AST</code> 树来生成一个新的 <code>AST</code> 树。</p>
+<h1 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h1><p>核心方法就是 <code>lib/6to5/traverse/index.js</code> 中的 <code>traverse</code> 方法了，比较典型的深度优先遍历，遍历过程中根据传入的 <code>callbacks</code> 来更改 <code>node</code> 节点。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> traverse = <span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span> (<span class="params">parent, callbacks, blacklistTypes</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!parent) <span class="keyword">return</span>;</span><br><span class="line">	</span><br><span class="line">  <span class="comment">// 当前节点是数组，分别遍历进入递归</span></span><br><span class="line">  <span class="keyword">if</span> (_.isArray(parent)) &#123;</span><br><span class="line">    _.each(parent, <span class="function"><span class="keyword">function</span> (<span class="params">node</span>) </span>&#123;</span><br><span class="line">      traverse(node, callbacks, blacklistTypes);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 拿到当前节点的 key 值，后边还会提到</span></span><br><span class="line">  <span class="keyword">var</span> keys = VISITOR_KEYS[parent.type] || [];</span><br><span class="line">  blacklistTypes = blacklistTypes || [];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 为了统一，如果传进来的 callbacks 是函数，将其转换为对象，后边还会提到</span></span><br><span class="line">  <span class="keyword">if</span> (_.isFunction(callbacks)) &#123;</span><br><span class="line">    callbacks = &#123; <span class="attr">enter</span>: callbacks &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 遍历当前节点的每一个 key</span></span><br><span class="line">  _.each(keys, <span class="function"><span class="keyword">function</span> (<span class="params">key</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> nodes = parent[key];</span><br><span class="line">    <span class="keyword">if</span> (!nodes) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果当前节点是数组就分别处理</span></span><br><span class="line">    <span class="keyword">if</span> (_.isArray(nodes)) &#123;</span><br><span class="line">      _.each(nodes, <span class="function"><span class="keyword">function</span> (<span class="params">node, i</span>) </span>&#123;</span><br><span class="line">        handle(nodes, i);</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// remove deleted nodes</span></span><br><span class="line">      parent[key] = _.flatten(parent[key]).filter(<span class="function"><span class="keyword">function</span> (<span class="params">node</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> node !== traverse.Delete;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      handle(parent, key);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (parent[key] === traverse.Delete) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"trying to delete property "</span> + key + <span class="string">" from "</span> +</span><br><span class="line">                        parent.type + <span class="string">" but can't because it's required"</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p> <code>VISITOR_KEYS</code> 其实就是枚举了所有的要处理的 <code>node</code> 节点的 <code>key</code> 值。</p>
+<p>比如上边举的 <code>const data = &quot;test&quot;;</code> 的例子，它对应的 <code>node</code> 节点就是：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"type"</span>: <span class="string">"VariableDeclaration"</span>,</span><br><span class="line">    <span class="string">"declarations"</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="string">"type"</span>: <span class="string">"VariableDeclarator"</span>,</span><br><span class="line">        <span class="string">"id"</span>: &#123;</span><br><span class="line">          <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">          <span class="string">"name"</span>: <span class="string">"data"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"init"</span>: &#123;</span><br><span class="line">          <span class="string">"type"</span>: <span class="string">"Literal"</span>,</span><br><span class="line">          <span class="string">"value"</span>: <span class="string">"test"</span>,</span><br><span class="line">          <span class="string">"raw"</span>: <span class="string">"\"test\""</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">"kind"</span>: <span class="string">"const"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们所要遍历的就是「包含  <code>type</code> 的对象」，比如上边的 </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"type"</span>: <span class="string">"VariableDeclarator"</span>,</span><br><span class="line">  <span class="string">"id"</span>: &#123;</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">      <span class="string">"name"</span>: <span class="string">"data"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"init"</span>: &#123;</span><br><span class="line">       <span class="string">"type"</span>: <span class="string">"Literal"</span>,</span><br><span class="line">       <span class="string">"value"</span>: <span class="string">"test"</span>,</span><br><span class="line">       <span class="string">"raw"</span>: <span class="string">"\"test\""</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以对于 <code>VariableDeclaration</code> 节点，它可以枚举的 <code>key</code> 就是 <code>[&#39;declarations&#39;]</code>，它包含了 <code>VariableDeclarator</code> 节点。</p>
+<p>同理，对于 <code>VariableDeclarator</code> 节点，它可以枚举的 <code>key</code> 就是 <code>[&#39;id&#39;, &#39;init&#39;]</code>。</p>
+<p><code>VISITOR_KEYS</code>  就是一个大对象，<code>key</code> 就是 <code>node</code> 节点的 <code>type</code>，<code>value</code> 就是可以通过枚举得到 <code>node</code> 节点的所有 <code>key</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"ArrayExpression"</span>:               [<span class="string">"elements"</span>],</span><br><span class="line">  <span class="string">"ArrayPattern"</span>:                  [<span class="string">"elements"</span>],</span><br><span class="line">  <span class="string">"ArrowFunctionExpression"</span>:       [<span class="string">"params"</span>, <span class="string">"defaults"</span>, <span class="string">"rest"</span>, <span class="string">"body"</span>],</span><br><span class="line">  <span class="string">"AssignmentExpression"</span>:          [<span class="string">"left"</span>, <span class="string">"right"</span>],</span><br><span class="line">  <span class="string">"AwaitExpression"</span>:               [<span class="string">"argument"</span>],</span><br><span class="line">  <span class="string">"BinaryExpression"</span>:              [<span class="string">"left"</span>, <span class="string">"right"</span>],</span><br><span class="line">  <span class="string">"BlockStatement"</span>:                [<span class="string">"body"</span>],</span><br><span class="line">  <span class="string">"BreakStatement"</span>:                [<span class="string">"label"</span>],</span><br><span class="line">  <span class="string">"CallExpression"</span>:                [<span class="string">"callee"</span>, <span class="string">"arguments"</span>],</span><br><span class="line">  <span class="string">"CatchClause"</span>:                   [<span class="string">"param"</span>, <span class="string">"body"</span>],</span><br><span class="line">  <span class="string">"ClassBody"</span>:                     [<span class="string">"body"</span>],</span><br><span class="line">  <span class="string">"ClassDeclaration"</span>:              [<span class="string">"id"</span>, <span class="string">"body"</span>, <span class="string">"superClass"</span>],</span><br><span class="line">  <span class="string">"ClassExpression"</span>:               [<span class="string">"id"</span>, <span class="string">"body"</span>, <span class="string">"superClass"</span>],</span><br><span class="line">  <span class="string">"ClassProperty"</span>:                 [<span class="string">"key"</span>, <span class="string">"value"</span>],</span><br><span class="line">  <span class="string">"ComprehensionBlock"</span>:            [<span class="string">"left"</span>, <span class="string">"right"</span>, <span class="string">"body"</span>],</span><br><span class="line">  <span class="string">"ComprehensionExpression"</span>:       [<span class="string">"filter"</span>, <span class="string">"blocks"</span>, <span class="string">"body"</span>],</span><br><span class="line">  <span class="string">"ConditionalExpression"</span>:         [<span class="string">"test"</span>, <span class="string">"consequent"</span>, <span class="string">"alternate"</span>],</span><br><span class="line">  <span class="string">"ContinueStatement"</span>:             [<span class="string">"label"</span>],</span><br><span class="line">  <span class="string">"DebuggerStatement"</span>:             [],</span><br><span class="line">  <span class="string">"DoWhileStatement"</span>:              [<span class="string">"body"</span>, <span class="string">"test"</span>],</span><br><span class="line">  <span class="string">"EmptyStatement"</span>:                [],</span><br><span class="line">  ...</span><br><span class="line">  <span class="string">"VariableDeclaration"</span>:           [<span class="string">"declarations"</span>],</span><br><span class="line">  <span class="string">"VariableDeclarator"</span>:            [<span class="string">"id"</span>, <span class="string">"init"</span>],</span><br><span class="line">  <span class="string">"VoidTypeAnnotation"</span>:            [],</span><br><span class="line">  <span class="string">"WhileStatement"</span>:                [<span class="string">"test"</span>, <span class="string">"body"</span>],</span><br><span class="line">  <span class="string">"WithStatement"</span>:                 [<span class="string">"object"</span>, <span class="string">"body"</span>],</span><br><span class="line">  <span class="string">"YieldExpression"</span>:               [<span class="string">"argument"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>遍历过程中对于每个 <code>node</code> 节点都会执行 <code>handle</code> 函数，<code>callback</code> 是传入的回调函数，包含 <code>enter</code> 方法和 <code>exit</code> 方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  enter: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;,</span><br><span class="line">  exit: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>用 <code>enter</code> 返回的节点替换当前节点，所有子节点遍历完成后再调用 <code>exit</code> 方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> handle = <span class="function"><span class="keyword">function</span> (<span class="params">obj, key</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> node = obj[key];</span><br><span class="line">  <span class="keyword">if</span> (!node) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// type is blacklisted</span></span><br><span class="line">  <span class="keyword">if</span> (blacklistTypes.indexOf(node.type) &gt;= <span class="number">0</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// enter</span></span><br><span class="line">  <span class="keyword">var</span> result = callbacks.enter(node, parent, obj, key);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// stop iteration</span></span><br><span class="line">  <span class="keyword">if</span> (result === <span class="literal">false</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// replace node</span></span><br><span class="line">  <span class="keyword">if</span> (result != <span class="literal">null</span>) node = obj[key] = result;</span><br><span class="line"></span><br><span class="line">  traverse(node, callbacks, blacklistTypes);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// exit</span></span><br><span class="line">  <span class="keyword">if</span> (callbacks.exit) callbacks.exit(node, parent, obj, key);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="回调函数和模版"><a href="#回调函数和模版" class="headerlink" title="回调函数和模版"></a>回调函数和模版</h1><p><code>babel</code> 定义了不同 <code>transform</code> 来作为回调函数，返回处理后的 <code>node</code> 节点。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">transformers</span><br><span class="line">├── array-comprehension.js</span><br><span class="line">├── arrow-functions.js</span><br><span class="line">├── block-binding.js</span><br><span class="line">├── classes.js</span><br><span class="line">├── computed-property-names.js</span><br><span class="line">├── constants.js</span><br><span class="line">├── <span class="keyword">default</span>-parameters.js</span><br><span class="line">├── destructuring.js</span><br><span class="line">├── <span class="keyword">for</span>-<span class="keyword">of</span>.js</span><br><span class="line">├── generators.js</span><br><span class="line">├── modules.js</span><br><span class="line">├── property-method-assignment.js</span><br><span class="line">├── property-name-shorthand.js</span><br><span class="line">├── rest-parameters.js</span><br><span class="line">├── spread.js</span><br><span class="line">├── template-literals.js</span><br><span class="line">└── unicode-regex.js</span><br></pre></td></tr></table></figure>
+<p>可以看一下 <code>block-binding</code> 的实现，主要作用就是在定义 <code>var</code> 变量的地方包一层自执行函数，也就是文章最开头写的测试例子。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//output.js</span></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> data = <span class="string">"a"</span>;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p><code>block-binding.js</code> 中的核心方法是 <code>buildNode</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> buildNode = <span class="function"><span class="keyword">function</span> (<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> nodes = [];</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 包装所需要的 node 节点</span></span><br><span class="line">  <span class="keyword">var</span> block = b.blockStatement([]);</span><br><span class="line">  block.body = node;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> func = b.functionExpression(<span class="literal">null</span>, [], block, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> templateName = <span class="string">"function-call"</span>;</span><br><span class="line">  <span class="keyword">if</span> (traverse.hasType(node, <span class="string">"ThisExpression"</span>)) templateName += <span class="string">"-this"</span>;</span><br><span class="line">  <span class="keyword">if</span> (traverse.hasType(node, <span class="string">"ReturnStatement"</span>, [<span class="string">"FunctionDeclaration"</span>, <span class="string">"FunctionExpression"</span>])) templateName += <span class="string">"-return"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 将模版中的节点替换为上边生成的节点</span></span><br><span class="line">  nodes.push(util.template(templateName, &#123;</span><br><span class="line">    FUNCTION: func</span><br><span class="line">  &#125;, <span class="literal">true</span>));</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    node: nodes,</span><br><span class="line">    body: block</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其中 <code>b</code> 是 <code>var b = require(&quot;ast-types&quot;).builders;</code> ，可以得到各种类型的 <code>ast</code> 节点。<code>util.template</code> 方法可以通过预先写的一些模版，将模版的某一块用传入的节点替换。</p>
+<p>模版的话都写在了 <code>templates</code> 文件夹下。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">templates</span><br><span class="line">├── <span class="built_in">arguments</span>-slice-assign-arg.js</span><br><span class="line">├── <span class="built_in">arguments</span>-slice-assign.js</span><br><span class="line">├── <span class="built_in">arguments</span>-slice.js</span><br><span class="line">├── array-comprehension-container.js</span><br><span class="line">├── array-comprehension-filter.js</span><br><span class="line">├── array-comprehension-<span class="keyword">for</span>-each.js</span><br><span class="line">├── array-comprehension-map.js</span><br><span class="line">├── array-concat.js</span><br><span class="line">├── array-push.js</span><br><span class="line">├── assign.js</span><br><span class="line">├── <span class="class"><span class="keyword">class</span>-<span class="title">inherits</span>-<span class="title">properties</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">class</span>-<span class="title">inherits</span>-<span class="title">prototype</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">class</span>-<span class="title">method</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">class</span>-<span class="title">statement</span>-<span class="title">container</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">class</span>-<span class="title">static</span>-<span class="title">method</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">class</span>-<span class="title">super</span>-<span class="title">constructor</span>-<span class="title">call</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">class</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">exports</span>-<span class="title">alias</span>-<span class="title">var</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">exports</span>-<span class="title">assign</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">exports</span>-<span class="title">default</span>-<span class="title">require</span>-<span class="title">key</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">exports</span>-<span class="title">default</span>-<span class="title">require</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">exports</span>-<span class="title">default</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">exports</span>-<span class="title">require</span>-<span class="title">assign</span>-<span class="title">key</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">exports</span>-<span class="title">require</span>-<span class="title">assign</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">exports</span>-<span class="title">wildcard</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">for</span>-<span class="title">of</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">function</span>-<span class="title">bind</span>-<span class="title">this</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">function</span>-<span class="title">call</span>-<span class="title">return</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">function</span>-<span class="title">call</span>-<span class="title">this</span>-<span class="title">return</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">function</span>-<span class="title">call</span>-<span class="title">this</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">function</span>-<span class="title">call</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">function</span>-<span class="title">return</span>-<span class="title">obj</span>-<span class="title">this</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">function</span>-<span class="title">return</span>-<span class="title">obj</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">if</span>-<span class="title">undefined</span>-<span class="title">set</span>-<span class="title">to</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">if</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">obj</span>-<span class="title">key</span>-<span class="title">set</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">object</span>-<span class="title">define</span>-<span class="title">properties</span>-<span class="title">closure</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">object</span>-<span class="title">define</span>-<span class="title">properties</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">prototype</span>-<span class="title">identifier</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">require</span>-<span class="title">assign</span>-<span class="title">key</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">require</span>-<span class="title">assign</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">require</span>-<span class="title">key</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">require</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">├── <span class="title">variable</span>-<span class="title">assign</span>.<span class="title">js</span></span></span><br><span class="line"><span class="class">└── <span class="title">variable</span>-<span class="title">declare</span>.<span class="title">js</span></span></span><br></pre></td></tr></table></figure>
+<p>看一下上边用到的 <code>function-call</code> 模版，<code>function-call.js</code> 文件里仅有一行，一个函数调用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FUNCTION();</span><br></pre></td></tr></table></figure>
+<p><code>babel</code> 预先会把上边 <code>template</code> 文件夹里的所有文件全部转成 <code>ast</code> 的语法树。</p>
+<p>遍历 <code>templates</code> 下的所有文件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// lib/6to5/util.js</span></span><br><span class="line">_.each(fs.readdirSync(templatesLoc), <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> key = path.basename(name, path.extname(name));</span><br><span class="line">  <span class="keyword">var</span> loc = templatesLoc + <span class="string">"/"</span> + name;</span><br><span class="line">  <span class="keyword">var</span> code = fs.readFileSync(loc, <span class="string">"utf8"</span>);</span><br><span class="line"></span><br><span class="line">  exports.templates[key] = exports.removeProperties(</span><br><span class="line">    exports.parse(loc, code).program</span><br><span class="line">  );</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>而上边使用的 <code>exports.parse</code> 就是调用了 <code>recast</code> 库的 <code>parse</code> 来返回 <code>ast</code> 树。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">exports.parse = <span class="function"><span class="keyword">function</span> (<span class="params">filename, code, callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> ast = recast.parse(code, &#123;</span><br><span class="line">      sourceFileName: path.basename(filename),</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (callback) &#123;</span><br><span class="line">      <span class="keyword">return</span> callback(ast);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> ast;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>再回到上边 <code>block-binding.js</code> 中 <code>util.template</code> 方法来。</p>
+<blockquote>
+<p>其中 <code>b</code> 是 <code>var b = require(&quot;ast-types&quot;).builders;</code> ，可以得到各种类型的 <code>ast</code> 节点。<code>util.template</code> 方法可以通过预先写的一些模版，将模版的某一块用传入的节点替换。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// nodes 传入我们需要替换的模版中的节点</span></span><br><span class="line">exports.template = <span class="function"><span class="keyword">function</span> (<span class="params">name, nodes, keepExpression</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 得到之前生成的模版 AST 树</span></span><br><span class="line">  <span class="keyword">var</span> template = exports.templates[name];</span><br><span class="line">  <span class="keyword">if</span> (!template) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">ReferenceError</span>(<span class="string">"unknown template "</span> + name);</span><br><span class="line"></span><br><span class="line">  template = _.cloneDeep(template);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!_.isEmpty(nodes)) &#123;</span><br><span class="line">    <span class="comment">// 遍历模版 AST 树</span></span><br><span class="line">    traverse(template, <span class="function"><span class="keyword">function</span> (<span class="params">node</span>) </span>&#123;</span><br><span class="line">      <span class="comment">// 如果当前节点是我们需要替换的就进行替换</span></span><br><span class="line">      <span class="keyword">if</span> (node.type === <span class="string">"Identifier"</span> &amp;&amp; _.has(nodes, node.name)) &#123;</span><br><span class="line">        <span class="keyword">var</span> newNode = nodes[node.name];</span><br><span class="line">        <span class="keyword">if</span> (_.isString(newNode)) &#123;</span><br><span class="line">          node.name = newNode;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">return</span> newNode;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> node = template.body[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!keepExpression &amp;&amp; node.type === <span class="string">"ExpressionStatement"</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> node.expression;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><code>babel</code> 编译器主要是三个步骤，解析（词法分析、语法分析）-&gt; 转换 -&gt; 生成目标代码，主要逻辑是第二步转换。</p>
+<p>转换主要就是通过提前写好各种类型的 <code>transform</code> ，利用 <code>traverse</code> 方法遍历 <code>AST</code> 的所有 <code>node</code> 节点，遍历过程操作旧 <code>node</code> 节点来生成新的 <code>node</code> 节点（可以通过 <code>recast</code> 库辅助），再替换之前写好的模版的某一部分从而生成一个新的 <code>AST</code>。</p>
+<p>我感觉最复杂最细节的地方就是一个个的 <code>transform</code> 的编写了，需要对 <code>AST</code> 了解得非常清楚。</p>
+<p>感觉文字不太好表述，大家可以按照最开始介绍的方法打断点然后结合上边的文字应该会更容易理解。</p>
+<p>前端工程化其他系列文章大家感兴趣也可以看一下：</p>
+<p><a href="https://mp.weixin.qq.com/s/rWK_4CwFoBZyXZe_1I2TrQ" target="_blank" rel="noopener">前端工程化发展历史</a></p>
+<p><a href="https://mp.weixin.qq.com/s/_xAT8D9O-O6Jz1cQ3sUhnA" target="_blank" rel="noopener">2021年从零开发前端项目指南</a></p>
+<p><a href="https://mp.weixin.qq.com/s/zaIx2CWf_z_Hwwiuw6qZVw" target="_blank" rel="noopener">eslint 源码详解-v0.0.2</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/babel/" rel="tag"># babel</a>
+          
+            <a href="/tags/ast/" rel="tag"># ast</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/09/02/eslint-v0-0-2做了什么/" rel="next" title="eslint-v0.0.2做了什么">
+                <i class="fa fa-chevron-left"></i> eslint-v0.0.2做了什么
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/10/31/用TypeScript实现斐波那契数列/" rel="prev" title="用 TypeScript 实现斐波那契数列">
+                用 TypeScript 实现斐波那契数列 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#运行调试"><span class="nav-number">1.</span> <span class="nav-text">运行调试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#主要原理"><span class="nav-number">2.</span> <span class="nav-text">主要原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#遍历"><span class="nav-number">3.</span> <span class="nav-text">遍历</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#回调函数和模版"><span class="nav-number">4.</span> <span class="nav-text">回调函数和模版</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

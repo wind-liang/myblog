@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="现象 element-ui 版本是 2.15.9，vue 版本是 2.7.8 。 在 el-dialog 中使用 el-tabs ，并且 el-dialog 添加 destroy-on-close 属性，当关闭弹窗的时候页面就直接无响应了。 1234567891011121314151617181920212223242526272829303132333435&amp;lt;template&amp;gt;">
+<meta name="keywords" content="elementUI,vue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elementUI中el-tabs或者说Vue现存的一个bug排查">
+<meta property="og:url" content="https://windliang.wang/2022/08/14/elementUI中el-tabs的一个bug分析/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="现象 element-ui 版本是 2.15.9，vue 版本是 2.7.8 。 在 el-dialog 中使用 el-tabs ，并且 el-dialog 添加 destroy-on-close 属性，当关闭弹窗的时候页面就直接无响应了。 1234567891011121314151617181920212223242526272829303132333435&amp;lt;template&amp;gt;">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.com11.gif">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220814073751320.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220814080300663.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comKapture%202022-08-14%20at%2008.05.56.gif">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220814095416654.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comKapture%202022-08-14%20at%2010.07.33.gif">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220816063309490.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.com3.gif">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220816085852972.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220816082327739.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220816083018335.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220816083227156.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220816084114944.png">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.933Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="elementUI中el-tabs或者说Vue现存的一个bug排查">
+<meta name="twitter:description" content="现象 element-ui 版本是 2.15.9，vue 版本是 2.7.8 。 在 el-dialog 中使用 el-tabs ，并且 el-dialog 添加 destroy-on-close 属性，当关闭弹窗的时候页面就直接无响应了。 1234567891011121314151617181920212223242526272829303132333435&amp;lt;template&amp;gt;">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.com11.gif">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2022/08/14/elementUI中el-tabs的一个bug分析/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>elementUI中el-tabs或者说Vue现存的一个bug排查 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2022/08/14/elementUI中el-tabs的一个bug分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">elementUI中el-tabs或者说Vue现存的一个bug排查
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-08-14 07:26:13" itemprop="dateCreated datePublished" datetime="2022-08-14T07:26:13+08:00">2022-08-14</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2022/08/14/elementUI中el-tabs的一个bug分析/" class="leancloud_visitors" data-flag-title="elementUI中el-tabs或者说Vue现存的一个bug排查">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h1><p> <code>element-ui</code> 版本是 <code>2.15.9</code>，<code>vue</code> 版本是 <code>2.7.8</code> 。</p>
+<p>在 <code>el-dialog</code> 中使用 <code>el-tabs</code> ，并且 <code>el-dialog</code> 添加 <code>destroy-on-close</code> 属性，当关闭弹窗的时候页面就直接无响应了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">        &lt;el-dialog</span><br><span class="line">            title=<span class="string">"提示"</span></span><br><span class="line">            :visible.sync=<span class="string">"dialogVisible"</span></span><br><span class="line">            width=<span class="string">"30%"</span></span><br><span class="line">            destroy-on-close</span><br><span class="line">        &gt;</span><br><span class="line">            &lt;el-tabs type=<span class="string">"border-card"</span>&gt;</span><br><span class="line">                &lt;el-tab-pane label=<span class="string">"用户管理"</span>&gt;用户管理&lt;<span class="regexp">/el-tab-pane&gt;</span></span><br><span class="line"><span class="regexp">                &lt;el-tab-pane label="配置管理"&gt;配置管理&lt;/</span>el-tab-pane&gt;</span><br><span class="line">                &lt;el-tab-pane label=<span class="string">"角色管理"</span>&gt;角色管理&lt;<span class="regexp">/el-tab-pane&gt;</span></span><br><span class="line"><span class="regexp">                &lt;el-tab-pane label="定时任务补偿"&gt;定时任务补偿&lt;/</span>el-tab-pane&gt;</span><br><span class="line">            &lt;<span class="regexp">/el-tabs&gt;</span></span><br><span class="line"><span class="regexp">            &lt;span slot="footer" class="dialog-footer"&gt;</span></span><br><span class="line"><span class="regexp">                &lt;el-button @click="dialogVisible = false"&gt;取 消&lt;/</span>el-button&gt;</span><br><span class="line">                &lt;el-button type=<span class="string">"primary"</span> @click=<span class="string">"dialogVisible = false"</span></span><br><span class="line">                    &gt;确 定&lt;<span class="regexp">/el-button</span></span><br><span class="line"><span class="regexp">                &gt;</span></span><br><span class="line"><span class="regexp">            &lt;/</span>span&gt;</span><br><span class="line">        &lt;<span class="regexp">/el-dialog&gt;</span></span><br><span class="line"><span class="regexp">        &lt;el-button @click="dialogVisible = true"&gt;打开弹窗&lt;/</span>el-button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    name: <span class="string">"App"</span>,</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            dialogVisible: <span class="literal">false</span>,</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<p>效果如下：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.com11.gif" alt="11"></p>
+<p>再等一会儿 <code>Chrome</code> 就直接抛错了：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220814073751320.png" alt="image-20220814073751320"></p>
+<p>操作过程中控制台也没有任何报错，去 <code>github</code> 的 <code>issues</code> 看一眼发现已经有 <code>3</code> 个人遇到过这个问题了：</p>
+<p><a href="https://github.com/ElemeFE/element/issues/21114" target="_blank" rel="noopener">[bug report] El dialog [destroy on close] El tabs page crashes #21114</a></p>
+<p><a href="https://github.com/ElemeFE/element/issues/20974" target="_blank" rel="noopener">[Bug Report] When set a attribute “destory-on-close=’true’” on a el-dialog which has a child el-tabs component will cause the browser crash #20974</a></p>
+<p><a href="https://github.com/ElemeFE/element/issues/20947" target="_blank" rel="noopener">[Bug Report] el-tabs in el-dialog with destroy-on-close=‘true’ ,dialog can’t be closed</a></p>
+<p>看表现应该是哪里陷入了死循环，猜测是 <code>el-tabs</code> 的 <code>render</code> 函数在无限执行。</p>
+<p>为了证实这个猜测，我们直接在 <code>node_modules</code> 中 <code>el-tabs</code> 的 <code>render</code> 函数添加 <code>console</code> 。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220814080300663.png" alt="image-20220814080300663"></p>
+<p>打开控制台观察一下是否有输出：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comKapture%202022-08-14%20at%2008.05.56.gif" alt="Kapture 2022-08-14 at 08.05.56"></p>
+<p>直接原因找到了，下边需要排查一下 <code>render</code> 进入死循环的原因。</p>
+<h1 id="问题排查"><a href="#问题排查" class="headerlink" title="问题排查"></a>问题排查</h1><p>可能出现问题的点，<code>el-dialog</code>、<code>el-tabs</code>、<code>el-tab-pane</code>，当然如果上述都没问题的话，也不排除 <code>Vue</code> 的问题，虽然可能性很低。</p>
+<h2 id="el-dialog"><a href="#el-dialog" class="headerlink" title="el-dialog"></a>el-dialog</h2><p>如果我们把 <code>destroy-on-close</code> 属性去掉，然后一切就恢复正常了。所以我们先看一下 <code>destroy-on-close</code>  做了什么。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;transition</span><br><span class="line">    name=<span class="string">"dialog-fade"</span></span><br><span class="line">    @after-enter=<span class="string">"afterEnter"</span></span><br><span class="line">    @after-leave=<span class="string">"afterLeave"</span>&gt;</span><br><span class="line">    &lt;div</span><br><span class="line">      v-show=<span class="string">"visible"</span></span><br><span class="line">      <span class="class"><span class="keyword">class</span></span>=<span class="string">"el-dialog__wrapper"</span></span><br><span class="line">      @click.self=<span class="string">"handleWrapperClick"</span>&gt;</span><br><span class="line">      &lt;div</span><br><span class="line">        role=<span class="string">"dialog"</span></span><br><span class="line">        :key=<span class="string">"key"</span></span><br><span class="line">        :style=<span class="string">"style"</span>&gt;</span><br><span class="line">        ...</span><br><span class="line">        &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"el-dialog__body"</span> v-<span class="keyword">if</span>=<span class="string">"rendered"</span>&gt;<span class="xml"><span class="tag">&lt;<span class="name">slot</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">        ...</span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">  &lt;<span class="regexp">/transition&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br></pre></td></tr></table></figure>
+<p>最关键的的是 <code>&lt;el-dialog__body&gt;</code> 的外层 <code>div</code> 中设置了一个 <code>key</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">watch: &#123;</span><br><span class="line">  visible(val) &#123;</span><br><span class="line">    <span class="keyword">if</span> (val) &#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">this</span>.$el.removeEventListener(<span class="string">'scroll'</span>, <span class="keyword">this</span>.updatePopper);</span><br><span class="line">      <span class="keyword">if</span> (!<span class="keyword">this</span>.closed) <span class="keyword">this</span>.$emit(<span class="string">'close'</span>);</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.destroyOnClose) &#123;</span><br><span class="line">        <span class="keyword">this</span>.$nextTick(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">this</span>.key++;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>当我们把 <code>dialog</code> 的 <code>visible</code> 置为 <code>false</code> 的时候，会判断 <code>this.destroyOnClose</code> 的值，然后修改 <code>key</code> 的值。</p>
+<p>当 <code>key</code> 值修改以后，<code>div</code> 中的元素就会整个重新渲染了，这就是官网中所说明 <code>this.destroyOnClose</code> 的作用。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220814095416654.png" alt="image-20220814095416654"></p>
+<p>为了排除 <code>el-dialog</code> 的问题，我们写一个自定义组件来替代 <code>el-dialog</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div v-show=<span class="string">"showDialog"</span> :key=<span class="string">"key"</span>&gt;</span><br><span class="line">        &lt;slot&gt;<span class="xml"><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span></span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    components: &#123;&#125;,</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            key: <span class="number">1</span>,</span><br><span class="line">            showDialog: <span class="literal">false</span></span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;</span><br><span class="line">        open() &#123;</span><br><span class="line">            <span class="keyword">this</span>.showDialog = <span class="literal">true</span>;</span><br><span class="line">        &#125;,</span><br><span class="line">        close() &#123;</span><br><span class="line">            <span class="keyword">this</span>.key += <span class="number">1</span></span><br><span class="line">            <span class="keyword">this</span>.showDialog = <span class="literal">false</span>;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;style scoped&gt;&lt;/</span>style&gt;</span><br></pre></td></tr></table></figure>
+<p>接着我们将 <code>el-dialog</code>  换为上边的组件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">        &lt;wrap ref=<span class="string">"wrap"</span>&gt;</span><br><span class="line">            &lt;el-tabs type=<span class="string">"border-card"</span>&gt;</span><br><span class="line">                &lt;el-tab-pane label=<span class="string">"用户管理"</span>&gt;用户管理&lt;<span class="regexp">/el-tab-pane&gt;</span></span><br><span class="line"><span class="regexp">                &lt;el-tab-pane label="配置管理"&gt;配置管理&lt;/</span>el-tab-pane&gt;</span><br><span class="line">                &lt;el-tab-pane label=<span class="string">"角色管理"</span>&gt;角色管理&lt;<span class="regexp">/el-tab-pane&gt;</span></span><br><span class="line"><span class="regexp">                &lt;el-tab-pane label="定时任务补偿"&gt;定时任务补偿&lt;/</span>el-tab-pane&gt;</span><br><span class="line">            &lt;<span class="regexp">/el-tabs&gt;</span></span><br><span class="line"><span class="regexp">            &lt;el-button @click="close"&gt;关闭&lt;/</span>el-button&gt;</span><br><span class="line">        &lt;<span class="regexp">/wrap&gt;</span></span><br><span class="line"><span class="regexp">        &lt;el-button @click="open"&gt;打开弹窗&lt;/</span>el-button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">import</span> Wrap <span class="keyword">from</span> <span class="string">"./Wrap.vue"</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    name: <span class="string">"App"</span>,</span><br><span class="line">    components: &#123;</span><br><span class="line">        Wrap,</span><br><span class="line">    &#125;,</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line">    methods: &#123;</span><br><span class="line">        open() &#123;</span><br><span class="line">            <span class="keyword">this</span>.$refs.wrap.open();</span><br><span class="line">        &#125;,</span><br><span class="line">        close() &#123;</span><br><span class="line">            <span class="keyword">this</span>.$refs.wrap.close();</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;style&gt;</span></span><br><span class="line"><span class="regexp">#app &#123;</span></span><br><span class="line"><span class="regexp">    font-family: Avenir, Helvetica, Arial, sans-serif;</span></span><br><span class="line"><span class="regexp">    -webkit-font-smoothing: antialiased;</span></span><br><span class="line"><span class="regexp">    -moz-osx-font-smoothing: grayscale;</span></span><br><span class="line"><span class="regexp">    text-align: center;</span></span><br><span class="line"><span class="regexp">    color: #2c3e50;</span></span><br><span class="line"><span class="regexp">    margin-top: 60px;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp">&lt;/</span>style&gt;</span><br></pre></td></tr></table></figure>
+<p>运行之后发现问题依旧存在，因此我们可以排除是 <code>el-dialog</code> 的问题了。</p>
+<h2 id="el-tabs-el-tab-pane"><a href="#el-tabs-el-tab-pane" class="headerlink" title="el-tabs el-tab-pane"></a>el-tabs el-tab-pane</h2><p>接下来就是一个二选一问题了，问题代码是在 <code>el-tabs</code> 还是 <code>el-tab-pane</code> 中。</p>
+<p>我们把 <code>el-tab-pane</code> 从 <code>el-tabs</code> 去掉再来看一下还有没有问题。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">wrap</span> <span class="attr">ref</span>=<span class="string">"wrap"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">el-tabs</span> <span class="attr">type</span>=<span class="string">"border-card"</span>&gt;</span></span><br><span class="line">                hello World</span><br><span class="line">            <span class="tag">&lt;/<span class="name">el-tabs</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">el-button</span> @<span class="attr">click</span>=<span class="string">"close"</span>&gt;</span>关闭<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">wrap</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">el-button</span> @<span class="attr">click</span>=<span class="string">"open"</span>&gt;</span>打开弹窗<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>运行一下发现一切正常了：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comKapture%202022-08-14%20at%2010.07.33.gif" alt="Kapture 2022-08-14 at 10.07.33"></p>
+<p>至此，可以基本确认是 <code>el-tab-pane</code> 问题了。</p>
+<h1 id="直接原因"><a href="#直接原因" class="headerlink" title="直接原因"></a>直接原因</h1><p>我们来定位是哪行代码出现了问题，看一下 <code>el-tab-pane</code> 的整个代码。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div</span><br><span class="line">    <span class="class"><span class="keyword">class</span></span>=<span class="string">"el-tab-pane"</span></span><br><span class="line">    v-<span class="keyword">if</span>=<span class="string">"(!lazy || loaded) || active"</span></span><br><span class="line">    v-show=<span class="string">"active"</span></span><br><span class="line">    role=<span class="string">"tabpanel"</span></span><br><span class="line">    :aria-hidden=<span class="string">"!active"</span></span><br><span class="line">    :id=<span class="string">"`pane-$&#123;paneName&#125;`"</span></span><br><span class="line">    :aria-labelledby=<span class="string">"`tab-$&#123;paneName&#125;`"</span></span><br><span class="line">  &gt;</span><br><span class="line">    &lt;slot&gt;<span class="xml"><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span></span><br><span class="line">  &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    name: <span class="string">'ElTabPane'</span>,</span><br><span class="line"></span><br><span class="line">    componentName: <span class="string">'ElTabPane'</span>,</span><br><span class="line"></span><br><span class="line">    props: &#123;</span><br><span class="line">      label: <span class="built_in">String</span>,</span><br><span class="line">      labelContent: <span class="built_in">Function</span>,</span><br><span class="line">      name: <span class="built_in">String</span>,</span><br><span class="line">      closable: <span class="built_in">Boolean</span>,</span><br><span class="line">      disabled: <span class="built_in">Boolean</span>,</span><br><span class="line">      lazy: <span class="built_in">Boolean</span></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    data() &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        index: <span class="literal">null</span>,</span><br><span class="line">        loaded: <span class="literal">false</span></span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    computed: &#123;</span><br><span class="line">      isClosable() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.closable || <span class="keyword">this</span>.$parent.closable;</span><br><span class="line">      &#125;,</span><br><span class="line">      active() &#123;</span><br><span class="line">        <span class="keyword">const</span> active = <span class="keyword">this</span>.$parent.currentName === (<span class="keyword">this</span>.name || <span class="keyword">this</span>.index);</span><br><span class="line">        <span class="keyword">if</span> (active) &#123;</span><br><span class="line">          <span class="keyword">this</span>.loaded = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> active;</span><br><span class="line">      &#125;,</span><br><span class="line">      paneName() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.name || <span class="keyword">this</span>.index;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    updated() &#123;</span><br><span class="line">      <span class="keyword">this</span>.$parent.$emit(<span class="string">'tab-nav-update'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<p>定位 <code>bug</code> 所在行数一般无脑采取二分注释法很快就出来了，经过两次尝试，我们只需要把 <code>updated</code> 中的代码注释掉就一切正常了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">updated() &#123;</span><br><span class="line">  <span class="comment">// this.$parent.$emit('tab-nav-update');</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="根本原因"><a href="#根本原因" class="headerlink" title="根本原因"></a>根本原因</h1><p>子组件发送了 <code>tab-nav-update</code> 事件，看一下父组件 <code>el-tabs</code> 接收  <code>tab-nav-update</code> 事件的代码。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">created() &#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>.currentName) &#123;</span><br><span class="line">    <span class="keyword">this</span>.setCurrentName(<span class="string">'0'</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.$on(<span class="string">'tab-nav-update'</span>, <span class="keyword">this</span>.calcPaneInstances.bind(<span class="literal">null</span>, <span class="literal">true</span>));</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>这里会执行 <code>calcPaneInstances</code> 方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">calcPaneInstances(isForceUpdate = <span class="literal">false</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.$slots.default) &#123;</span><br><span class="line">    <span class="keyword">const</span> paneSlots = <span class="keyword">this</span>.$slots.default.filter(<span class="function"><span class="params">vnode</span> =&gt;</span> vnode.tag &amp;&amp;</span><br><span class="line">                                                 vnode.componentOptions &amp;&amp; vnode.componentOptions.Ctor.options.name === <span class="string">'ElTabPane'</span>);</span><br><span class="line">    <span class="comment">// update indeed</span></span><br><span class="line">    <span class="keyword">const</span> panes = paneSlots.map(<span class="function">(<span class="params">&#123; componentInstance &#125;</span>) =&gt;</span> componentInstance);</span><br><span class="line">    <span class="keyword">const</span> panesChanged = !<span class="function">(<span class="params">panes.length === <span class="keyword">this</span>.panes.length &amp;&amp; panes.every((pane, index</span>) =&gt;</span> pane === <span class="keyword">this</span>.panes[index]));</span><br><span class="line">    <span class="keyword">if</span> (isForceUpdate || panesChanged) &#123;</span><br><span class="line">      <span class="keyword">this</span>.panes = panes;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.panes.length !== <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.panes = [];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>主要是比较前后的 <code>panes</code> 是否一致，如果不一致就直接用新的覆盖旧的 <code>this.panes</code> 。</p>
+<p>由于 <code>render</code> 函数中使用了 <code>panes</code> ，当修改 <code>panes</code> 的值的时候就会触发 <code>el-tabs</code> 的 <code>render</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">render(h) &#123;</span><br><span class="line">      <span class="keyword">let</span> &#123;</span><br><span class="line">        type,</span><br><span class="line">        handleTabClick,</span><br><span class="line">        handleTabRemove,</span><br><span class="line">        handleTabAdd,</span><br><span class="line">        currentName,</span><br><span class="line">        panes, <span class="comment">// 这里用到了</span></span><br><span class="line">        editable,</span><br><span class="line">        addable,</span><br><span class="line">        tabPosition,</span><br><span class="line">        stretch</span><br><span class="line">      &#125; = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">      ...</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<p>打印一下关闭弹窗的时候发生了什么：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220816063309490.png" alt="image-20220816063309490"></p>
+<p>当关闭弹窗的时候，触发了 <code>el-tabs</code> 的 <code>render</code> ，但此时除了触发了 <code>el-tabs</code> 的 <code>updated</code> ，同时也触发到了 <code>el-tabs-pane</code> 的 <code>updated</code> 。</p>
+<p>在 <code>el-tab-pane</code> 的 <code>updated</code> 中我们发送 <code>tab-nav-update</code> 事件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">updated() &#123;</span><br><span class="line">  <span class="keyword">this</span>.$parent.$emit(<span class="string">'tab-nav-update'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>tab-nav-update</code> 事件的回调是 <code>calcPaneInstances</code> ，除了改变 <code>this</code> 指向，同时传了一个默认参数 <code>true</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.$on(<span class="string">'tab-nav-update'</span>, <span class="keyword">this</span>.calcPaneInstances.bind(<span class="literal">null</span>, <span class="literal">true</span>));</span><br></pre></td></tr></table></figure>
+<p>对于 <code>calcPaneInstances</code> 第一个参数的含义是 <code>isForceUpdate</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">calcPaneInstances(isForceUpdate = <span class="literal">false</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.$slots.default) &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (isForceUpdate || panesChanged) &#123;</span><br><span class="line">      <span class="keyword">this</span>.panes = panes;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.panes.length !== <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.panes = [];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>如果 <code>isForceUpdate</code> 为 <code>true</code> 就会更新 <code>panes</code> 的值，接着又触发 <code>el-tabs</code> 的 <code>render</code> 函数，又一次引发 <code>el-tab-pane</code> 的 <code>updated</code> ，最终造成了 <code>render</code> 的死循环，使得浏览器卡死。</p>
+<h1 id="bug-最小说明"><a href="#bug-最小说明" class="headerlink" title="bug 最小说明"></a>bug 最小说明</h1><p>一句话总结：某些场景下如果父组件重新 <code>render</code>，即使子组件没有变化，但子组件传递了 <code>slot</code> ，此时就会触发子组件的 <code>updated</code> 函数。</p>
+<p>上边的逻辑确实不符合直觉，我们将代码完全从 <code>Element</code> 中抽离，举一个简单的例子来复现这个问题：</p>
+<p><code>App.vue</code> 代码，依旧用 <code>wrap</code> 包裹。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">        &lt;wrap ref=<span class="string">"wrap"</span>&gt;</span><br><span class="line">            &lt;tabs&gt;</span><br><span class="line">                &lt;pane&gt;我来自pane的slot&lt;<span class="regexp">/pane&gt;</span></span><br><span class="line"><span class="regexp">            &lt;/</span>tabs&gt;</span><br><span class="line">            &lt;el-button @click=<span class="string">"close"</span>&gt;关闭&lt;<span class="regexp">/el-button&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>wrap&gt;</span><br><span class="line">        &lt;el-button @click=<span class="string">"open"</span>&gt;打开弹窗&lt;<span class="regexp">/el-button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">import Wrap from "./</span>Wrap.vue<span class="string">";</span></span><br><span class="line"><span class="string">import Pane from "</span>./Pane.vue<span class="string">";</span></span><br><span class="line"><span class="string">import Tabs from "</span>./Tabs.vue<span class="string">";</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">export default &#123;</span></span><br><span class="line"><span class="string">    name: "</span>App<span class="string">",</span></span><br><span class="line"><span class="string">    components: &#123;</span></span><br><span class="line"><span class="string">        Wrap,</span></span><br><span class="line"><span class="string">        Pane,</span></span><br><span class="line"><span class="string">        Tabs,</span></span><br><span class="line"><span class="string">    &#125;,</span></span><br><span class="line"><span class="string">    data() &#123;</span></span><br><span class="line"><span class="string">        return &#123;</span></span><br><span class="line"><span class="string">            show: false,</span></span><br><span class="line"><span class="string">        &#125;;</span></span><br><span class="line"><span class="string">    &#125;,</span></span><br><span class="line"><span class="string">    methods: &#123;</span></span><br><span class="line"><span class="string">        open() &#123;</span></span><br><span class="line"><span class="string">            this.$refs.wrap.open();</span></span><br><span class="line"><span class="string">            this.show = true;</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        close() &#123;</span></span><br><span class="line"><span class="string">            this.$refs.wrap.close();</span></span><br><span class="line"><span class="string">            this.show = false;</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">    &#125;,</span></span><br><span class="line"><span class="string">&#125;;</span></span><br><span class="line"><span class="string">&lt;/script&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;style&gt;</span></span><br><span class="line"><span class="string">#app &#123;</span></span><br><span class="line"><span class="string">    font-family: Avenir, Helvetica, Arial, sans-serif;</span></span><br><span class="line"><span class="string">    -webkit-font-smoothing: antialiased;</span></span><br><span class="line"><span class="string">    -moz-osx-font-smoothing: grayscale;</span></span><br><span class="line"><span class="string">    text-align: center;</span></span><br><span class="line"><span class="string">    color: #2c3e50;</span></span><br><span class="line"><span class="string">    margin-top: 60px;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">&lt;/style&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>Tabs.vue</code> ，提供一个 <code>slot</code> ，并且提供一个方法更新自己包含的 <code>data</code> 属性 <code>i</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        &lt;div&gt;我是 Tabs，第 &#123;&#123; i &#125;&#125; 次渲染&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        &lt;slot&gt;&lt;/</span>slot&gt;</span><br><span class="line">        &lt;el-button @click=<span class="string">"change"</span>&gt;触发 Tabs 重新渲染&lt;<span class="regexp">/el-button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">export default &#123;</span></span><br><span class="line"><span class="regexp">    data() &#123;</span></span><br><span class="line"><span class="regexp">        return &#123;</span></span><br><span class="line"><span class="regexp">            i: 0,</span></span><br><span class="line"><span class="regexp">        &#125;;</span></span><br><span class="line"><span class="regexp">    &#125;,</span></span><br><span class="line"><span class="regexp">    methods: &#123;</span></span><br><span class="line"><span class="regexp">        change() &#123;</span></span><br><span class="line"><span class="regexp">            this.i++;</span></span><br><span class="line"><span class="regexp">        &#125;,</span></span><br><span class="line"><span class="regexp">    &#125;,</span></span><br><span class="line"><span class="regexp">    updated() &#123;</span></span><br><span class="line"><span class="regexp">        console.log("Tabs:updated");</span></span><br><span class="line"><span class="regexp">    &#125;,</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">    mounted() &#123;</span></span><br><span class="line"><span class="regexp">        console.log("Tabs:mounted");</span></span><br><span class="line"><span class="regexp">    &#125;,</span></span><br><span class="line"><span class="regexp">&#125;;</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;<span class="xml"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p><code>Pane.vue</code> ，提供一个 <code>slot</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;<span class="xml"><span class="tag">&lt;<span class="name">slot</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">    export default &#123;</span></span><br><span class="line"><span class="regexp">mounted() &#123;</span></span><br><span class="line"><span class="regexp">  console.log("Pane:mounted");</span></span><br><span class="line"><span class="regexp">&#125;,</span></span><br><span class="line"><span class="regexp">  updated() &#123;</span></span><br><span class="line"><span class="regexp">    console.log("Pane:updated");</span></span><br><span class="line"><span class="regexp">  &#125;,</span></span><br><span class="line"><span class="regexp">&#125;;</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;<span class="xml"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>操作路径：</p>
+<p>打开弹窗 -&gt; 关闭弹窗 -&gt; 再打开弹窗（此时 <code>pane</code> 就会触发 <code>updated</code> ） -&gt; 更新 <code>Tabs</code> 的值，会发现 <code>pane</code> 一直触发 <code>updated</code> 。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.com3.gif" alt="3"></p>
+<p>如果我们在 <code>Pane</code> 的 <code>updated</code> 中引发 <code>Tabs</code> 的 <code>render</code> ，就会造成死循环了。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>关于这个问题网上前几年已经讨论过了：</p>
+<p><a href="https://segmentfault.com/q/1010000040171066" target="_blank" rel="noopener">https://segmentfault.com/q/1010000040171066</a></p>
+<p><a href="https://github.com/vuejs/vue/issues/8342" target="_blank" rel="noopener">https://github.com/vuejs/vue/issues/8342</a></p>
+<p><a href="https://stackoverflow.com/questions/57536067/why-vue-need-to-forceupdate-components-when-they-include-static-slot" target="_blank" rel="noopener">https://stackoverflow.com/questions/57536067/why-vue-need-to-forceupdate-components-when-they-include-static-slot</a></p>
+<p>但是上边网站的例子试了下已经不能复现了，看起来这个问题被修过一次了，但没有完全解决，可能是当做 <code>feature</code> 了。</p>
+<h2 id="Vue-2-6"><a href="#Vue-2-6" class="headerlink" title="Vue 2.6+"></a>Vue 2.6+</h2><p>如果你的版本是 <code>Vue 2.6</code> 以上，当时尤大提过了一个<a href="https://github.com/vuejs/vue/pull/9371" target="_blank" rel="noopener">解决方案</a>：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220816085852972.png" alt="image-20220816085852972"></p>
+<p>指明 <code>slot</code> 的名字，这里就是 <code>default</code> 。</p>
+<p>代码中我们在 <code>Pane</code> 中包裹一层 <code>template</code> 指明 <code>default</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">        &lt;wrap ref=<span class="string">"wrap"</span>&gt;</span><br><span class="line">            &lt;tabs&gt;</span><br><span class="line">                &lt;pane&gt;</span><br><span class="line">                    &lt;template v-slot:<span class="keyword">default</span>&gt; 我来自pane的slot &lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp">                &lt;/</span>pane&gt;</span><br><span class="line">            &lt;<span class="regexp">/tabs&gt;</span></span><br><span class="line"><span class="regexp">            &lt;el-button @click="close"&gt;关闭&lt;/</span>el-button&gt;</span><br><span class="line">        &lt;<span class="regexp">/wrap&gt;</span></span><br><span class="line"><span class="regexp">        &lt;el-button @click="open"&gt;打开弹窗&lt;/</span>el-button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>template&gt;</span><br></pre></td></tr></table></figure>
+<p>再运行一下会发现 <code>pane</code> 的 <code>updated</code> 就不会触发了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220816082327739.png" alt="image-20220816082327739"></p>
+<h2 id="Vue-2-6-以下"><a href="#Vue-2-6-以下" class="headerlink" title="Vue 2.6 以下"></a>Vue 2.6 以下</h2><p>仔细想一下，我们第一次渲染的时候并不会出现问题，因此我们干脆在关闭弹窗的时候把 <code>Pane</code> 销毁掉（<code>Pane</code> 添加 <code>v-if</code> ），再打开弹窗的时候现场就和第一次保持一致，就不会引起 <code>Element</code> 的死循环了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div id=<span class="string">"app"</span>&gt;</span><br><span class="line">        &lt;wrap ref=<span class="string">"wrap"</span>&gt;</span><br><span class="line">            &lt;tabs&gt;</span><br><span class="line">                &lt;pane v-<span class="keyword">if</span>=<span class="string">"show"</span>&gt; 我来自pane的slot &lt;<span class="regexp">/pane&gt;</span></span><br><span class="line"><span class="regexp">            &lt;/</span>tabs&gt;</span><br><span class="line">            &lt;el-button @click=<span class="string">"close"</span>&gt;关闭&lt;<span class="regexp">/el-button&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>wrap&gt;</span><br><span class="line">        &lt;el-button @click=<span class="string">"open"</span>&gt;打开弹窗&lt;<span class="regexp">/el-button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">import Wrap from "./</span>Wrap.vue<span class="string">";</span></span><br><span class="line"><span class="string">import Pane from "</span>./Pane.vue<span class="string">";</span></span><br><span class="line"><span class="string">import Tabs from "</span>./Tabs.vue<span class="string">";</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">export default &#123;</span></span><br><span class="line"><span class="string">    name: "</span>App<span class="string">",</span></span><br><span class="line"><span class="string">    components: &#123;</span></span><br><span class="line"><span class="string">        Wrap,</span></span><br><span class="line"><span class="string">        Pane,</span></span><br><span class="line"><span class="string">        Tabs,</span></span><br><span class="line"><span class="string">    &#125;,</span></span><br><span class="line"><span class="string">    data() &#123;</span></span><br><span class="line"><span class="string">        return &#123;</span></span><br><span class="line"><span class="string">            show: false,</span></span><br><span class="line"><span class="string">        &#125;;</span></span><br><span class="line"><span class="string">    &#125;,</span></span><br><span class="line"><span class="string">    methods: &#123;</span></span><br><span class="line"><span class="string">        open() &#123;</span></span><br><span class="line"><span class="string">            this.$refs.wrap.open();</span></span><br><span class="line"><span class="string">            this.show = true;</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">        close() &#123;</span></span><br><span class="line"><span class="string">            this.$refs.wrap.close();</span></span><br><span class="line"><span class="string">            this.show = false;</span></span><br><span class="line"><span class="string">        &#125;,</span></span><br><span class="line"><span class="string">    &#125;,</span></span><br><span class="line"><span class="string">&#125;;</span></span><br><span class="line"><span class="string">&lt;/script&gt;</span></span><br></pre></td></tr></table></figure>
+<p>同样的，<code>Pane</code> 的 <code>updated</code> 也不会被触发了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220816083018335.png" alt="image-20220816083018335"></p>
+<h2 id="等-Element-兼容"><a href="#等-Element-兼容" class="headerlink" title="等 Element 兼容"></a>等 Element 兼容</h2><p>讲道理，这个问题其实也不能算作是 <code>Element</code> 的，但在 <code>updated</code> 生命周期触发渲染其实 <code>Vue</code> 官方已经给出过警告了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220816083227156.png" alt="image-20220816083227156"></p>
+<p><code>Element</code> 兼容的话，需要分析一下当时为什么在 <code>updated</code> 更新父组件状态，然后换一种方式了。</p>
+<h2 id="等-Vue-修复？"><a href="#等-Vue-修复？" class="headerlink" title="等 Vue 修复？"></a>等 Vue 修复？</h2><p>应该不会再修复了，毕竟有方案可以绕过这个问题，强制更新子组件应该是某些场景确实需要更新。</p>
+<p>但 <code>slot</code> 为什么会引发这个问题，源代码到时候我会再研究下，最近也一直在看源代码相关的，目前 <code>Vue2</code> 响应式系统和虚拟 <code>dom</code> 两大块原理解析已经完成了，模版编译已经开始写了，关于 <code>slot</code> 应该也快写到了，感兴趣的同学也可以到 <a href="https://vue.windliang.wang/" target="_blank" rel="noopener">vue.windliang.wang</a> 一起学习，文章会将 <code>Vue</code> 的每个点都拆出来并且配有相应的源代码进行调试。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>在业务开发中，如果业务方能解决的问题，一般就自己解决了，一方面底层包团队更新速度确实慢，另一方面，因为业务代码依赖的包可能和最新版本差很多了，即使底层库修复了，我们也不会去更新库版本，罗老师镇楼。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220816084114944.png" alt="image-20220816084114944"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/elementUI/" rel="tag"># elementUI</a>
+          
+            <a href="/tags/vue/" rel="tag"># vue</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/06/30/在美团工作的第二年/" rel="next" title="在美团工作的第二年">
+                <i class="fa fa-chevron-left"></i> 在美团工作的第二年
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/08/23/油猴脚本重新fetch和xhr请求/" rel="prev" title="油猴脚本重写fetch和xhr请求">
+                油猴脚本重写fetch和xhr请求 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#现象"><span class="nav-number">1.</span> <span class="nav-text">现象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题排查"><span class="nav-number">2.</span> <span class="nav-text">问题排查</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#el-dialog"><span class="nav-number">2.1.</span> <span class="nav-text">el-dialog</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#el-tabs-el-tab-pane"><span class="nav-number">2.2.</span> <span class="nav-text">el-tabs el-tab-pane</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#直接原因"><span class="nav-number">3.</span> <span class="nav-text">直接原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#根本原因"><span class="nav-number">4.</span> <span class="nav-text">根本原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bug-最小说明"><span class="nav-number">5.</span> <span class="nav-text">bug 最小说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决方案"><span class="nav-number">6.</span> <span class="nav-text">解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue-2-6"><span class="nav-number">6.1.</span> <span class="nav-text">Vue 2.6+</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue-2-6-以下"><span class="nav-number">6.2.</span> <span class="nav-text">Vue 2.6 以下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#等-Element-兼容"><span class="nav-number">6.3.</span> <span class="nav-text">等 Element 兼容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#等-Vue-修复？"><span class="nav-number">6.4.</span> <span class="nav-text">等 Vue 修复？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">7.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

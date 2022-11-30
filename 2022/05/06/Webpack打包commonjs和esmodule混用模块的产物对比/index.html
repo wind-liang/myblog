@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="接 Webpack 打包 commonjs 和 esmodule 模块的产物对比 继续，这篇文章来测试下 commonjs 模块和 esmodule 混用的情况，也就是 import 导入 commonjs 的模块，require 导入 esomodule 的模块，看一下它们在 Webpack 下的产物。 import 导入 commonjs 模块commonjs 模块会为我们预设一个 modul">
+<meta name="keywords" content="webpack">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webpack打包commonjs和esmodule混用模块的产物对比">
+<meta property="og:url" content="https://windliang.wang/2022/05/06/Webpack打包commonjs和esmodule混用模块的产物对比/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="接 Webpack 打包 commonjs 和 esmodule 模块的产物对比 继续，这篇文章来测试下 commonjs 模块和 esmodule 混用的情况，也就是 import 导入 commonjs 的模块，require 导入 esomodule 的模块，看一下它们在 Webpack 下的产物。 import 导入 commonjs 模块commonjs 模块会为我们预设一个 modul">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508085606651.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508090141724.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508092644764.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508092737165.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508094440422.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508095931458.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508100718016.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508101552792.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508101628186.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508101715288.png">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.933Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Webpack打包commonjs和esmodule混用模块的产物对比">
+<meta name="twitter:description" content="接 Webpack 打包 commonjs 和 esmodule 模块的产物对比 继续，这篇文章来测试下 commonjs 模块和 esmodule 混用的情况，也就是 import 导入 commonjs 的模块，require 导入 esomodule 的模块，看一下它们在 Webpack 下的产物。 import 导入 commonjs 模块commonjs 模块会为我们预设一个 modul">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508085606651.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2022/05/06/Webpack打包commonjs和esmodule混用模块的产物对比/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Webpack打包commonjs和esmodule混用模块的产物对比 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2022/05/06/Webpack打包commonjs和esmodule混用模块的产物对比/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Webpack打包commonjs和esmodule混用模块的产物对比
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-05-06 09:04:47" itemprop="dateCreated datePublished" datetime="2022-05-06T09:04:47+08:00">2022-05-06</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2022/05/06/Webpack打包commonjs和esmodule混用模块的产物对比/" class="leancloud_visitors" data-flag-title="Webpack打包commonjs和esmodule混用模块的产物对比">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>接 <a href="https://zhuanlan.zhihu.com/p/508808789" target="_blank" rel="noopener">Webpack 打包 commonjs 和 esmodule 模块的产物对比</a> 继续，这篇文章来测试下 <code>commonjs</code> 模块和 <code>esmodule</code> 混用的情况，也就是 <code>import</code> 导入 <code>commonjs</code> 的模块，<code>require</code> 导入 <code>esomodule</code> 的模块，看一下它们在 <code>Webpack</code> 下的产物。</p>
+<h1 id="import-导入-commonjs-模块"><a href="#import-导入-commonjs-模块" class="headerlink" title="import 导入 commonjs 模块"></a>import 导入 commonjs 模块</h1><p><code>commonjs</code> 模块会为我们预设一个 <code>module = {exports: {}}</code> 的对象，导出模块的话我们可以直接给 <code>module.exports.xxx = xxxx</code> 或者 <code>exports.xxx = xxx</code> 加属性，也可以给 <code>module.exports = xxx</code> 赋值为一个新对象或者函数。</p>
+<p>下边看下这两种情况的异同：</p>
+<h2 id="exports-添加属性"><a href="#exports-添加属性" class="headerlink" title="exports 添加属性"></a>exports 添加属性</h2><p>两个文件的代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/commonjs/add.js</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"add开始引入"</span>);</span><br><span class="line"><span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports.add = add;</span><br><span class="line"></span><br><span class="line">exports.sub = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b;</span><br><span class="line"></span><br><span class="line"><span class="comment">// src/commonjs/index.js</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"commonjs开始执行"</span>);</span><br><span class="line"><span class="keyword">import</span> &#123; add &#125; <span class="keyword">from</span> <span class="string">"./add"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"1+1="</span>, add(<span class="number">1</span>, <span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>如果还记得  <a href="https://zhuanlan.zhihu.com/p/508808789" target="_blank" rel="noopener">Webpack 打包 commonjs 和 esmodule 模块的产物对比</a>  这里总结的，我们的 <code>import</code> 会导入整个对象，然后执行的时候再通过 <code>xxx.add</code> 的形式调用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _add__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(</span><br><span class="line">  <span class="string">"./src/commonjs/add.js"</span></span><br><span class="line">);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"commonjs开始执行"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"1+1="</span>, (<span class="number">0</span>, _add__WEBPACK_IMPORTED_MODULE_0__.add)(<span class="number">1</span>, <span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>而 <code>_add__WEBPACK_IMPORTED_MODULE_0__</code> 就是我们导出的整个 <code>module.exports</code> 对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"./src/commonjs/add.js"</span>: <span class="function">(<span class="params"><span class="built_in">module</span>, exports</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"add开始引入"</span>);</span><br><span class="line">  <span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">module</span>.exports.add = add;</span><br><span class="line"></span><br><span class="line">  exports.sub = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>因此这种情况两种模式是完全契合的，不会有问题。</p>
+<p>全部代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> __webpack_modules__ = &#123;</span><br><span class="line">        <span class="string">"./src/commonjs/add.js"</span>: <span class="function">(<span class="params"><span class="built_in">module</span>, exports</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"add开始引入"</span>);</span><br><span class="line">            <span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> a + b;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="built_in">module</span>.exports.add = add;</span><br><span class="line"></span><br><span class="line">            exports.sub = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> __webpack_module_cache__ = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__webpack_require__</span>(<span class="params">moduleId</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> cachedModule = __webpack_module_cache__[moduleId];</span><br><span class="line">        <span class="keyword">if</span> (cachedModule !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> cachedModule.exports;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> <span class="built_in">module</span> = (__webpack_module_cache__[moduleId] = &#123;</span><br><span class="line">            exports: &#123;&#125;,</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        __webpack_modules__[moduleId](</span><br><span class="line">            <span class="built_in">module</span>,</span><br><span class="line">            <span class="built_in">module</span>.exports,</span><br><span class="line">            __webpack_require__</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">module</span>.exports;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        __webpack_require__.r = <span class="function">(<span class="params">exports</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">Symbol</span> !== <span class="string">"undefined"</span> &amp;&amp; <span class="built_in">Symbol</span>.toStringTag) &#123;</span><br><span class="line">                <span class="built_in">Object</span>.defineProperty(exports, <span class="built_in">Symbol</span>.toStringTag, &#123;</span><br><span class="line">                    value: <span class="string">"Module"</span>,</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">Object</span>.defineProperty(exports, <span class="string">"__esModule"</span>, &#123;</span><br><span class="line">                value: <span class="literal">true</span>,</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> __webpack_exports__ = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line"><span class="meta">        "use strict"</span>;</span><br><span class="line"></span><br><span class="line">        __webpack_require__.r(__webpack_exports__);</span><br><span class="line">        <span class="keyword">var</span> _add__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(</span><br><span class="line">            <span class="string">"./src/commonjs/add.js"</span></span><br><span class="line">        );</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"commonjs开始执行"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"1+1="</span>, (<span class="number">0</span>, _add__WEBPACK_IMPORTED_MODULE_0__.add)(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line">    &#125;)();</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<h2 id="exports-赋值为新对象"><a href="#exports-赋值为新对象" class="headerlink" title="exports 赋值为新对象"></a>exports 赋值为新对象</h2><p>这次我们将 <code>module.exports</code> 整个赋值为一个新对象，这种情况我们一般是直接赋值为一个新的函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/commonjs/add.js</span></span><br><span class="line"><span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = add;</span><br></pre></td></tr></table></figure>
+<p><code>index.js</code> 我们可以直接导入函数，不需要这样子 <code>import { xxx } from &#39;yyy&#39;</code>  再进行对象解构。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/commonjs/index.js</span></span><br><span class="line"><span class="keyword">import</span> add <span class="keyword">from</span> <span class="string">"./add"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"1+1="</span>, add(<span class="number">1</span>, <span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>我们知道，对于直接 <code>import</code> 导入的话， <code>esmodule</code> 相当于导入 <code>default</code> 属性，事实上 <code>commonjs</code> 并没有导出 <code>default</code> ，但 <code>webpack</code> 帮我们进行了兼容。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _add__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__( <span class="string">"./src/commonjs/add.js"</span>);</span><br><span class="line"><span class="keyword">var</span> _add__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_add__WEBPACK_IMPORTED_MODULE_0__);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"1+1="</span>, _add__WEBPACK_IMPORTED_MODULE_0___default()(<span class="number">1</span>, <span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>看一下 <code>__webpack_require__.n</code> 方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">__webpack_require__.n = <span class="function">(<span class="params"><span class="built_in">module</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> getter = <span class="built_in">module</span> &amp;&amp; <span class="built_in">module</span>.__esModule ? <span class="comment">// 判断是否为 esmodule 模块</span></span><br><span class="line">      () =&gt; (<span class="built_in">module</span>[<span class="string">'default'</span>]) :</span><br><span class="line">  () =&gt; (<span class="built_in">module</span>); <span class="comment">// 直接返回整个模块</span></span><br><span class="line">  __webpack_require__.d(getter, &#123; <span class="attr">a</span>: getter &#125;); <span class="comment">// 这句没懂</span></span><br><span class="line">  <span class="keyword">return</span> getter;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>如果不是 <code>esmodule</code> 模块的话，我们会将整个模块作为 <code>default</code> 属性返回，但为什么在模块内又加了个 <code>a</code> 属性，这里没太懂，谁知道的话可以和我交流一下哈。</p>
+<p>再看下整个的代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> __webpack_modules__ = &#123;</span><br><span class="line">        <span class="string">"./src/commonjs/add.js"</span>: <span class="function">(<span class="params"><span class="built_in">module</span></span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> a + b;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="built_in">module</span>.exports = add;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> __webpack_module_cache__ = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__webpack_require__</span>(<span class="params">moduleId</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> cachedModule = __webpack_module_cache__[moduleId];</span><br><span class="line">        <span class="keyword">if</span> (cachedModule !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> cachedModule.exports;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> <span class="built_in">module</span> = (__webpack_module_cache__[moduleId] = &#123;</span><br><span class="line">            exports: &#123;&#125;,</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        __webpack_modules__[moduleId](</span><br><span class="line">            <span class="built_in">module</span>,</span><br><span class="line">            <span class="built_in">module</span>.exports,</span><br><span class="line">            __webpack_require__</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">module</span>.exports;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        __webpack_require__.n = <span class="function">(<span class="params"><span class="built_in">module</span></span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">var</span> getter =</span><br><span class="line">                <span class="built_in">module</span> &amp;&amp; <span class="built_in">module</span>.__esModule</span><br><span class="line">                    ? <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">module</span>[<span class="string">"default"</span>]</span><br><span class="line">                    : <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">module</span>;</span><br><span class="line">            __webpack_require__.d(getter, &#123; <span class="attr">a</span>: getter &#125;);</span><br><span class="line">            <span class="keyword">return</span> getter;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)();</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        __webpack_require__.d = <span class="function">(<span class="params">exports, definition</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">in</span> definition) &#123;</span><br><span class="line">                <span class="keyword">if</span> (</span><br><span class="line">                    __webpack_require__.o(definition, key) &amp;&amp;</span><br><span class="line">                    !__webpack_require__.o(exports, key)</span><br><span class="line">                ) &#123;</span><br><span class="line">                    <span class="built_in">Object</span>.defineProperty(exports, key, &#123;</span><br><span class="line">                        enumerable: <span class="literal">true</span>,</span><br><span class="line">                        get: definition[key],</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)();</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        __webpack_require__.o = <span class="function">(<span class="params">obj, prop</span>) =&gt;</span></span><br><span class="line">            <span class="built_in">Object</span>.prototype.hasOwnProperty.call(obj, prop);</span><br><span class="line">    &#125;)();</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        __webpack_require__.r = <span class="function">(<span class="params">exports</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">Symbol</span> !== <span class="string">"undefined"</span> &amp;&amp; <span class="built_in">Symbol</span>.toStringTag) &#123;</span><br><span class="line">                <span class="built_in">Object</span>.defineProperty(exports, <span class="built_in">Symbol</span>.toStringTag, &#123;</span><br><span class="line">                    value: <span class="string">"Module"</span>,</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">Object</span>.defineProperty(exports, <span class="string">"__esModule"</span>, &#123; <span class="attr">value</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> __webpack_exports__ = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line"><span class="meta">        "use strict"</span>;</span><br><span class="line"></span><br><span class="line">        __webpack_require__.r(__webpack_exports__);</span><br><span class="line">        <span class="keyword">var</span> _add__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(</span><br><span class="line">            <span class="string">"./src/commonjs/add.js"</span></span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">var</span> _add__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(</span><br><span class="line">            _add__WEBPACK_IMPORTED_MODULE_0__</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"1+1="</span>, _add__WEBPACK_IMPORTED_MODULE_0___default()(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line">    &#125;)();</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<h1 id="require-导入-esmodule-模块"><a href="#require-导入-esmodule-模块" class="headerlink" title="require 导入 esmodule 模块"></a>require 导入 esmodule 模块</h1><p><code>esmodule</code> 模块除了正常的 <code>export</code> ，我们把 <code>export default</code> 也加一下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/esmodule/add.js</span></span><br><span class="line"><span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> sub = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> add;</span><br></pre></td></tr></table></figure>
+<p>然后 <code>index.js</code> 通过 <code>require</code> 来导入：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/esmodule/index.js</span></span><br><span class="line"><span class="keyword">const</span> m = <span class="built_in">require</span>(<span class="string">"./add"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(m)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"1+1="</span>, m.default(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"1-1="</span>, m.sub(<span class="number">1</span>, <span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>因为 <code>require</code> 是直接导入整个对象，没有专门导入 <code>default</code> 的形式，所以调用 <code>default</code> 方法的时候，我们需要通过 <code>m.default</code> 来调用。</p>
+<p>运行起来是没有问题的：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508085606651.png" alt="image-20220508085606651"></p>
+<p>让我们回忆下 <a href="https://zhuanlan.zhihu.com/p/508808789" target="_blank" rel="noopener">Webpack 打包 commonjs 和 esmodule 模块的产物对比</a>  这里介绍的 <code>esmodule</code> 模块的导出产物：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> __webpack_modules__ = &#123;</span><br><span class="line">  <span class="string">"./src/esmodule/add.js"</span>: (</span><br><span class="line">    __unused_webpack_module,</span><br><span class="line">    __webpack_exports__,</span><br><span class="line">    __webpack_require__</span><br><span class="line">  ) =&gt; &#123;</span><br><span class="line"><span class="meta">    "use strict"</span>;</span><br><span class="line">    __webpack_require__.r(__webpack_exports__);</span><br><span class="line">    __webpack_require__.d(__webpack_exports__, &#123;</span><br><span class="line">      sub: <span class="function"><span class="params">()</span> =&gt;</span> sub,</span><br><span class="line">      <span class="keyword">default</span>: <span class="function"><span class="params">()</span> =&gt;</span> __WEBPACK_DEFAULT_EXPORT__,</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> a + b;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">const</span> sub = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> __WEBPACK_DEFAULT_EXPORT__ = add;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>相当于导出了一个 <code>module.exports</code> 大的对象，包含 <code>sub</code> 和 <code>default</code> 属性。</p>
+<p>然后是 <code>index.js</code> </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> m = __webpack_require__(<span class="string">"./src/esmodule/add.js"</span>);</span><br><span class="line">  <span class="built_in">console</span>.log(m);</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"1+1="</span>, m.default(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"1-1="</span>, m.sub(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>需要注意的是虽然导出的是整个对象，但对于 <code>index.js</code> 我们不可以通过对象解构来拿到 <code>default</code> 方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/esmodule/index.js</span></span><br><span class="line"><span class="keyword">const</span> &#123; <span class="keyword">default</span>&#125; = <span class="built_in">require</span>(<span class="string">"./add"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"1+1="</span>, <span class="keyword">default</span>(<span class="number">1</span>, <span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p><code>default</code> 会在这里被认为是一个关键字，直接抛错：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508090141724.png" alt="image-20220508090141724"></p>
+<p>来看下整体代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> __webpack_modules__ = &#123;</span><br><span class="line">        <span class="string">"./src/esmodule/add.js"</span>: (</span><br><span class="line">            __unused_webpack_module,</span><br><span class="line">            __webpack_exports__,</span><br><span class="line">            __webpack_require__</span><br><span class="line">        ) =&gt; &#123;</span><br><span class="line"><span class="meta">            "use strict"</span>;</span><br><span class="line">            __webpack_require__.r(__webpack_exports__);</span><br><span class="line">            __webpack_require__.d(__webpack_exports__, &#123;</span><br><span class="line">                sub: <span class="function"><span class="params">()</span> =&gt;</span> sub,</span><br><span class="line">                <span class="keyword">default</span>: <span class="function"><span class="params">()</span> =&gt;</span> __WEBPACK_DEFAULT_EXPORT__,</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> a + b;</span><br><span class="line">            &#125;;</span><br><span class="line">            <span class="keyword">const</span> sub = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a - b;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">const</span> __WEBPACK_DEFAULT_EXPORT__ = add;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> __webpack_module_cache__ = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__webpack_require__</span>(<span class="params">moduleId</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> cachedModule = __webpack_module_cache__[moduleId];</span><br><span class="line">        <span class="keyword">if</span> (cachedModule !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> cachedModule.exports;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> <span class="built_in">module</span> = (__webpack_module_cache__[moduleId] = &#123;</span><br><span class="line">            exports: &#123;&#125;,</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        __webpack_modules__[moduleId](</span><br><span class="line">            <span class="built_in">module</span>,</span><br><span class="line">            <span class="built_in">module</span>.exports,</span><br><span class="line">            __webpack_require__</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">module</span>.exports;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        __webpack_require__.d = <span class="function">(<span class="params">exports, definition</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">in</span> definition) &#123;</span><br><span class="line">                <span class="keyword">if</span> (</span><br><span class="line">                    __webpack_require__.o(definition, key) &amp;&amp;</span><br><span class="line">                    !__webpack_require__.o(exports, key)</span><br><span class="line">                ) &#123;</span><br><span class="line">                    <span class="built_in">Object</span>.defineProperty(exports, key, &#123;</span><br><span class="line">                        enumerable: <span class="literal">true</span>,</span><br><span class="line">                        get: definition[key],</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)();</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        __webpack_require__.o = <span class="function">(<span class="params">obj, prop</span>) =&gt;</span></span><br><span class="line">            <span class="built_in">Object</span>.prototype.hasOwnProperty.call(obj, prop);</span><br><span class="line">    &#125;)();</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        __webpack_require__.r = <span class="function">(<span class="params">exports</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">Symbol</span> !== <span class="string">"undefined"</span> &amp;&amp; <span class="built_in">Symbol</span>.toStringTag) &#123;</span><br><span class="line">                <span class="built_in">Object</span>.defineProperty(exports, <span class="built_in">Symbol</span>.toStringTag, &#123;</span><br><span class="line">                    value: <span class="string">"Module"</span>,</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">Object</span>.defineProperty(exports, <span class="string">"__esModule"</span>, &#123; <span class="attr">value</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> __webpack_exports__ = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> m = __webpack_require__(<span class="string">"./src/esmodule/add.js"</span>);</span><br><span class="line">        <span class="built_in">console</span>.log(m);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"1+1="</span>, m.default(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"1-1="</span>, m.sub(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line">    &#125;)();</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<h1 id="同时导出-commonjs-和-esmodule"><a href="#同时导出-commonjs-和-esmodule" class="headerlink" title="同时导出 commonjs 和 esmodule"></a>同时导出 commonjs 和 esmodule</h1><p>我们在一个文件同时使用 <code>module.exports</code> 和 <code>export</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">module</span>.exports.add = add;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> sub = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>浏览器会直接抛错：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508092644764.png" alt="image-20220508092644764"></p>
+<p>如果直接重写 <code>module.exports</code> 呢？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">module</span>.exports = add;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> sub = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508092737165.png" alt="image-20220508092737165"></p>
+<p>同样会抛错，让我们看一下 <code>webpack</code> 的产物。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"./src/commonjs/add.js"</span>: (</span><br><span class="line">           <span class="built_in">module</span>,</span><br><span class="line">           __webpack_exports__,</span><br><span class="line">           __webpack_require__</span><br><span class="line">       ) =&gt; &#123;</span><br><span class="line">           __webpack_require__.r(__webpack_exports__);</span><br><span class="line">           __webpack_require__.d(__webpack_exports__, &#123;</span><br><span class="line">               sub: <span class="function"><span class="params">()</span> =&gt;</span> sub,</span><br><span class="line">           &#125;);</span><br><span class="line">           <span class="built_in">module</span> = __webpack_require__.hmd(<span class="built_in">module</span>);</span><br><span class="line"></span><br><span class="line">           <span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">               <span class="keyword">return</span> a + b;</span><br><span class="line">           &#125;;</span><br><span class="line">           <span class="built_in">module</span>.exports.add = add;</span><br><span class="line"></span><br><span class="line">           <span class="keyword">const</span> sub = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">               <span class="keyword">return</span> a + b;</span><br><span class="line">           &#125;;</span><br><span class="line">       &#125;,</span><br></pre></td></tr></table></figure>
+<p>调用了 <code>__webpack_require__.hmd</code> 方法拿到 <code>module</code> 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">__webpack_require__.hmd = <span class="function">(<span class="params"><span class="built_in">module</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">module</span> = <span class="built_in">Object</span>.create(<span class="built_in">module</span>);</span><br><span class="line">  <span class="keyword">if</span> (!<span class="built_in">module</span>.children) <span class="built_in">module</span>.children = [];</span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(<span class="built_in">module</span>, <span class="string">"exports"</span>, &#123;</span><br><span class="line">    enumerable: <span class="literal">true</span>,</span><br><span class="line">    set: <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(</span><br><span class="line">        <span class="string">"ES Modules may not assign module.exports or exports.*, Use ESM export syntax, instead: "</span> +</span><br><span class="line">        <span class="built_in">module</span>.id</span><br><span class="line">      );</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">module</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>hmd</code> 方法重新定义了 <code>exports</code> 属性，没有定义 <code>get</code> 属性，所以 <code>module.exports</code> 返回的是 <code>undefined</code>，<code>module.exports.add</code> 就直接抛错了。</p>
+<p>重新定义了 <code>set</code> 函数，所以 <code>module.exports = xxx</code> ，重新赋值属性的时候走到 <code>set</code> 后直接抛错。</p>
+<h1 id="同时导入-commonjs-和-esmodule"><a href="#同时导入-commonjs-和-esmodule" class="headerlink" title="同时导入 commonjs 和 esmodule"></a>同时导入 commonjs 和 esmodule</h1><p>定义一个 <code>commonjs</code> 模块：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/commonjs/add.js</span></span><br><span class="line"><span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">module</span>.exports = add;</span><br></pre></td></tr></table></figure>
+<p>定义一个 <code>esmodule</code> 模块：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/esmodule/sub.js</span></span><br><span class="line"><span class="keyword">const</span> sub = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a - b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> sub;</span><br></pre></td></tr></table></figure>
+<p>然后在 <code>index.js</code> 同时引入：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> add = <span class="built_in">require</span>(<span class="string">"./add"</span>) ;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"1+1="</span>, add(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sub <span class="keyword">from</span> <span class="string">'../esmodule/sub'</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"1-1="</span>, sub(<span class="number">1</span>, <span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>没什么问题，正常运行：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508094440422.png" alt="image-20220508094440422"></p>
+<p>因为导入的话它们是互不影响的，各自导入自己的即可，可以看下完整代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> __webpack_modules__ = &#123;</span><br><span class="line">        <span class="string">"./src/commonjs/add.js"</span>: <span class="function">(<span class="params"><span class="built_in">module</span></span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">const</span> add = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> a + b;</span><br><span class="line">            &#125;;</span><br><span class="line">            <span class="built_in">module</span>.exports = add;</span><br><span class="line">        &#125;,</span><br><span class="line"></span><br><span class="line">        <span class="string">"./src/esmodule/sub.js"</span>: (</span><br><span class="line">            __unused_webpack_module,</span><br><span class="line">            __webpack_exports__,</span><br><span class="line">            __webpack_require__</span><br><span class="line">        ) =&gt; &#123;</span><br><span class="line"><span class="meta">            "use strict"</span>;</span><br><span class="line">            __webpack_require__.r(__webpack_exports__);</span><br><span class="line">            __webpack_require__.d(__webpack_exports__, &#123;</span><br><span class="line">                <span class="keyword">default</span>: <span class="function"><span class="params">()</span> =&gt;</span> __WEBPACK_DEFAULT_EXPORT__,</span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="keyword">const</span> sub = <span class="function">(<span class="params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> a - b;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">const</span> __WEBPACK_DEFAULT_EXPORT__ = sub;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> __webpack_module_cache__ = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__webpack_require__</span>(<span class="params">moduleId</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> cachedModule = __webpack_module_cache__[moduleId];</span><br><span class="line">        <span class="keyword">if</span> (cachedModule !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> cachedModule.exports;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> <span class="built_in">module</span> = (__webpack_module_cache__[moduleId] = &#123;</span><br><span class="line">            exports: &#123;&#125;,</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        __webpack_modules__[moduleId](</span><br><span class="line">            <span class="built_in">module</span>,</span><br><span class="line">            <span class="built_in">module</span>.exports,</span><br><span class="line">            __webpack_require__</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">module</span>.exports;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        __webpack_require__.d = <span class="function">(<span class="params">exports, definition</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">in</span> definition) &#123;</span><br><span class="line">                <span class="keyword">if</span> (</span><br><span class="line">                    __webpack_require__.o(definition, key) &amp;&amp;</span><br><span class="line">                    !__webpack_require__.o(exports, key)</span><br><span class="line">                ) &#123;</span><br><span class="line">                    <span class="built_in">Object</span>.defineProperty(exports, key, &#123;</span><br><span class="line">                        enumerable: <span class="literal">true</span>,</span><br><span class="line">                        get: definition[key],</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)();</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        __webpack_require__.o = <span class="function">(<span class="params">obj, prop</span>) =&gt;</span></span><br><span class="line">            <span class="built_in">Object</span>.prototype.hasOwnProperty.call(obj, prop);</span><br><span class="line">    &#125;)();</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        __webpack_require__.r = <span class="function">(<span class="params">exports</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">Symbol</span> !== <span class="string">"undefined"</span> &amp;&amp; <span class="built_in">Symbol</span>.toStringTag) &#123;</span><br><span class="line">                <span class="built_in">Object</span>.defineProperty(exports, <span class="built_in">Symbol</span>.toStringTag, &#123;</span><br><span class="line">                    value: <span class="string">"Module"</span>,</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">Object</span>.defineProperty(exports, <span class="string">"__esModule"</span>, &#123; <span class="attr">value</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;)();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> __webpack_exports__ = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    (<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line"><span class="meta">        "use strict"</span>;</span><br><span class="line"></span><br><span class="line">        __webpack_require__.r(__webpack_exports__);</span><br><span class="line">        <span class="keyword">var</span> _esmodule_sub__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(</span><br><span class="line">            <span class="string">"./src/esmodule/sub.js"</span></span><br><span class="line">        );</span><br><span class="line">        <span class="keyword">const</span> add = __webpack_require__(<span class="string">"./src/commonjs/add.js"</span>);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"1+1="</span>, add(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">        <span class="built_in">console</span>.log(</span><br><span class="line">            <span class="string">"1-1="</span>,</span><br><span class="line">            (<span class="number">0</span>, _esmodule_sub__WEBPACK_IMPORTED_MODULE_0__[<span class="string">"default"</span>])(<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">        );</span><br><span class="line">    &#125;)();</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>不管是 <code>esmodule</code> 还是 <code>commonjs</code> 模块，最终都转换成了 <code>module = {exports: {}}</code> 形式的模块，所以它们之间的混用成为了可能。</p>
+<p><code>import</code> <code>commonjs</code> 模块的话，<code>import</code> 拿到的就是整个 <code>module.exports</code> 对象，正常使用即可。如果我们直接改写 <code>module.exports</code> 对象，<code>webpack</code> 会认为等同于 <code>export default</code> ，进行兼容处理。</p>
+<p><code>require</code> <code>esmodule</code> 模块的话，如果之前 <code>esmodule</code> 模块中有 <code>export default</code> ，那么使用的时候需要显示的调用 <code>xxx.default</code> ，对于其他的 <code>export</code> 正常使用即可。</p>
+<p>虽然可以混用，但一般情况下能不混用就不混用，以免遇到未知问题，目前更推荐 <code>esmodule</code> 模块。</p>
+<p>如果遇到奇怪问题的话，可以考虑直接去查看 <code>webpack</code> 的产物，能更快的排查出问题。</p>
+<h1 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h1><p>对产物其实有两个问题，然后去请教了下 <code>Tecvan</code> ，杰哥。</p>
+<p>第一个问题就是上边提到，当使用 <code>imports</code> 导入 <code>commonjs</code> 模块的时候，会调用 <code>n</code> 方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">__webpack_require__.n = <span class="function">(<span class="params"><span class="built_in">module</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> getter =</span><br><span class="line">      <span class="built_in">module</span> &amp;&amp; <span class="built_in">module</span>.__esModule</span><br><span class="line">  ? <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">module</span>[<span class="string">"default"</span>]</span><br><span class="line">  : <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">module</span>;</span><br><span class="line">  __webpack_require__.d(getter, &#123; <span class="attr">a</span>: getter &#125;);</span><br><span class="line">  <span class="keyword">return</span> getter;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里会挂一个 <code>a</code> 属性，原因的话如下：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508095931458.png" alt="image-20220508095931458"></p>
+<p>主要是兼容 <code>webpack</code> 混用的情况，场景可能如下：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508100718016.png" alt="image-20220508100718016"></p>
+<p>第二个问题，还是 <code>import</code> 导入 <code>commonjs</code> 模块的时候，打包产物如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _add__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(</span><br><span class="line">  <span class="string">"./src/commonjs/add.js"</span></span><br><span class="line">);</span><br><span class="line"><span class="keyword">var</span> _add__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(</span><br><span class="line">  _add__WEBPACK_IMPORTED_MODULE_0__</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"1+1="</span>, _add__WEBPACK_IMPORTED_MODULE_0___default()(<span class="number">1</span>, <span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>这里会触发 <code>__webpack_require__.n</code> 方法去生成 <code>_add__WEBPACK_IMPORTED_MODULE_0___default</code> 变量。触发这个逻辑的原因并不是因为我们使用了 <code>import xxx from &#39;yyy&#39;</code> 的格式，而是因为导出 <code>commonjs</code> 模块的时候直接使用 <code>module.exports = xxx</code> 进行了覆盖，这种情况 <code>webpack</code> 就会认为等效于 <code>export default</code> 的情况。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508101552792.png" alt="image-20220508101552792"></p>
+<p>但对于代码，因为 <code>_add__WEBPACK_IMPORTED_MODULE_0__</code> 和 <code>_add__WEBPACK_IMPORTED_MODULE_0___default</code> 是同一个值，我们不处理 <code>default</code> 逻辑其实也是通的：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508101628186.png" alt="image-20220508101628186"></p>
+<p><code>webpack</code> 为什么会这样处理，具体原因就不知道了，欢迎大家一起来讨论，下边是杰哥的猜测：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220508101715288.png" alt="image-20220508101715288"></p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>算上这篇，总结了三篇 <code>webpack</code> 的产物的文章  <a href="https://zhuanlan.zhihu.com/p/508808789" target="_blank" rel="noopener">Webpack 打包 commonjs 和 esmodule 模块的产物对比</a> 、<a href="https://windliang.wang/2022/05/03/Webpack%E6%89%93%E5%8C%85commonjs%E5%92%8Cesmodule%E5%8A%A8%E6%80%81%E5%BC%95%E5%85%A5%E6%A8%A1%E5%9D%97%E7%9A%84%E4%BA%A7%E7%89%A9%E5%AF%B9%E6%AF%94/">Webpack 打包 commonjs 和 esmodule 动态引入模块的产物对比</a>，可以加深平常开发中对于模块之间的理解。</p>
+<p>大家如果还对 <code>Webpack</code> 原理感兴趣的话，可以去看杰哥的 <a href="https://juejin.cn/column/6978684601921175583" target="_blank" rel="noopener">Webpack 原理系列</a>。目前我没有总结这个系列的计划了，哈哈。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/webpack/" rel="tag"># webpack</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/05/03/Webpack打包commonjs和esmodule动态引入模块的产物对比/" rel="next" title="Webpack 打包 commonjs 和 esmodule 动态引入模块的产物对比">
+                <i class="fa fa-chevron-left"></i> Webpack 打包 commonjs 和 esmodule 动态引入模块的产物对比
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/05/10/echarts画中国地图/" rel="prev" title="echarts 画中国地图及省份切换">
+                echarts 画中国地图及省份切换 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#import-导入-commonjs-模块"><span class="nav-number">1.</span> <span class="nav-text">import 导入 commonjs 模块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#exports-添加属性"><span class="nav-number">1.1.</span> <span class="nav-text">exports 添加属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exports-赋值为新对象"><span class="nav-number">1.2.</span> <span class="nav-text">exports 赋值为新对象</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#require-导入-esmodule-模块"><span class="nav-number">2.</span> <span class="nav-text">require 导入 esmodule 模块</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#同时导出-commonjs-和-esmodule"><span class="nav-number">3.</span> <span class="nav-text">同时导出 commonjs 和 esmodule</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#同时导入-commonjs-和-esmodule"><span class="nav-number">4.</span> <span class="nav-text">同时导入 commonjs 和 esmodule</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">5.</span> <span class="nav-text">总</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#讨论"><span class="nav-number">6.</span> <span class="nav-text">讨论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">7.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

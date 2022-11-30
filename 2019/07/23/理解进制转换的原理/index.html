@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="准备写一篇关于浮点数存储的，然后先写了进制转换，越写越多，就单独作为一篇文章吧。 2019.723，这个数的二进制形式是什么样呢？让我们慢慢考虑。 数字的概念首先思考一下数字是什么？为什么要有数字。 我有一个苹果，你脑海中会出现一个苹果。 我有五个苹果，你脑海中会出现五个苹果。 我有三十个苹果，你脑海中会出现三十个苹果。 我有一千个苹果，你可能想象不出来了。 数字的作用，就是让我们对一个东西的数量">
+<meta name="keywords" content="计算机,二进制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解进制转换的原理">
+<meta property="og:url" content="https://windliang.wang/2019/07/23/理解进制转换的原理/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="准备写一篇关于浮点数存储的，然后先写了进制转换，越写越多，就单独作为一篇文章吧。 2019.723，这个数的二进制形式是什么样呢？让我们慢慢考虑。 数字的概念首先思考一下数字是什么？为什么要有数字。 我有一个苹果，你脑海中会出现一个苹果。 我有五个苹果，你脑海中会出现五个苹果。 我有三十个苹果，你脑海中会出现三十个苹果。 我有一千个苹果，你可能想象不出来了。 数字的作用，就是让我们对一个东西的数量">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/Oracle_numeral.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/float2.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/float3.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/float4.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/float5.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/float6.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/float7.jpg">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.992Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="理解进制转换的原理">
+<meta name="twitter:description" content="准备写一篇关于浮点数存储的，然后先写了进制转换，越写越多，就单独作为一篇文章吧。 2019.723，这个数的二进制形式是什么样呢？让我们慢慢考虑。 数字的概念首先思考一下数字是什么？为什么要有数字。 我有一个苹果，你脑海中会出现一个苹果。 我有五个苹果，你脑海中会出现五个苹果。 我有三十个苹果，你脑海中会出现三十个苹果。 我有一千个苹果，你可能想象不出来了。 数字的作用，就是让我们对一个东西的数量">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/Oracle_numeral.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2019/07/23/理解进制转换的原理/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>理解进制转换的原理 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2019/07/23/理解进制转换的原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">理解进制转换的原理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-23 10:54:29" itemprop="dateCreated datePublished" datetime="2019-07-23T10:54:29+08:00">2019-07-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机组成/" itemprop="url" rel="index"><span itemprop="name">计算机组成</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/07/23/理解进制转换的原理/" class="leancloud_visitors" data-flag-title="理解进制转换的原理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>准备写一篇关于浮点数存储的，然后先写了进制转换，越写越多，就单独作为一篇文章吧。</p>
+<p><code>2019.723</code>，这个数的二进制形式是什么样呢？让我们慢慢考虑。</p>
+<h1 id="数字的概念"><a href="#数字的概念" class="headerlink" title="数字的概念"></a>数字的概念</h1><p>首先思考一下数字是什么？为什么要有数字。</p>
+<p>我有<strong>一</strong>个苹果，你脑海中会出现<strong>一</strong>个苹果。</p>
+<p>我有<strong>五</strong>个苹果，你脑海中会出现<strong>五</strong>个苹果。</p>
+<p>我有<strong>三十</strong>个苹果，你脑海中会出现<strong>三十</strong>个苹果。</p>
+<p>我有<strong>一千</strong>个苹果，你可能想象不出来了。</p>
+<p>数字的作用，就是让我们对一个东西的数量有一个更精确的认识。如果没有数字，我可能只能说我有一桌子苹果，我有一堆苹果，我有一大堆苹果，我有一大大堆苹果，这些都是感性的认知，每个人的认知可能是不一样的，而数字统一了我们对「量」的概念。</p>
+<p>此外，另一个神奇的地方在于数字仅仅是「量」的概念，他没有限制去描述什么。</p>
+<p>比如说五个苹果，五只小狗，五头牛，五粒大米，数量都是五，但他们的体积、质量、形状都和他们本身有关了。</p>
+<h1 id="数字的记录"><a href="#数字的记录" class="headerlink" title="数字的记录"></a>数字的记录</h1><p>后来人类发明了纸笔，如果把这个「量」的概念写下来该怎么办呢？</p>
+<p>最简单的想法就是画竖线，每增加一个，就加一条竖线。</p>
+<p>1 -&gt; I</p>
+<p>2 -&gt; II</p>
+<p>3 -&gt; III</p>
+<p>4 -&gt; IIII</p>
+<p>5 -&gt; IIIII</p>
+<p>20 -&gt; ???</p>
+<p>如果数字大了，一直画竖线显然是不现实的，在出土的甲骨文中发现了当时人们对数字的认识。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/Oracle_numeral.jpg" alt=""></p>
+<p>一些大的数字用一些特定的符号来表示，这样如果表示 108 的话，我们只需要画出这两个图形就可以了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/float2.jpg" alt=""></p>
+<p>顺序无所谓，另一个人可能画出的是下边的</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/float3.jpg" alt=""></p>
+<p>即使顺序不一样，但他们表示的数字都是 <code>108</code>。</p>
+<h1 id="进制的概念"><a href="#进制的概念" class="headerlink" title="进制的概念"></a>进制的概念</h1><p>上边的依旧不是很方便，比如我要是想表示 <code>1000</code>，如果我们只有 <code>100</code> 对应的符号，我还是需要画 <code>10</code> 个才行。接下来，人们用了一个更伟大的发明，进位制，也许因为人有 <code>10</code> 根手指，所以采用了 <code>10</code> 进制，其实就是我们现在的计数法。用<code>0 - 9</code> 十个符号就可以表示任意数字了。</p>
+<p>这里边最伟大的发明就是<code>0</code>的概念了，它除了表示数量上的 <code>0</code>，也可以用来占位。从而数字在不同的位置有了不同的含义。拿十进制来举例，就是逢十进一。</p>
+<p>得到<strong>一</strong>个苹果，写个 <code>1</code>，得到<strong>六</strong>个苹果，写个<code>6</code>，得到<strong>十</strong>个苹果了，怎么表达<strong>十</strong>这个数量呢，低位用<code>0</code>占位，高位写<code>1</code>就可以了。也就是<code>10</code>。此时的<code>1</code>不再是一，而是一个十。同理<code>100</code>，就表明有十个十的数量。此外再发明一个小数点，<code>0.1</code>，小数点右边的一表明是十分之一。</p>
+<p>每个位置就有了不同的含义，可以看作下边的公式。e 是小数点后开始的数位。</p>
+<p>$$…+a\times10^3+b\times10^2+c\times10^1+d\times10^0+e\times10^{-1}+f\times10^{-2}+g\times10^{-3}+…$$</p>
+<p>a，b，c … 代表<code>0 - 9</code>中的任意一个符号，现在的数量是<code>a</code>个<code>1000</code>，b 个 <code>100</code>，c 个 <code>10</code>……</p>
+<p>比如<code>2019.723</code>就可以看成下边的样子</p>
+<p>$$2\times10^3+0\times10^2+1\times10^1+9\times10^0+7\times10^{-1}+2\times10^{-2}+3\times10^{-3}$$</p>
+<p>上边是十进制，让我们想一下 2 进制。</p>
+<p>2 进制只有两个符号可以用，那就是<code>0</code>和 <code>1</code>，规则是满<code>2</code> 就要进 <code>1</code>。</p>
+<p>如果有一个苹果那么就记做<code>1</code>，如果有两个苹果要利用<code>0</code>来占位，高位写<code>1</code>，也就是<code>10</code>，如果有四个苹果，那就用<code>100</code>来表示。</p>
+<p>因为我们对十进制太熟悉了，如果我说「我考了<code>100</code>分」。大家第一反应就是我考的不错，但如果是在二进制的世界，<code>100</code>其实是一个蛮小的数字。</p>
+<p>如果把二进制换两个符号，比如<code>&gt;</code>来表示<strong>一</strong>个苹果，<code>&lt;</code>来表示零的概念，用来占位。我如果说我考了<code>&gt;&lt;&lt;</code>分，这样大家就没有条件反射觉得我考的很高了。</p>
+<p>所以我们要明确一个概念，不同进制下，可能用了同一个符号，但对于同一个数量，那么表示法是不一样的。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/float4.jpg" alt=""></p>
+<p>看到这么多苹果，</p>
+<p>商朝人可能会写下，我有<code>| 二</code>个苹果。</p>
+<p>十进制的人们会写下，我有 <code>12</code> 个苹果。</p>
+<p>二进制的人们会写下，我有 <code>1100</code> 个苹果。</p>
+<p>可以看到对于同一个数量，大家的表示是不一样的，即使十进制和二进制的人们用了相同的符号<code>0</code>和<code>1</code>，但由于进制不同，他们写出来是不一样的。</p>
+<p>有一天二进制的人和十进制的人相遇了，二进制的人说，我买了<code>1100</code>个苹果，然后对于十进制的人第一反应，哇，一千多个苹果，也太多了吧。</p>
+<p>二进制的人们，看到<code>1100</code>立马脑海中联想到了上图的数量，但是对于十进制人们必须把这个数量转换成自己熟悉的十进制表示，才可以在脑海里想象<code>1100</code>个苹果的数量是多少。那么怎么转换呢？</p>
+<h1 id="二进制转十进制"><a href="#二进制转十进制" class="headerlink" title="二进制转十进制"></a>二进制转十进制</h1><p>让我们从十进制的角度去看一下二进制，二进制是满二进一，所以他的每一位的权重其实是以 2 为权重的，就是下边的样子。</p>
+<p>$$…+a\times2^3+b\times2^2+c\times2^1+d\times2^0+e\times2^{-1}+f\times2^{-2}+g\times2^{-3}+…$$</p>
+<p>a，b，c … 代表<code>0</code>和 <code>1</code>中的一个，现在的数量是 a 个 8，b 个 4，c 个 2 ……</p>
+<p>所以<code>1100</code>如果用十进制表示，就是 1 个 8 加上 1 个 4，也就是<code>12</code>了。这样的话，我们就可以理解他买了多少苹果了。</p>
+<h1 id="十进制转二进制"><a href="#十进制转二进制" class="headerlink" title="十进制转二进制"></a>十进制转二进制</h1><p>那么十进制怎么转换成二进制呢？最开始的问题，怎么用二进制去表示 <code>2019.723</code>。</p>
+<h2 id="整数的转换"><a href="#整数的转换" class="headerlink" title="整数的转换"></a>整数的转换</h2><p>其实这就是数学上的问题了，首先我们考虑整数部分<code>2019</code>。根据前边二进制转十进制的公式，我们知道可以有下边的等式。</p>
+<p>$$…a\times2^4+b\times2^3+c\times2^2+d\times2^1+e\times2^0=2019$$</p>
+<p>两边如果同时除以 2 会发生什么呢，</p>
+<p>$$…a\times2^3+b\times2^2+c\times2^1+d\times2^0+e/2=2018/2+1/2$$</p>
+<p>可以看到系数是 <code>a，b，c，d</code>的部分都整除了，只剩下 <code>e/2</code>。</p>
+<p>右边的话，把<code>2019</code>分成两部分<code>2018</code>和<code>1</code>。然后就是$2018/2$和$1/2$两部分。</p>
+<p>左边也看做$…a\times2^3+b\times2^2+c\times2^1+d\times2^0$和$e/2$两部分。</p>
+<p>左右两部分对应相等。</p>
+<p>右边的部分。</p>
+<p>$$e/2==1/2$$</p>
+<p>所以算出了 $e=1$。</p>
+<p>再看左边的部分。</p>
+<p>$$…a\times2^3+b\times2^2+c\times2^1+d\times2^0=2018/2=1009$$</p>
+<p>我们可以两边继续同时除以<code>2</code>，就可以求出<code>d</code>。同理就可以求出<code>a，b，c</code>以及更多的系数。</p>
+<p>再来回想一下我们的方法，两边同时除以<code>2</code>，然后被分成$2018/2$和$1/2$两部分，其实左边就是商，右边是余数。<code>2019/2=1009······1</code>，对应等式左边的部分，e 其实就等于余数。</p>
+<p>所以转换的方法就是用<code>2019</code>除以<code>2</code>，余数作为二进制的低位。商作为新的除数，继续除以<code>2</code>，余数作为二进制的低位…直到商为 0。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/float5.jpg" alt=""></p>
+<p>因为我们每次求出的都是二进制对应的低位，书写的话习惯于先写高位，所以倒着写过来 <code>11111100011</code>就是<code>2019</code>的二进制形式了。</p>
+<p>写成代码的形式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Integer&gt; <span class="title">integerTrans</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    ArrayList&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">while</span> (n != <span class="number">0</span>) &#123;</span><br><span class="line">        list.add(n % <span class="number">2</span>);</span><br><span class="line">        n /= <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = list.size() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        System.out.print(list.get(i));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> list;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="小数的转换"><a href="#小数的转换" class="headerlink" title="小数的转换"></a>小数的转换</h2><p>考虑完整数，再来想一下小数<code>0.723</code>怎么处理。同样的，利用二进制转十进制的公式，写出下边的等式。</p>
+<p>$$e\times2^{-1}+f\times2^{-2}+g\times2^{-3}+…=0.723$$</p>
+<p>之前同时是利用两边同时除以<code>2</code>，对于上边的等式肯定不行了。换一下，两边同时乘以<code>2</code>呢？看看会发生什么。</p>
+<p>$$e\times2^{0}+f\times2^{-1}+g\times2^{-2}+…=0.723\times2$$</p>
+<p>和之前一样，把两边分别分成两部分。</p>
+<p>$$e+f\times2^{-1}+g\times2^{-2}+…=1+0.446$$</p>
+<p>两部分分别对应相等，可以知道</p>
+<p>$$e==1$$</p>
+<p>另外一部分的话</p>
+<p>$$f\times2^{-1}+g\times2^{-2}+…=0.446$$</p>
+<p>我们继续同时乘以<code>2</code>，变成下边的样子。</p>
+<p>$$f+g\times2^{-1}+…=0 + 0.892$$</p>
+<p>这样又可以求出$f=0$，同样的一直不停的继续下去，直到得到的新的小数部分是<code>0</code>。</p>
+<p>所以我们的算法就是不停的乘<code>2</code>取整数部分，有可能得到的新的数永远不等于 0，这就取决于我们需要的精度了，可以随时停止。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/float6.jpg" alt=""></p>
+<p>小数的话正着写出来就可以了，<code>0.1011</code>就是十进制<code>0.723</code>的近似值了。</p>
+<p>所以十进制小数转成二进制并不会像十进制整数那么顺利。原因的话，因为二进制小数它的权重依次是<code>0.5</code>,<code>0.25</code>,<code>0.125</code>…，所以只有这些数的任意相加才能被精确表示。大部分的十进制小数都不能精确的用二进制表示。</p>
+<p>甚至看起来最简单的<code>0.1</code>如果转成二进制，会是什么样呢？</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/float7.jpg" alt=""></p>
+<p>可以看到计算过程中，出现了循环，<code>0.4，0.8，0.6，0.2</code>会循环出现，所以<code>0.1</code>的二进制表示就是<code>0.0 0011 0011 0011...</code>是一个无限循环小数了。它就相当于我们十进制中的<code>1/3</code>，写成小数形式是<code>0.3333333...</code>。</p>
+<p>用代码表示一下，我们只保留 <code>10</code> 位小数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;Integer&gt; <span class="title">decimalTrans</span><span class="params">(<span class="keyword">double</span> n)</span> </span>&#123;</span><br><span class="line">    ArrayList&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">while</span> (count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        n = n * <span class="number">2</span>;</span><br><span class="line">        list.add((<span class="keyword">int</span>) (n));</span><br><span class="line">        n = n - (<span class="keyword">int</span>) (n);</span><br><span class="line">        count--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size(); i++) &#123;</span><br><span class="line">        System.out.print(list.get(i));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> list;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="历史的发展"><a href="#历史的发展" class="headerlink" title="历史的发展"></a>历史的发展</h1><p>可以看一下现实生活中数字的发展，引自维基百科。</p>
+<blockquote>
+<p>无位值十进制</p>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%8F%A4%E5%9F%83%E5%8F%8A" target="_blank" rel="noopener">古埃及</a>十进制：以一个竖道代表1，二并排竖道代表2，三竖道代表3，一横道代表4，左二撇右竖道代表5，上三撇下三撇代表6，上下两道代表8，四个（并排代表9，一个“人”字形代表10，“人”上加一横代表20，20左加一点代表30，横道上加一点代表40，横道上加三竖道（如中国筹算的8）代表60，横道上加四竖道代表80（形同中国筹算中的9）代表80，两横道上加三竖代表90……。</li>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%8F%A4%E5%B8%8C%E8%85%8A" target="_blank" rel="noopener">古希腊</a>十进制，1至9，10至90，100至900各有不同的单字母代表。</li>
+<li>古印度Kharosshi十进制，以一个竖道代表1，二并排竖道代表2，三竖道代表3，一个X代表4，IX代表5，||X代表6，XX代表8，10，20个有单字符代表。</li>
+<li>古印度和Brahmi十进制，和希腊十进制相似，1至9，10至90，100至900各有不同的单字母代表。符号很多。</li>
+</ul>
+<p>非十进的进位制</p>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%B7%B4%E6%AF%94%E4%BC%A6" target="_blank" rel="noopener">巴比伦</a>60进位制：以一个上大下小的楔形代表1，两个并列楔形代表2，三个并列楔形代表3，上二个楔形下二个楔形代表4，上三楔下二楔代表5，上三楔下三楔代表6，上四楔下三楔代表7，上四楔下四楔代表8，上五楔下四楔代表9；一个左小右大横楔代10，两个横楔并排代表20，三个横楔并排代表30，四个横楔并排代表40。</li>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%8E%9B%E9%9B%85" target="_blank" rel="noopener">玛雅</a>20进位制：以一个点代表1，两个点并列代表2，三点并列代表3，四点并列代表4，短横线代表5，横线上加一点代表6，横线上加二点代表7，横线上加三点代表8，横线上加四点代表9；上下两横线代表10，上下两横线之上加一点代表11，三重叠横线代表15，三横线上加一，二，三点代表16，17，18；小椭圆圈上加一点代表20。</li>
+</ul>
+<p>十进位制</p>
+<ul>
+<li>中国古代的十进制有书写式和<a href="https://zh.wikipedia.org/wiki/%E7%AE%97%E7%AD%B9" target="_blank" rel="noopener">算筹</a>两种型式。</li>
+<li>印度-阿拉伯十进位制。</li>
+</ul>
+</blockquote>
+<h1 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h1><p>不得不感慨下人类的聪明，将量的概念抽象出来，不同地区的独立发展，最后又是那么的相像。所以数字，其实就是符号对数量的映射，并且人们达成了共识。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机/" rel="tag"># 计算机</a>
+          
+            <a href="/tags/二进制/" rel="tag"># 二进制</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/15/追本溯源-字符串及编码/" rel="next" title="追本溯源：字符串及编码">
+                <i class="fa fa-chevron-left"></i> 追本溯源：字符串及编码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/25/一直迷糊的浮点数/" rel="prev" title="一直迷糊的浮点数">
+                一直迷糊的浮点数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数字的概念"><span class="nav-number">1.</span> <span class="nav-text">数字的概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数字的记录"><span class="nav-number">2.</span> <span class="nav-text">数字的记录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#进制的概念"><span class="nav-number">3.</span> <span class="nav-text">进制的概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二进制转十进制"><span class="nav-number">4.</span> <span class="nav-text">二进制转十进制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十进制转二进制"><span class="nav-number">5.</span> <span class="nav-text">十进制转二进制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#整数的转换"><span class="nav-number">5.1.</span> <span class="nav-text">整数的转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小数的转换"><span class="nav-number">5.2.</span> <span class="nav-text">小数的转换</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#历史的发展"><span class="nav-number">6.</span> <span class="nav-text">历史的发展</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结束"><span class="nav-number">7.</span> <span class="nav-text">结束</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

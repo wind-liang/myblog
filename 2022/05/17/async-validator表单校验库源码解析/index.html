@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="平常开发写 element 表单的时候，肯定少不了表单的校验，element 使用的是 async-validator 这个开源库。  这篇文章详细分析一下 async-validator 的主流程。 使用方法12345678910111213141516171819202122232425262728293031import Schema from &apos;async-validator&apos;;const">
+<meta name="keywords" content="element">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Element使用的async-validator表单校验库源码解析">
+<meta property="og:url" content="https://windliang.wang/2022/05/17/async-validator表单校验库源码解析/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="平常开发写 element 表单的时候，肯定少不了表单的校验，element 使用的是 async-validator 这个开源库。  这篇文章详细分析一下 async-validator 的主流程。 使用方法12345678910111213141516171819202122232425262728293031import Schema from &apos;async-validator&apos;;const">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220517090312952.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220519081546339.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220519081840212.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220519094003441.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521082112809.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521082219018.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521082345013.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521082457313.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521083746778.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521103342907.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521103508233.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521103841307.png">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.933Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Element使用的async-validator表单校验库源码解析">
+<meta name="twitter:description" content="平常开发写 element 表单的时候，肯定少不了表单的校验，element 使用的是 async-validator 这个开源库。  这篇文章详细分析一下 async-validator 的主流程。 使用方法12345678910111213141516171819202122232425262728293031import Schema from &apos;async-validator&apos;;const">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220517090312952.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2022/05/17/async-validator表单校验库源码解析/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Element使用的async-validator表单校验库源码解析 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2022/05/17/async-validator表单校验库源码解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Element使用的async-validator表单校验库源码解析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-05-17 08:13:34" itemprop="dateCreated datePublished" datetime="2022-05-17T08:13:34+08:00">2022-05-17</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2022/05/17/async-validator表单校验库源码解析/" class="leancloud_visitors" data-flag-title="Element使用的async-validator表单校验库源码解析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>平常开发写 <code>element</code> 表单的时候，肯定少不了表单的校验，<code>element</code> 使用的是 <a href="https://github.com/yiminghe/async-validator" target="_blank" rel="noopener">async-validator</a> 这个开源库。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220517090312952.png" alt="image-20220517090312952"></p>
+<p>这篇文章详细分析一下 <code>async-validator</code> 的主流程。</p>
+<h1 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Schema <span class="keyword">from</span> <span class="string">'async-validator'</span>;</span><br><span class="line"><span class="keyword">const</span> descriptor = &#123;</span><br><span class="line">  list: &#123;</span><br><span class="line">    required: <span class="literal">true</span>,</span><br><span class="line">    type: <span class="string">'number'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  limit: [</span><br><span class="line">    &#123;</span><br><span class="line">      required: <span class="literal">true</span>,</span><br><span class="line">      message: <span class="string">'数量必填'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      validator(r, v, cb) &#123;</span><br><span class="line">        <span class="keyword">if</span> (v &lt; <span class="number">100</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> cb(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'数量不能小于 100'</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        cb();</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> validator = <span class="keyword">new</span> Schema(descriptor);</span><br><span class="line">validator.validate(</span><br><span class="line">  &#123; <span class="attr">list</span>: <span class="string">'12'</span>, <span class="attr">limit</span>: <span class="literal">null</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">firstFields</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">  (errors, fields) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (errors) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'错误列表'</span>, errors);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>我们需要定义 <code>descriptor</code> ，也就是我们在 <code>element</code> 中定义的 <code>rules</code> ，然后创建一个 <code>Schema</code> 对象。</p>
+<p>最后调用 <code>validate</code> 函数，传递三个参数：</p>
+<p>第一个参数是要校验的对象</p>
+<p>第二个参数是 <code>options</code> 对象， <code>firstFields</code> 为 <code>true</code> ，表示同一个字段如果有多个校验规则，一旦出现校验不通过的规则后边的规则就不执行了。</p>
+<p>还可以设置 <code>first</code> 为 <code>true</code>，这个是针对整个校验对象的，如果某个字段校验不通过，那么后边所有的字段就不再校验了。</p>
+<p>第三个参数是校验结束后的回调函数，<code>erros</code> 保存了所有校验失败的字段以及 <code>message</code> 信息。</p>
+<p>因此，上边代码的输出如下：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220519081546339.png" alt="image-20220519081546339"></p>
+<p><code>list</code> 对应结果的 <code>message</code> 是默认为我们添加的，<code>limit</code> 对应结果的 <code>message</code> 是我们自己设置的，会覆盖默认的 <code>message</code>。</p>
+<p>因为我们设置了 <code>firstFields</code> 为 <code>true</code> ，所以只校验了 <code>limit</code> 的第一个规则，第二个规则就没有走到。</p>
+<p>我们给 <code>limit</code> 设置一个值，让它走到第二个校验规则。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">validator.validate(</span><br><span class="line">  &#123; <span class="attr">list</span>: <span class="string">'12'</span>, <span class="attr">limit</span>: <span class="number">3</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">firstFields</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">  (errors, fields) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (errors) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'错误列表'</span>, errors);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>输出如下：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220519081840212.png" alt="image-20220519081840212"></p>
+<p>此时 <code>limit</code> 对应结果就是一个 <code>Error</code> 对象了，<code>Error</code> 对象除了本身的 <code>message</code> 属性，默认还为我们添加了 <code>field</code> 和 <code>filedValue</code> 属性。</p>
+<h1 id="预处理-descriptor"><a href="#预处理-descriptor" class="headerlink" title="预处理 descriptor"></a>预处理 descriptor</h1><p>校验前  <code>async-validator</code>  会将传入的 <code>descriptor</code> 规范化。</p>
+<p>我们传进入的是下边的样子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> descriptor = &#123;</span><br><span class="line">  list: &#123;</span><br><span class="line">    required: <span class="literal">true</span>,</span><br><span class="line">    type: <span class="string">'number'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  limit: [</span><br><span class="line">    &#123;</span><br><span class="line">      required: <span class="literal">true</span>,</span><br><span class="line">      message: <span class="string">'数量必填'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      validator(r, v, cb) &#123;</span><br><span class="line">        <span class="keyword">if</span> (v &lt; <span class="number">100</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> cb(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'数量不能小于 100'</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        cb();</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>预处理后会变成下边的样子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  list: [</span><br><span class="line">    &#123;</span><br><span class="line">      rule: &#123;</span><br><span class="line">        required: <span class="literal">true</span>,</span><br><span class="line">        type: <span class="string">'number'</span>,</span><br><span class="line">        field: <span class="string">'list'</span>,</span><br><span class="line">        fullField: <span class="string">'list'</span>,</span><br><span class="line">        validator: <span class="function">(<span class="params">rule, value, callback, source, options</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">const</span> errors = [];</span><br><span class="line">          <span class="keyword">const</span> validate =</span><br><span class="line">            rule.required ||</span><br><span class="line">            (!rule.required &amp;&amp; source.hasOwnProperty(rule.field));</span><br><span class="line">          <span class="keyword">if</span> (validate) &#123;</span><br><span class="line">            <span class="keyword">if</span> (value === <span class="string">''</span>) &#123;</span><br><span class="line">              value = <span class="literal">undefined</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (isEmptyValue(value) &amp;&amp; !rule.required) &#123;</span><br><span class="line">              <span class="keyword">return</span> callback();</span><br><span class="line">            &#125;</span><br><span class="line">            rules.required(rule, value, source, errors, options);</span><br><span class="line">            <span class="keyword">if</span> (value !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">              rules.type(rule, value, source, errors, options);</span><br><span class="line">              rules.range(rule, value, source, errors, options);</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          callback(errors);</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">      value: <span class="string">'12'</span>,</span><br><span class="line">      source: &#123;</span><br><span class="line">        list: <span class="string">'12'</span>,</span><br><span class="line">        limit: <span class="number">3</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      field: <span class="string">'list'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">  limit: [</span><br><span class="line">    &#123;</span><br><span class="line">      rule: &#123;</span><br><span class="line">        required: <span class="literal">true</span>,</span><br><span class="line">        message: <span class="string">'数量必填'</span>,</span><br><span class="line">        field: <span class="string">'limit'</span>,</span><br><span class="line">        fullField: <span class="string">'limit'</span>,</span><br><span class="line">        type: <span class="string">'string'</span>,</span><br><span class="line">        validator: <span class="function">(<span class="params">rule, value, callback, source, options</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">const</span> errors = [];</span><br><span class="line">          <span class="keyword">const</span> type = <span class="built_in">Array</span>.isArray(value) ? <span class="string">'array'</span> : <span class="keyword">typeof</span> value;</span><br><span class="line">          rules.required(rule, value, source, errors, options, type);</span><br><span class="line">          callback(errors);</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">      value: <span class="number">3</span>,</span><br><span class="line">      source: &#123;</span><br><span class="line">        list: <span class="string">'12'</span>,</span><br><span class="line">        limit: <span class="number">3</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      field: <span class="string">'limit'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      rule: &#123;</span><br><span class="line">        field: <span class="string">'limit'</span>,</span><br><span class="line">        fullField: <span class="string">'limit'</span>,</span><br><span class="line">        type: <span class="string">'string'</span>,</span><br><span class="line">        validator(r, v, cb) &#123;</span><br><span class="line">          <span class="keyword">if</span> (v &lt; <span class="number">100</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> cb(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'数量不能小于 100'</span>));</span><br><span class="line">          &#125;</span><br><span class="line">          cb();</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">      value: <span class="number">3</span>,</span><br><span class="line">      source: &#123;</span><br><span class="line">        list: <span class="string">'12'</span>,</span><br><span class="line">        limit: <span class="number">3</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      field: <span class="string">'limit'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>主要做了三件事情：</p>
+<ol>
+<li>把每个字段的校验规则统一成了一个数组对象</li>
+<li>把原本的校验对象放到了 <code>rule</code> 属性中，并且添加了 <code>value</code>、<code>source</code>、<code>field</code> 属性</li>
+<li>根据 <code>required</code> 和 <code>type</code> 补充了默认的 <code>validator</code> 校验函数</li>
+</ol>
+<h1 id="预处理-descriptor-对应的源码"><a href="#预处理-descriptor-对应的源码" class="headerlink" title="预处理 descriptor 对应的源码"></a>预处理 descriptor 对应的源码</h1><p>让我们过一下这部分源码。</p>
+<p>在构造函数中，把 <code>descriptor</code> 所有字段的 <code>rule</code> 转为了数组，保存到 <code>rules</code> 对象中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">constructor</span>(descriptor: Rules) &#123;</span><br><span class="line">  <span class="keyword">this</span>.define(descriptor);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">define(rules: Rules) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!rules) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Cannot configure a schema with no rules'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> rules !== <span class="string">'object'</span> || <span class="built_in">Array</span>.isArray(rules)) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Rules must be an object'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">this</span>.rules = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">Object</span>.keys(rules).forEach(<span class="function"><span class="params">name</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> item: Rule = rules[name];</span><br><span class="line">    <span class="keyword">this</span>.rules[name] = <span class="built_in">Array</span>.isArray(item) ? item : [item];</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>剩下的处理都在 <code>validate</code> 函数中了，可以跟随下边的注释看一下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"> validate(source_: Values, <span class="attr">o</span>: any = &#123;&#125;, <span class="attr">oc</span>: any = <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;): <span class="built_in">Promise</span>&lt;Values&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> source: Values = source_;</span><br><span class="line">    <span class="keyword">let</span> options: ValidateOption = o;</span><br><span class="line">    <span class="keyword">let</span> callback: ValidateCallback = oc;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> options === <span class="string">'function'</span>) &#123;</span><br><span class="line">      callback = options;</span><br><span class="line">      options = &#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    function complete(results: (ValidateError | ValidateError[])[]) &#123;</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> series: Record&lt;string, RuleValuePackage[]&gt; = &#123;&#125;;</span><br><span class="line">    <span class="keyword">const</span> keys = options.keys || <span class="built_in">Object</span>.keys(<span class="keyword">this</span>.rules); <span class="comment">// 得到所有的要校验的 key</span></span><br><span class="line">    keys.forEach(<span class="function"><span class="params">z</span> =&gt;</span> &#123; <span class="comment">// 遍历所有字段</span></span><br><span class="line">      <span class="keyword">const</span> arr = <span class="keyword">this</span>.rules[z];</span><br><span class="line">      <span class="keyword">let</span> value = source[z];</span><br><span class="line">      arr.forEach(<span class="function"><span class="params">r</span> =&gt;</span> &#123; <span class="comment">// 遍历每个字段的所有 rule</span></span><br><span class="line">        <span class="keyword">let</span> rule: InternalRuleItem = r;</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">// 如果是函数，放到 validator 属性中</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> rule === <span class="string">'function'</span>) &#123;</span><br><span class="line">          rule = &#123;</span><br><span class="line">            validator: rule,</span><br><span class="line">          &#125;;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          rule = &#123; ...rule &#125;;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 填充 validator 属性</span></span><br><span class="line">        rule.validator = <span class="keyword">this</span>.getValidationMethod(rule);</span><br><span class="line">        <span class="keyword">if</span> (!rule.validator) &#123;</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 填充其他属性</span></span><br><span class="line">        rule.field = z;</span><br><span class="line">        rule.fullField = rule.fullField || z;</span><br><span class="line">        rule.type = <span class="keyword">this</span>.getType(rule);</span><br><span class="line">        series[z] = series[z] || [];</span><br><span class="line">        <span class="comment">// 保存到 series 中</span></span><br><span class="line">        series[z].push(&#123;</span><br><span class="line">          rule,</span><br><span class="line">          value,</span><br><span class="line">          source,</span><br><span class="line">          field: z,</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">const</span> errorFields = &#123;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看下上边的 <code>getValidationMethod</code> 方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">getValidationMethod(rule: InternalRuleItem) &#123;</span><br><span class="line">  <span class="comment">// 如果用户自定了，直接返回自定义的</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> rule.validator === <span class="string">'function'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> rule.validator;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> keys = <span class="built_in">Object</span>.keys(rule);</span><br><span class="line">  <span class="keyword">const</span> messageIndex = keys.indexOf(<span class="string">'message'</span>);</span><br><span class="line">  <span class="keyword">if</span> (messageIndex !== <span class="number">-1</span>) &#123;</span><br><span class="line">    keys.splice(messageIndex, <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 如果只有一个 required 字段，返回 required 的校验函数</span></span><br><span class="line">  <span class="keyword">if</span> (keys.length === <span class="number">1</span> &amp;&amp; keys[<span class="number">0</span>] === <span class="string">'required'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> validators.required;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 否则的根据 type 去返回校验函数</span></span><br><span class="line">  <span class="keyword">return</span> validators[<span class="keyword">this</span>.getType(rule)] || <span class="literal">undefined</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所有的校验函数都是提前定义好的：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220519094003441.png" alt="image-20220519094003441"></p>
+<p>在 <a href="https://pattern.windliang.wang/posts/%E5%89%8D%E7%AB%AF%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E7%B3%BB%E5%88%97-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F.html" target="_blank" rel="noopener">前端的设计模式中-策略模式</a> 中我们也提到过上边的逻辑。</p>
+<h1 id="循环校验"><a href="#循环校验" class="headerlink" title="循环校验"></a>循环校验</h1><p>当我们有了预处理好的所有字段的校验规则。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> series = &#123;</span><br><span class="line">  list: [</span><br><span class="line">    &#123;</span><br><span class="line">      rule: &#123;</span><br><span class="line">        required: <span class="literal">true</span>,</span><br><span class="line">        type: <span class="string">'number'</span>,</span><br><span class="line">        field: <span class="string">'list'</span>,</span><br><span class="line">        fullField: <span class="string">'list'</span>,</span><br><span class="line">        validator: <span class="function">(<span class="params">rule, value, callback, source, options</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">const</span> errors = [];</span><br><span class="line">          <span class="keyword">const</span> validate =</span><br><span class="line">            rule.required ||</span><br><span class="line">            (!rule.required &amp;&amp; source.hasOwnProperty(rule.field));</span><br><span class="line">          <span class="keyword">if</span> (validate) &#123;</span><br><span class="line">            <span class="keyword">if</span> (value === <span class="string">''</span>) &#123;</span><br><span class="line">              value = <span class="literal">undefined</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (isEmptyValue(value) &amp;&amp; !rule.required) &#123;</span><br><span class="line">              <span class="keyword">return</span> callback();</span><br><span class="line">            &#125;</span><br><span class="line">            rules.required(rule, value, source, errors, options);</span><br><span class="line">            <span class="keyword">if</span> (value !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">              rules.type(rule, value, source, errors, options);</span><br><span class="line">              rules.range(rule, value, source, errors, options);</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          callback(errors);</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">      value: <span class="string">'12'</span>,</span><br><span class="line">      source: &#123;</span><br><span class="line">        list: <span class="string">'12'</span>,</span><br><span class="line">        limit: <span class="number">3</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      field: <span class="string">'list'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">  limit: [</span><br><span class="line">    &#123;</span><br><span class="line">      rule: &#123;</span><br><span class="line">        required: <span class="literal">true</span>,</span><br><span class="line">        message: <span class="string">'数量必填'</span>,</span><br><span class="line">        field: <span class="string">'limit'</span>,</span><br><span class="line">        fullField: <span class="string">'limit'</span>,</span><br><span class="line">        type: <span class="string">'string'</span>,</span><br><span class="line">        validator: <span class="function">(<span class="params">rule, value, callback, source, options</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">const</span> errors = [];</span><br><span class="line">          <span class="keyword">const</span> type = <span class="built_in">Array</span>.isArray(value) ? <span class="string">'array'</span> : <span class="keyword">typeof</span> value;</span><br><span class="line">          rules.required(rule, value, source, errors, options, type);</span><br><span class="line">          callback(errors);</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">      value: <span class="number">3</span>,</span><br><span class="line">      source: &#123;</span><br><span class="line">        list: <span class="string">'12'</span>,</span><br><span class="line">        limit: <span class="number">3</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      field: <span class="string">'limit'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      rule: &#123;</span><br><span class="line">        field: <span class="string">'limit'</span>,</span><br><span class="line">        fullField: <span class="string">'limit'</span>,</span><br><span class="line">        type: <span class="string">'string'</span>,</span><br><span class="line">        validator(r, v, cb) &#123;</span><br><span class="line">          <span class="keyword">if</span> (v &lt; <span class="number">100</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> cb(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'数量不能小于 100'</span>));</span><br><span class="line">          &#125;</span><br><span class="line">          cb();</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">      value: <span class="number">3</span>,</span><br><span class="line">      source: &#123;</span><br><span class="line">        list: <span class="string">'12'</span>,</span><br><span class="line">        limit: <span class="number">3</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">      field: <span class="string">'limit'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>接下来只需要搞一个双重循环，执行所有的字段和每个字段的所有校验函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> field <span class="keyword">of</span> <span class="built_in">Object</span>.keys(series)) &#123; <span class="comment">// 遍历每一个字段</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">const</span> data <span class="keyword">of</span> series[field]) &#123; <span class="comment">// 每一个规则</span></span><br><span class="line">    <span class="keyword">const</span> rule = data.rule;</span><br><span class="line">    <span class="keyword">const</span> res = rule.validator(rule, data.value, cb, data.source, options);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>rule</code> 、<code>data.value</code>、<code>data.source</code> 就是当前规则相关的变量，<code>options</code> 是最开始调用校验的时候传进来的 <code>{ firstFields: true },</code>，那么 <code>cb</code> 是什么？</p>
+<p><code>cb</code> 函数接受一个错误数据列表，如果返回的不是数组会包装为数组，然后对错误进行填充。</p>
+<p>最后调用 <code>doIt</code> 函数，将校验结果传入，后边会介绍这个方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cb</span>(<span class="params">e = []</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> errorList = <span class="built_in">Array</span>.isArray(e) ? e : [e];</span><br><span class="line">  <span class="keyword">if</span> (errorList.length &amp;&amp; rule.message !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">    errorList = [].concat(rule.message); <span class="comment">// 错误列表优先使用 message 字段</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// Fill error info</span></span><br><span class="line">  <span class="keyword">let</span> filledErrors = errorList.map(complementError(rule, source));</span><br><span class="line">  doIt(filledErrors); <span class="comment">// 将当前字段的错误列表保存起来</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>complementError</code> 会返回一个函数，将错误列表进行填充，主要就是补充了 <code>field</code> 和 <code>fieldValue</code> 属性。 </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">complementError</span>(<span class="params">rule: InternalRuleItem, source: Values</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">oe: ValidateError | ((</span>) =&gt;</span> string) | string): <span class="function"><span class="params">ValidateError</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> fieldValue;</span><br><span class="line">    <span class="keyword">if</span> (rule.fullFields) &#123;</span><br><span class="line">      fieldValue = getValue(source, rule.fullFields);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      fieldValue = source[(oe <span class="keyword">as</span> any).field || rule.fullField];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (isErrorObj(oe)) &#123;</span><br><span class="line">      oe.field = oe.field || rule.fullField;</span><br><span class="line">      oe.fieldValue = fieldValue;</span><br><span class="line">      <span class="keyword">return</span> oe;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      message: <span class="keyword">typeof</span> oe === <span class="string">'function'</span> ? oe() : oe,</span><br><span class="line">      fieldValue,</span><br><span class="line">      field: ((oe <span class="keyword">as</span> unknown) <span class="keyword">as</span> ValidateError).field || rule.fullField,</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>收到的错误列表分为两种情况：</p>
+<p>处理前如果 <code>cb</code> 收到的是 <code>Error</code> 列表，比如这样调用 <code>cb(new Error(&#39;数量不能小于 100&#39;));</code> 。</p>
+<p>那么处理前是下图：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521082112809.png" alt="image-20220521082112809"></p>
+<p>处理后，就会往 <code>Error</code> 对象中塞入 <code>field</code> 和 <code>fieldValue</code> 属性。 </p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521082219018.png" alt="image-20220521082219018"></p>
+<p>处理前如果<code>cb</code> 是字符串列表，比如这样调用 <code>cb([&#39;list is required&#39;, &#39;list is not a number&#39;])</code> 。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521082345013.png" alt="image-20220521082345013"></p>
+<p>同样的，处理后也是塞入 <code>field</code> 和 <code>fieldValue</code> 属性。 </p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521082457313.png" alt="image-20220521082457313"></p>
+<p>再回到我们的双重循环中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> field <span class="keyword">of</span> <span class="built_in">Object</span>.keys(series)) &#123; <span class="comment">// 遍历每一个字段</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">const</span> data <span class="keyword">of</span> series[field]) &#123; <span class="comment">// 每一个规则</span></span><br><span class="line">    <span class="keyword">const</span> rule = data.rule;</span><br><span class="line">    <span class="keyword">const</span> res = rule.validator(rule, data.value, cb, data.source, options);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中 <code>validator</code> 函数就是我们自己定义的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">validator(r, v, cb) &#123;</span><br><span class="line">  <span class="keyword">if</span> (v &lt; <span class="number">100</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> cb(<span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'数量不能小于 100'</span>));</span><br><span class="line">  &#125;</span><br><span class="line">  cb();</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>由于 <code>Element</code> 官方示例是上边的样子，所以我们一般都按照上边的样子写，但其实我们也可以不调用 <code>cb</code> 函数，而是仅仅 <code>return</code> 字符串数组，或者 <code>boolean</code> 值，调用 <code>cb</code> 函数交给双重循环。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">validator(r, v, cb) &#123;</span><br><span class="line">  <span class="keyword">if</span> (v &lt; <span class="number">100</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'数量不能小于 100'</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>双重循环中来处理 <code>validator</code> 的返回值去调用 <code>cb</code> 函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">const</span> field <span class="keyword">of</span> <span class="built_in">Object</span>.keys(series)) &#123; <span class="comment">// 遍历每一个字段</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">const</span> data <span class="keyword">of</span> series[field]) &#123; <span class="comment">// 每一个规则</span></span><br><span class="line">    <span class="keyword">const</span> rule = data.rule;</span><br><span class="line">    <span class="keyword">const</span> res = rule.validator(rule, data.value, cb, data.source, options);</span><br><span class="line">    <span class="comment">// 根据返回的结果，去调用 cb 函数</span></span><br><span class="line">    <span class="keyword">if</span> (res === <span class="literal">true</span>) &#123;</span><br><span class="line">      cb();</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res === <span class="literal">false</span>) &#123;</span><br><span class="line">      cb(</span><br><span class="line">        <span class="keyword">typeof</span> rule.message === <span class="string">'function'</span></span><br><span class="line">        ? rule.message(rule.fullField || rule.field)</span><br><span class="line">        : rule.message || <span class="string">`<span class="subst">$&#123;rule.fullField || rule.field&#125;</span> fails`</span>,</span><br><span class="line">      );</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">      cb(res);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res <span class="keyword">instanceof</span> <span class="built_in">Error</span>) &#123;</span><br><span class="line">      cb(res.message);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="asyncMap"><a href="#asyncMap" class="headerlink" title="asyncMap"></a>asyncMap</h1><p>向上边我们直接粗暴的写双重循环去依次校验也没有问题，但因为校验库还支持一些参数，比如前边介绍的：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521083746778.png" alt="image-20220521083746778"></p>
+<p>如果是 <code>for</code> 循环中去处理 <code>firstFields</code> 和 <code>first</code> 的逻辑，就过于耦合了，未来再扩充其他逻辑，双重循环中的逻辑就会越来越复杂。</p>
+<p> <code>async-validator</code>  的处理方式在这里就比较优雅了，实现了 <code>asyncMap</code> 方法，作用就是遍历 <code>series</code> 数组，并且处理了 <code>firstFields</code> 和 <code>first</code> 参数的逻辑。</p>
+<p>下边来分析一下实现：</p>
+<p>看一下 <code>asyncMap</code> 的入口参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">asyncMap</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  objArr: Record&lt;string, RuleValuePackage[]&gt;,</span></span></span><br><span class="line"><span class="function"><span class="params">  option: ValidateOption,</span></span></span><br><span class="line"><span class="function"><span class="params">  func: ValidateFunc,</span></span></span><br><span class="line"><span class="function"><span class="params">  callback: (errors: ValidateError[]</span>) =&gt; <span class="title">void</span>,</span></span><br><span class="line"><span class="function">  <span class="title">source</span>: <span class="title">Values</span>,</span></span><br><span class="line"><span class="function">)</span>&#123;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接受 <code>5</code> 个参数：</p>
+<p><code>objArr</code>：要遍历的 <code>rule</code> 规则，就是我们前边生成的 <code>series</code> 数组，即双重循环遍历的对象。</p>
+<p><code>option</code> ：最开始传入的 <code>option</code>，可能包含 <code>firstFields</code> 和 <code>first</code> 属性。</p>
+<p><code>func</code>：遍历过程的中会调用这个函数，会传入当前遍历的 <code>rule</code> 和一个 <code>doIt</code> 函数，<code>doIt</code> 函数需要接收处理好的校验结果。这里就需要我们之前 <code>for</code> 循环内部的处理逻辑。</p>
+<p><code>callback</code> : 全部检验结束后调用，会传入所有的校验结果。</p>
+<p><code>source</code>：要校验的对象。</p>
+<p>这样我们就可以把 <code>for</code> 循环改为直接调用 <code>asyncMap</code> 函数了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">asyncMap(</span><br><span class="line">  series,</span><br><span class="line">  options,</span><br><span class="line">  (data, doIt) =&gt; &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;,</span><br><span class="line">  results =&gt; &#123;</span><br><span class="line">    complete(results);</span><br><span class="line">  &#125;,</span><br><span class="line">  source,</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>第三个参数就是需要我们去处理 <code>data</code> 这个校验规则，也就是之前 <code>for</code> 循环中的逻辑移动过来。</p>
+<p>其中 <code>doIt</code> 函数我们在之前讲的 <code>cb</code> 函数中调用即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">(data, doIt) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> rule = data.rule;</span><br><span class="line">  rule.field = data.field;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">cb</span>(<span class="params">e: SyncErrorType | SyncErrorType[] = []</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> errorList = <span class="built_in">Array</span>.isArray(e) ? e : [e];</span><br><span class="line">    <span class="keyword">if</span> (errorList.length &amp;&amp; rule.message !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">      errorList = [].concat(rule.message);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Fill error info</span></span><br><span class="line">    <span class="keyword">let</span> filledErrors = errorList.map(complementError(rule, source));</span><br><span class="line">    doIt(filledErrors); <span class="comment">// 将当前字段的错误列表保存起来</span></span><br><span class="line">  &#125;</span><br><span class="line">	<span class="comment">/******** for 循环中的逻辑 *****************/</span></span><br><span class="line">  <span class="keyword">const</span> res = rule.validator(rule, data.value, cb, data.source, options);</span><br><span class="line">  <span class="keyword">if</span> (res === <span class="literal">true</span>) &#123;</span><br><span class="line">    cb();</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res === <span class="literal">false</span>) &#123;</span><br><span class="line">    cb(</span><br><span class="line">      <span class="keyword">typeof</span> rule.message === <span class="string">'function'</span></span><br><span class="line">      ? rule.message(rule.fullField || rule.field)</span><br><span class="line">      : rule.message || <span class="string">`<span class="subst">$&#123;rule.fullField || rule.field&#125;</span> fails`</span>,</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">    cb(res);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res <span class="keyword">instanceof</span> <span class="built_in">Error</span>) &#123;</span><br><span class="line">    cb(res.message);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/***************************************/</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>最后就是全部遍历结束后的 <code>complete</code> 函数，我们只需要把 <code>results</code> 列表传到外边即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">complete</span>(<span class="params">results</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> fields: ValidateFieldsError = &#123;&#125;;</span><br><span class="line">  <span class="keyword">if</span> (!results.length) &#123;</span><br><span class="line">    callback(<span class="literal">null</span>, source);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    fields = convertFieldsError(results);</span><br><span class="line">    callback (results, fields);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上边的 <code>callback</code> 函数就是我们调用校验函数时候外部传入的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> validator = <span class="keyword">new</span> Schema(descriptor);</span><br><span class="line">validator.validate(</span><br><span class="line">  &#123; <span class="attr">list</span>: <span class="string">'12'</span>, <span class="attr">limit</span>: <span class="literal">null</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">firstFields</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">  <span class="comment">//***** 上边的 callback ********************/</span></span><br><span class="line">  (errors, fields) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (errors) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'错误列表'</span>, errors);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">//*********************************************/</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h1 id="内层循环"><a href="#内层循环" class="headerlink" title="内层循环"></a>内层循环</h1><p>双重循环的的外层是遍历所有字段，内层是遍历该字段的所有规则。</p>
+<p>我们来先看一下内层循环的实现：</p>
+<p> <code>async-validator</code>  库提供了 <code>asyncParallelArray</code> 方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asyncParallelArray</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  arr: RuleValuePackage[],</span></span></span><br><span class="line"><span class="function"><span class="params">  func: ValidateFunc,</span></span></span><br><span class="line"><span class="function"><span class="params">  callback: (errors: ValidateError[]</span>) =&gt; <span class="title">void</span>,</span></span><br><span class="line"><span class="function">) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> results: ValidateError[] = [];</span><br><span class="line">  <span class="keyword">let</span> total = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">const</span> arrLength = arr.length;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">count</span>(<span class="params">errors: ValidateError[]</span>) </span>&#123;</span><br><span class="line">    results.push(...(errors || []));</span><br><span class="line">    total++;</span><br><span class="line">    <span class="keyword">if</span> (total === arrLength) &#123;</span><br><span class="line">      callback(results);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  arr.forEach(<span class="function"><span class="params">a</span> =&gt;</span> &#123;</span><br><span class="line">    func(a, count);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接受三个参数：</p>
+<p><code>arr</code> 就是当前字段要遍历的规则列表。</p>
+<p><code>func</code> 是处理 <code>rule</code> 规则的函数，内部会调用这里的 <code>count</code> 方法，接受当前 <code>a</code> 的校验结果。</p>
+<p>传入的 <code>func</code> 其实就是我们前边介绍过的 <code>for</code> 循环内部逻辑，<code>a</code> 是下边的 <code>data</code> 参数，<code>count</code> 就是下边的 <code>doIt</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">(data, doIt) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> rule = data.rule;</span><br><span class="line">  rule.field = data.field;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">cb</span>(<span class="params">e: SyncErrorType | SyncErrorType[] = []</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> errorList = <span class="built_in">Array</span>.isArray(e) ? e : [e];</span><br><span class="line">    <span class="keyword">if</span> (errorList.length &amp;&amp; rule.message !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">      errorList = [].concat(rule.message);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Fill error info</span></span><br><span class="line">    <span class="keyword">let</span> filledErrors = errorList.map(complementError(rule, source));</span><br><span class="line">    doIt(filledErrors);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> res = rule.validator(rule, data.value, cb, data.source, options);</span><br><span class="line">  <span class="keyword">if</span> (res === <span class="literal">true</span>) &#123;</span><br><span class="line">    cb();</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res === <span class="literal">false</span>) &#123;</span><br><span class="line">    cb(</span><br><span class="line">      <span class="keyword">typeof</span> rule.message === <span class="string">'function'</span></span><br><span class="line">      ? rule.message(rule.fullField || rule.field)</span><br><span class="line">      : rule.message || <span class="string">`<span class="subst">$&#123;rule.fullField || rule.field&#125;</span> fails`</span>,</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">    cb(res);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res <span class="keyword">instanceof</span> <span class="built_in">Error</span>) &#123;</span><br><span class="line">    cb(res.message);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>第三个参数 <code>callback</code> 是当前 <code>arr</code> 全部校验结束后的回调，代表当前字段的所有校验规则都判断结束。</p>
+<p>这里需要注意的是，我们是通过 <code>count</code> 进入的次数来判断是否去调用 <code>callback</code> 函数，而不是 <code>arr</code> 遍历结束后调用 <code>callback</code>。</p>
+<p>除了 <code>asyncParallelArray</code> 方法，因为有 <code>firstFields</code> 属性的存在，也就是遍历某个字段的所有规则时，如果出现校验不通过的规则就直接结束，后边的规则不再进行判断。</p>
+<p>因此， <code>async-validator</code>  还提供了 <code>asyncSerialArray</code> 方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">asyncSerialArray</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  arr: RuleValuePackage[],</span></span></span><br><span class="line"><span class="function"><span class="params">  func: ValidateFunc,</span></span></span><br><span class="line"><span class="function"><span class="params">  callback: (errors: ValidateError[]</span>) =&gt; <span class="title">void</span>,</span></span><br><span class="line"><span class="function">) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> index = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">const</span> arrLength = arr.length;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">next</span>(<span class="params">errors: ValidateError[]</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (errors &amp;&amp; errors.length) &#123;</span><br><span class="line">      callback(errors);</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> original = index;</span><br><span class="line">    index = index + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (original &lt; arrLength) &#123;</span><br><span class="line">      func(arr[original], next);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      callback([]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  next([]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>入口参数和 <code>asyncParallelArray</code> 是一致的，区别在于对于 <code>arr</code> 是顺序执行，如果过程中出现了校验不通过的规则，就直接调用 <code>callback</code> 结束。</p>
+<h1 id="外层循环"><a href="#外层循环" class="headerlink" title="外层循环"></a>外层循环</h1><p>外层循环和上边很类似，其实就是遍历所有字段，然后把每个字段的校验列表传给内层循环即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">asyncMap</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  objArr: Record&lt;string, RuleValuePackage[]&gt;,</span></span></span><br><span class="line"><span class="function"><span class="params">  option: ValidateOption,</span></span></span><br><span class="line"><span class="function"><span class="params">  func: ValidateFunc,</span></span></span><br><span class="line"><span class="function"><span class="params">  callback: (errors: ValidateError[]</span>) =&gt; <span class="title">void</span>,</span></span><br><span class="line"><span class="function">  <span class="title">source</span>: <span class="title">Values</span>,</span></span><br><span class="line"><span class="function">) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> firstFields =</span><br><span class="line">    option.firstFields === <span class="literal">true</span></span><br><span class="line">      ? <span class="built_in">Object</span>.keys(objArr)</span><br><span class="line">      : option.firstFields || [];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> objArrKeys = <span class="built_in">Object</span>.keys(objArr);</span><br><span class="line">  <span class="keyword">const</span> objArrLength = objArrKeys.length;</span><br><span class="line">  <span class="keyword">let</span> total = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">const</span> results: ValidateError[] = [];</span><br><span class="line">  <span class="keyword">const</span> next = <span class="function">(<span class="params">errors: ValidateError[]</span>) =&gt;</span> &#123;</span><br><span class="line">    results.push.apply(results, errors);</span><br><span class="line">    total++;</span><br><span class="line">    <span class="keyword">if</span> (total === objArrLength) &#123;</span><br><span class="line">      callback(results);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">if</span> (!objArrKeys.length) &#123;</span><br><span class="line">    callback(results);</span><br><span class="line">  &#125;</span><br><span class="line">  objArrKeys.forEach(<span class="function"><span class="params">key</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> arr = objArr[key];</span><br><span class="line">    <span class="keyword">if</span> (firstFields.indexOf(key) !== <span class="number">-1</span>) &#123;</span><br><span class="line">      asyncSerialArray(arr, func, next);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      asyncParallelArray(arr, func, next);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>入口参数前边已经介绍过了，可以看到我们做的就是遍历 <code>objArrKeys</code> 数组，然后根据 <code>firstFields</code> 的值去调用 <code>asyncSerialArray</code> 和 <code>asyncParallelArray</code> 。内存循环判断结束后会调用上边的 <code>next</code> 方法。</p>
+<p><code>next</code> 同样也是通过进入的次数，来判断是否调用 <code>callback</code> 函数，也就是前边介绍的 <code>complete</code> 方法。</p>
+<p>和内层循环类似，因为有 <code>first</code> 属性的存在，也就是遍历某个字段时，存在校验不通过的字段就直接结束，后边的字段就不再进行判断。</p>
+<p>我们只需要把所有规则打平，然后调用 <code>asyncSerialArray</code> 方法即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (option.first) &#123;</span><br><span class="line">  <span class="keyword">const</span> next = <span class="function">(<span class="params">errors: ValidateError[]</span>) =&gt;</span> &#123;</span><br><span class="line">    callback(errors);</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">const</span> flattenArr = flattenObjArr(objArr);</span><br><span class="line">  asyncSerialArray(flattenArr, func, next);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">flattenObjArr</span>(<span class="params">objArr: Record&lt;string, RuleValuePackage[]&gt;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> ret: RuleValuePackage[] = [];</span><br><span class="line">  <span class="built_in">Object</span>.keys(objArr).forEach(<span class="function"><span class="params">k</span> =&gt;</span> &#123;</span><br><span class="line">    ret.push(...(objArr[k] || []));</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="代码总"><a href="#代码总" class="headerlink" title="代码总"></a>代码总</h1><p>以上就是  <code>async-validator</code> 源码的主要流程了，说起来也简单，先预处理所有规则，然后通过 <code>asyncMap</code> 方法双层循环遍历所有校验规则即可，这个双层循环的抽离确实很优雅，避免了循环中耦合太多逻辑。</p>
+<p>除了上边介绍的代码，因为 <code>async-validator</code> 还支持 <code>Promise</code> 的调用风格，校验函数支持 <code>Promise</code> 函数等其他功能，大家感兴趣也可以到 <a href="https://github.com/yiminghe/async-validator" target="_blank" rel="noopener">async-validator</a> 看一下更详细的源码。</p>
+<p>值得一提的点是，双层循环是通过计数来判断是否结束的，而进入计数其实就是调用 <code>cb</code> 函数。因此如果我们规则是下边的样子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Schema <span class="keyword">from</span> <span class="string">'../src/index'</span>;</span><br><span class="line"><span class="keyword">const</span> descriptor = &#123;</span><br><span class="line">  limit: [</span><br><span class="line">    &#123;</span><br><span class="line">      validator(r, v, cb) &#123;</span><br><span class="line">        <span class="keyword">if</span> (v &lt; <span class="number">100</span>) &#123;</span><br><span class="line">          cb(<span class="string">'校验1'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        cb();</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      validator(r, v, cb) &#123;</span><br><span class="line">        <span class="keyword">if</span> (v &lt; <span class="number">50</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> cb(<span class="string">'校验2'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        cb();</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  ],</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> validator = <span class="keyword">new</span> Schema(descriptor);</span><br><span class="line">validator.validate(</span><br><span class="line">  &#123; <span class="attr">limit</span>: <span class="number">3</span> &#125;,</span><br><span class="line">  (errors, fields) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (errors) &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'错误列表'</span>, errors);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>因为我们没有传递 <code>firstFields</code> 属性，所以我们期望的是将 <code>limit</code> 所有的校验都进行了，<code>limit</code> 的值是 <code>3</code> ，所以两个校验都没通过，应该输出下边的内容：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521103342907.png" alt="image-20220521103342907"></p>
+<p>但其实只进行了第一个的校验：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521103508233.png" alt="image-20220521103508233"></p>
+<p>原因就在于第一个 <code>validator</code> 进行了两次 <code>cb</code> ，然后内层循环的 <code>callback</code> 就提前调用了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">validator(r, v, cb) &#123;</span><br><span class="line">  <span class="keyword">if</span> (v &lt; <span class="number">100</span>) &#123;</span><br><span class="line">    cb(<span class="string">'校验1'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  cb();</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>因此我们最好保证一个 <code>validator</code> 只进行一次 <code>cb</code> ，走到 <code>cb</code> 后就直接 <code>return</code>。（因为 <code>Element</code> 会设置 <code>firstFields</code> 为 <code>true</code>，所以其实有多个 <code>cb</code> 也不影响最终结果）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">validator(r, v, cb) &#123;</span><br><span class="line">  <span class="keyword">if</span> (v &lt; <span class="number">100</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> cb(<span class="string">'校验1'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  cb();</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>并且一定要有一个 <code>cb</code> ，不然最终的回调函数永远也不会执行了，这就是为什么 <code>Element</code> 提示我们要进行 <code>cb</code> 。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20220521103841307.png" alt="image-20220521103841307"></p>
+<p>但这里说的也不够严谨，我们也可以返回字符串，或者字符串数组、布尔值等， <code>async-validator</code> 内部会根据 <code>validator</code> 返回的结果去调用 <code>cb</code> 函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> res = rule.validator(rule, data.value, cb, data.source, options);</span><br><span class="line">  <span class="keyword">if</span> (res === <span class="literal">true</span>) &#123;</span><br><span class="line">    cb();</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res === <span class="literal">false</span>) &#123;</span><br><span class="line">    cb(</span><br><span class="line">      <span class="keyword">typeof</span> rule.message === <span class="string">'function'</span></span><br><span class="line">      ? rule.message(rule.fullField || rule.field)</span><br><span class="line">      : rule.message || <span class="string">`<span class="subst">$&#123;rule.fullField || rule.field&#125;</span> fails`</span>,</span><br><span class="line">    );</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">    cb(res);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res <span class="keyword">instanceof</span> <span class="built_in">Error</span>) &#123;</span><br><span class="line">    cb(res.message);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p> <code>async-validator</code>  用计数的方式来判断是否去调用回调，就是为了实现异步的校验，当异步过程结束后才去调用 <code>cb</code> ，代表校验完成。</p>
+<h1 id="其他属性"><a href="#其他属性" class="headerlink" title="其他属性"></a>其他属性</h1><p>平时写代码直接参照前人的校验规则去仿照着写了，大家也基本上是按照 <code>Element</code> 的样例来写校验规则，如果去  <a href="https://github.com/yiminghe/async-validator" target="_blank" rel="noopener">async-validator</a>  看一下的话，会发现一些其他没听过的属性，这里也记录下。</p>
+<p><code>validator</code> 校验函数最多能接收到 <code>5</code> 个参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">validator(rule, value, callback, source, options) &#123;</span><br><span class="line">  <span class="keyword">const</span> errors = [];</span><br><span class="line">  <span class="comment">// test if email address already exists in a database</span></span><br><span class="line">  <span class="comment">// and add a validation error to the errors array if it does</span></span><br><span class="line">  <span class="keyword">return</span> errors;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>我们可以通过第四个参数 <code>source</code> 拿到整个表单的对象，如果想校验一些联动的逻辑，我们就可以通过 <code>source</code> 拿到其他字段的值。</p>
+<p>对对象字段的校验，如果校验字段是个对象，我们可以通过 <code>fields</code> 来校验对象中的字段。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> descriptor = &#123;</span><br><span class="line">  address: &#123;</span><br><span class="line">    type: <span class="string">'object'</span>,</span><br><span class="line">    required: <span class="literal">true</span>,</span><br><span class="line">    fields: &#123;</span><br><span class="line">      street: &#123; <span class="attr">type</span>: <span class="string">'string'</span>, <span class="attr">required</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">      city: &#123; <span class="attr">type</span>: <span class="string">'string'</span>, <span class="attr">required</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">      zip: &#123; <span class="attr">type</span>: <span class="string">'string'</span>, <span class="attr">required</span>: <span class="literal">true</span>, <span class="attr">len</span>: <span class="number">8</span>, <span class="attr">message</span>: <span class="string">'invalid zip'</span> &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  name: &#123; <span class="attr">type</span>: <span class="string">'string'</span>, <span class="attr">required</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> validator = <span class="keyword">new</span> Schema(descriptor);</span><br><span class="line">validator.validate(&#123; <span class="attr">address</span>: &#123;&#125; &#125;, (errors, fields) =&gt; &#123;</span><br><span class="line">  <span class="comment">// errors for address.street, address.city, address.zip</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><code>transform</code> 函数，可以将值先进行一次转换，然后再进行校验。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> descriptor = &#123;</span><br><span class="line">  name: &#123;</span><br><span class="line">    type: <span class="string">'string'</span>,</span><br><span class="line">    required: <span class="literal">true</span>,</span><br><span class="line">    pattern: <span class="regexp">/^[a-z]+$/</span>,</span><br><span class="line">    transform(value) &#123;</span><br><span class="line">      <span class="keyword">return</span> value.trim();</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>asyncValidator</code>，校验函数内部是用 <code>Promise</code> 或者直接返回一个 <code>Promise</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fields = &#123;</span><br><span class="line">  asyncField: &#123;</span><br><span class="line">    asyncValidator(rule, value, callback) &#123;</span><br><span class="line">      ajax(&#123;</span><br><span class="line">        url: <span class="string">'xx'</span>,</span><br><span class="line">        value: value,</span><br><span class="line">      &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">        callback();</span><br><span class="line">      &#125;, <span class="function"><span class="keyword">function</span>(<span class="params">error</span>) </span>&#123;</span><br><span class="line">        callback(<span class="keyword">new</span> <span class="built_in">Error</span>(error));</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  promiseField: &#123;</span><br><span class="line">    asyncValidator(rule, value) &#123;</span><br><span class="line">      <span class="keyword">return</span> ajax(&#123;</span><br><span class="line">        url: <span class="string">'xx'</span>,</span><br><span class="line">        value: value,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>上边就是   <code>async-validator</code>  开源库的核心源码了，希望对你有帮助。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/element/" rel="tag"># element</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/05/10/echarts画中国地图/" rel="next" title="echarts 画中国地图及省份切换">
+                <i class="fa fa-chevron-left"></i> echarts 画中国地图及省份切换
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/06/30/在美团工作的第二年/" rel="prev" title="在美团工作的第二年">
+                在美团工作的第二年 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#使用方法"><span class="nav-number">1.</span> <span class="nav-text">使用方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#预处理-descriptor"><span class="nav-number">2.</span> <span class="nav-text">预处理 descriptor</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#预处理-descriptor-对应的源码"><span class="nav-number">3.</span> <span class="nav-text">预处理 descriptor 对应的源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#循环校验"><span class="nav-number">4.</span> <span class="nav-text">循环校验</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#asyncMap"><span class="nav-number">5.</span> <span class="nav-text">asyncMap</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内层循环"><span class="nav-number">6.</span> <span class="nav-text">内层循环</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#外层循环"><span class="nav-number">7.</span> <span class="nav-text">外层循环</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码总"><span class="nav-number">8.</span> <span class="nav-text">代码总</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他属性"><span class="nav-number">9.</span> <span class="nav-text">其他属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">10.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

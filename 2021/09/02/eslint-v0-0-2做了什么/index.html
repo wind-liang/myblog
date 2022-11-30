@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="准备了解一下 eslint 的原理，就先看一下最早一版 eslint 的实现吧。github 打了 tag 的最早的版本就是 0.0.2 了，提交记录是八年前了。  git clone git@github.com:eslint/eslint.git 并且 git checkout v0.0.2 ，先看一下 package.json 。 123456789101112131415161718192">
+<meta name="keywords" content="eslint,ast">
+<meta property="og:type" content="article">
+<meta property="og:title" content="eslint-v0.0.2做了什么">
+<meta property="og:url" content="https://windliang.wang/2021/09/02/eslint-v0-0-2做了什么/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="准备了解一下 eslint 的原理，就先看一下最早一版 eslint 的实现吧。github 打了 tag 的最早的版本就是 0.0.2 了，提交记录是八年前了。  git clone git@github.com:eslint/eslint.git 并且 git checkout v0.0.2 ，先看一下 package.json 。 123456789101112131415161718192">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/eslint1.jpg">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.934Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="eslint-v0.0.2做了什么">
+<meta name="twitter:description" content="准备了解一下 eslint 的原理，就先看一下最早一版 eslint 的实现吧。github 打了 tag 的最早的版本就是 0.0.2 了，提交记录是八年前了。  git clone git@github.com:eslint/eslint.git 并且 git checkout v0.0.2 ，先看一下 package.json 。 123456789101112131415161718192">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/eslint1.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2021/09/02/eslint-v0-0-2做了什么/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>eslint-v0.0.2做了什么 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2021/09/02/eslint-v0-0-2做了什么/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">eslint-v0.0.2做了什么
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-09-02 09:03:32" itemprop="dateCreated datePublished" datetime="2021-09-02T09:03:32+08:00">2021-09-02</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2021/09/02/eslint-v0-0-2做了什么/" class="leancloud_visitors" data-flag-title="eslint-v0.0.2做了什么">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>准备了解一下 <code>eslint</code> 的原理，就先看一下最早一版 <code>eslint</code> 的实现吧。<code>github</code> 打了 <code>tag</code> 的最早的版本就是 <code>0.0.2</code> 了，提交记录是八年前了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/eslint1.jpg" style="width:50%;"></p>
+<p><code>git clone git@github.com:eslint/eslint.git</code> 并且 <code>git checkout v0.0.2</code> ，先看一下 <code>package.json</code> 。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"name"</span>: <span class="string">"jscheck"</span>,</span><br><span class="line">  <span class="attr">"version"</span>: <span class="string">"0.0.2"</span>,</span><br><span class="line">  <span class="attr">"author"</span>: <span class="string">"Nicholas C. Zakas &lt;nicholas+npm@nczconsulting.com&gt;"</span>,</span><br><span class="line">  <span class="attr">"description"</span>: <span class="string">"An AST-based pattern checker for JavaScript."</span>,</span><br><span class="line">  <span class="attr">"main"</span>: <span class="string">"./lib/jscheck.js"</span>,</span><br><span class="line">  <span class="attr">"bin"</span>: &#123;</span><br><span class="line">    <span class="attr">"jscheck"</span>: <span class="string">"./bin/jscheck.js"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"ctest"</span>: <span class="string">"istanbul cover --print both vows -- --spec ./tests/*/*/*.js"</span>,</span><br><span class="line">    <span class="attr">"test"</span>: <span class="string">"vows -- --spec ./tests/*/*/*.js"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"repository"</span>: <span class="string">""</span>,</span><br><span class="line">  <span class="attr">"dependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"optimist"</span>: <span class="string">"*"</span>,</span><br><span class="line">    <span class="attr">"astw"</span>: <span class="string">"*"</span>,</span><br><span class="line">    <span class="attr">"esprima"</span>: <span class="string">"*"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"devDependencies"</span>: &#123;</span><br><span class="line">    <span class="attr">"vows"</span>: <span class="string">"~0.7.0"</span>,</span><br><span class="line">    <span class="attr">"istanbul"</span>: <span class="string">"~0.1.10"</span>,</span><br><span class="line">    <span class="attr">"sinon"</span>: <span class="string">"*"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"keywords"</span>: [</span><br><span class="line">    <span class="string">"ast"</span>,</span><br><span class="line">    <span class="string">"lint"</span>,</span><br><span class="line">    <span class="string">"javascript"</span>,</span><br><span class="line">    <span class="string">"ecmascript"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"preferGlobal"</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"license"</span>: <span class="string">"BSD"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>主要涉及到 <code>optimist</code> 、<code>astw</code>、<code>esprima</code> ，我们来依次了解一下。</p>
+<h1 id="optimist"><a href="#optimist" class="headerlink" title="optimist"></a>optimist</h1><p>主要作用就是帮我们解析命令行参数，我们来试验一下。</p>
+<p>在根目录新建一个 <code>cli.js</code> ，并且赋予执行权限，执行 <code>chmod +x ./cli.js</code> ，输入下边的内容：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env node</span></span><br><span class="line"><span class="keyword">var</span> optimist = <span class="built_in">require</span>(<span class="string">"optimist"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'argv 收到的参数'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(process.argv);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'optimist 解析后的参数'</span>)</span><br><span class="line"><span class="built_in">console</span>.log(optimist.parse(process.argv.slice(<span class="number">2</span>)));</span><br></pre></td></tr></table></figure>
+<p><code>#!/usr/bin/env node</code> 指明使用 <code>node</code> 执行当前脚本，就可以直接使用 <code>./cli.js</code> 执行命令，而不需要使用 <code>node ./cli.js</code> 执行。</p>
+<p><code>process</code> 是 <code>node</code> 为我们提供的一个全局变量，可以拿到命令行参数 <code>argv</code>。</p>
+<p>然后执行 <code>./cli.js -w --hello 23 --no-ugly  --name=test ./fils.js ./file2.js</code>，控制台会输出如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">argv 收到的参数</span><br><span class="line">[</span><br><span class="line">  '/Users/wangliang/.nvm/versions/node/v14<span class="number">.17</span><span class="number">.3</span>/bin/node',</span><br><span class="line">  '/Users/wangliang/windliang/eslint/cli.js',</span><br><span class="line">  '-w',</span><br><span class="line">  '--hello',</span><br><span class="line">  '<span class="number">23</span>',</span><br><span class="line">  '--no-ugly',</span><br><span class="line">  '--name=test',</span><br><span class="line">  './fils.js',</span><br><span class="line">  './file2.js'</span><br><span class="line">]</span><br><span class="line">optimist 解析后的参数</span><br><span class="line">&#123;</span><br><span class="line">  _: [ './fils.js', './file2.js' ],</span><br><span class="line">  w: true,</span><br><span class="line">  hello: 23,</span><br><span class="line">  ugly: false,</span><br><span class="line">  name: 'test',</span><br><span class="line">  '$0': '../../.nvm/versions/node/v14.17.3/bin/node ./cli.js'</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到 <code>argv[0]</code> 是 <code>node</code> 的路径，<code>argv[1]</code> 是要执行脚本的路径，从 <code>argv[2]</code> 开始是我们要的参数，所以代码里我们执行了 <code>argv.slice(2)</code>。</p>
+<p>通过 <code>optimist</code> 解析，我们就可以得到相应的 <code>key</code> 、<code>value</code> 键值对了。</p>
+<h1 id="esprima"><a href="#esprima" class="headerlink" title="esprima"></a>esprima</h1><p>可以做词法分析或者生成 <code>AST</code> 的语法树，直接看示例。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env node</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> esprima = <span class="built_in">require</span>(<span class="string">"esprima"</span>);</span><br><span class="line"><span class="keyword">var</span> program = <span class="string">`const answer = 42;</span></span><br><span class="line"><span class="string">if(answer == 5)&#123;console.log(answer)&#125;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`词法分析`</span>);</span><br><span class="line"><span class="built_in">console</span>.log(esprima.tokenize(program));</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">`AST 语法树`</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(esprima.parseScript(program), <span class="literal">null</span>, <span class="number">2</span>));</span><br></pre></td></tr></table></figure>
+<p>看一下输出：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line">词法分析</span><br><span class="line">[</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Keyword'</span>, <span class="attr">value</span>: <span class="string">'const'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Identifier'</span>, <span class="attr">value</span>: <span class="string">'answer'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Punctuator'</span>, <span class="attr">value</span>: <span class="string">'='</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Numeric'</span>, <span class="attr">value</span>: <span class="string">'42'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Punctuator'</span>, <span class="attr">value</span>: <span class="string">';'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Keyword'</span>, <span class="attr">value</span>: <span class="string">'if'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Punctuator'</span>, <span class="attr">value</span>: <span class="string">'('</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Identifier'</span>, <span class="attr">value</span>: <span class="string">'answer'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Punctuator'</span>, <span class="attr">value</span>: <span class="string">'=='</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Numeric'</span>, <span class="attr">value</span>: <span class="string">'5'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Punctuator'</span>, <span class="attr">value</span>: <span class="string">')'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Punctuator'</span>, <span class="attr">value</span>: <span class="string">'&#123;'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Identifier'</span>, <span class="attr">value</span>: <span class="string">'console'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Punctuator'</span>, <span class="attr">value</span>: <span class="string">'.'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Identifier'</span>, <span class="attr">value</span>: <span class="string">'log'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Punctuator'</span>, <span class="attr">value</span>: <span class="string">'('</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Identifier'</span>, <span class="attr">value</span>: <span class="string">'answer'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Punctuator'</span>, <span class="attr">value</span>: <span class="string">')'</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">type</span>: <span class="string">'Punctuator'</span>, <span class="attr">value</span>: <span class="string">'&#125;'</span> &#125;</span><br><span class="line">]</span><br><span class="line">AST 语法树</span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">"type"</span>: <span class="string">"Program"</span>,</span><br><span class="line">  <span class="string">"body"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"VariableDeclaration"</span>,</span><br><span class="line">      <span class="string">"declarations"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="string">"type"</span>: <span class="string">"VariableDeclarator"</span>,</span><br><span class="line">          <span class="string">"id"</span>: &#123;</span><br><span class="line">            <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">            <span class="string">"name"</span>: <span class="string">"answer"</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="string">"init"</span>: &#123;</span><br><span class="line">            <span class="string">"type"</span>: <span class="string">"Literal"</span>,</span><br><span class="line">            <span class="string">"value"</span>: <span class="number">42</span>,</span><br><span class="line">            <span class="string">"raw"</span>: <span class="string">"42"</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ],</span><br><span class="line">      <span class="string">"kind"</span>: <span class="string">"const"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"IfStatement"</span>,</span><br><span class="line">      <span class="string">"test"</span>: &#123;</span><br><span class="line">        <span class="string">"type"</span>: <span class="string">"BinaryExpression"</span>,</span><br><span class="line">        <span class="string">"operator"</span>: <span class="string">"=="</span>,</span><br><span class="line">        <span class="string">"left"</span>: &#123;</span><br><span class="line">          <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">          <span class="string">"name"</span>: <span class="string">"answer"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"right"</span>: &#123;</span><br><span class="line">          <span class="string">"type"</span>: <span class="string">"Literal"</span>,</span><br><span class="line">          <span class="string">"value"</span>: <span class="number">5</span>,</span><br><span class="line">          <span class="string">"raw"</span>: <span class="string">"5"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"consequent"</span>: &#123;</span><br><span class="line">        <span class="string">"type"</span>: <span class="string">"BlockStatement"</span>,</span><br><span class="line">        <span class="string">"body"</span>: [</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="string">"type"</span>: <span class="string">"ExpressionStatement"</span>,</span><br><span class="line">            <span class="string">"expression"</span>: &#123;</span><br><span class="line">              <span class="string">"type"</span>: <span class="string">"CallExpression"</span>,</span><br><span class="line">              <span class="string">"callee"</span>: &#123;</span><br><span class="line">                <span class="string">"type"</span>: <span class="string">"MemberExpression"</span>,</span><br><span class="line">                <span class="string">"computed"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="string">"object"</span>: &#123;</span><br><span class="line">                  <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">                  <span class="string">"name"</span>: <span class="string">"console"</span></span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="string">"property"</span>: &#123;</span><br><span class="line">                  <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">                  <span class="string">"name"</span>: <span class="string">"log"</span></span><br><span class="line">                &#125;</span><br><span class="line">              &#125;,</span><br><span class="line">              <span class="string">"arguments"</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                  <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">                  <span class="string">"name"</span>: <span class="string">"answer"</span></span><br><span class="line">                &#125;</span><br><span class="line">              ]</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"alternate"</span>: <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="string">"sourceType"</span>: <span class="string">"script"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此外，解析 <code>Ast</code> 语法树的时候为我们提供了 <code>range</code> 参数和 <code>loc</code> 参数，<code>esprima.parseScript(program, { loc: true, range: true })</code>，输出节点的时候可以帮我们输出源代码的位置，类似于下边的样子。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"type"</span>: <span class="string">"VariableDeclarator"</span>,</span><br><span class="line">  <span class="string">"id"</span>: &#123;</span><br><span class="line">    <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">      <span class="string">"name"</span>: <span class="string">"answer"</span>,</span><br><span class="line">        <span class="string">"range"</span>: [</span><br><span class="line">          <span class="number">6</span>,</span><br><span class="line">          <span class="number">12</span></span><br><span class="line">        ],</span><br><span class="line">          <span class="string">"loc"</span>: &#123;</span><br><span class="line">            <span class="string">"start"</span>: &#123;</span><br><span class="line">              <span class="string">"line"</span>: <span class="number">1</span>,</span><br><span class="line">                <span class="string">"column"</span>: <span class="number">6</span></span><br><span class="line">            &#125;,</span><br><span class="line">              <span class="string">"end"</span>: &#123;</span><br><span class="line">                <span class="string">"line"</span>: <span class="number">1</span>,</span><br><span class="line">                  <span class="string">"column"</span>: <span class="number">12</span></span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<h1 id="astw"><a href="#astw" class="headerlink" title="astw"></a>astw</h1><p><code>ast walk</code>，输入源代码或者 <code>AST</code> 对象，然后调用 <code>walk</code> 方法传入回调，会帮我们依次遍历 <code>ast</code> 的节点，同样看个例子就明白了。</p>
+<p>为了更好的看出输出的结果，我们引入 <code>escodegen</code> 库，可以将遍历的 <code>ast</code> 节点还原为源代码。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env node</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> astw = <span class="built_in">require</span>(<span class="string">"astw"</span>);</span><br><span class="line"><span class="keyword">var</span> esprima = <span class="built_in">require</span>(<span class="string">"esprima"</span>);</span><br><span class="line"><span class="keyword">var</span> program = <span class="string">`const answer = 42;</span></span><br><span class="line"><span class="string">if(answer == 5)&#123;console.log(answer)&#125;</span></span><br><span class="line"><span class="string">`</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(esprima.parseScript(program), <span class="literal">null</span>, <span class="number">2</span>));</span><br><span class="line"><span class="keyword">var</span> walk = astw(program);</span><br><span class="line"><span class="keyword">var</span> deparse = <span class="built_in">require</span>(<span class="string">"escodegen"</span>).generate;</span><br><span class="line"><span class="keyword">let</span> count = <span class="number">1</span>;</span><br><span class="line">walk(<span class="function"><span class="keyword">function</span> (<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> src = deparse(node);</span><br><span class="line">  <span class="built_in">console</span>.log(count++, node.type + <span class="string">" :: "</span> + <span class="built_in">JSON</span>.stringify(src));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>看一下结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"type"</span>: <span class="string">"Program"</span>,</span><br><span class="line">  <span class="string">"body"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"VariableDeclaration"</span>,</span><br><span class="line">      <span class="string">"declarations"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="string">"type"</span>: <span class="string">"VariableDeclarator"</span>,</span><br><span class="line">          <span class="string">"id"</span>: &#123;</span><br><span class="line">            <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">            <span class="string">"name"</span>: <span class="string">"answer"</span></span><br><span class="line">          &#125;,</span><br><span class="line">          <span class="string">"init"</span>: &#123;</span><br><span class="line">            <span class="string">"type"</span>: <span class="string">"Literal"</span>,</span><br><span class="line">            <span class="string">"value"</span>: <span class="number">42</span>,</span><br><span class="line">            <span class="string">"raw"</span>: <span class="string">"42"</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      ],</span><br><span class="line">      <span class="string">"kind"</span>: <span class="string">"const"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">"type"</span>: <span class="string">"IfStatement"</span>,</span><br><span class="line">      <span class="string">"test"</span>: &#123;</span><br><span class="line">        <span class="string">"type"</span>: <span class="string">"BinaryExpression"</span>,</span><br><span class="line">        <span class="string">"operator"</span>: <span class="string">"=="</span>,</span><br><span class="line">        <span class="string">"left"</span>: &#123;</span><br><span class="line">          <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">          <span class="string">"name"</span>: <span class="string">"answer"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"right"</span>: &#123;</span><br><span class="line">          <span class="string">"type"</span>: <span class="string">"Literal"</span>,</span><br><span class="line">          <span class="string">"value"</span>: <span class="number">5</span>,</span><br><span class="line">          <span class="string">"raw"</span>: <span class="string">"5"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"consequent"</span>: &#123;</span><br><span class="line">        <span class="string">"type"</span>: <span class="string">"BlockStatement"</span>,</span><br><span class="line">        <span class="string">"body"</span>: [</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="string">"type"</span>: <span class="string">"ExpressionStatement"</span>,</span><br><span class="line">            <span class="string">"expression"</span>: &#123;</span><br><span class="line">              <span class="string">"type"</span>: <span class="string">"CallExpression"</span>,</span><br><span class="line">              <span class="string">"callee"</span>: &#123;</span><br><span class="line">                <span class="string">"type"</span>: <span class="string">"MemberExpression"</span>,</span><br><span class="line">                <span class="string">"computed"</span>: <span class="literal">false</span>,</span><br><span class="line">                <span class="string">"object"</span>: &#123;</span><br><span class="line">                  <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">                  <span class="string">"name"</span>: <span class="string">"console"</span></span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="string">"property"</span>: &#123;</span><br><span class="line">                  <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">                  <span class="string">"name"</span>: <span class="string">"log"</span></span><br><span class="line">                &#125;</span><br><span class="line">              &#125;,</span><br><span class="line">              <span class="string">"arguments"</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                  <span class="string">"type"</span>: <span class="string">"Identifier"</span>,</span><br><span class="line">                  <span class="string">"name"</span>: <span class="string">"answer"</span></span><br><span class="line">                &#125;</span><br><span class="line">              ]</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        ]</span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="string">"alternate"</span>: <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  <span class="string">"sourceType"</span>: <span class="string">"script"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="number">1</span> Identifier :: <span class="string">"answer"</span></span><br><span class="line"><span class="number">2</span> Literal :: <span class="string">"42"</span></span><br><span class="line"><span class="number">3</span> VariableDeclarator :: <span class="string">"answer = 42"</span></span><br><span class="line"><span class="number">4</span> VariableDeclaration :: <span class="string">"const answer = 42;"</span></span><br><span class="line"><span class="number">5</span> Identifier :: <span class="string">"answer"</span></span><br><span class="line"><span class="number">6</span> Literal :: <span class="string">"5"</span></span><br><span class="line"><span class="number">7</span> BinaryExpression :: <span class="string">"answer == 5"</span></span><br><span class="line"><span class="number">8</span> Identifier :: <span class="string">"console"</span></span><br><span class="line"><span class="number">9</span> Identifier :: <span class="string">"log"</span></span><br><span class="line"><span class="number">10</span> MemberExpression :: <span class="string">"console.log"</span></span><br><span class="line"><span class="number">11</span> Identifier :: <span class="string">"answer"</span></span><br><span class="line"><span class="number">12</span> CallExpression :: <span class="string">"console.log(answer)"</span></span><br><span class="line"><span class="number">13</span> ExpressionStatement :: <span class="string">"console.log(answer);"</span></span><br><span class="line"><span class="number">14</span> BlockStatement :: <span class="string">"&#123;\n    console.log(answer);\n&#125;"</span></span><br><span class="line"><span class="number">15</span> IfStatement :: <span class="string">"if (answer == 5) &#123;\n    console.log(answer);\n&#125;"</span></span><br><span class="line"><span class="number">16</span> Program :: <span class="string">"const answer = 42;\nif (answer == 5) &#123;\n    console.log(answer);\n&#125;"</span></span><br></pre></td></tr></table></figure>
+<p>可以看到 <code>walk</code> 方法会帮助我们从内到外的遍历 <code>AST</code> 的节点，通过回调将当前节点返回。</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>知道了 <code>AST</code> 树，我们其实就可以实现最简单的 <code>Eslint</code> 检查了，比如最常见的是否使用了 <code>===</code>。</p>
+<p>举个例子，对于 <code>answer == 42;</code> 我们在 <code>walk</code> 过程中会得到这样一个节点。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">Node &#123;</span><br><span class="line">  type: <span class="string">'BinaryExpression'</span>,</span><br><span class="line">  start: <span class="number">22</span>,</span><br><span class="line">  end: <span class="number">33</span>,</span><br><span class="line">  left: Node &#123;</span><br><span class="line">    type: <span class="string">'Identifier'</span>,</span><br><span class="line">    start: <span class="number">22</span>,</span><br><span class="line">    end: <span class="number">28</span>,</span><br><span class="line">    name: <span class="string">'answer'</span>,</span><br><span class="line">    parent: [Circular *<span class="number">1</span>]</span><br><span class="line">  &#125;,</span><br><span class="line">  operator: <span class="string">'=='</span>,</span><br><span class="line">  right: Node &#123;</span><br><span class="line">    type: <span class="string">'Literal'</span>,</span><br><span class="line">    start: <span class="number">32</span>,</span><br><span class="line">    end: <span class="number">33</span>,</span><br><span class="line">    value: <span class="number">5</span>,</span><br><span class="line">    raw: <span class="string">'5'</span>,</span><br><span class="line">    parent: [Circular *<span class="number">1</span>]</span><br><span class="line">  &#125;,</span><br><span class="line">  parent: Node &#123;</span><br><span class="line">    type: <span class="string">'IfStatement'</span>,</span><br><span class="line">    start: <span class="number">19</span>,</span><br><span class="line">    end: <span class="number">55</span>,</span><br><span class="line">    test: [Circular *<span class="number">1</span>],</span><br><span class="line">    consequent: Node &#123; <span class="attr">type</span>: <span class="string">'BlockStatement'</span>, <span class="attr">start</span>: <span class="number">34</span>, <span class="attr">end</span>: <span class="number">55</span>, <span class="attr">body</span>: [<span class="built_in">Array</span>] &#125;,</span><br><span class="line">    alternate: <span class="literal">null</span>,</span><br><span class="line">    parent: Node &#123;</span><br><span class="line">      type: <span class="string">'Program'</span>,</span><br><span class="line">      start: <span class="number">0</span>,</span><br><span class="line">      end: <span class="number">56</span>,</span><br><span class="line">      body: [<span class="built_in">Array</span>],</span><br><span class="line">      sourceType: <span class="string">'script'</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据这个 <code>ast</code> 的节点，首先判断 <code>type</code> 是不是  <code>BinaryExpression</code>，然后再判断 <code>operator</code> 是否是 <code>==</code> 和 <code>!=</code> 就可以了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(node.type === <span class="string">'BinaryExpression'</span>)&#123;</span><br><span class="line">  <span class="keyword">if</span> (operator === <span class="string">"=="</span>) &#123;</span><br><span class="line">  	输出(node, <span class="string">"Unexpected use of ==, use === instead."</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (operator === <span class="string">"!="</span>) &#123;</span><br><span class="line">    输出(node, <span class="string">"Unexpected use of !=, use !== instead."</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于单一的规则很好实现，但把多个规则整合起来，并且便于用户扩展就是个学问了，这里学习一下 <code>eslint</code> 是怎么整合的。</p>
+<h1 id="EventEmitter-库"><a href="#EventEmitter-库" class="headerlink" title="EventEmitter 库"></a>EventEmitter 库</h1><p>一个 <code>Ast</code> 节点对应一个要处理的规则，每遍历一个节点，就去处理相应的规则。这里使用了<em>订阅/发布</em>的设计模式，<code>node.js</code> 提供了 <code>events.EventEmitter</code> 库供我们使用。</p>
+<p>我们只需要遍历所有规则列表，然后调用 <code>on</code> 方法，订阅相关事件，事件名就是 <code>node.type</code>，比如上边介绍的 <code>BinaryExpression</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> EventEmitter = <span class="built_in">require</span>(<span class="string">"events"</span>).EventEmitter;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">var</span> api = <span class="built_in">Object</span>.create(<span class="keyword">new</span> EventEmitter()),</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.keys(config.rules).forEach(<span class="function"><span class="keyword">function</span>(<span class="params">key</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> ruleCreator = rules.get(key),</span><br><span class="line">      rule;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (ruleCreator) &#123;</span><br><span class="line">    rule = ruleCreator(<span class="keyword">new</span> RuleContext(key, api));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// add all the node types as listeners</span></span><br><span class="line">    <span class="built_in">Object</span>.keys(rule).forEach(<span class="function"><span class="keyword">function</span>(<span class="params">nodeType</span>) </span>&#123;</span><br><span class="line">      api.on(nodeType, rule[nodeType]);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Definition for rule '"</span> + key + <span class="string">"' was not found."</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>然后在调用 <code>astw</code> 库的 <code>walk</code> 方法的时候 <code>emit</code> 一下 <code>node.type</code> 事件名即可。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ast = esprima.parse(text, &#123; <span class="attr">loc</span>: <span class="literal">true</span>, <span class="attr">range</span>: <span class="literal">true</span> &#125;),</span><br><span class="line">    walk = astw(ast);</span><br><span class="line"></span><br><span class="line">walk(<span class="function"><span class="keyword">function</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  api.emit(node.type, node);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><p>先看一下代码目录：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">eslint</span><br><span class="line">├── LICENSE</span><br><span class="line">├── README.md</span><br><span class="line">├── bin</span><br><span class="line">│   └── jscheck.js <span class="comment">//入口文件，调用 cli.js 的 execute</span></span><br><span class="line">├── config</span><br><span class="line">│   └── jscheck.json <span class="comment">//eslint 配置文件，定义检测哪些规则</span></span><br><span class="line">├── lib</span><br><span class="line">│   ├── cli.js <span class="comment">// 主函数</span></span><br><span class="line">│   ├── jscheck.js <span class="comment">// 提供 verify 方法</span></span><br><span class="line">│   ├── reporters</span><br><span class="line">│   │   └── compact.js <span class="comment">// 格式化输出的内容</span></span><br><span class="line">│   ├── rule-context.js <span class="comment">// 将 jsCheack 对象的方法提过给 rule 调用</span></span><br><span class="line">│   ├── rules <span class="comment">// 预制的规则</span></span><br><span class="line">│   │   ├── camelcase.js</span><br><span class="line">│   │   ├── curly.js</span><br><span class="line">│   │   ├── eqeqeq.js</span><br><span class="line">│   │   ├── no-bitwise.js</span><br><span class="line">│   │   ├── no-<span class="built_in">console</span>.js</span><br><span class="line">│   │   ├── no-<span class="keyword">debugger</span>.js</span><br><span class="line">│   │   ├── no-empty.js</span><br><span class="line">│   │   ├── no-<span class="built_in">eval</span>.js</span><br><span class="line">│   │   └── no-<span class="keyword">with</span>.js</span><br><span class="line">│   └── rules.js <span class="comment">// 读取 rule 规则</span></span><br><span class="line">├── package-lock.json</span><br><span class="line">├── package.json</span><br><span class="line">└── tests</span><br><span class="line">    └── lib</span><br><span class="line">        └── rules</span><br><span class="line">            ├── camelcase.js</span><br><span class="line">            ├── no-bitwise.js</span><br><span class="line">            ├── no-<span class="keyword">debugger</span>.js</span><br><span class="line">            ├── no-<span class="built_in">eval</span>.js</span><br><span class="line">            └── no-<span class="keyword">with</span>.js</span><br></pre></td></tr></table></figure>
+<p>看一下 <code>lib/cli.js</code> 的主逻辑：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">execute: <span class="function"><span class="keyword">function</span> (<span class="params">argv, callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> options = optimist.parse(argv),</span><br><span class="line">      files = options._,</span><br><span class="line">      config;</span><br><span class="line">  <span class="keyword">if</span> (options.h || options.help) &#123;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    config = readConfig(options);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> Figure out correct option vs. config for this</span></span><br><span class="line">    <span class="comment">// load rules</span></span><br><span class="line">    <span class="keyword">if</span> (options.rules) &#123; <span class="comment">// 用户传入自定义的 rules</span></span><br><span class="line">      rules.load(options.rules);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (files.length) &#123;</span><br><span class="line">      processFiles(files, config);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"No files!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>其中 <code>readConfig</code> 就是读取了配置文件，为用户提供了 <code>c/config</code> 参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">readConfig</span>(<span class="params">options</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> configLocation = path.resolve(</span><br><span class="line">    __dirname,</span><br><span class="line">    options.c || options.config || DEFAULT_CONFIG</span><br><span class="line">  );</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">require</span>(configLocation);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>默认的 <code>DEFAULT_CONFIG</code> 路径是 <code>../config/jscheck.json</code> ，内容如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"rules"</span>: &#123;</span><br><span class="line">        <span class="string">"no-bitwise"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"no-eval"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"no-with"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"no-empty"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"no-debugger"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"no-console"</span>: <span class="number">1</span>,</span><br><span class="line"></span><br><span class="line">        <span class="string">"camelcase"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"eqeqeq"</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="string">"curly"</span>: <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>processFiles(files, config)</code>  主要就是两层循环，循环要检查的文件和上边的配置。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">processFiles</span>(<span class="params">files, config</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> fullFileList = [];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 如果是目录的话，继续递归去添加</span></span><br><span class="line">  files.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">file</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isDirectory(file)) &#123;</span><br><span class="line">      fullFileList = fullFileList.concat(getFiles(file));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      fullFileList.push(file);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 遍历文件</span></span><br><span class="line">  fullFileList.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">file</span>) </span>&#123;</span><br><span class="line">    processFile(file, config);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看一下 <code>processFile</code> 函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">processFile</span>(<span class="params">filename, config</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 读取文件</span></span><br><span class="line">  <span class="keyword">var</span> text = fs.readFileSync(path.resolve(filename), <span class="string">"utf8"</span>),</span><br><span class="line">      <span class="comment">// 检查文件</span></span><br><span class="line">    messages = jscheck.verify(text, config);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(reporter(jscheck, messages, filename, config));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>verify</code> 就是核心逻辑了，调用了 <code>on</code> 事件和 <code>emit</code> 事件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">api.verify = <span class="function"><span class="keyword">function</span> (<span class="params">text, config</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// reset</span></span><br><span class="line">    <span class="keyword">this</span>.removeAllListeners();</span><br><span class="line">    messages = [];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// enable appropriate rules</span></span><br><span class="line">    <span class="built_in">Object</span>.keys(config.rules).forEach(<span class="function"><span class="keyword">function</span> (<span class="params">key</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">var</span> ruleCreator = rules.get(key),</span><br><span class="line">        rule;</span><br><span class="line">      <span class="keyword">if</span> (ruleCreator) &#123;</span><br><span class="line">        <span class="comment">// 将 js api 的 context 传给 rule</span></span><br><span class="line">        rule = ruleCreator(<span class="keyword">new</span> RuleContext(key, api));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// add all the node types as listeners</span></span><br><span class="line">        <span class="comment">// rule 规则</span></span><br><span class="line">        <span class="built_in">Object</span>.keys(rule).forEach(<span class="function"><span class="keyword">function</span> (<span class="params">nodeType</span>) </span>&#123;</span><br><span class="line">          api.on(nodeType, rule[nodeType]);</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Definition for rule '"</span> + key + <span class="string">"' was not found."</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// save config so rules can access as necessary</span></span><br><span class="line">    currentConfig = config;</span><br><span class="line">    currentText = text;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * Each node has a type property. Whenever a particular type of node is found,</span></span><br><span class="line"><span class="comment">     * an event is fired. This allows any listeners to automatically be informed</span></span><br><span class="line"><span class="comment">     * that this type of node has been found and react accordingly.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">var</span> ast = esprima.parse(text, &#123; <span class="attr">loc</span>: <span class="literal">true</span>, <span class="attr">range</span>: <span class="literal">true</span> &#125;),</span><br><span class="line">      walk = astw(ast);</span><br><span class="line"></span><br><span class="line">    walk(<span class="function"><span class="keyword">function</span> (<span class="params">node</span>) </span>&#123;</span><br><span class="line">      api.emit(node.type, node);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> messages;</span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+<p>其中 <code>ruleCreator</code> 就是某个规则对应的内容比如下边的 <code>curly.js</code> 文件。</p>
+<p>其中，上边的 <code>new RuleContext(key, api)</code> 就是生成了下边的 <code>context</code>，提过了 <code>report</code> 等其他方法。</p>
+<p>这样用户自定义 <code>rule</code> 的时候，通过 <code>context</code> 就可以调用 <code>eslint</code> 暴露出来的方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span> (<span class="params">context</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    IfStatement: <span class="function"><span class="keyword">function</span> (<span class="params">node</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (node.consequent.type !== <span class="string">"BlockStatement"</span>) &#123;</span><br><span class="line">        context.report(node, <span class="string">"Expected &#123; after 'if' condition."</span>);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (node.alternate &amp;&amp; node.alternate.type !== <span class="string">"BlockStatement"</span>) &#123;</span><br><span class="line">        context.report(node, <span class="string">"Expected &#123; after 'else'."</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    WhileStatement: <span class="function"><span class="keyword">function</span> (<span class="params">node</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (node.body.type !== <span class="string">"BlockStatement"</span>) &#123;</span><br><span class="line">        context.report(node, <span class="string">"Expected &#123; after 'while' condition."</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    ForStatement: <span class="function"><span class="keyword">function</span> (<span class="params">node</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (node.body.type !== <span class="string">"BlockStatement"</span>) &#123;</span><br><span class="line">        context.report(node, <span class="string">"Expected &#123; after 'for' condition."</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>上边就是 <code>eslint v0.0.2</code> 的全部代码了，更细节的内容可以在本地 <code>git clone git@github.com:eslint/eslint.git</code> 并且 <code>git checkout v0.0.2</code>  看。</p>
+<p>核心原理就是通过 <code>AST</code> 语法树来进行相应的检查，然后通过 <code>EventEmitter</code> 进行组织调用，使用 <code>RuleContext</code> 将一些方法暴露出来供 <code>rule</code> 使用。</p>
+<p>未来会继续总结前端相关的文章，感谢关注支持：</p>
+<p><a href="https://mp.weixin.qq.com/s/rWK_4CwFoBZyXZe_1I2TrQ" target="_blank" rel="noopener">前端工程化发展历史</a></p>
+<p><a href="https://mp.weixin.qq.com/s/_xAT8D9O-O6Jz1cQ3sUhnA" target="_blank" rel="noopener">2021年从零开发前端项目指南</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/eslint/" rel="tag"># eslint</a>
+          
+            <a href="/tags/ast/" rel="tag"># ast</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/08/19/2021年从零开发前端项目指南/" rel="next" title="2021年从零开发前端项目指南">
+                <i class="fa fa-chevron-left"></i> 2021年从零开发前端项目指南
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/09/26/babel-v1-7-8做了什么/" rel="prev" title="babel源码详解-v1.7.8">
+                babel源码详解-v1.7.8 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#optimist"><span class="nav-number">1.</span> <span class="nav-text">optimist</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#esprima"><span class="nav-number">2.</span> <span class="nav-text">esprima</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#astw"><span class="nav-number">3.</span> <span class="nav-text">astw</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">4.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#EventEmitter-库"><span class="nav-number">5.</span> <span class="nav-text">EventEmitter 库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源码分析"><span class="nav-number">6.</span> <span class="nav-text">源码分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">7.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

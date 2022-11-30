@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="小亮：小杨呀，考你个问题。 小杨：我不听，我不听，我不听。 小亮：非常有意思的，你听听。你说如果给你一个计算器，但只能算加法，那你减法该怎么办呀？ 小杨：这么神奇的吗，你难道有方法？ 小亮：其实原理很简单的，日常生活中我们其实一直都有用到的，你看一下现在闹钟几点了？  小杨：8 点！ 小亮：那 3 小时前是几点呢？ 小杨：8 - 3 = 5，5 点！ 小亮：那 9 小时以后呢？ 小杨：嗯嗯，你等等">
+<meta name="keywords" content="补码,计算机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="趣谈计算机补码">
+<meta property="og:url" content="https://windliang.wang/2019/05/25/计算机补码表示/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="小亮：小杨呀，考你个问题。 小杨：我不听，我不听，我不听。 小亮：非常有意思的，你听听。你说如果给你一个计算器，但只能算加法，那你减法该怎么办呀？ 小杨：这么神奇的吗，你难道有方法？ 小亮：其实原理很简单的，日常生活中我们其实一直都有用到的，你看一下现在闹钟几点了？  小杨：8 点！ 小亮：那 3 小时前是几点呢？ 小杨：8 - 3 = 5，5 点！ 小亮：那 9 小时以后呢？ 小杨：嗯嗯，你等等">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/clock.jpg">
+<meta property="og:updated_time" content="2022-11-17T00:01:23.992Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="趣谈计算机补码">
+<meta name="twitter:description" content="小亮：小杨呀，考你个问题。 小杨：我不听，我不听，我不听。 小亮：非常有意思的，你听听。你说如果给你一个计算器，但只能算加法，那你减法该怎么办呀？ 小杨：这么神奇的吗，你难道有方法？ 小亮：其实原理很简单的，日常生活中我们其实一直都有用到的，你看一下现在闹钟几点了？  小杨：8 点！ 小亮：那 3 小时前是几点呢？ 小杨：8 - 3 = 5，5 点！ 小亮：那 9 小时以后呢？ 小杨：嗯嗯，你等等">
+<meta name="twitter:image" content="https://windliang.oss-cn-beijing.aliyuncs.com/clock.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2019/05/25/计算机补码表示/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>趣谈计算机补码 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2019/05/25/计算机补码表示/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">趣谈计算机补码
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-25 23:15:32" itemprop="dateCreated datePublished" datetime="2019-05-25T23:15:32+08:00">2019-05-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/计算机组成/" itemprop="url" rel="index"><span itemprop="name">计算机组成</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/05/25/计算机补码表示/" class="leancloud_visitors" data-flag-title="趣谈计算机补码">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>小亮：小杨呀，考你个问题。</p>
+<p>小杨：我不听，我不听，我不听。</p>
+<p>小亮：非常有意思的，你听听。你说如果给你一个计算器，但只能算加法，那你减法该怎么办呀？</p>
+<p>小杨：这么神奇的吗，你难道有方法？</p>
+<p>小亮：其实原理很简单的，日常生活中我们其实一直都有用到的，你看一下现在闹钟几点了？</p>
+<p><img src="https://windliang.oss-cn-beijing.aliyuncs.com/clock.jpg" alt=""></p>
+<p>小杨：8 点！</p>
+<p>小亮：那 3 小时前是几点呢？</p>
+<p>小杨：8 - 3 = 5，5 点！</p>
+<p>小亮：那 9 小时以后呢？</p>
+<p>小杨：嗯嗯，你等等，一五得五，二五一十，五一劳动节，8 + 9 - 12 = 5，还是 5 点！</p>
+<p>小亮：你为什么减去了一个 12 呀？</p>
+<p>小杨：小学老师这样教我的呀，至于为什么？Emmmm，因为总共只有 12 个数呀！</p>
+<p>小亮：就是这里，你完成了一个伟大的操作！模运算。你进行了模 12 操作，还有一个关键点，总共只有 12 个数！</p>
+<p>小杨：我是不是很厉害，嘻嘻嘻，但是…然后呢？</p>
+<p>小亮：你想一想，8 - 3 和 8 + 9 的结果是一样的，而最开始我给你的计算器只能进行加法操作，所以再进一步，把 8 - 3 当做 8 + （- 3），它和 8 + 9 的结果一致，所以…</p>
+<p>小杨：所以我们用 9 去表示 -3，然后如果想计算减法 8 - 3，就直接在计算器上输 8 + 9，就可以得到正确结果了！</p>
+<p>小亮：bingo！但你忘了一个前提，就是计算器必须只能存 12 个数，它会自动进行取模操作。还有一个事，现在是 8 点，4 小时后呢？</p>
+<p>小杨：8 + 4 = 12，12 点！</p>
+<p>小亮：咦？你为什么不进行取模了，你看之前还多减了一个 12 呢？为了统一操作，我们每次都进行取模吧，12 - 12 = 0，这样也比较符合取模的含义，这样对 12 取模，意味着我们数的范围就是 0 到 11 了。</p>
+<p>小杨：好的，好的，我知道了，我现在只知道了 -3 可以用 9 表示，那我们想算 8 - 5 呢？-5 用多少表示呢？</p>
+<p>小亮：你自己拨动下表针看看，5 小时前和几小时后是等价的呢？</p>
+<p>小杨：我看看，7 点！算 8 - 5 的话，用 8 + 7 就可以了。好了，其他的我也知道了，来，我给你画张表。</p>
+<table>
+<thead>
+<tr>
+<th>0</th>
+<th>-1</th>
+<th>-2</th>
+<th>-3</th>
+<th>-4</th>
+<th>-5</th>
+<th>-6</th>
+<th>-7</th>
+<th>-8</th>
+<th>-9</th>
+<th>-10</th>
+<th>-11</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>11</td>
+<td>10</td>
+<td>9</td>
+<td>8</td>
+<td>7</td>
+<td>6</td>
+<td>5</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>小亮：哇，你是怎么把这个表列出来的？</p>
+<p>小杨：因为是模 12 ，所以 1+ 11 = 0，1 - 1 = 0，所以 -1 用 11 代替，2 + 10 等于 0，2 - 2 = 0，-2 用 10 代替，其他也是这样的。</p>
+<p>小亮：棒棒棒，那现在计算会有一个问题的，之前的 8 - 3，8 - 5，结果都是正的，没有问题。那如果，3 - 5 呢？</p>
+<p>小杨：3 - 5，-5 对应 7，那就是 3 + 7 等于 10 ，看上边的表格，10 对应 -2，所以答案是 -2！骗子！明明没有问题！</p>
+<p>小亮：那你 5 - 3 呢？？？ -3 对应 9，5 + 9 = 2，看下上边的表格，这时候你咋不进行 2 对应 -10 了。</p>
+<p>小杨：因为我知道 5 - 3 是正的，3 - 5 是负的，嘻嘻嘻。</p>
+<p>小亮：所以这就是问题所在了，既然要让计算器算，它肯定不知道是正的还是负的，所以这样肯定不行的。我们不能把每一个正数都对应一个负数，你看看下边这个表。</p>
+<table>
+<thead>
+<tr>
+<th>0</th>
+<th>-1</th>
+<th>-2</th>
+<th>-3</th>
+<th>-4</th>
+<th>-5</th>
+<th>-6</th>
+<th>5</th>
+<th>4</th>
+<th>3</th>
+<th>2</th>
+<th>1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>11</td>
+<td>10</td>
+<td>9</td>
+<td>8</td>
+<td>7</td>
+<td>6</td>
+<td>5</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>小杨：3 - 5 和之前一样，-5 对应 7，那就是 3 + 7 等于 10 ，10 对应 -2，然后的话，5 - 3 = 2，-3 对应 9，5 + 9 = 2，2 对应 2，哇！这次没有问题了。</p>
+<p>小亮：是的，这次我们只是用一部分正数表示了负数，另一部分保持不变。每一个数都有了一个对应关系，9 不再是 9 了，它其实是 -3。但这有个缺点，给你一个数，你并不能立刻知道它代表几，只能去查表才会知道。</p>
+<p>小杨：对呀，我用的计算机能算的数的范围非常大呀，它内部不会也有这样一个表格吧。</p>
+<p>小亮：不不不，它实现了一种转换关系，给定一个数立马知道它代表的几。</p>
+<p>小杨：那会不会很复杂呀，我想听听。</p>
+<p>小亮：其实和那个钟表是一个意思的，计算机里寄存器存的位数是固定的，就像表盘的数是固定的。表盘里，11 点过 1 个小时后，就变成了 0 点，因为是进行的模 12 操作。如果寄存器只能存 4 位数字，那就总共可以表示 16 个数字，那么 15 再加 1 的话就变成了 0，那么怎么实现减法…</p>
+<p>小杨：我懂了，一样的道理，用一部分数字来表示负数就可以了!</p>
+<p>小亮：聪明！因为计算机里是都是用 2 进制存储的，我们来看看这些数字都长什么样子。</p>
+<table>
+<thead>
+<tr>
+<th>0000 0</th>
+<th>1000 8</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0001 1</td>
+<td>1001 9</td>
+</tr>
+<tr>
+<td>0010 2</td>
+<td>1010 10</td>
+</tr>
+<tr>
+<td>0011 3</td>
+<td>1011 11</td>
+</tr>
+<tr>
+<td>0100 4</td>
+<td>1100 12</td>
+</tr>
+<tr>
+<td>0101 5</td>
+<td>1101 13</td>
+</tr>
+<tr>
+<td>0110 6</td>
+<td>1110 14</td>
+</tr>
+<tr>
+<td>0111 7</td>
+<td>1111 15</td>
+</tr>
+</tbody>
+</table>
+<p>小杨：那我来分一下吧！</p>
+<table>
+<thead>
+<tr>
+<th>0000 0</th>
+<th>0001 1</th>
+<th>0010 2</th>
+<th>0011 3</th>
+<th>0100 4</th>
+<th>0101 5</th>
+<th>0110 6</th>
+<th>0111 7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+</tr>
+<tr>
+<td>1000 8</td>
+<td>1001 9</td>
+<td>1010 10</td>
+<td>1011 11</td>
+<td>1100 12</td>
+<td>1101 13</td>
+<td>1110 14</td>
+<td>1111 15</td>
+</tr>
+<tr>
+<td>8</td>
+<td>9</td>
+<td>-6</td>
+<td>-5</td>
+<td>-4</td>
+<td>-3</td>
+<td>-2</td>
+<td>-1</td>
+</tr>
+</tbody>
+</table>
+<p>让我来算一个减法，7 - 4 = 7 + 12 模 16 = 3！哇，成功了！</p>
+<p>小亮：等等，你为什么搞了 8 个正数，只搞了 6 个负数呀。</p>
+<p>小杨：因为我喜欢！</p>
+<p>小亮：那这样又回到之前的问题了，如果我问 8 代表的正数还是负数？你是不是还是只能查表呀。</p>
+<p>小杨：对哦，那该怎么分呀。</p>
+<p>小亮：很自然呀，你看上边表格的二进制部分，最高位是不是有的是 0 ，有的是 1，我们把最高位是 1 的正数来表示负数，最高位是 0 的数表示正数，是不是就可以了。</p>
+<table>
+<thead>
+<tr>
+<th>0000 0</th>
+<th>0001 1</th>
+<th>0010 2</th>
+<th>0011 3</th>
+<th>0100 4</th>
+<th>0101 5</th>
+<th>0110 6</th>
+<th>0111 7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+</tr>
+<tr>
+<td>1000 8</td>
+<td>1001 9</td>
+<td>1010 10</td>
+<td>1011 11</td>
+<td>1100 12</td>
+<td>1101 13</td>
+<td>1110 14</td>
+<td>1111 15</td>
+</tr>
+<tr>
+<td>-8</td>
+<td>-7</td>
+<td>-6</td>
+<td>-5</td>
+<td>-4</td>
+<td>-3</td>
+<td>-2</td>
+<td>-1</td>
+</tr>
+</tbody>
+</table>
+<p>小杨：对呀，这样的话，给我一个数，我就知道它是负的还是正的了，比如 13，二进制是 1101，开头是 1，那它代表的一定是一个负数。那开始你说可以直接知道它代表的是几，该怎么算呢？</p>
+<p>小亮：嗯嗯，你想一想，你得出表格的时候是怎么操作的呢？首先二进制开头是 0 的，它是几就代表几，就不讨论了。负数的话，你为什么用  12 表示 -4 呢？</p>
+<p>小杨：因为现在是模 16 的，所以两数和如果是 16 的话，就会变成 0。12 + 4 = 16 = 0，-4 + 4 = 0，所以 12 可以代替 -4。</p>
+<p>小亮：所以如果给你一个数，如果是二进制开头是 1，我们先确定它是一个负数，至于是负几，我们直接用 16 减它就够了！如果给你 13，我们看一下二进制是多少，1101，开头是 1 所以它是负数，负几呢？16 - 13 = 3，所以 13 代表 -3，看下上边的表格，是不是对的？</p>
+<p>小杨：等等，这个我一直知道呀，之前表盘的时候我就是这样算的呀。16 - 13，我们是为了用加法表示减法，这怎么又出来减法了。</p>
+<p>小亮：到了见证奇迹的时候了！让我们用二进制的形式看一下，16 - 13 = 1 0000 - 1101 = （1 + 1111） - 1101 = （1111 - 1101）+ 1 = 0010 + 1 = 0011 = 3。</p>
+<p>小杨：哪里奇迹了，1111 - 1101，这不又出现减法了。</p>
+<p>小亮：不不不，这步不用减法，只需要把 1101 按位取反就够了，也就是 0010！</p>
+<p>小杨：神奇！所以我来总结下，给我们一个数，如果二进制开头是 0，那就不管了，它是几就是几。如果开头是 1，那它代表负数，负几呢？按位取反，再加一就够了！但还有个问题，现在给我一个数我只能它代表几，但反过来，给我一个数，我怎么知道用几去代表它呢？如果给我 -3，我们用多少代表它呢？</p>
+<p>小亮：是同样的道理，13 + 3 = 16 = 0，-3 + 3 = 0，所以用 13 代表 -3。所以算的话，还是用 16 去减这个数，所以同样的推导，最后的结论是一样的，按位取反，末位加 1，-3 的话，根据推导我们是用 16 减去的 3，所以用 3 对应的 2 进制 0011，按位取反，1100，末位加一，1101，所以 -3 就用 1101 表示。</p>
+<p>小杨：哇，懂了懂了，这样完美的把加法和减法统一了，只不过计算前进行数字的转换就够了。</p>
+<p>小亮：对的，其实这就是补码，计算机中所有的整数都用补码存储，这样算减法用加法器就足够了。举个例子，3 的补码是 3 不变，也就是 0011，-4 的补码，4 的二进制按位取反末位加 1，也就是 0100 变成 1011，再加 1 变成 1100，所以算 3 - 4 = 3 + （-4）= 0011 + 1100 = 1111，1111 代表多少呢？首先肯定代表一个负数，然后按位取反末位加 1，就是 0001 了，所以结果就是 -1。</p>
+<p>小杨：我明白了，只要学会把一个数转成补码，然后补码再还原就够了，而且两个转换的方法还一样，按位取反，末位加 1，很清晰了。</p>
+<p>小亮：让我们回到真正的计算机里， 我们知道 int 一般情况是 4 个字节，也就是 32 位，一样的道理，我们把最高位是 0 的代表正数，最高位是 1 的代表负数，所以最大的正数就是 0111 1111 … 1111 1111，这个数代表多少呢？</p>
+<p>小杨：这个我知道，为了方便计算，先把它加 1，变成 1000 0000 … 0000 0000，这个是 $$2^{31}$$，也就是 2147483648，然后减 1，就是 2147483647。</p>
+<p>小亮：那最大负数呢？</p>
+<p>小杨：最大负数的话，因为 1 开头代表负数，然后其他部分当然越小越好，所以就是 1000 0000 … 0000 0000，那它代表多少呢？直接套用公式，按位取反，末位加一，变成 1000 0000 … 0000 0000，它竟然又变了回来，之前算了这个数是  $$2^{31}$$，也就是 2147483648，所以它代表 -2147483648，咦，怎么感觉负数比正数多了一个，没有对称呀？</p>
+<p>小亮：你想一下呀，0 开头的数和 1 开头的数，个数是不是一样的，但是 0 开头的数包括了 0，所以正数就少了一个咯。顺便再问你个问题，最小的负数是 -2147483648，那 -2147483648 - 1 是多少呢？</p>
+<p>小杨：-2147483649！！哈哈，开个玩笑，我知道你是问我计算机里边的情况。我来算一下，-2147483648 的补码是 1000 0000 … 0000 0000，-1 的补码是把 1 按位取反末位加 1，就是 1111 1111 … 1111 1111，然后把这两个数加起来就是 0111 1111 … 1111 1111，这不是那个最大的正数吗，所以  -2147483648 - 1 是 2147483647！</p>
+<p>小亮：感觉你出师了呀，竟然没中套。这其实也很好理解对不对</p>
+<table>
+<thead>
+<tr>
+<th>0000 0</th>
+<th>0001 1</th>
+<th>0010 2</th>
+<th>0011 3</th>
+<th>0100 4</th>
+<th>0101 5</th>
+<th>0110 6</th>
+<th>0111 7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+</tr>
+<tr>
+<td>1000 8</td>
+<td>1001 9</td>
+<td>1010 10</td>
+<td>1011 11</td>
+<td>1100 12</td>
+<td>1101 13</td>
+<td>1110 14</td>
+<td>1111 15</td>
+</tr>
+<tr>
+<td>-8</td>
+<td>-7</td>
+<td>-6</td>
+<td>-5</td>
+<td>-4</td>
+<td>-3</td>
+<td>-2</td>
+<td>-1</td>
+</tr>
+</tbody>
+</table>
+<p>看上边的表格，这个只有 4 位，所以最大的数是 7，最小的数是 -8。上边的 7 后边是 -8 了，所以 -8 减 1，也就是 -8 前边那个数当然就是 7 了。</p>
+<p>小杨：其实这个表格化成圆其实更好理解了，就像表盘一样，哈哈。</p>
+<p>小亮：对的，总结一下，其实我们利用了寄存器存的位数是有限的，所以它到达最大的数以后会自动置零，相当于完成了取模操作，就像钟表一样，到了 11 点，之后又会从 0 点开始。然后我们再定义用哪些数表示正数，哪些数表示负数，从而完成了加法和减法的统一。并且做到了给一个数知道它的补码表示，知道补码，也可以算出它代表几。</p>
+<p>小杨：那计算机设计补码的时候就是这样想的吗？</p>
+<p>小亮：这我就不知道了，但可能和我想的一样？哈哈哈。最后留给你一个题，不用乘法除法也不用减法怎么求一个数的相反数呢？ -2147483648 * （-1）等于多少呢？</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/补码/" rel="tag"># 补码</a>
+          
+            <a href="/tags/计算机/" rel="tag"># 计算机</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/21/linux和Android的关系/" rel="next" title="linux和Android的关系">
+                <i class="fa fa-chevron-left"></i> linux和Android的关系
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/24/一文让你彻底明白马拉车算法/" rel="prev" title="一文让你彻底明白马拉车算法">
+                一文让你彻底明白马拉车算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">95</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
