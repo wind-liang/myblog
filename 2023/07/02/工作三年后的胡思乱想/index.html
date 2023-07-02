@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一眨眼工作已经三年了，前两年的总结 工作第一年、工作第二年 基本上把在公司做的事情都介绍了，今年站在「前端已死」、互联网大裁员的环境下，想想未来的路可能更为应景。 经常说这是最好的时代，也是最坏的时代，互联网便是如此。通过互联网将人与人之间的各种链接都成为了可能，在互联网诞生之前，人与人之间的交流就是现实生活中的圈子，而现在本来这一辈子都不会在现实中产生交集的人在互联网却会相遇。 各种写书的大佬、">
+<meta name="keywords" content="随想">
+<meta property="og:type" content="article">
+<meta property="og:title" content="工作三年后的胡思乱想">
+<meta property="og:url" content="https://windliang.wang/2023/07/02/工作三年后的胡思乱想/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="一眨眼工作已经三年了，前两年的总结 工作第一年、工作第二年 基本上把在公司做的事情都介绍了，今年站在「前端已死」、互联网大裁员的环境下，想想未来的路可能更为应景。 经常说这是最好的时代，也是最坏的时代，互联网便是如此。通过互联网将人与人之间的各种链接都成为了可能，在互联网诞生之前，人与人之间的交流就是现实生活中的圈子，而现在本来这一辈子都不会在现实中产生交集的人在互联网却会相遇。 各种写书的大佬、">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/milky-way-2695569_1280.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20230630080510771.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20230702141922024.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20230702143219493.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20230702153842246.png">
+<meta property="og:updated_time" content="2023-07-02T09:07:17.489Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="工作三年后的胡思乱想">
+<meta name="twitter:description" content="一眨眼工作已经三年了，前两年的总结 工作第一年、工作第二年 基本上把在公司做的事情都介绍了，今年站在「前端已死」、互联网大裁员的环境下，想想未来的路可能更为应景。 经常说这是最好的时代，也是最坏的时代，互联网便是如此。通过互联网将人与人之间的各种链接都成为了可能，在互联网诞生之前，人与人之间的交流就是现实生活中的圈子，而现在本来这一辈子都不会在现实中产生交集的人在互联网却会相遇。 各种写书的大佬、">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/milky-way-2695569_1280.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2023/07/02/工作三年后的胡思乱想/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>工作三年后的胡思乱想 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2023/07/02/工作三年后的胡思乱想/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">工作三年后的胡思乱想
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2023-07-02 15:44:18 / 修改时间：17:07:17" itemprop="dateCreated datePublished" datetime="2023-07-02T15:44:18+08:00">2023-07-02</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2023/07/02/工作三年后的胡思乱想/" class="leancloud_visitors" data-flag-title="工作三年后的胡思乱想">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一眨眼工作已经三年了，前两年的总结 <a href="https://windliang.wang/2021/05/29/%E5%9C%A8%E7%BE%8E%E5%9B%A2%E5%B7%A5%E4%BD%9C%E7%9A%84%E7%AC%AC%E4%B8%80%E5%B9%B4/">工作第一年</a>、<a href="https://windliang.wang/2022/06/30/%E5%9C%A8%E7%BE%8E%E5%9B%A2%E5%B7%A5%E4%BD%9C%E7%9A%84%E7%AC%AC%E4%BA%8C%E5%B9%B4/">工作第二年</a> 基本上把在公司做的事情都介绍了，今年站在「前端已死」、互联网大裁员的环境下，想想未来的路可能更为应景。</p>
+<p>经常说这是最好的时代，也是最坏的时代，互联网便是如此。通过互联网将人与人之间的各种链接都成为了可能，在互联网诞生之前，人与人之间的交流就是现实生活中的圈子，而现在本来这一辈子都不会在现实中产生交集的人在互联网却会相遇。</p>
+<p>各种写书的大佬、开源的大佬，以往可能只是从文字、代码中了解他们，但现在通过社交媒体、微信竟然就产生了互动。当然不好一面就是也会遇到和自己不相投的人，也许会影响自己的心情。</p>
+<p>通过互联网极大的扩宽了我们的视野，看到了别人在怎么生活，也放大了自己的焦虑和欲望。我们需要认清自己的边界，知道自己想要什么，自己能做什么，不需要对本来不可能发生在自己身上的事情而焦虑。</p>
+<p>当迷茫焦虑时，看看宇宙的纪录片，从宇宙的视角去看自己，无论从空间大小还是时间维度，其实自己什么都不是，想那么多干啥。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/milky-way-2695569_1280.jpg" style="zoom: 50%;"></p>
+<p>再想想其他动物，吃饭睡觉喵喵叫，也挺好的。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20230630080510771.png" style="zoom: 25%;"></p>
+<h1 id="前端已死"><a href="#前端已死" class="headerlink" title="前端已死"></a>前端已死</h1><p>互联网已经结束了快速扩张的时期，这是个客观事实，因此招聘的人数相对于之前减少了很多，但远没到一个已死的状态，相对于其他行业，选择互联网依旧是一个不错的选择。</p>
+<p>前端会不会死不知道，互联网肯定会一直存在下去，现在整个社会都是基于互联网，已经变成了像电、水一样的基础设施，没有人可以离开它。因此互联网的相关的岗位一定会一直一直存在。</p>
+<p>至于互联网中具体的职业划分，前端、后端、算法、数据库等，它们各自使用的语言、技术一定会发生变化的，当选择互联网技术行业的时候，就应该抱有持续学习的态度。</p>
+<p>塞班操作系统被安卓、iOS 取代、.Net 岗位的减少、客户端大量岗位转前端，这些也就发生在近十几二十年。当某一个岗位减少的时候，一定又会出现新的岗位，保持开放的心态去学就可以，变化再多肯定也有不变的东西。当掌握一门技术再学习另一门技术的时候，肯定会比小白学习一门新技术快很多很多，很多经验也会迁移过去。</p>
+<p>去年 12 月出来的 chatGPT 为代表的大模型，到现在也就半年多的时间，很多以前完全不敢想的事情就这样发生了。可以预见的是一部分岗位数量肯定也会减少，目前影响最大的应该是  UI 岗，其次一定程度上可以提高程序员的开发以及学习效率，但还没有到取代的程度，但未来会再怎么发展就不得而知了。</p>
+<p>相对于其他行业，虽然互联网相关技术迭代确实很快，但如果是因为热爱而选择这个行业，我觉得去做一辈子是没问题的。</p>
+<h1 id="技术"><a href="#技术" class="headerlink" title="技术"></a>技术</h1><p>底层技术服务于上层技术，上层技术服务于应用，真正赚钱的是应用，它可能提升了用户的效率、也可能提升了用户的生活体验，这样用户才愿意付费。上层技术的人收到了钱，进一步也愿意为底层技术的人付费。</p>
+<p>但对于一个应用，技术并不是最重要的，更多需要的是产品和运营，一个应用在 chatGPT 和各种框架、云服务的加持下做出来变得太简单了，更多的是我们需要思考如何设计产品和如何推广运营产品，和用户产生更亲密的连接，用户才愿意付费。</p>
+<p>极端一点，即使现在所有的应用都停止更新了，其实也并不会产生多大的影响。</p>
+<p>在公司中亦是如此，对于技术开发，没有谁是不可取代的，公司更期望的是那些可以发现问题、分析问题、定义问题的人，至于怎么解决，问题定义清楚以后，解决方案自然可以出来，谁去解决并不重要了。</p>
+<p>但也不用太过悲观，虽然技术不是最重要的，但一定是不可或缺的，在解决问题的过程中也会区分出能力强和能力差的：方案的设定、代码编写的好坏、线上的 bug 数、代码的扩展性等。</p>
+<h1 id="赚钱"><a href="#赚钱" class="headerlink" title="赚钱"></a>赚钱</h1><p>赚钱很大程度又是需要运气的，比如同一个人十年前进入互联网和现在进入互联网差别就会很大，再比如开发一个应用突然爆火，例如「羊了个羊」，这些我们是很难控制的，我们只能「尽人事，听天命」。</p>
+<p>最近几年，除了在公司工作，对于有技术的同学赚钱有下边的方式：</p>
+<ul>
+<li><p>付费课程、出书</p>
+<p>最近几年越来越多的人在极客时间、掘金小册写课程或者直接出书。</p>
+<p>对于写课的人赚到了钱，对于买课的人只要跟着看完了，多多少少都会有很多收获。付费课程会比较系统， 如果没有这些课程，去学东西肯定也是可以学的，但需要花很多时间去网上搜一些零碎的资料，由于没有经验甚至可能走很多弯路。</p>
+</li>
+<li><p>付费社群</p>
+<p>市面上也会有一些付费训练的社群或者知识星球</p>
+<p>对于组织付费社群的人会花费很大的精力，需要持续运营并且照顾到每一个人，不然就等着挨骂吧。因此这类收益也会很高，一些人会辞去工作专职来搞。</p>
+</li>
+<li><p>开源</p>
+<p>大部分开源基本上是用爱发电，更多是收获一些朋友、流量、提升技术。</p>
+<p>比如 <a href="https://www.infoq.cn/article/s8jsfyhxu8vowd1uphkp" target="_blank" rel="noopener">core-js</a> 作者的经历，一个 22.6k star 的项目，几乎各个网站都在用的一个项目，作者却因为钱的问题被很多人谩骂。因此如果是个人专职开源一个项目靠  GitHub Sponsor 会很难很难。</p>
+<p>当然，开源也是能赚到钱的，比如 Vue 开源就赚到了很多钱，但毕竟是很少很少数了。</p>
+<p>依赖纯开源项目赚到钱，还是需要背靠公司。比如阿里云谦的 Umi、通过开源加入 NuxtLab 的 Anthony Fu、在 AFFiNE 的雪碧等等。</p>
+</li>
+<li><p>应用</p>
+<p>身为一个程序员，尤其是前端程序员，当然可以自己维护一个应用来赚钱。</p>
+<p>做得很成功的比如 Livid 的 V2ex 社区，Abner Lee 的 Typora（后来知道作者竟然是国内开发者）。</p>
+<p>也有一些没有那么出名的，比如大鹏的 <a href="https://mdnice.com/" target="_blank" rel="noopener">mdnice</a>，秋风的 <a href="https://www.mujicv.com/index.html" target="_blank" rel="noopener">木及简历</a>。</p>
+<p>当然如果要做一个很大的项目，背靠公司也是一个很好的选择，比如之前阿里玉伯的语雀、之前极客邦池建强的极客时间。</p>
+<p>还有一些小的创业公司会做的，冯大辉的「抽奖助手」、吴鲁加的「知识星球」等。</p>
+<p>做出这些应用不需要很多时间，需要我们善于发现生活中的痛点以及强大的执行力，当然想成功的话需要再加一点运气，在成功前需要不断尝试不同的东西。</p>
+</li>
+<li><p>流量变现</p>
+<p>有流量就会赚钱，不管是接广告、还是带货。互联网上也会有部分人专注于怎么搞流量，知乎怎么获得更多曝光、视频号怎么获得更多流量、怎么批量注册号，各个平台规则可能是什么，怎么对抗规则，这类有技术加持也会更加顺利，很多人也在专职做。</p>
+</li>
+</ul>
+<p>赚钱的方式有很多，对于我来说，我会尽量选择复利的事情，这样才能产生更大的价值。比如一对一咨询，一份时间换一份收入。但如果把东西写成课程，只需要花一份的时间就能获得 N 份的收入。</p>
+<p>另外就是需要保持分享，分享除了能帮助其他人，对自己也会有很大的帮助，写文章的过程中也会不断的有新的认知得到。虽然当下可能没有金钱方面的收入，但时间放宽到几十年，相信一定会有很大的回报。</p>
+<p>人的欲望是无穷的，也不能陷入赚钱的极端，目标应该是关注此刻，体验生活，享受生活，而不是不停的赚钱。之前听播客，有一个恰当的比喻，钱就好比汽油，不停的赚钱相当于不停的加油，但如果汽车停着一直不动，再多的汽油也是无意义的。</p>
+<h1 id="健康"><a href="#健康" class="headerlink" title="健康"></a>健康</h1><p>最近几年总是爆出程序员突然离世的新闻，前段时间耗子叔突然离世的消息听到之后真的很震惊。twitter 经常刷到耗子叔的动态，然后突然一天竟然就戛然而止了，毫无征兆。</p>
+<p>意外是无法避免的，只能尽可能的从饮食、作息、锻炼三方面降低生病的风险。</p>
+<h2 id="饮食"><a href="#饮食" class="headerlink" title="饮食"></a>饮食</h2><p>我是工作第一年体检的时候检查出了中度脂肪肝、尿酸高，当时因为是刚毕业，体重是我的巅峰，140 多斤，脂肪都堆在了肚子上。那段时间就开始跑步加吃沙拉，少吃米饭、面条。降的也快，几个月就回到了 130 斤以下，甚至到 120 多点。</p>
+<p>第二年体检的时候，脂肪肝基本没有了，尿酸也降了许多。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20230702141922024.png" alt="image-20230702141922024" style="zoom:50%;"></p>
+<p>后来就保持少吃米饭，多吃蛋白质、蔬菜的饮食了。</p>
+<h2 id="作息"><a href="#作息" class="headerlink" title="作息"></a>作息</h2><p>有一次得了带状疱疹，那种非常痛的类似于痘痘的东西，后来了解了一下是因为免疫力低导致病毒入侵的。猜测因为晚上坐在电脑前，气温降低了没注意，从而导致了生病。</p>
+<p>病好之后就决心养成早睡早起的习惯。</p>
+<p>之前作息基本上是 1 点到 2 点睡觉，9 点前后起床。现在基本上保持在 11 点前后睡觉，6 点到 7 点间起床了。</p>
+<p>早起的好处就是早上会有大把的时间，而且这段时间是专属于自己的，并且因为大脑刚苏醒，效率也会很高。但如果是工作一天，晚上回家再做自己的事情，此时大脑已经很疲惫了，效率会比较低。</p>
+<h2 id="运动"><a href="#运动" class="headerlink" title="运动"></a>运动</h2><p>最开始是跑步，但确实很难坚持下去，跑步需要换衣服、出门，还依赖于外边的天气，成本很高。后来陆续尝试过 keep、一些付费课程，都做了但没有完全养成习惯。</p>
+<p>后来知道了 switch 的健身环大冒险，然后就一路坚持到了现在，前段时间已经通关了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20230702143219493.png" alt="image-20230702143219493" style="zoom:50%;"></p>
+<p>目前也一直在坚持，基本上一周会运动三到四次，一次大概花费 50 分钟左右。</p>
+<h1 id="投资"><a href="#投资" class="headerlink" title="投资"></a>投资</h1><p>大学的时候开始接触到理财，知道了基金的概念，看了银行螺丝钉的「指数基金定投指南」，也看了「穷爸爸富爸爸」、「小狗钱钱」这类理财入门的书。当时赚到的一些钱，就跟着银行螺丝钉投了，主要是一些宽基和中概、医疗。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20230702153842246.png" alt="image-20230702153842246" style="zoom:50%;"></p>
+<p>一直到工作的第一年，基金收入确实不错，甚至赚了百分之四五十。当时想着原来股市这么简单，这咋还能亏钱了。</p>
+<p>接着疫情不断发展，还有外部经济的变化，中概、医疗都大跌，当时发了年终奖还不停的补仓中概，到现在亏损也有百分之三四十了。</p>
+<p>但我心态是可以的，一切都是浮亏和浮盈，只要不卖一切都是浮云。</p>
+<p>经历了大起大落后吸取了一些教训，那就是一定要严格执行计划，现金流多不一定要立刻全部投入，而是按计划定投，因为没人知道会跌多久，只有有充足的现金流，才能够把亏损逐步拉平。</p>
+<p>现在国家规定互联网基金这些必须走「投顾」，也就是主理人帮我们买入、卖出，我们只需要交一定的投顾费即可。目前我都是在雪球上投，跟投的有孟岩的「长钱账户」、alex 的「全球精选」、螺丝钉的指数增强和主动优选。</p>
+<p>能设置自动跟投的就自动跟投了，我相信专业的事交给专业的人肯定是没问题的。</p>
+<p>投资肯定是财富自由不了的，但一定比把钱放余额宝强一些，只要耐心持有，尤其是目前这样的熊市投入，相信到下一个牛市会有不错的回报。</p>
+<p>（以上仅个人看法，股市有风险，入市需谨慎）</p>
+<h1 id="保险"><a href="#保险" class="headerlink" title="保险"></a>保险</h1><p>如果开始接触理财，除了投资，一个绕不过去的点就是保险。</p>
+<p>对于保险是什么的比喻，之前听薛兆丰的课时候印象深刻。</p>
+<blockquote>
+<p>我现在还年轻力壮，将来年纪大了可能会生病，为了防止以后生病要花一大笔医药费，今天就开始存钱，每个月拿出 10% 的收入存起来，未雨绸缪。这是一种做法。</p>
+<p>另外一种做法，是我每个月也拿出 10% 的收入去买保险。</p>
+<p>这两种做法有什么区别呢？</p>
+<p>区别在于，如果我是用储蓄来未雨绸缪，那么未来可能就会发生两种不同的情形。</p>
+<p>如果我将来年纪大了也没生病，我存的钱就还是我的钱，我不需要花出去，这时候我还是很幸运的，能够保有我原来的收入，这份储蓄没有被花掉，我赚了。</p>
+<p>但是如果我运气不好，生病了，这份储蓄就会被用掉，甚至需要借很多钱去治病，生活会发生巨大的变化。</p>
+<p>所以通过储蓄来未雨绸缪，它的特点是未来的结局是可变的，是变动的、是带有风险的。要么高、要么低，要么能够保有原来的这份储蓄，要么这份储蓄就被用掉了甚至借更多的钱。</p>
+<p>而对于保险来说，如果你没病，那你的生活该怎么样还是怎么样。如果你病了，那会有保险公司给你支付一大笔钱，你也不用和别人借钱，病好后继续该干啥干啥。</p>
+</blockquote>
+<p>因此存钱去防止生病就有赌的成分了，如果没病就白赚了很多钱，如果病了生活质量可能会发生很大的变化。</p>
+<p>而保险就可以降低风险，未来即使生病了，由于看病不需要花钱了，病好后生活质量也尽可能的维持在原来轨道 。</p>
+<p>我期望未来肯定是尽量稳定的，所以在不影响当前生活质量的条件下我愿意拿出一部分钱来买保险。原计划我可能会 30 岁以后开始买重疾险，之前女朋友的朋友有推荐保险的，然后就跟女朋友一起配置了重疾险。</p>
+<p>选保险一定要慎重，一些看起来很划算的保险， 到理赔的时候可能会推三阻四，甚至理赔前公司破产了，尽量要选择大公司。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>当然生活没有标准答案，每个人看到世界也都是不同的，我也一直在成长，一直在认识新的东西，上边的所想的也不能保证说未来不会再变。</p>
+<p>未来能做的就是多看看书，不限制自己，看看经济学的、哲学的、心理学的、人文的，多出去走走看看，尽可能多的增加人生体验，去认识世界，认识自己，做自己想做的事，爱自己所爱的人，走下去就好了。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/随想/" rel="tag"># 随想</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/06/13/css层叠上下文和z-index的使用和思考/" rel="next" title="css层叠上下文和z-index的使用和思考">
+                <i class="fa fa-chevron-left"></i> css层叠上下文和z-index的使用和思考
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">101</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">103</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前端已死"><span class="nav-number">1.</span> <span class="nav-text">前端已死</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#技术"><span class="nav-number">2.</span> <span class="nav-text">技术</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#赚钱"><span class="nav-number">3.</span> <span class="nav-text">赚钱</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#健康"><span class="nav-number">4.</span> <span class="nav-text">健康</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#饮食"><span class="nav-number">4.1.</span> <span class="nav-text">饮食</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作息"><span class="nav-number">4.2.</span> <span class="nav-text">作息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运动"><span class="nav-number">4.3.</span> <span class="nav-text">运动</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#投资"><span class="nav-number">5.</span> <span class="nav-text">投资</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#保险"><span class="nav-number">6.</span> <span class="nav-text">保险</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">7.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
