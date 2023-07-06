@@ -108,37 +108,20 @@
 
 
 
-  <meta name="description" content="去年 5 月的时候写了小程序 神奇字体，可以生成类似这样的字体 𝓘 𝓵𝓸𝓿𝓮 𝔂𝓸𝓾 𝓽𝓱𝓻𝓮𝓮 𝓽𝓱𝓸𝓾𝓼𝓪𝓷𝓭.，到今天 8.22 号的话，累计用户已经破了 50 万。  这篇文章的话主要就是分享一下小程序的一些数据和收入，供大家参考。 小程序广告类型首先介绍下微信小程序主要的广告类型，主要分为 Banner 广告、激励式广告、插屏广告、视频广告、视频">
-<meta name="keywords" content="小程序">
+  <meta name="description" content="好久没有在知乎上看到好问题了，前几天看到一个，把回答同步过来。  确实是一个很有争议的问题，团队里也经常讨论这个问题，下边分享下我的想法，也不一定是最佳实践。 首先，不要修改 prop 的值肯定是一条比较好的实践，保证数据的流向明确。 官方文档中也有明确指出： One-Way Data FlowAll props form a one-way-down binding between the ch">
+<meta name="keywords" content="Vue">
 <meta property="og:type" content="article">
-<meta property="og:title" content="累计用户50万的小程序可以赚多少钱?">
-<meta property="og:url" content="https://windliang.wang/2020/08/22/累计用户50万的小程序可以赚多少钱/index.html">
+<meta property="og:title" content="Vue中props是Object可以直接修改吗">
+<meta property="og:url" content="https://windliang.wang/2023/07/06/Vue中props是Object可以直接修改吗/index.html">
 <meta property="og:site_name" content="windliang">
-<meta property="og:description" content="去年 5 月的时候写了小程序 神奇字体，可以生成类似这样的字体 𝓘 𝓵𝓸𝓿𝓮 𝔂𝓸𝓾 𝓽𝓱𝓻𝓮𝓮 𝓽𝓱𝓸𝓾𝓼𝓪𝓷𝓭.，到今天 8.22 号的话，累计用户已经破了 50 万。  这篇文章的话主要就是分享一下小程序的一些数据和收入，供大家参考。 小程序广告类型首先介绍下微信小程序主要的广告类型，主要分为 Banner 广告、激励式广告、插屏广告、视频广告、视频">
+<meta property="og:description" content="好久没有在知乎上看到好问题了，前几天看到一个，把回答同步过来。  确实是一个很有争议的问题，团队里也经常讨论这个问题，下边分享下我的想法，也不一定是最佳实践。 首先，不要修改 prop 的值肯定是一条比较好的实践，保证数据的流向明确。 官方文档中也有明确指出： One-Way Data FlowAll props form a one-way-down binding between the ch">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini1.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini2.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini3.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini4.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini5.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini6.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini7.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini8.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini10.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini12.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini13.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini14.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini16.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini15.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini21.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini19.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini20.jpg">
-<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%A0%81.jpg">
-<meta property="og:updated_time" content="2022-11-17T00:01:23.992Z">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20230706080412256.png">
+<meta property="og:updated_time" content="2023-07-06T00:44:07.933Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="累计用户50万的小程序可以赚多少钱?">
-<meta name="twitter:description" content="去年 5 月的时候写了小程序 神奇字体，可以生成类似这样的字体 𝓘 𝓵𝓸𝓿𝓮 𝔂𝓸𝓾 𝓽𝓱𝓻𝓮𝓮 𝓽𝓱𝓸𝓾𝓼𝓪𝓷𝓭.，到今天 8.22 号的话，累计用户已经破了 50 万。  这篇文章的话主要就是分享一下小程序的一些数据和收入，供大家参考。 小程序广告类型首先介绍下微信小程序主要的广告类型，主要分为 Banner 广告、激励式广告、插屏广告、视频广告、视频">
-<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini1.jpg">
+<meta name="twitter:title" content="Vue中props是Object可以直接修改吗">
+<meta name="twitter:description" content="好久没有在知乎上看到好问题了，前几天看到一个，把回答同步过来。  确实是一个很有争议的问题，团队里也经常讨论这个问题，下边分享下我的想法，也不一定是最佳实践。 首先，不要修改 prop 的值肯定是一条比较好的实践，保证数据的流向明确。 官方文档中也有明确指出： One-Way Data FlowAll props form a one-way-down binding between the ch">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20230706080412256.png">
 
 
 
@@ -147,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="https://windliang.wang/2020/08/22/累计用户50万的小程序可以赚多少钱/"/>
+  <link rel="canonical" href="https://windliang.wang/2023/07/06/Vue中props是Object可以直接修改吗/"/>
 
 
 
@@ -157,7 +140,7 @@
   };
 </script>
 
-  <title>累计用户50万的小程序可以赚多少钱? | windliang</title>
+  <title>Vue中props是Object可以直接修改吗 | windliang</title>
   
 
 
@@ -414,7 +397,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2020/08/22/累计用户50万的小程序可以赚多少钱/">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2023/07/06/Vue中props是Object可以直接修改吗/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="windliang">
@@ -431,7 +414,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">累计用户50万的小程序可以赚多少钱?
+          <h1 class="post-title" itemprop="name headline">Vue中props是Object可以直接修改吗
               
             
           </h1>
@@ -456,24 +439,12 @@
                 
               
 
-              <time title="创建时间：2020-08-22 19:08:49" itemprop="dateCreated datePublished" datetime="2020-08-22T19:08:49+08:00">2020-08-22</time>
+              <time title="创建时间：2023-07-06 08:02:45 / 修改时间：08:44:07" itemprop="dateCreated datePublished" datetime="2023-07-06T08:02:45+08:00">2023-07-06</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2022-11-17 08:01:23" itemprop="dateModified" datetime="2022-11-17T08:01:23+08:00">2022-11-17</time>
               
             
           </span>
@@ -504,7 +475,7 @@
 
           
           
-             <span id="/2020/08/22/累计用户50万的小程序可以赚多少钱/" class="leancloud_visitors" data-flag-title="累计用户50万的小程序可以赚多少钱?">
+             <span id="/2023/07/06/Vue中props是Object可以直接修改吗/" class="leancloud_visitors" data-flag-title="Vue中props是Object可以直接修改吗">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -535,50 +506,41 @@
       
 
       
-        <p>去年 <code>5</code> 月的时候写了小程序 <a href="https://mp.weixin.qq.com/s/CQTk6KMV6sWlF3A2hYEF1Q" target="_blank" rel="noopener">神奇字体</a>，可以生成类似这样的字体 𝓘 𝓵𝓸𝓿𝓮 𝔂𝓸𝓾 𝓽𝓱𝓻𝓮𝓮 𝓽𝓱𝓸𝓾𝓼𝓪𝓷𝓭.，到今天 <code>8.22</code> 号的话，累计用户已经破了 <code>50</code> 万。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini1.jpg" alt=""></p>
-<p>这篇文章的话主要就是分享一下小程序的一些数据和收入，供大家参考。</p>
-<h1 id="小程序广告类型"><a href="#小程序广告类型" class="headerlink" title="小程序广告类型"></a>小程序广告类型</h1><p>首先介绍下微信小程序主要的广告类型，主要分为 <code>Banner</code> 广告、激励式广告、插屏广告、视频广告、视频贴片广告、格子广告、原生模版广告。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini2.jpg" alt=""></p>
-<p><code>banner</code> 广告是最常见的，微信公众号文章下边一般都会有，就是下边的样子。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini3.jpg" alt=""></p>
-<p>然后是激励式广告，通常出现在游戏中，复活的时候让看一段视频广告那种。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini4.jpg" alt=""></p>
-<p>插屏广告的话，是那种弹窗广告，一般在某项活动结束的时候，小程序可能会弹出这种广告，会覆盖掉整个屏幕。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini5.jpg" alt=""></p>
-<p>视频广告和 <code>banner</code> 广告一样，会固定在某个位置，然后播放视频广告。视频贴片广告指的是一些视频类小程序，在播放视频前会播放一些广告。</p>
-<p>比较新的是格子广告，我好像也没在小程序里边见到别人用过。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini6.jpg" alt=""></p>
-<h1 id="用户情况"><a href="#用户情况" class="headerlink" title="用户情况"></a>用户情况</h1><p>下图是今天的访问情况。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini7.jpg" alt=""></p>
-<p>下图是近 <code>30</code> 天的用户打开次数的情况。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini8.jpg" alt=""></p>
-<p>下图是近 <code>30</code> 天的用户的新增情况。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini10.jpg" alt=""></p>
-<p>最后是近 <code>30</code> 天用户进入小程序的途径。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini12.jpg" alt=""></p>
-<p>很大一部分都是用户主动搜索进来的。我主要是在微信群、朋友圈、知识星球、知乎、我的博客、<code>v</code> 站分享过。</p>
-<p>我觉得用户之所以能够持续增长，最主要的原因就是小程序自带传播的属性，当用户使用了小程序中的字体，别人看到以后一定会去询问，从而引起传播。</p>
-<h1 id="收入情况"><a href="#收入情况" class="headerlink" title="收入情况"></a>收入情况</h1><p>说出来你可能不信，这一年多，<code>50</code> 多万的用户小程序的广告收入只有两千多，哈哈。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini13.jpg" alt=""></p>
-<p>下边是刚开通流量主第一个月时候的收入情况。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini14.jpg" alt=""></p>
-<p>除了刚发布的时候，达到了 <code>10</code> 多块钱，其余都是两块上下浮动。但此时的曝光量是很小的，也就是 <code>500</code> 上下。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini16.jpg" alt=""></p>
-<p>所以如果这样算的话，当时的 <code>eCPM</code> (每千次曝光的收入) 其实是很高的，有时候甚至超过了 <code>10</code> 元。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini15.jpg" alt=""></p>
-<p>然后看下上个月的情况。</p>
-<p>此时收入差不多在 <code>10</code> 元上下徘徊。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini21.jpg" alt=""></p>
-<p>此时的曝光量已经稳定在 <code>1</code> 万多了，是当时的十倍了。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini19.jpg" alt=""></p>
-<p>按照当时的 <code>eCPM</code>，收入应该过百了，然而此时的 <code>eCPM</code> 已经很低了，只在 <code>1</code> 块钱上下浮动了。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/mini20.jpg" alt=""></p>
-<p><code>banner</code> 广告的 <code>eCPM</code> 应该调整过很多次，有时候明明用户增长了，收入反而下降了。总之是越来越便宜了。</p>
-<h1 id="未来的打算"><a href="#未来的打算" class="headerlink" title="未来的打算"></a>未来的打算</h1><p>目前只接入了 <code>banner</code> 广告，听说激励广告的收入会很多，但我的这个小程序明显很不适用。</p>
-<p>在不影响之前体验的情况下，我把 <code>banner</code> 广告换成了视频广告，此外复制成功后会弹出一个插屏广告，看看收益会不会增长。未来的话再把这两种广告类型的收益情况分享给大家，供大家参考。</p>
-<p>当然，大家也可以体验下这个小程序「神奇字体」，哈哈，虽然简单，但还是很好用的，发朋友圈、发微博都可以用到。</p>
-<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%A0%81.jpg" alt=""></p>
+        <p>好久没有在知乎上看到好问题了，前几天<a href="https://www.zhihu.com/question/609822540/answer/3099837968" target="_blank" rel="noopener">看到一个</a>，把回答同步过来。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20230706080412256.png" alt=""></p>
+<p>确实是一个很有争议的问题，团队里也经常讨论这个问题，下边分享下我的想法，也不一定是最佳实践。</p>
+<p>首先，不要修改 prop 的值肯定是一条比较好的实践，保证数据的流向明确。</p>
+<p><a href="https://vuejs.org/guide/components/props.html#one-way-data-flow" target="_blank" rel="noopener">官方文档</a>中也有明确指出：</p>
+<h1 id="One-Way-Data-Flow"><a href="#One-Way-Data-Flow" class="headerlink" title="One-Way Data Flow"></a>One-Way Data Flow</h1><p>All props form a <strong>one-way-down binding</strong> between the child property and the parent one: when the parent property updates, it will flow down to the child, but not the other way around. This prevents child components from accidentally mutating the parent’s state, which can make your app’s data flow harder to understand.</p>
+<p>In addition, every time the parent component is updated, all props in the child component will be refreshed with the latest value. This means you should <strong>not</strong> attempt to mutate a prop inside a child component. If you do, Vue will warn you in the console:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  props: [<span class="string">'foo'</span>],</span><br><span class="line">  created() &#123;</span><br><span class="line">    <span class="comment">// ❌ 警告！prop 是只读的！</span></span><br><span class="line">    <span class="keyword">this</span>.foo = <span class="string">'bar'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>There are usually two cases where it’s tempting to mutate a prop:</p>
+<p><strong>1.The prop is used to pass in an initial value; the child component wants to use it as a local data property afterwards.</strong> In this case, it’s best to define a local data property that uses the prop as its initial value:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Vue3</span></span><br><span class="line"><span class="keyword">const</span> props = defineProps([<span class="string">'initialCounter'</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">// counter only uses props.initialCounter as the initial value;</span></span><br><span class="line"><span class="comment">// it is disconnected from future prop updates.</span></span><br><span class="line"><span class="keyword">const</span> counter = ref(props.initialCounter)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Vue2</span></span><br><span class="line">props: [<span class="string">'initialCounter'</span>],</span><br><span class="line">data: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    counter: <span class="keyword">this</span>.initialCounter</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>2. The prop is passed in as a raw value that needs to be transformed.</strong> In this case, it’s best to define a computed property using the prop’s value:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Vue3</span></span><br><span class="line"><span class="keyword">const</span> props = defineProps([<span class="string">'size'</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">// computed property that auto-updates when the prop changes</span></span><br><span class="line"><span class="keyword">const</span> normalizedSize = computed(<span class="function"><span class="params">()</span> =&gt;</span> props.size.trim().toLowerCase())</span><br><span class="line"></span><br><span class="line"><span class="comment">// Vue2</span></span><br><span class="line">props: [<span class="string">'size'</span>],</span><br><span class="line">computed: &#123;</span><br><span class="line">  normalizedSize: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.size.trim().toLowerCase()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了避免修改 prop 的值，可以在 data 中初始化为 prop 的值然后再去使用或者定义 computed 属性拿到 prop 值再去使用。</p>
+<p>当然，上边的写法也仅仅对原始值生效，如果 props 定义成一个 Array 或者 Object，如果把 Object 的值直接赋值给 data：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">props: [<span class="string">'initialCounterObj'</span>],</span><br><span class="line">data: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    counterObj: <span class="keyword">this</span>.initialCounterObj</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当去修改 <code>counterObj</code> 中的值，虽然看起来没有修改 props 的值，但因为 Objeact 传递进来的是引用，修改 <code>counterObj</code> 的值的时候外部的相应的对象也跟着修改了。</p>
+<p>针对这种情况，可以将 Object 摊开，变为一个个原始值。</p>
+<h2 id="通过-sync"><a href="#通过-sync" class="headerlink" title="通过 .sync"></a>通过 .sync</h2><p>父组件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">child</span> <span class="attr">field1.sync</span>=<span class="string">"obj.field1"</span> <span class="attr">field2.sync</span>=<span class="string">"obj.field2"</span>&gt;</span><span class="tag">&lt;/<span class="name">child</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>子组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  props: [<span class="string">'field1'</span>, <span class="string">'field2'</span>],</span><br><span class="line">  methods: &#123;</span><br><span class="line">      updateField1(newVal)&#123;</span><br><span class="line">           <span class="keyword">this</span>.$emit(<span class="string">'update:field1'</span>, newVal)</span><br><span class="line">      &#125;,</span><br><span class="line">      updateField2(newVal)&#123;</span><br><span class="line">           <span class="keyword">this</span>.$emit(<span class="string">'update:field2'</span>, newVal)</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="通过-get-set"><a href="#通过-get-set" class="headerlink" title="通过 get set"></a><a href="https://stackoverflow.com/questions/59992698/vuejs-best-practices-for-passing-form-data-to-child-and-back-to-parent?rq=4" target="_blank" rel="noopener">通过 get set</a></h2><p>父组件</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">child</span> <span class="attr">v-model</span>=<span class="string">"obj"</span>&gt;</span><span class="tag">&lt;/<span class="name">child</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>子组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  props: &#123;</span><br><span class="line">    value: &#123;</span><br><span class="line">      type: <span class="built_in">Object</span>,</span><br><span class="line">      <span class="keyword">default</span>: <span class="function"><span class="params">()</span> =&gt;</span> (&#123;&#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  computed: &#123;</span><br><span class="line">    field1: &#123;</span><br><span class="line">      get() &#123; <span class="keyword">return</span> <span class="keyword">this</span>.value.field1 &#125;,</span><br><span class="line">      set(field1) &#123; <span class="keyword">this</span>.$emit(<span class="string">'input'</span>, &#123;...this.value, field1 &#125;)&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    field2: &#123;</span><br><span class="line">      get() &#123; <span class="keyword">return</span> <span class="keyword">this</span>.value.field1 &#125;,</span><br><span class="line">      set(field2) &#123; <span class="keyword">this</span>.$emit(<span class="string">'input'</span>, &#123;...this.value, field2 &#125;)&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外一种更暴力的写法就是题主讲到的方案三 「<strong>不可变对象型」，</strong>每次修改前都把整个对象（或数组）克隆一遍，修改新的对象，再通过 emit 事件把新的对象（这里最好也再克隆一下）传出去。</p>
+<p>上边的方案都可以保证不去修改 props 的值。</p>
+<p>看下<a href="https://vuejs.org/guide/components/props.html#one-way-data-flow" target="_blank" rel="noopener">官方</a>对于 props 是 Object/Array 的态度：</p>
+<h1 id="Mutating-Object-Array-Props"><a href="#Mutating-Object-Array-Props" class="headerlink" title="Mutating Object / Array Props"></a>Mutating Object / Array Props</h1><p>When objects and arrays are passed as props, while the child component cannot mutate the prop binding, it <strong>will</strong> be able to mutate the object or array’s nested properties. This is because in JavaScript objects and arrays are passed by reference, and it is unreasonably expensive for Vue to prevent such mutations.</p>
+<p>The main drawback of such mutations is that it allows the child component to affect parent state in a way that isn’t obvious to the parent component, potentially making it more difficult to reason about the data flow in the future. As a best practice, you should avoid such mutations unless the parent and child are tightly coupled by design. In most cases, the child should emit an event to let the parent perform the mutation.</p>
+<p>关键句：<strong>you should avoid such mutations unless the parent and child are tightly coupled by design.</strong></p>
+<p>因此对于表单场景，我认为符合 parent and child are tightly coupled by design ，很多时候由于表单越来越大，一个 Vue 文件会变得巨大，此时想要拆部分表单出来成为一个组件，这种情况下采用题主所说的方案一「直接修改型」我认为是更佳的，不然的话不管采用什么方式保证不修改 props 都会增加很多代码，反而增加了很多理解成本。</p>
+<p>更进一步，对于 Object/Array，是否修改 props 取决于当前组件的通用性，如果这个组件专门为了某个父组件使用或者专门服务于某个页面，并且为了不修改 props 会增加很多工作量，这种情况下直接修改 props 我认为是合适的。</p>
+<p>但如果这个组件可能用给其他人，此时修改 props ，如果使用方不清楚的话就可能引发问题。</p>
 
       
     </div>
@@ -607,7 +569,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/小程序/" rel="tag"># 小程序</a>
+            <a href="/tags/Vue/" rel="tag"># Vue</a>
           
         </div>
       
@@ -620,8 +582,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/08/16/html的lang属性有什么用吗/" rel="next" title="html的lang属性有什么用吗">
-                <i class="fa fa-chevron-left"></i> html的lang属性有什么用吗
+              <a href="/2023/07/02/工作三年后的胡思乱想/" rel="next" title="工作三年后的胡思乱想">
+                <i class="fa fa-chevron-left"></i> 工作三年后的胡思乱想
               </a>
             
           </div>
@@ -629,10 +591,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/08/30/二叉索引树（树状数组）的原理/" rel="prev" title="二叉索引树（树状数组）的原理">
-                二叉索引树（树状数组）的原理 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -1057,7 +1015,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#小程序广告类型"><span class="nav-number">1.</span> <span class="nav-text">小程序广告类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#用户情况"><span class="nav-number">2.</span> <span class="nav-text">用户情况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#收入情况"><span class="nav-number">3.</span> <span class="nav-text">收入情况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#未来的打算"><span class="nav-number">4.</span> <span class="nav-text">未来的打算</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#One-Way-Data-Flow"><span class="nav-number">1.</span> <span class="nav-text">One-Way Data Flow</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#通过-sync"><span class="nav-number">1.1.</span> <span class="nav-text">通过 .sync</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过-get-set"><span class="nav-number">1.2.</span> <span class="nav-text">通过 get set</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mutating-Object-Array-Props"><span class="nav-number">2.</span> <span class="nav-text">Mutating Object / Array Props</span></a></li></ol></div>
             
 
           </div>
