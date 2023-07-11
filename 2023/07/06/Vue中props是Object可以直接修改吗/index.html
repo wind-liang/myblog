@@ -117,7 +117,7 @@
 <meta property="og:description" content="好久没有在知乎上看到好问题了，前几天看到一个，把回答同步过来。  确实是一个很有争议的问题，团队里也经常讨论这个问题，下边分享下我的想法，也不一定是最佳实践。 首先，不要修改 prop 的值肯定是一条比较好的实践，保证数据的流向明确。 官方文档中也有明确指出： One-Way Data FlowAll props form a one-way-down binding between the ch">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20230706080412256.png">
-<meta property="og:updated_time" content="2023-07-06T00:44:07.933Z">
+<meta property="og:updated_time" content="2023-07-11T23:16:06.534Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vue中props是Object可以直接修改吗">
 <meta name="twitter:description" content="好久没有在知乎上看到好问题了，前几天看到一个，把回答同步过来。  确实是一个很有争议的问题，团队里也经常讨论这个问题，下边分享下我的想法，也不一定是最佳实践。 首先，不要修改 prop 的值肯定是一条比较好的实践，保证数据的流向明确。 官方文档中也有明确指出： One-Way Data FlowAll props form a one-way-down binding between the ch">
@@ -439,12 +439,24 @@
                 
               
 
-              <time title="创建时间：2023-07-06 08:02:45 / 修改时间：08:44:07" itemprop="dateCreated datePublished" datetime="2023-07-06T08:02:45+08:00">2023-07-06</time>
+              <time title="创建时间：2023-07-06 08:02:45" itemprop="dateCreated datePublished" datetime="2023-07-06T08:02:45+08:00">2023-07-06</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2023-07-12 07:16:06" itemprop="dateModified" datetime="2023-07-12T07:16:06+08:00">2023-07-12</time>
               
             
           </span>
@@ -522,7 +534,7 @@
 <p>为了避免修改 prop 的值，可以在 data 中初始化为 prop 的值然后再去使用或者定义 computed 属性拿到 prop 值再去使用。</p>
 <p>当然，上边的写法也仅仅对原始值生效，如果 props 定义成一个 Array 或者 Object，如果把 Object 的值直接赋值给 data：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">props: [<span class="string">'initialCounterObj'</span>],</span><br><span class="line">data: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    counterObj: <span class="keyword">this</span>.initialCounterObj</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当去修改 <code>counterObj</code> 中的值，虽然看起来没有修改 props 的值，但因为 Objeact 传递进来的是引用，修改 <code>counterObj</code> 的值的时候外部的相应的对象也跟着修改了。</p>
+<p>当去修改 <code>counterObj</code> 中的值，虽然看起来没有修改 props 的值，但因为 Object 传递进来的是引用，修改 <code>counterObj</code> 的值的时候外部的相应的对象也跟着修改了。</p>
 <p>针对这种情况，可以将 Object 摊开，变为一个个原始值。</p>
 <h2 id="通过-sync"><a href="#通过-sync" class="headerlink" title="通过 .sync"></a>通过 .sync</h2><p>父组件</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">child</span> <span class="attr">field1.sync</span>=<span class="string">"obj.field1"</span> <span class="attr">field2.sync</span>=<span class="string">"obj.field2"</span>&gt;</span><span class="tag">&lt;/<span class="name">child</span>&gt;</span></span><br></pre></td></tr></table></figure>
