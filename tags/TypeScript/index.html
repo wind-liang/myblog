@@ -317,12 +317,12 @@
         
         
           
-          <li class="menu-item menu-item-入门前端课程">
-    <a href="https://mp.weixin.qq.com/s/xvfdXNSOKyMp--X-h_WE_Q" rel="section"
+          <li class="menu-item menu-item-【限免】入门前端课程">
+    <a href="https:/mp.weixin.qq.com/s/0X8l9VeEp0VizlUTSgVmqg" rel="section"
         target = "_blank"
     
     >
-      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />入门前端课程</a>
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />【限免】入门前端课程</a>
   </li>
 
       
@@ -1432,6 +1432,61 @@
                 success: function(newcounter) {
                   var $element = $(document.getElementById(url));
                   $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+wcounter.get('time'));
                 },
                 error: function(newcounter, error) {
                   console.log('Failed to create');
