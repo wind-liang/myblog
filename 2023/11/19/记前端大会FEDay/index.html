@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="周六去杭州参加了第六届 FEDay，买的晚宴票，晚上还和大佬们吃了饭，看着网上活跃的 id 变成了吃饭的同桌，还真有一些不真切的感觉。  趁着对周六分享还有些记忆，就简单写一写周六的分享和感触吧，中间会混着我的一些观点，主要是听到分享后想到的，大家也不要误解。 阮贝琪（Jecelyn Yeen）：网页调试的最新进展（Modern Web Debugging） 一位谷歌的大佬，分享的非常幽默，主要介">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记前端大会 FEDay 的一天">
+<meta property="og:url" content="https://windliang.wang/2023/11/19/记前端大会FEDay/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="周六去杭州参加了第六届 FEDay，买的晚宴票，晚上还和大佬们吃了饭，看着网上活跃的 id 变成了吃饭的同桌，还真有一些不真切的感觉。  趁着对周六分享还有些记忆，就简单写一写周六的分享和感触吧，中间会混着我的一些观点，主要是听到分享后想到的，大家也不要误解。 阮贝琪（Jecelyn Yeen）：网页调试的最新进展（Modern Web Debugging） 一位谷歌的大佬，分享的非常幽默，主要介">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119172323465.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119172721731.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119174738753.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180001931.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180135764.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180330182.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180338334.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180403639.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180446239.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180824327.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119184127214.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119194238059.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231120090032301.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119194430058.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119195532826.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119195650859.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119204648441.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231120092616443.png">
+<meta property="og:image" content="https://image.woshipm.com/2023/11/10/e9df295e-7f85-11ee-836d-00163e0b5ff3.jpg">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119201814989.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119201953880.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119202425785.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119202606595.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119202337901.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119203908997.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119204430533.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231120085703675.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231120091828930.png">
+<meta property="og:updated_time" content="2023-11-20T01:26:21.831Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记前端大会 FEDay 的一天">
+<meta name="twitter:description" content="周六去杭州参加了第六届 FEDay，买的晚宴票，晚上还和大佬们吃了饭，看着网上活跃的 id 变成了吃饭的同桌，还真有一些不真切的感觉。  趁着对周六分享还有些记忆，就简单写一写周六的分享和感触吧，中间会混着我的一些观点，主要是听到分享后想到的，大家也不要误解。 阮贝琪（Jecelyn Yeen）：网页调试的最新进展（Modern Web Debugging） 一位谷歌的大佬，分享的非常幽默，主要介">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119172323465.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2023/11/19/记前端大会FEDay/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>记前端大会 FEDay 的一天 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-【限免】入门前端课程">
+    <a href="https://mp.weixin.qq.com/s/0X8l9VeEp0VizlUTSgVmqg" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />【限免】入门前端课程</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2023/11/19/记前端大会FEDay/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">记前端大会 FEDay 的一天
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2023-11-19 11:13:00" itemprop="dateCreated datePublished" datetime="2023-11-19T11:13:00+08:00">2023-11-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2023-11-20 09:26:21" itemprop="dateModified" datetime="2023-11-20T09:26:21+08:00">2023-11-20</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2023/11/19/记前端大会FEDay/" class="leancloud_visitors" data-flag-title="记前端大会 FEDay 的一天">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>周六去杭州参加了第六届 FEDay，买的晚宴票，晚上还和大佬们吃了饭，看着网上活跃的 id 变成了吃饭的同桌，还真有一些不真切的感觉。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119172323465.png" alt="image-20231119172323465" style="zoom: 33%;"></p>
+<p>趁着对周六分享还有些记忆，就简单写一写周六的分享和感触吧，<strong>中间会混着我的一些观点</strong>，主要是听到分享后想到的，大家也不要误解。</p>
+<h1 id="阮贝琪（Jecelyn-Yeen）：网页调试的最新进展（Modern-Web-Debugging）"><a href="#阮贝琪（Jecelyn-Yeen）：网页调试的最新进展（Modern-Web-Debugging）" class="headerlink" title="阮贝琪（Jecelyn Yeen）：网页调试的最新进展（Modern Web Debugging）"></a>阮贝琪（Jecelyn Yeen）：网页调试的最新进展（Modern Web Debugging）</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119172721731.png" alt="image-20231119172721731" style="zoom:33%;"></p>
+<p>一位谷歌的大佬，分享的非常幽默，主要介绍了 Chrome 的 devTools，调试相关的东西。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119174738753.png" alt="image-20231119174738753"></p>
+<p>更新了一个认识： Source Maps 规格竟然停留在了 <a href="https://docs.google.com/document/d/1U1RGAehQwRypUTovF1KRlpiOFze0b-_2gc6fAH0KY0k/edit?pli=1#heading=h.1ce2c87bpj24" target="_blank" rel="noopener">2011</a>，但过去十年前端发生了太多的变化，导致 SourceMap 目前很 flexible， 目前 Chrome 也在与 TC39 合作，强化规范并改善调试体验。</p>
+<p>介绍了很多调试 Tips，印象比较深的两个：</p>
+<p>前段时间知道了 Chrome 可以覆盖相应内容，意味着 Mock 再也不需要第三方插件了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180001931.png" alt="image-20231119180001931"></p>
+<p>会上还展示了 Override headers，通过编辑 headers 也可以直接解决跨域问题，这是之前没有想到的。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180135764.png" alt="image-20231119180135764"></p>
+<p>另外还有个之前遇到的头疼的问题，如果想调试搜索框选中下拉元素的样式。</p>
+<p>当切到 Element，搜索框下边的内容就会消失掉</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180330182.png" alt="image-20231119180330182"></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180338334.png" alt="image-20231119180338334"></p>
+<p>此时找到 MoreTools，Rendering</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180403639.png" alt="image-20231119180403639"></p>
+<p>开启 Emulate a focused page，此时下拉就出来了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180446239.png" alt="image-20231119180446239"></p>
+<p>Jecelyn Yeen 也自嘲这么好的功能为什么大家都不知道，未来也会把这个功能放到外层。</p>
+<p>最后，所有的功能其实都是有人在默默开发，遇到问题没有人反馈其实不会自己偷偷修复，Jecelyn Yeen  也提倡大家有问题可以及时报告。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119180824327.png" alt="image-20231119180824327"></p>
+<h1 id="周爱民：从JS到TS无缝迁移的实践报告"><a href="#周爱民：从JS到TS无缝迁移的实践报告" class="headerlink" title="周爱民：从JS到TS无缝迁移的实践报告"></a>周爱民：从JS到TS无缝迁移的实践报告</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119184127214.png" alt="image-20231119184127214" style="zoom:33%;"></p>
+<p>分享了无缝迁移 Mocha 到 TS 的全过程，以及期间遇到的常见的问题。</p>
+<p>突然发现是一个学 TS 不错的方法，github 找一个还没有 ts 的开源项目，然后去转 TS 来练习。</p>
+<p>关于用不用 TS 一直争议不断，前段时间我也有写过一篇 <a href="https://zhuanlan.zhihu.com/p/649557019" target="_blank" rel="noopener">关于 TS 的思考</a>。</p>
+<p>周爱民老师也分享了自己的看法：持续迭代的复杂项目，值得去转 TS。</p>
+<p>换言之，如果一个简单项目，直接 js 就好了，用 TS 徒增复杂度。但对于复杂项目是不是也要转 TS 这里我觉得还是有争议的，对于框架类、工具类接入 TS 是毫无疑问的，比如 Vue3 就全面拥抱了 TS。</p>
+<p>但对于复杂的业务项目，由于参与人数众多，很多结构也很依赖于后端，随着慢慢迭代，更多的 any 或者类型和实际用的数据渐渐不一致，就变成破窗效应，迭代需求时候就没有人再愿意维护旧类型了。</p>
+<h1 id="蒋豪群：一种-Vue-2-3-共存开发的思路"><a href="#蒋豪群：一种-Vue-2-3-共存开发的思路" class="headerlink" title="蒋豪群：一种 Vue 2/3 共存开发的思路"></a>蒋豪群：一种 Vue 2/3 共存开发的思路</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119194238059.png" alt="image-20231119194238059" style="zoom:33%;"></p>
+<p>Vue2 将在年底彻底停止维护，分享了之前 Vue2 修复的安全漏洞，继续使用 Vue2 一个最大的问题就是安全问题。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231120090032301.png" alt="image-20231120090032301"></p>
+<p>但在国内这个问题不会引起重视的[旺柴]，毕竟 XP 还有很多市场，我们团队内的项目甚至还是 Vue 2.5 的版本，对于业务团队，完全没有足够的理由去说升级这个事，风险远远大于收益。</p>
+<p>之前升级项目的 ElementUI 的版本也是灰度了很久才完成，Vue 去升级想都不敢想，只能是新开的项目来使用 Vue3 了。</p>
+<p>后边具体的分享了 Vue2/3 同时维护的方案，一种是一套源代码编译成 Vue2/3 两套代码，另一种是直接写两套代码，都一定程度上会多增加一些工作量，目前看来还是没有一种完美的方案来让 Vue2/3 共存。</p>
+<h1 id="张磊：响应式-WebComponents"><a href="#张磊：响应式-WebComponents" class="headerlink" title="张磊：响应式 WebComponents"></a>张磊：响应式 WebComponents</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119194430058.png" alt="image-20231119194430058" style="zoom: 33%;"></p>
+<p>磊哥分享很硬核，直接上一页又一页的代码，人也自带搞笑属性，哈哈。主要介绍了 Omi 的一些思路，Web components + 信号驱动的响应式编程，响应式编程还就是 Vue 那套，感兴趣的同学也可以看我之前总结的  <a href="https://vue.windliang.wang/" target="_blank" rel="noopener">vue.windliang.wang/</a>。</p>
+<p>分享了对于 Web Components 遇到的一些问题，还有许久没有操作的 dom，介绍了一个有用的 API TreeWalker，解决 Shadow Dom 样式被隔离的问题，全面拥抱 TailWind css，解决取名问题，同时避免各个 class 相互影响，实现组件内聚到 HTML 标签上。</p>
+<p>我突然产生了一种感觉，随着 Web component 的完善，更多的框架出现，未来会不会又回到原生标签的开发中，哈哈。</p>
+<p>最重要的就是 ALL IN AI，生成式 AI 势不可挡，下午也有更多的分享嘉宾带来了 AI 方面的思考。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119195532826.png" alt="image-20231119195532826"></p>
+<h1 id="渚薰：作为一名前端，如何赶上AR时代的脚步"><a href="#渚薰：作为一名前端，如何赶上AR时代的脚步" class="headerlink" title="渚薰：作为一名前端，如何赶上AR时代的脚步"></a>渚薰：作为一名前端，如何赶上AR时代的脚步</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119195650859.png" alt="image-20231119195650859" style="zoom:33%;"></p>
+<p>主要分享了 AR / XR 方面的知识，自己之前也没接触过这方面知识，同时分享了未来的畅享。分享了给他儿子写的一个奥特曼 AR 应用，你相信光吗，看着心潮澎湃，哈哈。</p>
+<p>另外提到目前网页都是二维或者三维的渲染，期待未来实现二维和三维的混合渲染，同时三维也尽可能的接近目前 html/css 的开发模式，目前已经有个框架在往这方面发展，还可以直接在 VSCode 上调试，但框架名我忘记了。</p>
+<p>此外，AR/XR 的未来，完全看苹果的表现了，虽然已经发展了很多年，那依然还是没能像手机一样普及。如果苹果的 Vision Pro 继续发展，电影中的场景也会很快实现，明年也许是真正的 AR 元年。</p>
+<p>对于前端来说，未来又多了一批职业。</p>
+<h1 id="李杰（一丝）：resvg-js-高性能的-SVG-跨端渲染引擎"><a href="#李杰（一丝）：resvg-js-高性能的-SVG-跨端渲染引擎" class="headerlink" title="李杰（一丝）：resvg-js 高性能的 SVG 跨端渲染引擎"></a>李杰（一丝）：resvg-js 高性能的 SVG 跨端渲染引擎</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119204648441.png" alt="image-20231119204648441" style="zoom:33%;"></p>
+<p>演讲的时候没有感受到，吃饭的时候发现一丝姐姐好活泼，哈哈。主要介绍了 SVG 的渲染引擎，底层是基于 Rust ，上次进行封装，提供操作 SVG 的方法，浏览器通过 WebAssebmy 进行调用。</p>
+<p>也都是自己知识外的知识，但只记得一点就行了，如果要高性能的渲染 SVG，去看 resvg-js 就好了，哈哈。</p>
+<h1 id="吴亮（月影）：AI-大模型时代前端新思路"><a href="#吴亮（月影）：AI-大模型时代前端新思路" class="headerlink" title="吴亮（月影）：AI 大模型时代前端新思路"></a>吴亮（月影）：AI 大模型时代前端新思路</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231120092616443.png" alt="image-20231120092616443" style="zoom:33%;"></p>
+<p>介绍了创业项目 AirCode，现场演示了目前的一些功能。</p>
+<p>生成式 AI 未来可能会引发新的交互形式，maybe 智能组件，比如一个时间选择组件，直接通过自然语言进行交互，「勾选中秋节假期」，而不是自己先去查中秋是啥时候，当然是指一个简单的设想，未来也说不准会怎么样，比如现在国外团队最近发布的 Ai Pin，直接挂到胸前，通过语音沟通，还能投影到手掌。</p>
+<p><img src="https://image.woshipm.com/2023/11/10/e9df295e-7f85-11ee-836d-00163e0b5ff3.jpg" alt="img" style="zoom:50%;"></p>
+<p>另一个点是，ai 有一个问题是不确定性。可能无法很好的遵从我们的指令，如果这个问题可以解决了，未来会有更大的想象力，甚至成为一门新的编程语言，而这门编程语言完全是我们的自然语言了。</p>
+<h1 id="张敏：WebNN-Web-端侧推理的未来"><a href="#张敏：WebNN-Web-端侧推理的未来" class="headerlink" title="张敏：WebNN, Web 端侧推理的未来"></a>张敏：WebNN, Web 端侧推理的未来</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119201814989.png" alt="image-20231119201814989" style="zoom:33%;"></p>
+<p>好吧，涉及硬件的东西，完全没有看懂：</p>
+<blockquote>
+<p>AI PC 以及 AI Mobile 的新兴时代已经到来，越来越多的设备集成了强大的神经处理单元 NPU，以实现高效的人工智能加速，这对需要端侧推理的应用至关重要。除了通过 CPU 和 GPU 进行推理之外，Web Neural Network API (WebNN) 提供了 Web 应用访问此类专有 AI 加速器 NPU 的途径，以获得卓越性能及更低功耗。</p>
+<p>本演讲将会给大家分享 WebNN API 的 W3C 标准进度，对 CNN, Transformer 以及更广泛的生成式 AI (Generative AI) 模型的支持情况和计划，以及在 Chrome, Edge 等浏览器的实现进展。作为 JavaScript ML 框架的后端，WebNN 将会在几乎不更改前端代码的前提下，为 Web 开发者及他们的产品带来相较于 Wasm, WebGL 更为优异的性能体验。</p>
+</blockquote>
+<p>大概就是提供专门的硬件 NPU，同时上层提供专门的 API 加速 AI 计算，为上层的应用服务，比如后边分享的 Transformer。</p>
+<h1 id="贺师俊（Hax）：如何更丝滑地在应用中调用-GPT"><a href="#贺师俊（Hax）：如何更丝滑地在应用中调用-GPT" class="headerlink" title="贺师俊（Hax）：如何更丝滑地在应用中调用 GPT"></a>贺师俊（Hax）：如何更丝滑地在应用中调用 GPT</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119201953880.png" alt="image-20231119201953880" style="zoom:33%;"></p>
+<p>大佬很和蔼，吃饭的时候甚至就在旁边。分享的很实用，因为 Hax 在做 AI 相关的应用，底层是基于 GPT 的，很细节的分享了如何调用 GPT 和踩的一些坑。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119202425785.png" alt="image-20231119202425785"></p>
+<p>这一次的生成式 AI 真的越来越像人，具备了人的特点。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119202606595.png" alt="image-20231119202606595"></p>
+<p>之前听孟岩的播客也提到这个，GPT 是基于概率来逐次生成完整的对话，我们人其实也完全是这样，如果要说一大段话，基于周围的环境，前边说的，一点一点的完成整个对话，和 GPT 真的太像了。</p>
+<p>另外，只要热爱编程，就忘掉 35 岁吧，贺老已经 45 了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119202337901.png" alt="image-20231119202337901"></p>
+<h1 id="Joshua-Lochner：-State-of-the-art-Machine-Learning-for-the-Web（远程分享）"><a href="#Joshua-Lochner：-State-of-the-art-Machine-Learning-for-the-Web（远程分享）" class="headerlink" title="Joshua Lochner： State-of-the-art Machine Learning for the Web（远程分享）"></a>Joshua Lochner： State-of-the-art Machine Learning for the Web（远程分享）</h1><blockquote>
+<p>在本次演讲中，你将了解 Hugging Face 如何通过 Transformers.js 将最先进的机器学习带到 Web 中，同时我们将讨论 WebML 技术的优势，以及如何将其用于加速您的 Web 应用程序。最后，为了展示 Transformers.js 的潜力，我们将探索一些使用该库构建的引人注目的应用。</p>
+</blockquote>
+<p>在 chatGPT 出现之前，这一定是非常惊艳的，可以在浏览器本地直接实现语音识别、翻译、图像识别等， Hugging Face  提供了众多训练好的专有模型，前端直接通过一行代码引入就可以直接使用，底层还是之前很火的深度学习模型。之前我也通过 <a href="https://zhuanlan.zhihu.com/p/71647786" target="_blank" rel="noopener">Tensorflow.js</a> 来直接在浏览器实现图像识别.</p>
+<p>但当大模型兴起后，之前的深度学习就略显尴尬了，毕竟在各个方面大模型都可以吊打各个深度学习的专有模型了。但在浏览器直接跑模型好处也是有的，那就是隐私，由于是完全本地调用 AI 模型，无需通过网络，隐私完全不会暴露，同时速度也很快。</p>
+<p>未来发展方向就是将大模型也能内置到浏览器，但还需要继续发展。</p>
+<h1 id="陈天壹（七桑）：抖音商家端-Rust-业务实践"><a href="#陈天壹（七桑）：抖音商家端-Rust-业务实践" class="headerlink" title="陈天壹（七桑）：抖音商家端 Rust 业务实践"></a>陈天壹（七桑）：抖音商家端 Rust 业务实践</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119203908997.png" style="zoom:33%;"></p>
+<blockquote>
+<p>随着抖音电商业务高速增长，商家端在有高复用要求的背景下，选用了 Electron + Web 构建跨平台、快交付的高效率方案，但也面对着不小的性能及稳定性压力。我们通过 Rust 在抖音商家端落地，为高性能挑战的业务(如IM)提供了底层能力支持，抬高原有架构性能天花板，并保持跨平台应对未来变化。</p>
+<p>本次分享我们将揭示抖音商家端Rust 实战的精华内容，你将了解到:<br>- Electron架构面临什么样的性能和稳定性挑战? 选型上与其他方案有什么样的考虑？<br>- 为什么选择Rust语言? 如何设计 Rust SDK 架构实现跨平台<br>- Rust 怎么在 Electron 内跑起来？与web如何交互？<br>- 提升IM的稳定性，抬高性能天花板，我们拿到了什么样的收益？</p>
+</blockquote>
+<p>Rust 一直如火如荼，但一直没有近距离的接触过。七桑用代码演示了使用的过程，同时介绍了在抖音电商的落地。未来相关基建一定会用 Rust 来重新了，但不知道自己啥时候会遇到这样的需求。</p>
+<h1 id="黄玄（Hux）：我的大前端世界观"><a href="#黄玄（Hux）：我的大前端世界观" class="headerlink" title="黄玄（Hux）：我的大前端世界观"></a>黄玄（Hux）：我的大前端世界观</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231119204430533.png" alt="image-20231119204430533" style="zoom:33%;"></p>
+<p>会议开头直接抛出了问题，后端是什么，前端又是什么？</p>
+<p>确实很难定义清楚，狭义的讲，跑在服务器的就是后端，html/css/js 就是前端。</p>
+<p>但随着前端的发展，Node.js、WebAssembly、Rust、React、Vue、RN、小程序的出现，前端的领域范围越来越大，一切都是前端，还有前端不能做的吗[旺柴] 可惜忘了拍那张前端的大图</p>
+<p>Hux 也形象的用 O(n) -&gt; O(1) 来比喻边际效应，从 Flash 到 H5 到移动端，当技术让边际成本足够低，相应的职业也就会消失。有老的技术的消失，但随之又会有新技术的出现，技术肯定是为人所服务的，只要有技术，我们就会在。</p>
+<p>这也是我之前的想法，但 Hux 讲的更深入，更高大上一些，之前我写的详见 <a href="https://zhuanlan.zhihu.com/p/640990591" target="_blank" rel="noopener">工作三年后的胡思乱想</a>。</p>
+<p>我们确实站在了 AI 变革的时间点，但不用担心被 AI 取代，历史的经验已经充分告诉我们，一个的消失一定会有新的出现，保持学习即可。</p>
+<h1 id="尤雨溪：前端与框架（线上录屏）"><a href="#尤雨溪：前端与框架（线上录屏）" class="headerlink" title="尤雨溪：前端与框架（线上录屏）"></a>尤雨溪：前端与框架（线上录屏）</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231120085703675.png" alt="image-20231120085703675"></p>
+<p>可惜这次还是没有见到尤大，到尤大时间已经比较紧了，视频也开始 1.25、1.5 倍速，因为是在电影院，后面一场电影马上要来人了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231120091828930.png" alt="image-20231120091828930"></p>
+<p>尤大的分享确实很干，主要是关于 Vue2 到 Vue3 中犯的一些错误，业务迁移困难、相关基建迁移困难，但好在 Vue3 现在也蓬勃发展了，并且吸取了教训用在后续 Vite 迭代中。</p>
+<p>讲了目前 Vite 开发采用 esbuild 很快，但线上打包采用更加灵活的 rollup，两者可能会带来差异，后续会开发 rolldown，吸取 esbuild 和 rollup 两者的优点，但估计是个漫长的过程了。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>一天分享的内容很多很多，不停的超时，哈哈。上边就是自己印象深刻的一些点，后续 FEDay 的组织者也许会在「前端圈」把 ppt 都分享出来，大家感兴趣也可以去找找。</p>
+<p>一天下来，最重要的大概就是 AI 了，之前一直说风口，Web1.0 时代、移动互联网时代，新的 ai 时代开启了，但我们可以做些什么呢？好吧，果然还是普通人，只能静静的等待 ai 时代的明星公司一个接着一个诞生了。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/08/31/从小白到入门编程的成长之路/" rel="next" title="从小白到入门编程的成长之路">
+                <i class="fa fa-chevron-left"></i> 从小白到入门编程的成长之路
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">106</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">104</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#阮贝琪（Jecelyn-Yeen）：网页调试的最新进展（Modern-Web-Debugging）"><span class="nav-number">1.</span> <span class="nav-text">阮贝琪（Jecelyn Yeen）：网页调试的最新进展（Modern Web Debugging）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#周爱民：从JS到TS无缝迁移的实践报告"><span class="nav-number">2.</span> <span class="nav-text">周爱民：从JS到TS无缝迁移的实践报告</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#蒋豪群：一种-Vue-2-3-共存开发的思路"><span class="nav-number">3.</span> <span class="nav-text">蒋豪群：一种 Vue 2/3 共存开发的思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#张磊：响应式-WebComponents"><span class="nav-number">4.</span> <span class="nav-text">张磊：响应式 WebComponents</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#渚薰：作为一名前端，如何赶上AR时代的脚步"><span class="nav-number">5.</span> <span class="nav-text">渚薰：作为一名前端，如何赶上AR时代的脚步</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#李杰（一丝）：resvg-js-高性能的-SVG-跨端渲染引擎"><span class="nav-number">6.</span> <span class="nav-text">李杰（一丝）：resvg-js 高性能的 SVG 跨端渲染引擎</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#吴亮（月影）：AI-大模型时代前端新思路"><span class="nav-number">7.</span> <span class="nav-text">吴亮（月影）：AI 大模型时代前端新思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#张敏：WebNN-Web-端侧推理的未来"><span class="nav-number">8.</span> <span class="nav-text">张敏：WebNN, Web 端侧推理的未来</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#贺师俊（Hax）：如何更丝滑地在应用中调用-GPT"><span class="nav-number">9.</span> <span class="nav-text">贺师俊（Hax）：如何更丝滑地在应用中调用 GPT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Joshua-Lochner：-State-of-the-art-Machine-Learning-for-the-Web（远程分享）"><span class="nav-number">10.</span> <span class="nav-text">Joshua Lochner： State-of-the-art Machine Learning for the Web（远程分享）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#陈天壹（七桑）：抖音商家端-Rust-业务实践"><span class="nav-number">11.</span> <span class="nav-text">陈天壹（七桑）：抖音商家端 Rust 业务实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#黄玄（Hux）：我的大前端世界观"><span class="nav-number">12.</span> <span class="nav-text">黄玄（Hux）：我的大前端世界观</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#尤雨溪：前端与框架（线上录屏）"><span class="nav-number">13.</span> <span class="nav-text">尤雨溪：前端与框架（线上录屏）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">14.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
