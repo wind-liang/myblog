@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="平常小程序写的多一些，简单总结一下原理。但因为小程序也没开源，只能参考相关文档以及开发者工具慢慢理解了。 理解小程序原理的突破口就是开发者工具了，开发者工具是基于 NW.js，一个基于 Chromium 和 node.js 的应用运行时。同时暴漏了 debug  的入口。  点开后就是一个新的 devTools 的窗口，这里我们可以找到预览界面的 dom。  小程序界面是一个独立的 webview">
+<meta name="keywords" content="微信小程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小程序原理系列二之 wxml">
+<meta property="og:url" content="https://windliang.wang/2023/11/27/小程序原理系列之wxml/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="平常小程序写的多一些，简单总结一下原理。但因为小程序也没开源，只能参考相关文档以及开发者工具慢慢理解了。 理解小程序原理的突破口就是开发者工具了，开发者工具是基于 NW.js，一个基于 Chromium 和 node.js 的应用运行时。同时暴漏了 debug  的入口。  点开后就是一个新的 devTools 的窗口，这里我们可以找到预览界面的 dom。  小程序界面是一个独立的 webview">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231121074438703.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231121074627001.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231121075414589.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231121075550310.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231128083757746.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231128083838687.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231130083327633.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231130083443521.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231130083621685.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231201083243411.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231201083422729.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202081218159.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202081803850.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202082009585.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202082112148.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202090844714.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202091928675.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202091334728.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202091413794.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202091522286.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202092329181.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202092914565.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202093121268.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202093657732.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202093756333.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202093851877.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202093943000.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202100111614.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202160157283.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202160244055.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202160620254.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202175146660.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202093121268.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202180839768.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202181028950.png">
+<meta property="og:updated_time" content="2023-12-02T12:37:44.565Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="小程序原理系列二之 wxml">
+<meta name="twitter:description" content="平常小程序写的多一些，简单总结一下原理。但因为小程序也没开源，只能参考相关文档以及开发者工具慢慢理解了。 理解小程序原理的突破口就是开发者工具了，开发者工具是基于 NW.js，一个基于 Chromium 和 node.js 的应用运行时。同时暴漏了 debug  的入口。  点开后就是一个新的 devTools 的窗口，这里我们可以找到预览界面的 dom。  小程序界面是一个独立的 webview">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231121074438703.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2023/11/27/小程序原理系列之wxml/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>小程序原理系列二之 wxml | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-【限免】入门前端课程">
+    <a href="https://mp.weixin.qq.com/s/0X8l9VeEp0VizlUTSgVmqg" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />【限免】入门前端课程</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2023/11/27/小程序原理系列之wxml/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">小程序原理系列二之 wxml
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2023-11-27 07:54:35" itemprop="dateCreated datePublished" datetime="2023-11-27T07:54:35+08:00">2023-11-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2023-12-02 20:37:44" itemprop="dateModified" datetime="2023-12-02T20:37:44+08:00">2023-12-02</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2023/11/27/小程序原理系列之wxml/" class="leancloud_visitors" data-flag-title="小程序原理系列二之 wxml">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>平常小程序写的多一些，简单总结一下原理。但因为小程序也没开源，只能参考相关文档以及开发者工具慢慢理解了。</p>
+<p>理解小程序原理的突破口就是开发者工具了，开发者工具是基于 <code>NW.js</code>，一个基于 <code>Chromium</code> 和 <code>node.js</code> 的应用运行时。同时暴漏了 <code>debug</code>  的入口。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231121074438703.png" alt=""></p>
+<p>点开后就是一个新的 <code>devTools</code> 的窗口，这里我们可以找到预览界面的 <code>dom</code>。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231121074627001.png" alt=""></p>
+<p>小程序界面是一个独立的 <code>webview</code>，也就是常说的视图层，可以在命令行执行 <code>document.getElementsByTagName(&#39;webview&#39;)</code> ，可以看到很多 <code>webview</code>。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231121075414589.png" alt=""></p>
+<p>我这边第 <code>0</code> 个就是 <code>pages/index/index</code> 的视图层，再通过 <code>document.getElementsByTagName(&#39;webview&#39;)[0].showDevTools(true)</code> 命令单独打开这个 <code>webview</code> 。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231121075550310.png" alt=""></p>
+<p>熟悉的感觉回来了，其实就是普通的 <code>html/css</code> ，小程序的原理的突破口也就在这里了。</p>
+<p>这篇文章简单看一下页面的 <code>dom</code> 是怎么来的，也就是 <code>wxml</code> 做了什么事情。</p>
+<p>源代码：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231128083757746.png" alt=""></p>
+<p>渲染出来的代码：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231128083838687.png" alt="image-20231128083838687"></p>
+<p><code>view</code> 变成了 <code>wx-view</code> ，<code>text</code>  变成了 <code>wx-text</code> ，并且里边加了 <code>&lt;span&gt;</code>。两个关键信息，<code>wx-xxx</code> 标签以及 <code>exparser</code> 。</p>
+<h1 id="自定义标签"><a href="#自定义标签" class="headerlink" title="自定义标签"></a>自定义标签</h1><p><code>html</code>  是支持我们直接写自定义名字的标签的，并且在上边设置 <code>class</code>  也会直接生效。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231130083327633.png" alt=""></p>
+<p>区别在于自己写的标签没有一些预制的属性，比如 <code>div</code> 的 <code>display: block</code> 。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231130083443521.png" alt=""></p>
+<p>如果我们给 <code>wx-view</code> 也加个 <code>display: block</code> ，那表现上它和 <code>div</code> 也就一致了。</p>
+<p>微信已经帮我们把自定义标签的属性提前内置了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231130083621685.png" alt=""></p>
+<p>至于为什么要把我们写的 <code>view</code> 转成 <code>wx-view</code> ，因为自定义元素中规定必须用 <code>-</code> 连接。</p>
+<blockquote>
+<p>“自定义元素的名字必须包含一个破折号（<code>-</code>）所以<code>&lt;x-tags&gt;</code>、<code>&lt;my-element&gt;</code>和<code>&lt;my-awesome-app&gt;</code>都是正确的名字，而<code>&lt;tabs&gt;</code>和<code>&lt;foo_bar&gt;</code>是不正确的。这样的限制使得 HTML 解析器可以分辨那些是标准元素，哪些是自定义元素。”</p>
+</blockquote>
+<p>有 <code>-</code> 可以保证一定的兼容性，并且也可以和浏览器自带的元素有一定的区分。</p>
+<h1 id="Exparser"><a href="#Exparser" class="headerlink" title="Exparser"></a>Exparser</h1><p>简单讲，就是一个仿照 <code>Web Components</code> 的组件系统，它会维护标签的属性、事件，提供 <code>registerElement</code> 方法用于注册自定义组件，提供 <code>createElement</code> 来渲染组件，对于自定义组件会采用 <code>Shadow DOM</code>  的技术。</p>
+<p><code>Exparser</code>  的相关代码在哪里呢？这就是微信传说中的基础库里了，在渲染层引入的是 <code>WAWebview.js</code> 。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231201083243411.png" alt=""></p>
+<p>可以右键打开这个文件，复制出来格式化一下：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231201083422729.png" alt=""></p>
+<p>由于文件比较大，用 <code>VSCode</code> 直接格式化可能会很卡，可以写个脚本来格式化。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202081218159.png" alt=""></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// chatGPT 生成</span></span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> prettier = <span class="built_in">require</span>(<span class="string">'prettier'</span>);</span><br><span class="line"><span class="keyword">const</span> jsBeautify = <span class="built_in">require</span>(<span class="string">'js-beautify'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> filePath = process.argv[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!filePath) &#123;</span><br><span class="line">  <span class="built_in">console</span>.error(<span class="string">'Please provide a file path'</span>);</span><br><span class="line">  process.exit(<span class="number">1</span>);</span><br><span class="line">&#125; </span><br><span class="line"><span class="built_in">console</span>.log(filePath)</span><br><span class="line">fs.readFile(filePath, <span class="string">'utf8'</span>, <span class="keyword">async</span> (err, data) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.error(<span class="string">`Error reading file: <span class="subst">$&#123;err&#125;</span>`</span>);</span><br><span class="line">    process.exit(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 使用 prettier 格式化代码</span></span><br><span class="line">  <span class="keyword">const</span> formattedCode = <span class="keyword">await</span> prettier.format(data, &#123; <span class="attr">parser</span>: <span class="string">'babel'</span> &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 使用 js-beautify 进一步格式化代码</span></span><br><span class="line">  <span class="keyword">const</span> beautifiedCode = jsBeautify(formattedCode, &#123; <span class="attr">indent_size</span>: <span class="number">2</span> &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 将格式化后的代码写回文件</span></span><br><span class="line">  fs.writeFile(filePath, beautifiedCode, <span class="string">'utf8'</span>, (err) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">      <span class="built_in">console</span>.error(<span class="string">`Error writing file: <span class="subst">$&#123;err&#125;</span>`</span>);</span><br><span class="line">      process.exit(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'File formatted successfully'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>然后在命令行执行 <code>node format.js ./WAWebview.js</code> ，接下来就看到格式化的代码了：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202081803850.png" alt=""></p>
+<p>是 <code>2.32.3</code> 版本，目前微信已经更到 <code>3.x.x</code> 了，新增了渲染引擎 <code>Skyline</code>，为了简单些这次就先看 <code>2.x</code> 的版本了。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202082009585.png" alt=""></p>
+<p>总共有 <code>14</code> 万行</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202082112148.png" alt=""></p>
+<p>接下来通过搜索、折行，找一下 <code>Exparser</code> 的部分，因为都是压缩过的代码，逐行理解肯定不现实，就找几个关键点看一下：</p>
+<p>提供了注册组件的方法 <code>registerElement</code> 。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202090844714.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202091928675.png" alt=""></p>
+<p>提前注册了内置的组件：</p>
+<p><code>wx-view</code>：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202091334728.png" alt=""></p>
+<p><code>wx-text</code> ：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202091413794.png" alt=""></p>
+<p>可以看到上边最终转成了 <code>span</code> 标签，和我们开发者工具看到的也是一致的：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202091522286.png" alt=""></p>
+<p>提供了 <code>createElement</code> 方法，将注册的组件生成为最终的 <code>dom</code> 。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202092329181.png" alt=""></p>
+<p>最终会调用 <code>document</code>  来创建 <code>dom</code> 。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202092914565.png" alt=""></p>
+<h1 id="生成流程"><a href="#生成流程" class="headerlink" title="生成流程"></a>生成流程</h1><p>再回到加载的 <code>dom</code>  看一下 <code>wxml</code> 转换成了什么：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202093121268.png" alt=""></p>
+<p>右键打开这个文件：</p>
+<p>定义了 <code>$gw</code> 这个函数，接收 <code>path</code> 参数。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202093657732.png" alt=""></p>
+<p>返回一个函数：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202093756333.png" alt=""></p>
+<p>内部有我们 <code>wxml</code> 的变量：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202093851877.png" alt=""></p>
+<p>对应于原文件：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202093943000.png" alt=""></p>
+<p>看一下调用这个函数的地方：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202100111614.png" alt=""></p>
+<p>传入当前页面路径将生成的函数赋值给了 <code>generateFunc</code> ，接着用 <code>document.dispatchEvent</code> 触发事件 <code>generateFuncReady</code>，并且将 <code>generateFunc</code> 传入。</p>
+<p>我们在控制台手动执行一下 <code>generateFunc</code> ，看下返回值：</p>
+<p>可以看到 <code>3</code> 个子元素：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202160157283.png" alt=""></p>
+<p>但因为前两个的值是在逻辑层 <code>data</code>  中，因为我们没有传递，所以上边前两个子元素 <code>children</code> 都是空字符串</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202160244055.png" alt=""></p>
+<p>这个 <code>data</code> 需要在调用 <code>generateFunc</code> 的时候传入：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202160620254.png" alt=""></p>
+<p>现在就正常返回了标签的结构，接着渲染层内部就会利用它生成虚拟 <code>dom</code> ，再利用 <code>Exparser</code> 生成最终的 <code>dom</code> 元素了。</p>
+<p>大概是下边的流程（下边的代码是最早期的基础库，目前的版本已经不是下边的结构了，目前先按下边的流程理解，后边再理清当前基础库的逻辑）：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202175146660.png" alt=""></p>
+<p>调用 <code>virtualTree</code> 将 <code>generateFunc</code> 返回的结构变为虚拟 <code>dom</code> ，接着调用 <code>render</code>  ，<code>render</code> 内部就是调用前边介绍的 <code>Exparser</code> 的 <code>createElement</code> 方法生成真正的 <code>dom</code> ，最后通过 <code>replaceChild</code> 挂载到页面上。</p>
+<p>当然 <code>generateFunc</code> 需要的 <code>data</code> 数据需要等待逻辑层传过来，后边的文章再介绍通信机制。</p>
+<h1 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h1><p>剩下最后一个问题，<code>wxml.js</code> 是哪里来的？</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202093121268.png" alt=""></p>
+<p>和 <a href="https://zhuanlan.zhihu.com/p/668845449" target="_blank" rel="noopener">wxss</a> 一样，是微信提前编译生成的。编译工具可以在微信开发者工具目录搜索 <code>wcc</code> ，<code>Library</code> 是个隐藏目录。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202180839768.png" alt=""></p>
+<p>我们把这个 <code>wcc</code> 文件拷贝到 <code>index.wxml</code> 的所在目录，然后将我们的 <code>index.wxml</code> 手动编译一下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./wcc -js ./index.wxml &gt;&gt; wxml.js</span><br></pre></td></tr></table></figure>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20231202181028950.png" alt=""></p>
+<p>可以看到  <code>$gw</code>  函数就生成了。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>大概过程就是上边了，先提前编译出了  <code>$gw</code>  函数，会返回一个函数，可以把 <code>wxml</code> 实例为一个 <code>dom</code> 的标签结构。传入当前页面的路径执行该函数生成 <code>generateFunc</code> 函数，将函数传给视图层。</p>
+<p>视图层拿到逻辑层的数据后将 <code>generateFunc</code> 函数返回的 <code>dom</code> 结构生成虚拟 <code>dom</code> ，通过 <code>Exparser</code> 执行 <code>render</code> 生成最终的 <code>dom</code> 挂载到页面。</p>
+<p>至于拿到逻辑层的数据的时机，相互通信的逻辑就放到后边的文章了，看着混淆的代码，头大。</p>
+<p>历史文章：</p>
+<p><a href="https://zhuanlan.zhihu.com/p/668845449" target="_blank" rel="noopener">小程序原理系列一之wxss</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/微信小程序/" rel="tag"># 微信小程序</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/11/21/小程序原理系列之wxss/" rel="next" title="小程序原理系列一之wxss">
+                <i class="fa fa-chevron-left"></i> 小程序原理系列一之wxss
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">108</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">104</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#自定义标签"><span class="nav-number">1.</span> <span class="nav-text">自定义标签</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Exparser"><span class="nav-number">2.</span> <span class="nav-text">Exparser</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生成流程"><span class="nav-number">3.</span> <span class="nav-text">生成流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译"><span class="nav-number">4.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">5.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
