@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Vue/React 将前端开发从 jQuery 命令式的编程风格带到了声明式的编程风格，开发者只需要描述界面应该是什么样子，Vue/React 就会根据数据的变化自动更新界面。 因此对于业务页面只需要关心数据有什么以及引起数据的变化有什么。 数据数据主要有两大类，ui 相关和非 ui 相关。  ui 相关前端本质上就是将数据可视化，因此定义的变量中一部分就是供页面展示使用的，在 Vue 中会把这些">
+<meta name="keywords" content="前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="业务前端的本质--数据维护">
+<meta property="og:url" content="https://windliang.wang/2024/06/10/业务前端的本质-状态维护/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="Vue/React 将前端开发从 jQuery 命令式的编程风格带到了声明式的编程风格，开发者只需要描述界面应该是什么样子，Vue/React 就会根据数据的变化自动更新界面。 因此对于业务页面只需要关心数据有什么以及引起数据的变化有什么。 数据数据主要有两大类，ui 相关和非 ui 相关。  ui 相关前端本质上就是将数据可视化，因此定义的变量中一部分就是供页面展示使用的，在 Vue 中会把这些">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20240624073416272.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/Kapture%202024-06-20%20at%2008.34.37.gif">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20240620083955393.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20240625073357149.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20240626082531111.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20240626082459980.png">
+<meta property="og:updated_time" content="2024-06-26T00:25:40.098Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="业务前端的本质--数据维护">
+<meta name="twitter:description" content="Vue/React 将前端开发从 jQuery 命令式的编程风格带到了声明式的编程风格，开发者只需要描述界面应该是什么样子，Vue/React 就会根据数据的变化自动更新界面。 因此对于业务页面只需要关心数据有什么以及引起数据的变化有什么。 数据数据主要有两大类，ui 相关和非 ui 相关。  ui 相关前端本质上就是将数据可视化，因此定义的变量中一部分就是供页面展示使用的，在 Vue 中会把这些">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20240624073416272.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2024/06/10/业务前端的本质-状态维护/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>业务前端的本质--数据维护 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-入门前端必备课程">
+    <a href="https://mp.weixin.qq.com/s/eBsYMO4GoLY_UVZ1DioXAA" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />入门前端必备课程</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2024/06/10/业务前端的本质-状态维护/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">业务前端的本质--数据维护
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2024-06-10 14:17:28" itemprop="dateCreated datePublished" datetime="2024-06-10T14:17:28+08:00">2024-06-10</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2024-06-26 08:25:40" itemprop="dateModified" datetime="2024-06-26T08:25:40+08:00">2024-06-26</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2024/06/10/业务前端的本质-状态维护/" class="leancloud_visitors" data-flag-title="业务前端的本质--数据维护">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Vue/React 将前端开发从 jQuery 命令式的编程风格带到了声明式的编程风格，开发者只需要描述界面应该是什么样子，Vue/React 就会根据数据的变化自动更新界面。</p>
+<p>因此对于业务页面只需要关心<strong>数据有什么</strong>以及<strong>引起数据的变化</strong>有什么。</p>
+<h1 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h1><p>数据主要有两大类，<strong>ui 相关</strong>和<strong>非 ui 相关</strong>。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20240624073416272.png" alt=""></p>
+<h2 id="ui-相关"><a href="#ui-相关" class="headerlink" title="ui 相关"></a>ui 相关</h2><p>前端本质上就是将数据可视化，因此定义的变量中一部分就是供页面展示使用的，在 Vue 中会把这些数据定义在 data 中变为响应式，在 React 中会调用 <code>SetState</code>  来更新这些变量以便更新视图。</p>
+<h3 id="前端自闭环"><a href="#前端自闭环" class="headerlink" title="前端自闭环"></a>前端自闭环</h3><p>一些变量仅在前端记录进行 ui 的更新，后端不会感知到。</p>
+<p>比如<a href="https://coursesub.top/" target="_blank" rel="noopener">页面</a>的 loading 态：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/Kapture%202024-06-20%20at%2008.34.37.gif" alt=""></p>
+<p>点击态，是否打开展示更多：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20240620083955393.png" alt=""></p>
+<h3 id="来自后端"><a href="#来自后端" class="headerlink" title="来自后端"></a>来自后端</h3><p>页面数据是存在数据库中，后端会把这些数据给前端，供前端展示，这类数据又分为两种：</p>
+<ul>
+<li>将数据直接赋值给某个前端变量进行展示，比如昵称、标题等。</li>
+<li>将数据转换后再进行展示，比如钱相关字段因为精度问题，后端存储的是分，给到前端以后需要转换成元进行展示。</li>
+</ul>
+<h3 id="来自底层"><a href="#来自底层" class="headerlink" title="来自底层"></a>来自底层</h3><p>设备信息：通过屏幕宽高来设置弹窗的宽高。</p>
+<p>localStorage：一些模块可能一天只需要展示一次，前端将标志存到 localStorage 中自行进行判断。</p>
+<h2 id="非-ui-相关"><a href="#非-ui-相关" class="headerlink" title="非 ui 相关"></a>非 ui 相关</h2><p>这些变量和 ui 无关也不会和页面后端交互，举几个例子：</p>
+<h3 id="前端自闭环-1"><a href="#前端自闭环-1" class="headerlink" title="前端自闭环"></a>前端自闭环</h3><p>请求锁：一些提交请求，为了防止用户多次提交，可以在接口请求前设置一个标志位，类似于下边这样。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用于保存请求状态的标志位</span></span><br><span class="line"><span class="keyword">let</span> isSubmitting = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 模拟一个异步请求</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sendRequest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">            resolve(<span class="string">"请求成功"</span>);</span><br><span class="line">        &#125;, <span class="number">2000</span>); <span class="comment">// 模拟2秒的请求时间</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理按钮点击事件</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleSubmit</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 检查标志位</span></span><br><span class="line">    <span class="keyword">if</span> (isSubmitting) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"请求正在进行中，请稍后..."</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置标志位</span></span><br><span class="line">    isSubmitting = <span class="literal">true</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"开始请求..."</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送请求</span></span><br><span class="line">    sendRequest().then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(response);</span><br><span class="line">    &#125;).catch(<span class="function"><span class="params">error</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.error(error);</span><br><span class="line">    &#125;).finally(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// 请求完成后重置标志位</span></span><br><span class="line">        isSubmitting = <span class="literal">false</span>;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"请求完成，可以再次提交"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>埋点数据：模块曝光或者用户点击的时候进行埋点，相关数据会提前存到一个对象中。</p>
+<p>定时器引用：页面中创建定时器后用一个变量保存定时器实例，用户可能离开页面的时候还未执行到定时器，因此需要在离开页面的时候进行清除。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">Page(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    <span class="comment">// 其他数据</span></span><br><span class="line">  &#125;,</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 用于保存定时器实例的变量</span></span><br><span class="line">  timer: <span class="literal">null</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 页面加载时创建定时器</span></span><br><span class="line">  onLoad: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.createTimer();</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 创建定时器的方法</span></span><br><span class="line">  createTimer: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.timer = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'定时器执行中...'</span>);</span><br><span class="line">    &#125;, <span class="number">5000</span>); <span class="comment">// 5秒后执行</span></span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 页面卸载时清除定时器</span></span><br><span class="line">  onUnload: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.clearTimer();</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 清除定时器的方法</span></span><br><span class="line">  clearTimer: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.timer) &#123;</span><br><span class="line">      clearTimeout(<span class="keyword">this</span>.timer);</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'页面即将卸载，定时器已清除'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 其他页面方法和事件处理函数</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="来自后端-1"><a href="#来自后端-1" class="headerlink" title="来自后端"></a>来自后端</h3><p>埋点数据：模块曝光或者用户点击的时候进行埋点，一些数据会由后端给到。</p>
+<h3 id="来自底层-1"><a href="#来自底层-1" class="headerlink" title="来自底层"></a>来自底层</h3><p>localStorage：比如存储用户的点击次数，进行相应的限频。</p>
+<h1 id="引起数据的变化"><a href="#引起数据的变化" class="headerlink" title="引起数据的变化"></a>引起数据的变化</h1><p>数据变化的根源就是<strong>用户操作</strong>，用户的操作可能直接引起数据变化，也可能触发某些全局事件或者定时器，又触发新一轮的页面数据变化。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20240625073357149.png" alt=""></p>
+<h2 id="用户操作"><a href="#用户操作" class="headerlink" title="用户操作"></a>用户操作</h2><p>大部分的数据变化都是由于用户的操作，比如点击、滑动。</p>
+<p>根据点击的位置不同，可能触发不同的动作。比如去请求后端接口拿数据、进入新页面、离开当前页面，在小程序中会触发 <code>onHide</code> 、<code>onShow</code>  生命周期，在这些周期中会做一些动作更新数据。</p>
+<p>还有经常遇到的表单逆向操作，当用户依次填了 A 项、B 项、C 项，由于 B、C  依赖于 A 项的选择，当用户再修改 A 项的时候需要清空 B、C 之前的选择。</p>
+<h2 id="监听数据变化"><a href="#监听数据变化" class="headerlink" title="监听数据变化"></a>监听数据变化</h2><p>在 <code>Vue</code> 中通过 <code>watch</code> 监听变量，在 <code>React</code> 中通过 <code>useEffect</code> 监听变量。一般情况监听的是组件的 prop，当父组件变化时，子组件进行相应的更新。</p>
+<h2 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h2><p>定时器时间结束后，会触发定时器注册的回调函数。</p>
+<p>常用于页面上的倒计时的更新。也用于解决 ui 更新的时序问题，直接给 setTimeout 事件设置为 0，让回调函数到下一个宏任务周期去执行。</p>
+<h2 id="全局事件"><a href="#全局事件" class="headerlink" title="全局事件"></a>全局事件</h2><p>主要用于跨模块之间的通信，常用的比如 eventbus、vuex、redux 等。</p>
+<p>常见的比如全局的登录事件，各个页面需要监听登录成功才去触发后续的业务逻辑。</p>
+<h1 id="关联"><a href="#关联" class="headerlink" title="关联"></a>关联</h1><p>理想状态，用户动作 =&gt; 更新数据 =&gt; 页面自动更新。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20240626082531111.png" alt=""></p>
+<p>但实际上，当数据变化的时候，由于全局事件、定时器的存在，还会继续触发新一轮的数据更新。</p>
+<p>此外，数据变化每次也不止变更一个数据，数据之间又会有相应的联动关系。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20240626082459980.png" alt="、"></p>
+<p>这也是为什么框架都在倡导单一数据流的原因，全局事件第一个人用起来会很方便，但在一个上百人的前端项目中，后续页面继续迭代或者重构的时候，漏改或者影响面评估错误的风险也会增高。</p>
+<p>当增加一个数据变量的时候也要考虑清楚，是否有必要新增，因为每增一个都会增加页面的内部复杂度。当然有时候也不是变量越少越好，当各个地方共用一个变量，也意味着这个变量赋予了多重含义，有悖「单一职责」。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>业务前端看起来简单，就是维护一些数据。但当页面数据变量越来越多，交互越来越多，数据更新会变得错综复杂，后续迭代的心智负担会越来越重。</p>
+<p>此时能做的就是明确<strong>当前数据（ui/非 ui 数据）有什么，引起数据的变化有什么（用户动作、数据之间的关联等）</strong>，这些理清之后出现 bug 的概率也会极大降低。</p>
+<p>最根本的还是降低函数和函数之间、模块与模块之间的依赖关系，也就是常说的高内聚、低耦合，保证后续改动的影响面足够小且明确。</p>
+<p>最终看到的页面不再是页面，而是数据的变化和流动。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/leetcode.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端/" rel="tag"># 前端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/05/26/第一个用了ai的小程序-语气友好转换器-从开发到备案上线全过程分享/" rel="next" title="第一个用了 ai 的小程序, 语气友好转换器, 从开发到备案上线全过程分享">
+                <i class="fa fa-chevron-left"></i> 第一个用了 ai 的小程序, 语气友好转换器, 从开发到备案上线全过程分享
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">111</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">105</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据"><span class="nav-number">1.</span> <span class="nav-text">数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ui-相关"><span class="nav-number">1.1.</span> <span class="nav-text">ui 相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前端自闭环"><span class="nav-number">1.1.1.</span> <span class="nav-text">前端自闭环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#来自后端"><span class="nav-number">1.1.2.</span> <span class="nav-text">来自后端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#来自底层"><span class="nav-number">1.1.3.</span> <span class="nav-text">来自底层</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非-ui-相关"><span class="nav-number">1.2.</span> <span class="nav-text">非 ui 相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前端自闭环-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">前端自闭环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#来自后端-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">来自后端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#来自底层-1"><span class="nav-number">1.2.3.</span> <span class="nav-text">来自底层</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#引起数据的变化"><span class="nav-number">2.</span> <span class="nav-text">引起数据的变化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#用户操作"><span class="nav-number">2.1.</span> <span class="nav-text">用户操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监听数据变化"><span class="nav-number">2.2.</span> <span class="nav-text">监听数据变化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定时器"><span class="nav-number">2.3.</span> <span class="nav-text">定时器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全局事件"><span class="nav-number">2.4.</span> <span class="nav-text">全局事件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关联"><span class="nav-number">3.</span> <span class="nav-text">关联</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">4.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2024</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
