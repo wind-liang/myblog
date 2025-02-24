@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://windliang.wang/"/>
-  <updated>2025-02-04T10:24:45.885Z</updated>
+  <updated>2025-02-24T00:06:28.575Z</updated>
   <id>https://windliang.wang/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>用cursor开发了一个链接转二维码的网站</title>
+    <link href="https://windliang.wang/2025/02/23/%E7%94%A8cursor%E5%BC%80%E5%8F%91%E4%BA%86%E4%B8%80%E4%B8%AA%E9%93%BE%E6%8E%A5%E8%BD%AC%E4%BA%8C%E7%BB%B4%E7%A0%81%E7%9A%84%E7%BD%91%E7%AB%99/"/>
+    <id>https://windliang.wang/2025/02/23/%E7%94%A8cursor%E5%BC%80%E5%8F%91%E4%BA%86%E4%B8%80%E4%B8%AA%E9%93%BE%E6%8E%A5%E8%BD%AC%E4%BA%8C%E7%BB%B4%E7%A0%81%E7%9A%84%E7%BD%91%E7%AB%99/</id>
+    <published>2025-02-23T10:45:12.000Z</published>
+    <updated>2025-02-24T00:06:28.575Z</updated>
+    
+    <content type="html"><![CDATA[<p>微信公众号文章不能加入外链，有时候会引用很多网站的链接，但大家想看的话还得复制到浏览器再去打开，最简单的方式就是贴一个链接二维码来解决。比如用草料二维码直接用生成：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250223192358686.png" alt="image-20250223192358686" style="zoom: 33%;"></p><p>但如果文章单独贴一个二维码会很突兀：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250223192554152.png" alt="image-20250223192554152" style="zoom:33%;"></p><p>于是就有了这个网站，<a href="https://qr.windliang.wang/" target="_blank" rel="noopener">qr.windliang.wang</a>：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250223192816758.png" alt=""></p><p>输入网站地址就可以生成下边的图片：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250223192719014.png" alt=""></p><p>利用二维码占据的高度，把标题和网站介绍都填充过去。</p><p>其实想做这个网站很久了，但因为懒一直没做。虽然功能很简单，但如果自己开发起来，去写 ui、处理交互、再学习 canvas 相关的，顺利的话估计也得一个周末。</p><p>但现在不同了，有了 Cursor，我可以一行代码都不写，通过和 Cursor 聊天就完成了网站的开发。</p><p>正如这个<a href="https://ghuntley.com/dothings/" target="_blank" rel="noopener">文章</a>所讲的：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250224071110660.png" alt=""></p><blockquote><p>有一句老话：创意很廉价，执行才是一切。然而，AI 颠覆了这个说法，执行现在很廉价，整个开发时间和交付速度的概念都不同了。</p><p>未来属于那些有想法、还能动手去做的人。</p></blockquote><p>网站的初始交互和 Cursor 对话一次就完成了开发：</p><blockquote><p>我现在需要写一个新项目，作用是为微信公众号提供链接转二维码图片的功能。</p><p>用户输入链接，输出一张图片，包含链接的二维码、网站标题、网站简介。</p><p>网站现代化一些，可以使用 Next.js 和 TailwindCSS</p><p>考虑网站的 SEO 优化。</p><p>我准备把项目开源，请写一个 ReadMe 。</p></blockquote><p>接着 Cursor 就开始干活了：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250224071605563.png" alt=""></p><blockquote><h2 id="项目：链接转二维码图片（微信公众号工具）"><a href="#项目：链接转二维码图片（微信公众号工具）" class="headerlink" title="项目：链接转二维码图片（微信公众号工具）"></a>项目：链接转二维码图片（微信公众号工具）</h2><h3 id="项目概述"><a href="#项目概述" class="headerlink" title="项目概述"></a>项目概述</h3><ul><li>功能：将链接转换为包含二维码、网站标题、网站简介的图片</li><li>技术栈：Next.js + TailwindCSS</li><li>目标：开源项目，注重 SEO 优化</li></ul><h3 id="任务列表"><a href="#任务列表" class="headerlink" title="任务列表"></a>任务列表</h3><p>[ ] 1. 创建项目基础结构<br>  [ ] 初始化 Next.js 项目<br>  [ ] 配置 TailwindCSS<br>  [ ] 设置基本目录结构<br>[ ] 2. 开发核心功能<br>  [ ] 实现链接输入和验证<br>  [ ] 集成二维码生成功能<br>  [ ] 实现网站信息抓取（标题、简介）<br>  [ ] 实现图片合成功能<br>[ ] 3. 前端开发<br>  [ ] 设计现代化 UI 界面<br>  [ ] 实现响应式设计<br>  [ ] 添加加载状态和错误处理<br>[ ] 4. SEO 优化<br>  [ ] 配置 meta 标签<br>  [ ] 实现动态 SEO<br>  [ ] 添加 sitemap<br>[ ] 5. 文档编写<br>  [ ] 编写 README.md<br>  [ ] 添加使用文档<br>  [ ] 添加贡献指南</p><h3 id="当前进度"><a href="#当前进度" class="headerlink" title="当前进度"></a>当前进度</h3><p>准备开始项目创建</p></blockquote><p>这种让它列出执行计划，可以参考鸭哥的 <a href="https://yage.ai/cursor-to-devin.html" target="_blank" rel="noopener">搏一搏，$20变$500：一小时魔改Cursor变身Devin</a>)。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250224072340149.png" alt=""></p><p>接下来就是根据自己的需求再调整交互细节，比如将图片的主标题、副标题加入一个表单：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250224072543994.png" alt=""></p><p>调整调整 ui：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250224072727263.png" alt=""></p><p>ui 的调整方面 ai 还不太擅长，可能会遇到改对了 B，又把之前改好的 A 搞没了。应对这种情况我们可以把需要的需求一次性描述给它。发现不符合，不要继续对话，而是编辑原来的输入词让它重新来过。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250224073545287.png" alt=""></p><p>还有就是到一个可用的节点之后记得及时 commit 方便我们随时回退。</p><p>遇到错误不用慌，把错误粘贴给它，它会自动修复：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250224072527846.png" alt=""></p><p>它在写代码过程中会自动修复自己写的 lint 问题，最终给我们一个可用的代码：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250224073651738.png" alt=""></p><p>之前还需要自己考虑移动端的展示，现在 AI 也帮我们直接完成了：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250224073005400.png" alt=""></p><p>之前开发就是自己的全部时间投入进去开发，现在更像我们有了自己的小弟，在做其他事情（锻炼身体、逛网站)的间隙，和它对对话，预览预览效果，一个网站就开发完了。</p><p>正如之前 <a href="https://mp.weixin.qq.com/s/UUcUeS1GTG_OIi_KQTQ5sg" target="_blank" rel="noopener">Ai 杂想</a> 中介绍的，一切都变了：</p><ul><li>编程范式正在经历一场革命：从面向过程到面向对象，再到函数式编程，现在我们迎来了面向 AI 编程的新时代。传统的编程语言（C++、Python、JavaScript、Java）可能会逐渐转变为类似汇编语言的角色——我们知道它的存在，但不再需要深入学习它。未来的主流编程方式将是使用自然语言。</li><li>未来技术文章作用会越来越低。在学习新技术、解答技术疑惑方面，AI 的能力已经超越了传统的技术文章。未来，技术写作可能会更多地聚焦于个人经验分享、企业实践案例等独特内容——那些 AI 无法替代的真实经历和洞察。</li><li>这标志着开发者角色的重大转变：我们正从具体实现者转变为需求描述者和结果验证者。我们变成了老板，Cursor 就像我们的 AI 员工，能够自主完成从需求理解到问题解决的整个过程。</li></ul><p>好处是所有人都又回到了一个新的起点，新的一万小时定律开始了。以前是多写代码锻炼编程能力，未来就是<strong>多用 AI、多用 AI、多用 AI</strong>，熟悉和 AI 对话的边界，积累描述需求的经验，探索 AI 和当前工作的结合。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;微信公众号文章不能加入外链，有时候会引用很多网站的链接，但大家想看的话还得复制到浏览器再去打开，最简单的方式就是贴一个链接二维码来解决。比如用草料二维码直接用生成：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://windliangblog.oss-cn-beijing.
+      
+    
+    </summary>
+    
+    
+      <category term="前端" scheme="https://windliang.wang/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="网站" scheme="https://windliang.wang/tags/%E7%BD%91%E7%AB%99/"/>
+    
+      <category term="ai" scheme="https://windliang.wang/tags/ai/"/>
+    
+  </entry>
   
   <entry>
     <title>AI杂想</title>
@@ -524,32 +553,6 @@
     
     
       <category term="cocos" scheme="https://windliang.wang/tags/cocos/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>中后台系统提升质量和效率的一个思路</title>
-    <link href="https://windliang.wang/2022/10/27/%E4%B8%AD%E5%90%8E%E5%8F%B0%E7%B3%BB%E7%BB%9F%E6%8F%90%E5%8D%87%E8%B4%A8%E9%87%8F%E5%92%8C%E6%95%88%E7%8E%87%E7%9A%84%E4%B8%80%E4%B8%AA%E6%80%9D%E8%B7%AF/"/>
-    <id>https://windliang.wang/2022/10/27/%E4%B8%AD%E5%90%8E%E5%8F%B0%E7%B3%BB%E7%BB%9F%E6%8F%90%E5%8D%87%E8%B4%A8%E9%87%8F%E5%92%8C%E6%95%88%E7%8E%87%E7%9A%84%E4%B8%80%E4%B8%AA%E6%80%9D%E8%B7%AF/</id>
-    <published>2022-10-26T22:04:20.000Z</published>
-    <updated>2022-11-17T00:01:23.938Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>中后台项目中会存在一些配置页面需求的开发，这些需求高度相似，迭代频率低，基本结构为「搜索区域」、「表格区域」、「包含表单的弹窗」三部分组成。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221027060647741.png" alt="image-20221027060647741"></p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221027060711024.png" alt="image-20221027060711024"></p><p>其中「搜索区域」和「表格区域」的操作区交互固化，比如查询、添加、查看、删除、上线、下线。</p><p>当前开发时大都采用复制类似需求页面继而修改的方式，如下图所示。每个人都形成了自己的代码组织结构，导致虽属同一团队，但代码风格、交互实现逻辑变为了多条平行线。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221027060727389.png" alt="image-20221027060727389"></p><p>这种迭代方式存在两点坏处：</p><p>a. 重复劳动较多，同时存在漏改的风险。易变的地方分布在页面中各个部分，修改起来不够方便，改动后存在影响到正常逻辑的风险。</p><p>b. 团队内各自抽离的不同交互方式，接手他人页面的时候需要耗费一定的理解成本，同时 <code>code review</code> 时无法快速的理清逻辑。</p><h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>中后台项目提效一个直接的想法就是低代码的思路：</p><p>a. 初态：抽离各个组件，定义 <code>json</code> 的格式，通过 <code>json</code> 渲染出页面。</p><p>b. 终态：开发搭建平台，通过拖拽生成 <code>json</code> 并且实时预览页面，开发者也可以通过预定的协议接入自己的组件。</p><p>上述两种方案除去搭建成本大之外，最大的问题就是业务开发灵活性将大大降低。</p><p>开发者将在新的规范下进行开发，不管是通过 <code>json</code> 配置还是配置平台生成页面，上手难度大大增加，不亚于去学习一个新的前端框架。如果新需求的交互框架没有考虑到，将花费大量的时间进行适配， 甚至超过了从零开发需求的时间。极端情况下，如果无法满足需求的交互，还存在推倒重来的风险。</p><p>基于以上考虑，我们采取一个更轻便的方案，以模版代码为基础进行后续开发，并通过脚手架进行模版的配置、拉取。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221027060745695.png" alt="image-20221027060745695"></p><p>如上图，大家的开发流程从之前的平行线变为了网状，未来的页面的目录格式和交互方式都会统一。</p><p>由于是生成的模版代码页面而且不强依赖于模版，未来需求有大的变化也可以正常迭代。</p><h1 id="方案设计"><a href="#方案设计" class="headerlink" title="方案设计"></a>方案设计</h1><h2 id="1-模板设计"><a href="#1-模板设计" class="headerlink" title="1.模板设计"></a>1.模板设计</h2><p>考虑到今后有可能增加其他场景模版，设计模版要考虑到未来可以进行无缝扩展，有两种方案：</p><p>a. 按分支来保存不同场景下的模版：</p><p>优点：不同场景下通过分支来拉取不同模版，模版之间完全隔离。</p><p>缺点：缺少了 <code>master</code> 分支，各模版都需要自己的 <code>master</code> 分支进行迭代。分支之间差异较大，完全违背了 <code>git</code> 的迭代初心。</p><p>b. 按文件夹来保存不同场景下的模版：</p><p>优点：所有模版都存在于 <code>master</code> 分支，和普通项目的方式一样从 <code>master</code> 切出分支进行迭代。</p><p>缺点：脚手架需要一次性拉取所有模版，然后复制自己需要的模版。</p><p>考虑到拉取文件速度较快，最终选取了方案 <code>b</code>。</p><p>各个配置页面之间虽然相似，但也会因实际情况存在细微差异，所以模版不能完全写死，需要支持动态编译，这里采用 <code>EJS</code> 进行编译。</p><p><code>EJS</code> 是一套简单的模板语言，它没有再造一套迭代和控制流语法，只需正常的 <code>JavaScript</code> 语法即可实现一些条件编译、变量替换等，因此可以快速上手。</p><p>关于模版内容，核心思想是将<strong>变化与不变的内容进行抽离</strong>。</p><p>我们可以将后端的接口、权限的配置、搜索框的配置、常量抽离出配置文件，将表格、搜索框、表单之间的联动方式预先写好，目录格式如下。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221027060919512.png" alt="image-20221027060919512"></p><p>开发者只需进行后端接口的配置、搜索框的配置、表单的开发即可快速完成整个需求。</p><h2 id="2-架构设计"><a href="#2-架构设计" class="headerlink" title="2. 架构设计"></a>2. 架构设计</h2><p>考虑到一方面脚手架整体架构和功能实现后迭代频率会逐渐降低，另一方面更新脚手架需要走 <code>npm</code> 包的发布流程，如果将模版内容耦合到脚手架中，每次更新都重新进行发包较为繁琐。</p><p>因此将模版单独放一个仓库，从脚手架中解耦出来，实现脚手架仓库和模版仓库分离，独立迭代，降低更新成本。</p><p>使用者通过输入命令和参数即可生成模版页面代码，脚手架内部实现拉取模版和编译，生成最终页面，架构如下：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221027060851382.png" alt="image-20221027060851382"></p><h2 id="3-脚手架实现"><a href="#3-脚手架实现" class="headerlink" title="3. 脚手架实现"></a>3. 脚手架实现</h2><p>提供 <code>ce-cli</code> 命令，结合用户的参数进行进行模版的编译生成，同时提供交互式的形式选择参数，降低使用者的上手难度，交互形式如下：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/windliangblog.oss-cn-beijing.aliyuncs.comimage-20221027060958575.png" alt="image-20221027060958575"></p><p>考虑到模版和脚手架存在强绑定关系，即如果模版更新了，但脚手架没有更新会造成一些模版逻辑未被编译的情况。因此执行命令时需要检查脚手架是否为最新版本，如果版本较低必须强制升级，中断程序的执行。（对于团队内部工具来说，始终保持最新版本才可以及时用到最新功能，这也是强制升级的原因之一）</p><p>为提高命令的执行速度，执行命令时将拉取的模版缓存到本地，并且将最新的 <code>commit</code> 名保存起来。第二次执行命令的时候将目前最新的 <code>commit</code> 和此前保存的 <code>commit</code> 进行比对，如果不相等则覆盖原来的模版，否则使用原来的模版即可，减少一次网络请求耗时。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>经过一段时间的迭代，后续有近 <code>20</code> 个页面用到脚手架，每需求可降低 <code>0.5pd</code> 的时间，更重要的是团队内相关需求的代码结构、交互实现均已统一，提升了代码质量 和 <code>code review</code> 的效率，团队间交替开发需求时的代码认知难度将大大降低。</p><p>在 <code>code review</code> 过程中，团队内提供相关建议，<a href="https://zhuanlan.zhihu.com/p/561275198" target="_blank" rel="noopener">沉淀最佳实践</a>，例如默认对象通过函数返回、公共方法的使用、项目框架一些特有操作都内置到模版中，不断提升代码质量，磨平大家之间的认知差异。</p><p>未来有新同学加入，可以在模版的基础上更快的进入开发，极大的降低对系统框架一些特有操作的认知时间，同时保证代码质量。</p><p>脚手架中的模版对主要对表格和搜索区域固化了代码逻辑，对于表单的使用我们还是通过原始的 <code>element</code> 表单进行开发，一些常用的规则校验、表单的逻辑每次都需要重复进行开发，经过调研目前公司内已经有多种封装好的表单，未来可以进行详细了解，最终引进到模版代码中，进一步提升开发效率。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;中后台项目中会存在一些配置页面需求的开发，这些需求高度相似，迭代频率低，基本结构为「搜索区域」、「表格区域」、「包含表单的弹窗」三部分组成。
-      
-    
-    </summary>
-    
-    
-      <category term="前端" scheme="https://windliang.wang/categories/%E5%89%8D%E7%AB%AF/"/>
-    
-    
-      <category term="前端" scheme="https://windliang.wang/tags/%E5%89%8D%E7%AB%AF/"/>
     
   </entry>
   
