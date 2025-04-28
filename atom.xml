@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://windliang.wang/"/>
-  <updated>2025-04-20T01:24:30.300Z</updated>
+  <updated>2025-04-28T00:20:43.002Z</updated>
   <id>https://windliang.wang/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Cursor写一个网页标题重命名的浏览器插件</title>
+    <link href="https://windliang.wang/2025/04/28/Cursor%E5%86%99%E4%B8%80%E4%B8%AA%E7%BD%91%E9%A1%B5%E6%A0%87%E9%A2%98%E9%87%8D%E5%91%BD%E5%90%8D%E7%9A%84%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8F%92%E4%BB%B6/"/>
+    <id>https://windliang.wang/2025/04/28/Cursor%E5%86%99%E4%B8%80%E4%B8%AA%E7%BD%91%E9%A1%B5%E6%A0%87%E9%A2%98%E9%87%8D%E5%91%BD%E5%90%8D%E7%9A%84%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8F%92%E4%BB%B6/</id>
+    <published>2025-04-27T23:32:14.000Z</published>
+    <updated>2025-04-28T00:20:43.002Z</updated>
+    
+    <content type="html"><![CDATA[<p>平时开发过程中会打开好多好多的浏览器标签页，虽然 Chrome 出了分类标签，</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250428074115844.png" style="zoom:50%;"></p><p>但用着用着会发现每个分类又多了很多标签，prd、前后端技术方案、case、ones 越点越多，到最后很难分清哪个网页有用，只能一个一个看一个一个关。</p><p>开始想得比较简单，直接搞了一个 js 的书签</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250428074822362.png" alt=""></p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javascript:<span class="keyword">void</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="built_in">document</span>.title=prompt(<span class="string">'新标签页名称'</span>)&#125;())</span><br></pre></td></tr></table></figure><p>可以用，但是有时候刷新页面或者过几天有的页面会自动刷新设置的标题就没了。</p><p>于是，Cursor 登场，直接让它写一个浏览器插件吧。虽然我不会写浏览器插件，但它一定会。</p><p>开始的时候没有完全想清楚交互，和它一次次对话，边让它开发边测试，边汲取灵感。</p><p>让它匹配域名加参数，后来又发现有 hash 又让它匹配 hash，后边又加了参数正则匹配，但此时出现了问题，尝试让它改了好多次，不管怎么跟它说，正则都加不成功了。</p><p>于是从头再来，把原有的代码全部删除，写了一个完整的说明，让它来实现：</p><p>按照文档实现一个 Chrome 插件：</p><blockquote><h1 id="实现一个浏览器插件"><a href="#实现一个浏览器插件" class="headerlink" title="实现一个浏览器插件"></a>实现一个浏览器插件</h1><p>主要功能：匹配用户输入的网站地址，设置当前网站为用户设置的标题。<br>三种选择供用户选择：</p><ul><li>按域</li><li>按域名+路径</li><li>按域名+路径+参数</li></ul><p>用户选择某一个选项后，按照选项含义自动填充当前输入的网站地址，再提供一个输入框供用户输入想要设置的标题。</p><h1 id="按域名-路径-参数"><a href="#按域名-路径-参数" class="headerlink" title="按域名+路径+参数"></a>按域名+路径+参数</h1><p>第三种方式相对复杂，其中参数也可能是 hash 参数，如果有 hash 参数，key 写 hash，值通过当前网页地址进行解析。</p><p>并且将当前网页参数的解析成 key、value 的形式，value 允许用户修改，并且 value 也支持写正则，可以提供一个 checkbox 供用户选择是否使用正则。</p><h1 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h1><p>设置完成后判断用户输入的地址是否匹配当前网站，尤其注意正则，如果匹配立即修改当前网站标题。</p><p>用户刷新页面，标题依旧按照用户添加的显示。</p><p>如果当前页面命中了之前的规则，将规则展示出来，方便用户删除，并且将当前规则放到第一个。</p><p>考虑整个 ui 和交互的自然美观，不要有莫名其妙的间隔，界面上都用中文。</p><h1 id="最重要功能"><a href="#最重要功能" class="headerlink" title="最重要功能"></a>最重要功能</h1><p><strong>用户设置规则之后要按照规则更新当前页面标题，并且刷新页面后也要自动更新标题</strong></p></blockquote><p>把需要的一次性告诉它，这次就得到了想要的功能，但发现还是漏了一些描述，不过不涉及核心功能，接着再一次一次对话完善就可以了。</p><blockquote><p>已保存的规则增加编辑功能</p><p>换一个图标，体现设置标题</p><p>有点丑，重新设计一下</p><p>不要橙色小点</p><p>第一次保存规则后要立刻生效，不需要用户刷新页面</p><p>按域名+路径+参数时候，解析出来的参数支持删除</p><p>点击删除没反应，删除不用 btn ，可以搞一个叉号就行</p><p>点击 x 符合没反应</p><p>偶尔会遇到点击保存规则后标题没更新，刷新页面好标题才更新</p><p>当我删除当前正则匹配的规则，底色是蓝色。下一个规则不是当前匹配的规则，但因为第一个删了了，它移上来底色也变成了蓝色，但我期望只有匹配当前网站的规则底色才是蓝色。</p><p>保证 button 的宽度，button 不要竖向</p></blockquote><p>然后插件就开发完成了，<a href="https://github.com/wind-liang/RenameTab" target="_blank" rel="noopener">https://github.com/wind-liang/RenameTab</a>：</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250428075859800.png" alt=""></p><p>感兴趣的同学可以直接把<a href="https://github.com/wind-liang/RenameTab" target="_blank" rel="noopener">项目</a> clone 下来加载到浏览器插件就可以使用了。</p><p>对于这种比较简单的工具，Cursor 确实太方便了。前期可以跟它随便聊，让它一点点改，当理清楚之后自己想要什么，可以写一个完整的文档让 Cursor 直接来实现。</p><p>相比之前手动开发，重头再来的成本约等于 0。从零实现这个插件，Cursor 也就几分钟就搞定了。</p><p>期间如果不满足可以尝试换换模型，开始用的 claude-3.7，但好像效果差强人意，但换成了 claude-3.5 反而好了一些。</p><p>随着 Cursor 的出现，这种个性化需求的工具可能会越来越多，不再需要看网上有没有，自己开发也不再需要考虑时间成本，不需要懂开发，把需求用自然语言一描述，工具自然就出来了。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;平时开发过程中会打开好多好多的浏览器标签页，虽然 Chrome 出了分类标签，&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250428074115844.png&quot; s
+      
+    
+    </summary>
+    
+    
+      <category term="前端" scheme="https://windliang.wang/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="ai" scheme="https://windliang.wang/tags/ai/"/>
+    
+      <category term="cursor" scheme="https://windliang.wang/tags/cursor/"/>
+    
+      <category term="浏览器插件" scheme="https://windliang.wang/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8F%92%E4%BB%B6/"/>
+    
+  </entry>
   
   <entry>
     <title>Cursor 原理之窥探提示词</title>
@@ -95,9 +126,9 @@
       <category term="前端" scheme="https://windliang.wang/categories/%E5%89%8D%E7%AB%AF/"/>
     
     
-      <category term="网站" scheme="https://windliang.wang/tags/%E7%BD%91%E7%AB%99/"/>
-    
       <category term="ai" scheme="https://windliang.wang/tags/ai/"/>
+    
+      <category term="网站" scheme="https://windliang.wang/tags/%E7%BD%91%E7%AB%99/"/>
     
   </entry>
   
@@ -526,37 +557,6 @@
     
     
       <category term="https" scheme="https://windliang.wang/tags/https/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>生日快乐</title>
-    <link href="https://windliang.wang/2022/12/31/%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/"/>
-    <id>https://windliang.wang/2022/12/31/%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/</id>
-    <published>2022-12-31T01:31:54.000Z</published>
-    <updated>2023-01-01T03:21:40.499Z</updated>
-    
-    <content type="html"><![CDATA[<p>一直过的农历生日腊月初十，农历的腊月是个比较尴尬的月份：</p><p>– 你属什么？</p><p>– 属猪</p><p>– 那你是 <code>95</code> 年生的咯</p><p>– 我是 <code>96</code> 年生的</p><p>– <code>96</code> 年不是鼠年吗</p><p>– <code>96</code> 年 <code>1</code> 月还没过年，所以是 <code>96</code> 年的🐷</p><p>因为属相是按农历算的，但腊月一般都是第二年的 <code>1</code> 月了，导致每次都得解释下，哈哈。</p><p>今年凑巧和元旦过在了同一天，印象中小时候也有一次赶在了元旦，索性写个小程序来看一下吧。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20221231102025214.png" alt="image-20221231102025214"></p><p>上一次生日在元旦已经是快 <code>20</code> 年前的 <code>04</code> 年了，还看到了一个神奇的年份，下一次农历和公历重合的生日是 <code>2033</code> 年。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20221231103536072.png" alt="image-20221231103536072"></p><p>因为农历不像公历一样有确切的数学规律，只能由天文台测定后提供，所以一般都是采用「查表法」获取农历数据，我这里就偷懒直接使用别人的库了 <a href="https://www.npmjs.com/package/solarlunar" target="_blank" rel="noopener">https://www.npmjs.com/package/solarlunar</a> 哈哈，这也导致目前只能查 <code>1900 - 2100</code> 年的数据。</p><p>感兴趣的同学也可以试试这个小程序 「农历生日转换」。</p><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E5%BE%AE%E4%BF%A1%E6%A0%87%E5%87%86%E7%BB%BF%E7%89%88.png" alt="扫码_搜索联合传播样式-微信标准绿版"></p><p>说到生日，<a href="https://windliang.wang/2017/01/07/21%E5%B2%81%E7%9A%84%E4%BD%A0%EF%BC%8C%E7%94%9F%E6%97%A5%E5%BF%AB%E4%B9%90/">我的博客</a> 其实也是 <code>17</code> 年生日那天搭建的，现在回过头再看感觉还是很奇妙的，就像和当前的自己产生了连接一样。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;一直过的农历生日腊月初十，农历的腊月是个比较尴尬的月份：&lt;/p&gt;
-&lt;p&gt;– 你属什么？&lt;/p&gt;
-&lt;p&gt;– 属猪&lt;/p&gt;
-&lt;p&gt;– 那你是 &lt;code&gt;95&lt;/code&gt; 年生的咯&lt;/p&gt;
-&lt;p&gt;– 我是 &lt;code&gt;96&lt;/code&gt; 年生的&lt;/p&gt;
-&lt;p&gt;– &lt;code&gt;
-      
-    
-    </summary>
-    
-    
-      <category term="前端" scheme="https://windliang.wang/categories/%E5%89%8D%E7%AB%AF/"/>
-    
-    
-      <category term="微信小程序" scheme="https://windliang.wang/tags/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
     
   </entry>
   
