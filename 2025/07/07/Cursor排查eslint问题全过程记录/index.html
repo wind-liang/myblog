@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Cursor 使用 Claude Sonnet 4 (Thinking) 排查 eslint 问题全流程记录。 背景问题：一个微信小程序项目的 wxml 文件，某个自定义 rules 规则不希望被检查，但添加 eslint-disable 后依旧被检查出 error。 我：对 eslint 了解甚微，完全无思路。 12345678910111213141516171819202122import">
+<meta name="keywords" content="ai,Cursor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cursor 排查 eslint 问题全过程记录">
+<meta property="og:url" content="https://windliang.wang/2025/07/07/Cursor排查eslint问题全过程记录/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="Cursor 使用 Claude Sonnet 4 (Thinking) 排查 eslint 问题全流程记录。 背景问题：一个微信小程序项目的 wxml 文件，某个自定义 rules 规则不希望被检查，但添加 eslint-disable 后依旧被检查出 error。 我：对 eslint 了解甚微，完全无思路。 12345678910111213141516171819202122import">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702171255205.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702171600501.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702171801478.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702172041889.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195301811.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195322230.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195420130.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195508527.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195639805.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195753403.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195838578.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195900756.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702200046707.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702200146498.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702200230082.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702200503020.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702200545978.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702200709622.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702201030427.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702201132049.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702201321614.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702201417820.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702201635762.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703111036037.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703111142250.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703111610793.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703111257232.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703112235757.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703112253000.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703113913909.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703113944125.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114023858.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114058432.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114129112.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114252032.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114346807.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114411382.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703112510692.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703112558780.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703112717747.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703112924772.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703113041787.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703113056483.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114542474.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703141106958.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703142518488.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703142615429.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143036316.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143053365.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143150740.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143211047.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143238261.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143319644.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143342820.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143418362.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143439327.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143458810.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143652934.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143930527.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703144525302.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703144600574.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703144918630.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703144956015.png">
+<meta property="og:updated_time" content="2025-07-07T03:51:28.972Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cursor 排查 eslint 问题全过程记录">
+<meta name="twitter:description" content="Cursor 使用 Claude Sonnet 4 (Thinking) 排查 eslint 问题全流程记录。 背景问题：一个微信小程序项目的 wxml 文件，某个自定义 rules 规则不希望被检查，但添加 eslint-disable 后依旧被检查出 error。 我：对 eslint 了解甚微，完全无思路。 12345678910111213141516171819202122import">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702171255205.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2025/07/07/Cursor排查eslint问题全过程记录/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Cursor 排查 eslint 问题全过程记录 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-入门前端必备课程">
+    <a href="https://mp.weixin.qq.com/s/eBsYMO4GoLY_UVZ1DioXAA" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />入门前端必备课程</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-链接转图片(写公众号用)">
+    <a href="https://qr.windliang.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />链接转图片(写公众号用)</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-浏览器标题修改插件">
+    <a href="https://github.com/wind-liang/RenameTab" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />浏览器标题修改插件</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2025/07/07/Cursor排查eslint问题全过程记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Cursor 排查 eslint 问题全过程记录
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2025-07-07 11:34:32 / 修改时间：11:51:28" itemprop="dateCreated datePublished" datetime="2025-07-07T11:34:32+08:00">2025-07-07</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2025/07/07/Cursor排查eslint问题全过程记录/" class="leancloud_visitors" data-flag-title="Cursor 排查 eslint 问题全过程记录">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Cursor 使用 Claude Sonnet 4 (Thinking) 排查 eslint 问题全流程记录。</p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>问题：一个微信小程序项目的 wxml 文件，某个自定义 rules 规则不希望被检查，但添加 eslint-disable 后依旧被检查出 error。</p>
+<p>我：对 eslint 了解甚微，完全无思路。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> wxml <span class="keyword">from</span> <span class="string">'eslint-plugin-wxml'</span>;</span><br><span class="line"><span class="keyword">import</span> wxmlParser <span class="keyword">from</span> <span class="string">"@wxml/parser"</span>;</span><br><span class="line"><span class="keyword">import</span> globals <span class="keyword">from</span> <span class="string">'globals'</span>;</span><br><span class="line"><span class="keyword">import</span> mpeMiniprogram <span class="keyword">from</span> <span class="string">"@mpe/eslint-plugin-miniprogram"</span>;</span><br><span class="line"><span class="keyword">const</span> OFF = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">const</span> WARN = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> ERROR = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span>[</span><br><span class="line">  &#123;  </span><br><span class="line">    files: [<span class="string">'**/*.wxml'</span>],</span><br><span class="line">    plugins:&#123;wxml, <span class="string">"@mpe/miniprogram"</span>: mpeMiniprogram&#125;,</span><br><span class="line">    languageOptions:&#123;</span><br><span class="line">     parser:wxmlParser,</span><br><span class="line">    &#125;,</span><br><span class="line">    rules:&#123;</span><br><span class="line">      <span class="comment">// 禁用标签名列表，持续迭代</span></span><br><span class="line">      <span class="string">'wxml/forbid-tags'</span>: [</span><br><span class="line">        ERROR,</span><br><span class="line">        &#123;</span><br><span class="line">          forbid: [],</span><br><span class="line">        &#125;,</span><br><span class="line">      ],</span><br></pre></td></tr></table></figure>
+<p>看了下使用了 <code>eslint-plugin-wxml</code> 和 <code>@wxml/parser</code> ，github 上也没看到相关问题。</p>
+<p>寄托于 AI 了。</p>
+<h1 id="Demo1-eslint-test"><a href="#Demo1-eslint-test" class="headerlink" title="Demo1 eslint-test"></a>Demo1 eslint-test</h1><p>尝试复现问题。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702171255205.png" alt=""></p>
+<p>现在创建项目 AI 会主动先创建一些测试文件保证功能正常：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702171600501.png" alt=""></p>
+<p>然后自己测试：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702171801478.png" alt=""></p>
+<p>先学到一个知识点禁用整个文件 eslint 检查不能用 <code>// eslint-disable</code> ，应该用 <code>/* eslint-disable */</code>。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702172041889.png" alt=""></p>
+<p>写 demo 前和 ai 聊了下（聊天记录不知道为啥没了），当时以为是<strong>自定义规则有问题</strong>导致 eslint-disable 不生效，所以思路是看自定义规则是不是执行来推导是否符合预期。</p>
+<p>先问了下 ai 哪个函数执行。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195301811.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195322230.png" alt=""></p>
+<p>得出了结论各个生命周期都还会执行，只是 context.report 调用被过滤了，继续追问怎么观察出是否被过滤：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195420130.png" alt=""></p>
+<p>AI 列了个表格分析了一波：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195508527.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195639805.png" alt=""></p>
+<p>还是只是说了会被丢弃，但没有讲细节。先不追问了，让他写个 wxml 看能不能复现现场。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195753403.png" alt=""></p>
+<p>三下五除二搞完了：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195838578.png" alt=""></p>
+<p>再让他搞个自定义规则：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702195900756.png" alt=""></p>
+<p>执行过程中自己发现了一个问题，只检测了 wxs：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702200046707.png" alt=""></p>
+<p>然后自己又写了写代码修复了：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702200146498.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702200230082.png" alt=""></p>
+<p>但我此时在文件添加了 <code>&lt;!-- eslint-disable --&gt;</code> 后，生效了，错误不再检查，复现失败。</p>
+<p>看了下不同之处，demo 用的 eslint 8 ，但项目是 9，让 AI 升级下：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702200503020.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702200545978.png" alt=""></p>
+<p>升级的很顺利，但是  <code>&lt;!-- eslint-disable --&gt;</code> 依旧生效了。</p>
+<p>现在的不同之处就是 wxml 的那两个库了，让 AI 换下库：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702200709622.png" alt=""></p>
+<p>然后  <code>&lt;!-- eslint-disable --&gt;</code> 就不生效了，复现成功。</p>
+<p>询问 AI 原因：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702201030427.png" alt=""></p>
+<p>AI 思考了很多，尝试了很多，最后给出了结论，</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702201132049.png" alt=""></p>
+<p>还顺带翻 node_modules 源码发现刚自定义的规则可以用自带的，不需要自己写：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702201321614.png" alt=""></p>
+<p>就是说是<strong>这个插件 eslint-plugin-wxml 的锅</strong>。那能绕过吗？</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702201417820.png" alt=""></p>
+<p>通过<strong>自定义 processor</strong> 还真解决了：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250702201635762.png" alt=""></p>
+<p>但我看了下它写的代码，只考虑了 <code>&lt;abc&gt;</code> 这一种情况，让他生成个通用方案</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703111036037.png" alt=""></p>
+<p>一顿操作还真给写出来了，但懒得去读代码了，直接问他实现的原理是什么：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703111142250.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703111610793.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703111257232.png" alt=""></p>
+<p>一句话说明就是<strong>在 preprocess 阶段将不需要检查的代码注释</strong>掉了。虽然解决了，但还是怪怪的，想知道 eslint 原生是怎么处理 eslint-disable 的。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703112235757.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703112253000.png" alt=""></p>
+<p>列了一个图，但依旧是表象，还是没说出 eslint 是怎么干的。</p>
+<h1 id="Demo2-eslint-wxml-test"><a href="#Demo2-eslint-wxml-test" class="headerlink" title="Demo2 eslint-wxml-test"></a>Demo2 eslint-wxml-test</h1><p>Demo1 项目代码比较乱了，再写一个纯粹的项目来二次确认是  <code>eslint-plugin-wxml</code> 出了问题。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703113913909.png" alt=""></p>
+<p>忘记指定版本了，让他升级下</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703113944125.png" alt=""></p>
+<p>成功复现，可以确认是 plugin 的问题了，顺便问问怎么解决：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114023858.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114058432.png" alt=""></p>
+<p>让我们忽略掉 相应的文件，当然不是我们想要的。</p>
+<p>还记得 html 的  plugin 生效，问他为什么：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114129112.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114252032.png" alt=""></p>
+<p>又回到 <strong>插件的 postprocess</strong> 了，再问问他刚没明白的原生的：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114346807.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114411382.png" alt=""></p>
+<p>说的有道理，但不涉及细节。</p>
+<p><strong>目前排除了自定义规则的问题，聚焦到  eslint-plugin-wxml 这个 node 包</strong>，可以通过 preprocess（检查前）注释代码或者 postprocess(检查后) 过滤错误来解决。</p>
+<h1 id="Demo3-eslint-html-test"><a href="#Demo3-eslint-html-test" class="headerlink" title="Demo3 eslint-html-test"></a>Demo3 eslint-html-test</h1><p>一开始使用的 html 的 plugin 是正常的，让 AI 再创建一个 html 的 demo 研究下。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703112510692.png" alt=""></p>
+<p>测试文件加一个 <code>eslint-disable</code> ，然后直入主题：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703112558780.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703112717747.png" alt=""></p>
+<p>AI 猜测了一下说是 postprocess 处理的，移除了禁用的错误。</p>
+<p>直觉上不太像，让他去 node_modules 里翻翻源码：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703112924772.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703113041787.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703113056483.png" alt=""></p>
+<p>破案了，<strong>不是 <code>eslint-plugin-wxml</code> postprocess 阶段做的，而是 <code>@wxml/parser</code> 做的</strong>，解析过程中收集了 comment，有了 comment 之后 Eslint 会自己判断。</p>
+<p>有了方案了，可以回到 demo2 了。</p>
+<h1 id="最终方案"><a href="#最终方案" class="headerlink" title="最终方案"></a>最终方案</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703114542474.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703141106958.png" alt=""></p>
+<p>告诉它方案之后，也直接解决了。但代码看上去非常啰嗦。</p>
+<p>原库导出了两个方法 parse 和 parseForESLint 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; parse <span class="keyword">as</span> cstParse &#125; <span class="keyword">from</span> <span class="string">"./cst"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; buildAst &#125; <span class="keyword">from</span> <span class="string">"./ast/build-ast"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">parse</span>(<span class="params">code: string</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; cst, tokenVector, lexErrors, parseErrors &#125; = cstParse(code);</span><br><span class="line">  <span class="keyword">return</span> buildAst(cst, tokenVector, lexErrors, parseErrors);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">parseForESLint</span>(<span class="params">code: string</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; cst, tokenVector, lexErrors, parseErrors &#125; = cstParse(code);</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    ast: buildAst(cst, tokenVector, lexErrors, parseErrors, <span class="literal">true</span>),</span><br><span class="line">    services: &#123;&#125;,</span><br><span class="line">    scopeManager: <span class="literal">null</span>,</span><br><span class="line">    visitorKeys: &#123;</span><br><span class="line">      Program: [<span class="string">"errors"</span>, <span class="string">"body"</span>],</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; parse, parseForESLint &#125;;</span><br></pre></td></tr></table></figure>
+<p>parse 相对底层，它基于 parse 来重写了 parseForEslint 。但直觉上应该直接基于 parseForEslint 重写 parseForEslint 就行。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703142518488.png" alt="image-20250703142518488"></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703142615429.png" alt=""></p>
+<p>整体思路上清晰了很多。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> wxmlParser <span class="keyword">from</span> <span class="string">'@wxml/parser'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 增强版 WXML Parser，基于 @wxml/parser 的 parseForESLint 方法</span></span><br><span class="line"><span class="comment"> * 主要增强：收集注释节点并转换为 ESLint 标准格式，支持 eslint-disable 功能</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">EnhancedWXMLParser</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">  parseForESLint(code, options = &#123;&#125;) &#123;</span><br><span class="line">    <span class="comment">// 使用原始 parser 的 parseForESLint 方法</span></span><br><span class="line">    <span class="keyword">const</span> result = wxmlParser.parseForESLint(code, options);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 收集所有注释节点并转换为 ESLint 格式</span></span><br><span class="line">    <span class="keyword">const</span> comments = <span class="keyword">this</span>.collectCommentsFromAST(result.ast, code);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将注释添加到 AST 中</span></span><br><span class="line">    result.ast.comments = comments;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 确保 AST 符合 ESLint 要求</span></span><br><span class="line">    <span class="keyword">this</span>.ensureESLintCompatibility(result.ast);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 从 AST 中收集所有 WXComment 节点并转换为 ESLint 格式</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  collectCommentsFromAST(ast, code) &#123;</span><br><span class="line">    <span class="keyword">const</span> comments = [];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 递归遍历 AST 查找 WXComment 节点</span></span><br><span class="line">    <span class="keyword">this</span>.traverseAST(ast, (node) =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span> (node.type === <span class="string">'WXComment'</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> comment = <span class="keyword">this</span>.convertWXCommentToESLintComment(node, code);</span><br><span class="line">        <span class="keyword">if</span> (comment) &#123;</span><br><span class="line">          comments.push(comment);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 按位置排序</span></span><br><span class="line">    <span class="keyword">return</span> comments.sort(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a.range[<span class="number">0</span>] - b.range[<span class="number">0</span>]);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 将 WXComment 节点转换为 ESLint 标准注释格式</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  convertWXCommentToESLintComment(wxComment, code) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!wxComment.loc) <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 计算字符范围</span></span><br><span class="line">    <span class="keyword">const</span> startOffset = <span class="keyword">this</span>.getOffsetFromLocation(code, wxComment.loc.start);</span><br><span class="line">    <span class="keyword">const</span> endOffset = <span class="keyword">this</span>.getOffsetFromLocation(code, wxComment.loc.end);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      type: <span class="string">"Block"</span>,</span><br><span class="line">      value: wxComment.value || <span class="string">""</span>,  <span class="comment">// WXComment.value 已经去掉了 &lt;!-- 和 --&gt;</span></span><br><span class="line">      range: [startOffset, endOffset],</span><br><span class="line">      loc: &#123;</span><br><span class="line">        start: &#123; <span class="attr">line</span>: wxComment.loc.start.line, <span class="attr">column</span>: wxComment.loc.start.column &#125;,</span><br><span class="line">        end: &#123; <span class="attr">line</span>: wxComment.loc.end.line, <span class="attr">column</span>: wxComment.loc.end.column &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 递归遍历 AST 节点</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  traverseAST(node, callback, visited = <span class="keyword">new</span> <span class="built_in">Set</span>()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!node || <span class="keyword">typeof</span> node !== <span class="string">'object'</span> || visited.has(node)) &#123;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    visited.add(node);</span><br><span class="line">    callback(node);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 遍历可能包含子节点的属性</span></span><br><span class="line">    <span class="keyword">const</span> childProperties = [<span class="string">'body'</span>, <span class="string">'children'</span>, <span class="string">'elements'</span>, <span class="string">'properties'</span>];</span><br><span class="line">    </span><br><span class="line">    childProperties.forEach(<span class="function"><span class="params">prop</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (node[prop] &amp;&amp; <span class="built_in">Array</span>.isArray(node[prop])) &#123;</span><br><span class="line">        node[prop].forEach(<span class="function"><span class="params">child</span> =&gt;</span> <span class="keyword">this</span>.traverseAST(child, callback, visited));</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 遍历其他可能的单个子节点</span></span><br><span class="line">    [<span class="string">'startTag'</span>, <span class="string">'endTag'</span>, <span class="string">'value'</span>].forEach(<span class="function"><span class="params">prop</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (node[prop] &amp;&amp; <span class="keyword">typeof</span> node[prop] === <span class="string">'object'</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.traverseAST(node[prop], callback, visited);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 确保 AST 符合 ESLint 兼容性要求</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  ensureESLintCompatibility(ast) &#123;</span><br><span class="line">    <span class="comment">// 确保根节点有必要的属性</span></span><br><span class="line">    <span class="keyword">if</span> (!ast.comments) ast.comments = [];</span><br><span class="line">    <span class="keyword">if</span> (!ast.tokens) ast.tokens = [];</span><br><span class="line">    <span class="keyword">if</span> (!ast.range) ast.range = [<span class="number">0</span>, <span class="number">0</span>];</span><br><span class="line">    <span class="keyword">if</span> (!ast.loc) &#123;</span><br><span class="line">      ast.loc = &#123;</span><br><span class="line">        start: &#123; <span class="attr">line</span>: <span class="number">1</span>, <span class="attr">column</span>: <span class="number">0</span> &#125;,</span><br><span class="line">        end: &#123; <span class="attr">line</span>: <span class="number">1</span>, <span class="attr">column</span>: <span class="number">0</span> &#125;</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!ast.sourceType) ast.sourceType = <span class="string">"module"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 递归处理所有节点，确保它们有必要的属性</span></span><br><span class="line">    <span class="keyword">this</span>.processNodeForESLint(ast);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 处理 AST 节点，确保符合 ESLint 要求</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  processNodeForESLint(node, visited = <span class="keyword">new</span> <span class="built_in">Set</span>()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!node || <span class="keyword">typeof</span> node !== <span class="string">'object'</span> || visited.has(node)) &#123;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    visited.add(node);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 确保每个节点都有 range 和 loc（如果它们还没有的话）</span></span><br><span class="line">    <span class="keyword">if</span> (!node.range &amp;&amp; node.loc) &#123;</span><br><span class="line">      <span class="comment">// 可以从 loc 推断 range，但这里我们保持简单</span></span><br><span class="line">      node.range = [<span class="number">0</span>, <span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!node.loc &amp;&amp; node.range) &#123;</span><br><span class="line">      node.loc = &#123;</span><br><span class="line">        start: &#123; <span class="attr">line</span>: <span class="number">1</span>, <span class="attr">column</span>: <span class="number">0</span> &#125;,</span><br><span class="line">        end: &#123; <span class="attr">line</span>: <span class="number">1</span>, <span class="attr">column</span>: <span class="number">0</span> &#125;</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 递归处理子节点</span></span><br><span class="line">    <span class="keyword">const</span> childProperties = [<span class="string">'body'</span>, <span class="string">'children'</span>, <span class="string">'elements'</span>, <span class="string">'properties'</span>];</span><br><span class="line">    childProperties.forEach(<span class="function"><span class="params">prop</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (node[prop] &amp;&amp; <span class="built_in">Array</span>.isArray(node[prop])) &#123;</span><br><span class="line">        node[prop].forEach(<span class="function"><span class="params">child</span> =&gt;</span> <span class="keyword">this</span>.processNodeForESLint(child, visited));</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 从位置信息计算字符偏移量</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  getOffsetFromLocation(code, location) &#123;</span><br><span class="line">    <span class="keyword">const</span> lines = code.split(<span class="string">'\n'</span>);</span><br><span class="line">    <span class="keyword">let</span> offset = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 计算到目标行之前的所有字符</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; location.line - <span class="number">1</span>; i++) &#123;</span><br><span class="line">      offset += lines[i].length + <span class="number">1</span>; <span class="comment">// +1 for the newline character</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 添加目标行中的列偏移</span></span><br><span class="line">    offset += location.column;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> offset;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 导出单例</span></span><br><span class="line"><span class="keyword">const</span> parserInstance = <span class="keyword">new</span> EnhancedWXMLParser();</span><br><span class="line"></span><br><span class="line"><span class="comment">// ESLint 期望的 parser 格式</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> enhancedWXMLParser = &#123;</span><br><span class="line">  parseForESLint: <span class="function">(<span class="params">code, options</span>) =&gt;</span> parserInstance.parseForESLint(code, options),</span><br><span class="line">  parse: <span class="function">(<span class="params">code, options</span>) =&gt;</span> parserInstance.parseForESLint(code, options).ast</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 兼容原有的接口</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> enhancedWXMLParser;</span><br></pre></td></tr></table></figure>
+<p>但看起来还是很多细节冗余，一点点的 review 代码让它优化：</p>
+<blockquote>
+<p> 1</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 确保 AST 符合 ESLint 要求</span></span><br><span class="line"> <span class="keyword">this</span>.ensureESLintCompatibility(result.ast);</span><br></pre></td></tr></table></figure>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143036316.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143053365.png" alt=""></p>
+<blockquote>
+<p>2 </p>
+</blockquote>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143150740.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143211047.png" alt=""></p>
+<blockquote>
+<p>3</p>
+</blockquote>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143238261.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143319644.png" alt=""></p>
+<blockquote>
+<p>4</p>
+</blockquote>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143342820.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143418362.png" alt=""></p>
+<blockquote>
+<p>5</p>
+</blockquote>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143439327.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143458810.png" alt=""></p>
+<blockquote>
+<p>6</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">traverseAST(node, callback, visited = <span class="keyword">new</span> <span class="built_in">Set</span>()) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!node || <span class="keyword">typeof</span> node !== <span class="string">'object'</span> || visited.has(node)) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  visited.add(node);</span><br><span class="line">  callback(node);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 遍历可能包含子节点的属性</span></span><br><span class="line">  <span class="keyword">const</span> childProperties = [<span class="string">'body'</span>, <span class="string">'children'</span>, <span class="string">'elements'</span>, <span class="string">'properties'</span>];</span><br><span class="line">  </span><br><span class="line">  childProperties.forEach(<span class="function"><span class="params">prop</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (node[prop] &amp;&amp; <span class="built_in">Array</span>.isArray(node[prop])) &#123;</span><br><span class="line">      node[prop].forEach(<span class="function"><span class="params">child</span> =&gt;</span> <span class="keyword">this</span>.traverseAST(child, callback, visited));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 遍历其他可能的单个子节点</span></span><br><span class="line">  [<span class="string">'startTag'</span>, <span class="string">'endTag'</span>, <span class="string">'value'</span>].forEach(<span class="function"><span class="params">prop</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (node[prop] &amp;&amp; <span class="keyword">typeof</span> node[prop] === <span class="string">'object'</span>) &#123;</span><br><span class="line">      <span class="keyword">this</span>.traverseAST(node[prop], callback, visited);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看到遍历是写死了几个标签名，让他优化下：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143652934.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703143930527.png" alt=""></p>
+<p>变成了更通用的方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">traverseAST(node, callback, visited = <span class="keyword">new</span> <span class="built_in">Set</span>()) &#123;</span><br><span class="line">   <span class="keyword">if</span> (!node || <span class="keyword">typeof</span> node !== <span class="string">'object'</span> || visited.has(node)) &#123;</span><br><span class="line">     <span class="keyword">return</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   visited.add(node);</span><br><span class="line">   callback(node);</span><br><span class="line">   </span><br><span class="line">   <span class="comment">// 不再硬编码属性名，而是动态检查所有属性</span></span><br><span class="line">   <span class="built_in">Object</span>.keys(node).forEach(<span class="function"><span class="params">key</span> =&gt;</span> &#123;</span><br><span class="line">     <span class="keyword">const</span> value = node[key];</span><br><span class="line">     </span><br><span class="line">     <span class="comment">// 跳过非子节点的属性</span></span><br><span class="line">     <span class="keyword">if</span> (<span class="keyword">this</span>.isNonTraversableProperty(key, value)) &#123;</span><br><span class="line">       <span class="keyword">return</span>;</span><br><span class="line">     &#125;</span><br><span class="line">     </span><br><span class="line">     <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(value)) &#123;</span><br><span class="line">       <span class="comment">// 遍历数组中的每个元素</span></span><br><span class="line">       value.forEach(<span class="function"><span class="params">child</span> =&gt;</span> &#123;</span><br><span class="line">         <span class="keyword">if</span> (child &amp;&amp; <span class="keyword">typeof</span> child === <span class="string">'object'</span>) &#123;</span><br><span class="line">           <span class="keyword">this</span>.traverseAST(child, callback, visited);</span><br><span class="line">         &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">     &#125; <span class="keyword">else</span> <span class="keyword">if</span> (value &amp;&amp; <span class="keyword">typeof</span> value === <span class="string">'object'</span>) &#123;</span><br><span class="line">       <span class="comment">// 遍历单个对象</span></span><br><span class="line">       <span class="keyword">this</span>.traverseAST(value, callback, visited);</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>当然也不是每次质疑都成功：</p>
+<blockquote>
+<p>7</p>
+</blockquote>
+<p>看到它返回 parse 也调用了 parserInstance.parseForESLint，想着是不是不应该重写 parse 就可以。</p>
+<p><code>parse: (code, options) =&gt; parserInstance.parseForESLint(code, options).ast</code></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703144525302.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703144600574.png" alt=""></p>
+<blockquote>
+<p>8</p>
+</blockquote>
+<p>尝试引导它加一些兜底</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703144918630.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250703144956015.png" alt=""></p>
+<p>但过于谨慎了，超时都整上了，最终没有采用。</p>
+<p>最终版本：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> wxmlParser <span class="keyword">from</span> <span class="string">'@wxml/parser'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 增强版 WXML Parser，基于 @wxml/parser 的 parseForESLint 方法</span></span><br><span class="line"><span class="comment"> * 主要增强：收集注释节点，支持 eslint-disable 功能</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">EnhancedWXMLParser</span> </span>&#123;</span><br><span class="line">  </span><br><span class="line">  parseForESLint(code, options = &#123;&#125;) &#123;</span><br><span class="line">    <span class="comment">// 使用原始 parser 的 parseForESLint 方法</span></span><br><span class="line">    <span class="keyword">const</span> result = wxmlParser.parseForESLint(code, options);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 收集所有注释节点，保持原始 WXComment 类型</span></span><br><span class="line">    <span class="keyword">const</span> comments = <span class="keyword">this</span>.collectCommentsFromAST(result.ast);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将注释添加到 AST 中</span></span><br><span class="line">    result.ast.comments = comments;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 从 AST 中收集所有 WXComment 节点，保持原始格式</span></span><br><span class="line"><span class="comment">   * 注释在遍历过程中已经是按位置排序的，无需额外排序</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  collectCommentsFromAST(ast) &#123;</span><br><span class="line">    <span class="keyword">const</span> comments = [];</span><br><span class="line">    <span class="comment">// 递归遍历 AST 查找 WXComment 节点</span></span><br><span class="line">    <span class="keyword">this</span>.traverseAST(ast, (node) =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span> (node.type === <span class="string">'WXComment'</span>) &#123;</span><br><span class="line">        <span class="comment">// WXComment 已经是正确格式，直接使用</span></span><br><span class="line">        comments.push(node);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 注释已经按位置自然排序，直接返回</span></span><br><span class="line">    <span class="keyword">return</span> comments;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 通用的 AST 遍历方法 - 动态发现所有子节点属性，未来兼容</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  traverseAST(node, callback, visited = <span class="keyword">new</span> <span class="built_in">Set</span>()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!node || <span class="keyword">typeof</span> node !== <span class="string">'object'</span> || visited.has(node)) &#123;</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    visited.add(node);</span><br><span class="line">    callback(node);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 不再硬编码属性名，而是动态检查所有属性</span></span><br><span class="line">    <span class="built_in">Object</span>.keys(node).forEach(<span class="function"><span class="params">key</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> value = node[key];</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// 跳过非子节点的属性</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.isNonTraversableProperty(key, value)) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(value)) &#123;</span><br><span class="line">        <span class="comment">// 遍历数组中的每个元素</span></span><br><span class="line">        value.forEach(<span class="function"><span class="params">child</span> =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (child &amp;&amp; <span class="keyword">typeof</span> child === <span class="string">'object'</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.traverseAST(child, callback, visited);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (value &amp;&amp; <span class="keyword">typeof</span> value === <span class="string">'object'</span>) &#123;</span><br><span class="line">        <span class="comment">// 遍历单个对象</span></span><br><span class="line">        <span class="keyword">this</span>.traverseAST(value, callback, visited);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 判断属性是否不应该被遍历</span></span><br><span class="line"><span class="comment">   * 这些属性虽然是对象或数组，但不包含 AST 子节点</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  isNonTraversableProperty(key, value) &#123;</span><br><span class="line">    <span class="comment">// 位置信息对象，不包含子节点</span></span><br><span class="line">    <span class="keyword">if</span> (key === <span class="string">'loc'</span> || key === <span class="string">'start'</span> || key === <span class="string">'end'</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 范围数组，只是数字不是节点</span></span><br><span class="line">    <span class="keyword">if</span> (key === <span class="string">'range'</span> &amp;&amp; <span class="built_in">Array</span>.isArray(value) &amp;&amp; </span><br><span class="line">        value.length === <span class="number">2</span> &amp;&amp; <span class="keyword">typeof</span> value[<span class="number">0</span>] === <span class="string">'number'</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 空数组，没必要遍历</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(value) &amp;&amp; value.length === <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 包含基础类型的数组（如 offset）</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(value) &amp;&amp; value.every(<span class="function"><span class="params">item</span> =&gt;</span> <span class="keyword">typeof</span> item !== <span class="string">'object'</span>)) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 字符串、数字、布尔值等基础类型</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> value !== <span class="string">'object'</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 导出单例</span></span><br><span class="line"><span class="keyword">const</span> parserInstance = <span class="keyword">new</span> EnhancedWXMLParser();</span><br><span class="line"></span><br><span class="line"><span class="comment">// ESLint 期望的 parser 格式</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> enhancedWXMLParser = &#123;</span><br><span class="line">  parseForESLint: <span class="function">(<span class="params">code, options</span>) =&gt;</span> parserInstance.parseForESLint(code, options),</span><br><span class="line">  parse: <span class="function">(<span class="params">code, options</span>) =&gt;</span> parserInstance.parseForESLint(code, options).ast</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 兼容原有的接口</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> enhancedWXMLParser;</span><br></pre></td></tr></table></figure>
+<p>从怀疑自定义 eslint 规则，到  <code>eslint-plugin-wxml</code> 这个 node 包通过 preprocess（检查前）或者 postprocess(检查后) 解决，之后转到了一个更优的方案 <code>@wxml/parser</code> 解析过程中收集 comment，最终一步一步再优化代码解决了这个问题。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>一些感受：</p>
+<ul>
+<li>AI 目前可以完成事情，但需要人为的引导可以把事情做的更好。未来如何让 Cursor 一次就写好是个值得探索的方向，除了等 ai 模型更强，另一个就是从 Cursor rules 入手了。</li>
+<li><p>目前看来过去积累的编程直觉还是有一定作用的，不然无法引导 ai。也就是常说的解决问题的能力，原来是思路 + 执行，现在思路我们来引导，执行交给 ai 就可以了。</p>
+</li>
+<li><p>有问题都先尝试着去问一下 AI，不断的熟悉 AI 的能力边界。</p>
+</li>
+<li><p>AI 写 demo 现在就是一句话的事，找 bug 完全可以先构造一个最小场景复现后继续排查。</p>
+</li>
+<li><p>当下试错成本非常低，有想法直接让 AI 实现即可，大不了就是推翻重来。</p>
+</li>
+<li><p>解决问题的流程变了，以往是先学习 -&gt; 再尝试解决，现在变成了问题解决了 -&gt; 再去学习了解。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/windliang.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ai/" rel="tag"># ai</a>
+          
+            <a href="/tags/Cursor/" rel="tag"># Cursor</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2025/06/12/Anthropic-官方提示词工程教程收获总结/" rel="next" title="Anthropic 官方提示词工程教程收获总结：Prompt 提示词工程快速入门">
+                <i class="fa fa-chevron-left"></i> Anthropic 官方提示词工程教程收获总结：Prompt 提示词工程快速入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">119</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">110</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Demo1-eslint-test"><span class="nav-number">2.</span> <span class="nav-text">Demo1 eslint-test</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Demo2-eslint-wxml-test"><span class="nav-number">3.</span> <span class="nav-text">Demo2 eslint-wxml-test</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Demo3-eslint-html-test"><span class="nav-number">4.</span> <span class="nav-text">Demo3 eslint-html-test</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最终方案"><span class="nav-number">5.</span> <span class="nav-text">最终方案</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">6.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

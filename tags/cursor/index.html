@@ -111,7 +111,7 @@
   <meta name="description" content="越努力，越幸运！">
 <meta property="og:type" content="website">
 <meta property="og:title" content="windliang">
-<meta property="og:url" content="https://windliang.wang/tags/cursor/index.html">
+<meta property="og:url" content="https://windliang.wang/tags/Cursor/index.html">
 <meta property="og:site_name" content="windliang">
 <meta property="og:description" content="越努力，越幸运！">
 <meta property="og:locale" content="zh-CN">
@@ -126,7 +126,7 @@
 
 
 
-  <link rel="canonical" href="https://windliang.wang/tags/cursor/"/>
+  <link rel="canonical" href="https://windliang.wang/tags/Cursor/"/>
 
 
 
@@ -136,7 +136,7 @@
   };
 </script>
 
-  <title>标签: cursor | windliang</title>
+  <title>标签: Cursor | windliang</title>
   
 
 
@@ -460,7 +460,7 @@
 
     <div id="posts" class="posts-collapse">
       <div class="collection-title">
-        <h1>cursor<small>标签</small>
+        <h1>Cursor<small>标签</small>
         </h1>
       </div>
 
@@ -472,37 +472,9 @@
 
       <h2 class="post-title">
         
-            <a class="post-title-link" href="/2025/04/28/Cursor写一个网页标题重命名的浏览器插件/" itemprop="url">
+            <a class="post-title-link" href="/2025/07/07/Cursor排查eslint问题全过程记录/" itemprop="url">
               
-                <span itemprop="name">Cursor写一个网页标题重命名的浏览器插件</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2025-04-28T07:32:14+08:00"
-              content="2025-04-28" >
-          04-28
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2025/04/11/Cursor-原理之窥探提示词/" itemprop="url">
-              
-                <span itemprop="name">Cursor 原理之窥探提示词</span>
+                <span itemprop="name">Cursor 排查 eslint 问题全过程记录</span>
               
             </a>
         
@@ -510,9 +482,9 @@
 
       <div class="post-meta">
         <time class="post-time" itemprop="dateCreated"
-              datetime="2025-04-11T08:38:13+08:00"
-              content="2025-04-11" >
-          04-11
+              datetime="2025-07-07T11:34:32+08:00"
+              content="2025-07-07" >
+          07-07
         </time>
       </div>
 
@@ -573,7 +545,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">118</span>
+                    <span class="site-state-item-count">119</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -845,7 +817,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">109</span>
+                      
+                    
+                    <span class="site-state-item-count">110</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1500,6 +1474,61 @@
                 success: function(newcounter) {
                   var $element = $(document.getElementById(url));
                   $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+.leancloud-visitors-count').text(newcounter.get('time'));
                 },
                 error: function(newcounter, error) {
                   console.log('Failed to create');
