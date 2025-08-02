@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一行代码没写，用 Cursor 实现了一个抽奖项目，相比之前的一行代码没写用 ai 开发了一个链接转二维码的网站、Cursor 写一个网页标题重命名的浏览器插件  复杂度提升了很多，涉及到实时通信、状态维护、数据库读写等，AI 编程的利弊也迅速凸显出来。 项目演示bilibili 抽奖演示。 分为观众、玩家、主持人的身份。主持人负责整个抽奖的流转，用户加入 -&amp;gt; 成为玩家，加入抽奖箱 -&amp;g">
+<meta name="keywords" content="ai,Cursor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cursor 开发复杂项目过程记录和利弊分析">
+<meta property="og:url" content="https://windliang.wang/2025/08/02/Cursor开发复杂项目过程记录和利弊分析/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="一行代码没写，用 Cursor 实现了一个抽奖项目，相比之前的一行代码没写用 ai 开发了一个链接转二维码的网站、Cursor 写一个网页标题重命名的浏览器插件  复杂度提升了很多，涉及到实时通信、状态维护、数据库读写等，AI 编程的利弊也迅速凸显出来。 项目演示bilibili 抽奖演示。 分为观众、玩家、主持人的身份。主持人负责整个抽奖的流转，用户加入 -&amp;gt; 成为玩家，加入抽奖箱 -&amp;g">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728083248591.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802112620094.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728080155357.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728081655763.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728081833533.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728081030809.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250731083009266.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082126098.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082143448.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082156045.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082842699.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082909294.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082922100.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082936998.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082947283.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082958150.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728083011741.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728083029878.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250801073817820.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728083048502.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728083118409.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250801223239320.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250801223820093.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802080431583.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250801224439882.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250801224454520.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250801224743543.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/1Kapture%202025-08-02%20at%2008.38.03.gif">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802082624130.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802082644318.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802083459658.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802083528588.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802091019763.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802091030391.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802094945894.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802095002566.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802102256376.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802102337196.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802105010662.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802105209009.png">
+<meta property="og:updated_time" content="2025-08-02T04:23:36.211Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cursor 开发复杂项目过程记录和利弊分析">
+<meta name="twitter:description" content="一行代码没写，用 Cursor 实现了一个抽奖项目，相比之前的一行代码没写用 ai 开发了一个链接转二维码的网站、Cursor 写一个网页标题重命名的浏览器插件  复杂度提升了很多，涉及到实时通信、状态维护、数据库读写等，AI 编程的利弊也迅速凸显出来。 项目演示bilibili 抽奖演示。 分为观众、玩家、主持人的身份。主持人负责整个抽奖的流转，用户加入 -&amp;gt; 成为玩家，加入抽奖箱 -&amp;g">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728083248591.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2025/08/02/Cursor开发复杂项目过程记录和利弊分析/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Cursor 开发复杂项目过程记录和利弊分析 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-入门前端必备课程">
+    <a href="https://mp.weixin.qq.com/s/eBsYMO4GoLY_UVZ1DioXAA" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />入门前端必备课程</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-链接转图片(写公众号用)">
+    <a href="https://qr.windliang.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />链接转图片(写公众号用)</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-浏览器标题修改插件">
+    <a href="https://github.com/wind-liang/RenameTab" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />浏览器标题修改插件</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2025/08/02/Cursor开发复杂项目过程记录和利弊分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Cursor 开发复杂项目过程记录和利弊分析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2025-08-02 11:59:47 / 修改时间：12:23:36" itemprop="dateCreated datePublished" datetime="2025-08-02T11:59:47+08:00">2025-08-02</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/ai/" itemprop="url" rel="index"><span itemprop="name">ai</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2025/08/02/Cursor开发复杂项目过程记录和利弊分析/" class="leancloud_visitors" data-flag-title="Cursor 开发复杂项目过程记录和利弊分析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一行代码没写，用 Cursor 实现了一个抽奖项目，相比之前的<a href="https://mp.weixin.qq.com/s/IjOe7asSVSmyg42iY-tbkw" target="_blank" rel="noopener">一行代码没写用 ai 开发了一个链接转二维码的网站</a>、<a href="https://mp.weixin.qq.com/s/_irX3wVl8z3fFz-EYAArCQ" target="_blank" rel="noopener">Cursor 写一个网页标题重命名的浏览器插件 </a> 复杂度提升了很多，涉及到实时通信、状态维护、数据库读写等，AI 编程的利弊也迅速凸显出来。</p>
+<h1 id="项目演示"><a href="#项目演示" class="headerlink" title="项目演示"></a>项目演示</h1><p><a href="https://www.bilibili.com/video/BV1Yo86zhENH/?share_source=copy_web&amp;vd_source=57ff17a6f0b3b002c6b2eca57af07900" target="_blank" rel="noopener">bilibili 抽奖演示</a>。</p>
+<p>分为观众、玩家、主持人的身份。主持人负责整个抽奖的流转，用户加入 -&gt; 成为玩家，加入抽奖箱 -&gt; 第一轮抽奖 -&gt; 依次选择奖励 -&gt; 第二轮抽奖 -&gt; 抽奖结果公布 -&gt; 游戏结束。</p>
+<p>整个抽奖流程实时保存，刷新页面回到之前状态。</p>
+<h1 id="项目开发过程"><a href="#项目开发过程" class="headerlink" title="项目开发过程"></a>项目开发过程</h1><p>全程采用的 Claude Sonnet 4 ，累计 100+ 轮的对话。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728083248591.png" alt=""></p>
+<h2 id="prd-准备"><a href="#prd-准备" class="headerlink" title="prd 准备"></a>prd 准备</h2><p>朋友直接给了我一个飞书的 prd 链接，<a href="https://fcnss2ecen8s.feishu.cn/wiki/P3TEwTLNRikJ9bkX5qkcVJxkn54?from=from_copylink" target="_blank" rel="noopener">小程序需求</a> ：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802112620094.png" alt=""></p>
+<p>Cursor 最好是去读 markdown 文件，但是飞书只能导出 word，所以就导出了个 word，又找了一个在线工具，把 word 转成了 .md。</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">这是一个婚礼抽奖项目，请使用 Next.js，SUPABASE，完成这个移动端项目，支持部署到 Vercel，请拆解任务一步步完成，每一步之后我进行测试，没问题再进行下一步。</span><br><span class="line"></span><br><span class="line">ui 美观一些。</span><br><span class="line"></span><br><span class="line"><span class="strong">**抽奖需求**</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">1. </span>抽取确定顺序流程阶段</span><br><span class="line"><span class="bullet">1. </span>分玩家身份和主持人身份、观众身份，不同身份有不同的头像框</span><br><span class="line"><span class="bullet">2. </span>观众身份</span><br><span class="line"><span class="bullet">1. </span>所有人进入时均为观众身份，大家登录进来能看到自己的头像，所有人的头像在大厅里下半部分，按进房间顺序排序，退出房间不删除，重连回到当前位置</span><br><span class="line"></span><br><span class="line">![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.001.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">2. </span>所有观众界面上有成为主持人按钮，点击成为主持人，出输入密码弹窗，点击确认，密码正确弹窗关闭成为主持人身份，移动自身位置，密码错误弹窗关闭，弹出提示“密码错误”给输入密码的人</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.002.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">3. </span>主持人点击观众头像，出弹窗，可设置观众为玩家身份</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.003.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">4. </span>主持人点击玩家身份头像，出弹窗，可设置玩家为观众身份</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.004.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">5. </span>所有人头像排列在下方区域，人越多，头像越小，自适应大小，规则可再详聊</span><br><span class="line"><span class="bullet">6. </span>点击抽奖箱打开一个小弹窗能看到当前抽奖箱里有哪些人，打开后侧边出现关闭按钮，再次点击则关闭抽奖箱弹窗</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.005.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">3. </span>玩家身份</span><br><span class="line"><span class="bullet">1. </span>可以点击参与抽奖按钮，能把自己的头像复制一份扔到抽奖箱里，已经点过并在抽奖箱中的玩家按钮置灰</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.006.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">2. </span>点击抽奖箱打开一个小弹窗能看到当前抽奖箱里有哪些人，打开后侧边出现关闭按钮，再次点击则关闭抽奖箱弹窗</span><br><span class="line"><span class="bullet">4. </span>主持人身份</span><br><span class="line"><span class="bullet">1. </span>主持人最多两位，进入后头像在抽奖箱左边/右边</span><br><span class="line"><span class="bullet">2. </span>点击抽奖按钮（屏幕左下角），即开始抽奖，有二次确认提示弹窗防止误触，弹窗有确认和取消两个键，点击确认则开始一次抽奖，点击取消则不进行操作。</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.007.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">3. </span>首次抽奖开始后，任何玩家不再能点击参与抽奖进入抽奖箱中</span><br><span class="line"><span class="bullet">4. </span>每次抽奖开始后，3秒内不能再次抽奖，期间任何主持人均不显示抽奖按钮，服务器也不再接收抽奖请求。</span><br><span class="line"><span class="bullet">5. </span>点击抽奖箱打开一个小弹窗能看到当前抽奖箱里有哪些人，打开后侧边出现关闭按钮，再次点击则关闭抽奖箱弹窗</span><br><span class="line"><span class="bullet">5. </span>抽奖箱位于屏幕中上部</span><br><span class="line"><span class="bullet">1. </span>每次开始抽奖后，主持人头像靠近抽奖箱，箱子摇一摇约两秒，之后箱子中目前在的一个随机头像从箱子里飞出，头像展示2秒播个光效，主持人头像回归原位</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.008.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">2. </span>抽出来的玩家头像复制飞回到玩家座位头像本体身上，并在座位的头像上标上数字，数字为自己被抽出后，仍在箱子里的人数+1的数，作为第二个阶段玩家的顺序</span><br><span class="line"><span class="bullet">3. </span>给对应被抽出来的玩家在屏幕正中华弹文字提示，“您获得了第x名”，其他玩家弹提示“y获得了第x名”，x为对应的第二阶段的顺序，提示2秒后消失</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.009.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">4. </span>抽出第一名后（箱子里没玩家了），主持人再次点击开始抽奖按钮，进入下一个阶段</span><br><span class="line"><span class="bullet">2. </span>轮流选择奖励阶段</span><br><span class="line"><span class="bullet">1. </span>在箱子里所有人被抽取出来后，进入轮流选择奖励阶段，两个主持人头像被移动至屏幕左上角，纵向排列</span><br><span class="line"><span class="bullet">2. </span>抽奖箱消失</span><br><span class="line"><span class="bullet">3. </span>屏幕中间出现奖励选择列表，每个奖励纵向排列，每个奖励均由奖励图片、奖励文字描述、单选框组成</span><br><span class="line"><span class="bullet">1. </span>主持人不显示单选框</span><br><span class="line"><span class="bullet">2. </span>观众不显示单选框</span><br><span class="line"><span class="bullet">4. </span>主持人屏幕左下角，有开始选择按钮，点击按钮有二次确认弹窗，点击取消则关闭弹窗，点击确认则开始选择流程，任一主持人点击开始选择，所有主持人按钮消失，服务器也不再接收开始请求</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.010.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">5. </span>开始选择后，从第一轮确定顺序的玩家的第一名开始，依次选择奖励，会在左侧展示对应头像</span><br><span class="line"><span class="bullet">6. </span>玩家点击奖励后，列表中对应奖励的单选框变为选中状态，其余奖励的单选框变为未选中状态，点击确定选择按钮，弹出二次确认弹窗“是否确认选择该奖励”，并展示奖励对应的图片和文字描述，点击取消则关闭弹窗不操作，点击确认则确认选择该奖励</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.011.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">7. </span>确认选择后头像挂到对应奖励上，放在单选框位置，该奖励无法再次被选择</span><br><span class="line"><span class="bullet">8. </span>直至第一阶段所有参与的玩家均选择完毕进入下一个阶段</span><br><span class="line"><span class="bullet">9. </span>每个玩家选择时，有30秒倒计时，倒计时结束前未选择则系统随机选择一个</span><br><span class="line"><span class="bullet">10. </span>记录下所有人的选择，保存并导出记录</span><br><span class="line"><span class="bullet">3. </span>绝地翻盘阶段</span><br><span class="line"><span class="bullet">1. </span>回到第一阶段的界面布局</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.012.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">2. </span>进入阶段是全部人拍脸公告“绝地翻盘阶段”，展示奖品及参与者、参与者排名情况，10秒后自动关闭界面</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.013.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">3. </span>所有首轮排序最后5名的玩家，将参与最后一个阶段的抽奖，主持人点击第三阶段开始后，他们的头像复制飞入抽奖箱，先最后一名飞入5个头像，再倒数第二名飞入4个，以此类推，最后倒数第五名飞入1个</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.014.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">4. </span>此时所有玩家、主持人、观众均可点击抽奖箱，弹出抽奖箱弹窗，看里面有几个头像复制，排序按飞入顺序排</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.015.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">5. </span>主持人点击抽奖按钮，二次确认弹窗确认后，从抽奖箱中随机一个出来，并在屏幕中出现获得者、绝地翻盘奖励图片及文字描述</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.016.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">6. </span>播放5秒后之后进入下一阶段</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.017.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">4. </span>完结阶段</span><br><span class="line"><span class="bullet">1. </span>布局稍微调整，清除所有人的排名情况，屏幕中间位置一直在放烟花动画，大家仍可继续发送表情，随时可以退出</span><br><span class="line"></span><br><span class="line">   ![](Aspose.Words.0503fd85-b484-4ef9-8d59-12a6d0fe6965.018.png)</span><br><span class="line"></span><br><span class="line"><span class="bullet">5. </span>断线重连</span><br><span class="line"><span class="bullet">1. </span>如果中途断网or闪退，再次打开小程序则自动连入，还是刚才的角色身份、选择情况等，不额外作为新玩家加入</span><br><span class="line"><span class="bullet">6. </span>游戏重置</span><br><span class="line"><span class="bullet">1. </span>留控制方式，需要手动重置时，可操作进行游戏重置</span><br><span class="line"><span class="bullet">7. </span>发送表情</span><br><span class="line"><span class="bullet">1. </span>每个人可以点击下方区域表情图标，发送表情，每次表情展示2秒，期间不可再次点击所有表情按钮，点击无效，发送的表情在头像上展示，大家可以看到彼此发送的表情</span><br></pre></td></tr></table></figure>
+<p>标题层级有点怪，但没管了，直接让 AI 进入开发了：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728080155357.png" alt=""></p>
+<p>整体开发完后接着就是每个功能的测试修改。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728081655763.png" alt=""></p>
+<p>AI 编程确实大大提升了效率，这么大的一个 PRD，总共就开发了不到 20 小时，期间大部分时间还是等待 AI 写代码的过程。甚至已经达到了一个可用的状态，把网站部署上线后让朋友去体验了。</p>
+<h2 id="二次改造"><a href="#二次改造" class="headerlink" title="二次改造"></a>二次改造</h2><p>让朋友看完之后进行了新的一轮改造，而且比想象的顺利，用户登录系统改造直接下边一段话就搞定。 </p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728081833533.png" alt=""></p>
+<h2 id="整体改造"><a href="#整体改造" class="headerlink" title="整体改造"></a>整体改造</h2><p>用的 supabase 但感觉卡卡的，想着是不是服务器的问题，准备换成国内的服务器试试。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728081030809.png" alt=""></p>
+<p>但 AI 目前还没有强大到这种程度，一句话是改不出来了，改完各个功能都坏掉了，先放弃迁移了。</p>
+<h2 id="bug-修复"><a href="#bug-修复" class="headerlink" title="bug 修复"></a>bug 修复</h2><p>前期开发确实非常快，但是后期修复 bug 就会令人感到痛苦。由于 AI 写的代码完全没有去看过，所以只能告诉他表象然后让他修复。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250731083009266.png" alt=""></p>
+<p>如果是必现的问题修起来还好。但如果是偶现的问题，让他修复之后完全无法验证，只能相信他。</p>
+<p>事实证明，有时候修了之后确实复现不了了，有时候修了之后多试试还是偶尔能复现，这也回到了大模型的本质——概率，哈哈。</p>
+<h2 id="AI-的局限"><a href="#AI-的局限" class="headerlink" title="AI 的局限"></a>AI 的局限</h2><p>这里举两个典型的例子，AI 目前需要专业知识的人来引导。</p>
+<h3 id="样式遮挡"><a href="#样式遮挡" class="headerlink" title="样式遮挡"></a>样式遮挡</h3><p>这也是平常开发经常遇到的问题，就是元素的层级不对，尝试让 AI 修复：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082126098.png" alt=""></p>
+<p>第一次修复失败，继续让他修复：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082143448.png" alt=""></p>
+<p>二次尝试之后还是失败，因为它只是在无脑提升 z-index，但我们知道 z-index 只影响同一层叠上下文的层级关系，如果是跨层叠上下文，层级关系要看父元素的 z-index，详见 <a href="https://zhuanlan.zhihu.com/p/638894230" target="_blank" rel="noopener">css层叠上下文和z-index的使用和思考</a>。</p>
+<p>此时提示它看一下层叠上下文的关系：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082156045.png" alt=""></p>
+<p>问题直接就被解决了。</p>
+<h3 id="二次抽奖功能"><a href="#二次抽奖功能" class="headerlink" title="二次抽奖功能"></a>二次抽奖功能</h3><p>抽奖有两轮，第二轮抽奖是选取第一轮抽奖的最后 5 名进行重新抽奖，但第二轮抽奖总是不成功。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082842699.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082909294.png" alt=""></p>
+<p>让我检查第一轮抽奖的数据库，但数据库中是有数据的。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082922100.png" alt=""></p>
+<p>失败。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082936998.png" alt=""></p>
+<p>失败。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082947283.png" alt=""></p>
+<p>失败。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728082958150.png" alt=""></p>
+<p>失败。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728083011741.png" alt=""></p>
+<p>此时已经失败好多轮了，我猜测原来的表是不是设计上有问题，导致一直拿不到第二轮抽奖的人。所以让他把第二轮抽奖的人放到一张新的表中。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728083029878.png" alt=""></p>
+<p>但还是失败。此时我突然意识到它实现上是不是有问题。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250801073817820.png" alt=""></p>
+<p>第二轮抽奖给每个人赋予了不同的抽奖概率，所以我怀疑他为了增加中奖概率是不是在重复将同一个人插入到数据库才导致问题。所以给他提供一个思路，只增加概率就行，用户不需要存多次。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728083048502.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250728083118409.png" alt=""></p>
+<p>终于成功了。</p>
+<h1 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h1><p>AI 确实帮我快速实现了项目，但也带来了一些无论怎么说都无法修复的问题。除了一些非必现的 bug，还有一些严重影响用户体验的问题，比如引起电脑发烫、交互卡顿等，这里尝试读一下代码看不能分析出来。</p>
+<p>打开控制台疯狂输出日志，卡的根本调试不了，先改一下不让他输出日志。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250801223239320.png" alt=""></p>
+<h2 id="发送表情"><a href="#发送表情" class="headerlink" title="发送表情"></a>发送表情</h2><p>发送表情主要是一个写库操作</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250801223820093.png" alt=""></p>
+<p>打印了前后的时间：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802080431583.png" alt=""></p>
+<p>有时候会慢一些，问问 AI 有没有优化空间：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250801224439882.png" alt=""></p>
+<p>一个是缺少索引</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250801224454520.png" alt="image-20250801224454520"></p>
+<p>一个是不必要的 select 的。</p>
+<p>代码中查了 roomId 是为了以防万一，但我们已经明确只有一个房间，可以把 roomId 删掉。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250801224743543.png" alt=""></p>
+<h2 id="疯狂网络请求"><a href="#疯狂网络请求" class="headerlink" title="疯狂网络请求"></a>疯狂网络请求</h2><p>打开控制台，这应该也是造成电脑发热的原因：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/1Kapture%202025-08-02%20at%2008.38.03.gif" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802082624130.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802082644318.png" alt=""></p>
+<p>只是降低请求频率，治标不治本。</p>
+<p>给他提供新思路：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802083459658.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802083528588.png" alt=""></p>
+<p>说的很好，但是打开之后还是疯狂的请求。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802091019763.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802091030391.png" alt=""></p>
+<p>打开控制台请求依旧在发，AI 修好无望。</p>
+<p>我们自己找一下调用位置：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802094945894.png" alt=""></p>
+<p>控制台输出，说明就是这里：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802095002566.png" alt=""></p>
+<p>明确了问题点之后再让 AI 修复：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802102256376.png" alt=""></p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802102337196.png" alt=""></p>
+<p>这次真修好了，原因就是 <code>useRealtime</code> 依赖的这几个函数在不停变化：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802105010662.png" alt=""></p>
+<p>比如 handleRoomChange 依赖了 room ，但内部又更新了 room 导致 handleRoomChange 不停的重新创建，引发了 useRealtime 的重复执行。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250802105209009.png" alt=""></p>
+<p>但这也只修好了重新发送请求的问题，再回过头看表情系统，会发现被改坏掉了。</p>
+<p>所以如果这个项目想完全修好，靠 AI 是不太行了，只能通读代码理解全部细节去优化了。 </p>
+<p>从代码来看，AI 仅仅是完成了功能，对于合理性完全没有考虑到，甚至太保守了反而造成一些问题。</p>
+<p>代码在 <a href="https://github.com/wind-liang/lottery" target="_blank" rel="noopener">https://github.com/wind-liang/lottery</a> ，感兴趣的同学也可以去看一看。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>从实际体验来看，AI 可以大大大大大大大大提升开发效率，但仍<strong>离不开专业开发者的引导和把控</strong>。</p>
+<p>对于非技术人员来说，虽然可以通过自然语言完成部分开发任务，但很容易在某个阶段陷入死胡同。尤其是当项目面向更多用户时，依赖自然语言的开发方式很难应对复杂需求和多变场景。一些交互体验、非必现的 bug，都严重影响用户的体验。</p>
+<p>因此，对于<strong>生产级别的项目</strong>，当下（2025.8.2）最靠谱的方式是：<strong>由开发者提出需求，AI 协助实现，之后再由开发者严格 review 所有改动，开发过程中需要引导 AI 进行优化或者解决 BUG</strong>。</p>
+<p>正如年初 <a href="https://mp.weixin.qq.com/s/UUcUeS1GTG_OIi_KQTQ5sg" target="_blank" rel="noopener">AI 杂想</a> 中讲的：</p>
+<blockquote>
+<p>未来一定是 ai 的，这已经毋庸置疑了，而我们需要做的就是拥抱 ai，学习 ai，使用 ai。</p>
+<p>从 php 开发、.NET 开发、java 开发、python 开发、塞班开发、安卓开发、iOS 开发、web 开发、小程序开发，到现在的 ai 开发，短短几十年，程序员的职业在不停变化。</p>
+<p>但变了吗？其实没有。程序员核心掌握的应该是「<strong>解决问题的能力</strong>」，而变的只是我们使用的工具罢了。</p>
+</blockquote>
+<p>革命尚未成功，AI 仍需努力。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/windliang.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ai/" rel="tag"># ai</a>
+          
+            <a href="/tags/Cursor/" rel="tag"># Cursor</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2025/07/13/Cursor杭州Meetup后的一些总结思考/" rel="next" title="Cursor 杭州 Meetup 后的一些总结思考">
+                <i class="fa fa-chevron-left"></i> Cursor 杭州 Meetup 后的一些总结思考
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">121</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">110</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#项目演示"><span class="nav-number">1.</span> <span class="nav-text">项目演示</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目开发过程"><span class="nav-number">2.</span> <span class="nav-text">项目开发过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#prd-准备"><span class="nav-number">2.1.</span> <span class="nav-text">prd 准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二次改造"><span class="nav-number">2.2.</span> <span class="nav-text">二次改造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整体改造"><span class="nav-number">2.3.</span> <span class="nav-text">整体改造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bug-修复"><span class="nav-number">2.4.</span> <span class="nav-text">bug 修复</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AI-的局限"><span class="nav-number">2.5.</span> <span class="nav-text">AI 的局限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#样式遮挡"><span class="nav-number">2.5.1.</span> <span class="nav-text">样式遮挡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二次抽奖功能"><span class="nav-number">2.5.2.</span> <span class="nav-text">二次抽奖功能</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码分析"><span class="nav-number">3.</span> <span class="nav-text">代码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#发送表情"><span class="nav-number">3.1.</span> <span class="nav-text">发送表情</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#疯狂网络请求"><span class="nav-number">3.2.</span> <span class="nav-text">疯狂网络请求</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">4.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
