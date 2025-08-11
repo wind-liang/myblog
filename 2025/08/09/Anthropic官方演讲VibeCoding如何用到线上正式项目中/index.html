@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一个非常 nice 的演讲，这里分享下，原地址：https://www.youtube.com/watch?v=fHWFF_pnqDk&amp;amp;ab_channel=Anthropic。 演讲简介 演讲者是 Erik Schulntz，Anthropic 的员工，主要研究 coding agent。 去年骑车上班摔断了胳膊，打了两个月的石膏，用 Claude 写了大部分代码，也沉淀出了很多经验，所">
+<meta name="keywords" content="ai">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Anthropic 官方演讲：Vibe Coding 如何用到线上正式项目中">
+<meta property="og:url" content="https://windliang.wang/2025/08/09/Anthropic官方演讲VibeCoding如何用到线上正式项目中/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="一个非常 nice 的演讲，这里分享下，原地址：https://www.youtube.com/watch?v=fHWFF_pnqDk&amp;amp;ab_channel=Anthropic。 演讲简介 演讲者是 Erik Schulntz，Anthropic 的员工，主要研究 coding agent。 去年骑车上班摔断了胳膊，打了两个月的石膏，用 Claude 写了大部分代码，也沉淀出了很多经验，所">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806073444300.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806074243675.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806074828725.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806081102322.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806081300808.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806082233309.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250807072327050.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250807072908123.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250807073846741.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250807074951401.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250807082012269.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250807225018102.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250808073050261.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250808073931972.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250808074510797.png">
+<meta property="og:updated_time" content="2025-08-11T00:02:02.896Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Anthropic 官方演讲：Vibe Coding 如何用到线上正式项目中">
+<meta name="twitter:description" content="一个非常 nice 的演讲，这里分享下，原地址：https://www.youtube.com/watch?v=fHWFF_pnqDk&amp;amp;ab_channel=Anthropic。 演讲简介 演讲者是 Erik Schulntz，Anthropic 的员工，主要研究 coding agent。 去年骑车上班摔断了胳膊，打了两个月的石膏，用 Claude 写了大部分代码，也沉淀出了很多经验，所">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806073444300.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2025/08/09/Anthropic官方演讲VibeCoding如何用到线上正式项目中/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Anthropic 官方演讲：Vibe Coding 如何用到线上正式项目中 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-入门前端必备课程">
+    <a href="https://mp.weixin.qq.com/s/eBsYMO4GoLY_UVZ1DioXAA" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />入门前端必备课程</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-链接转图片(写公众号用)">
+    <a href="https://qr.windliang.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />链接转图片(写公众号用)</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-浏览器标题修改插件">
+    <a href="https://github.com/wind-liang/RenameTab" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />浏览器标题修改插件</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2025/08/09/Anthropic官方演讲VibeCoding如何用到线上正式项目中/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Anthropic 官方演讲：Vibe Coding 如何用到线上正式项目中
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2025-08-09 10:27:37" itemprop="dateCreated datePublished" datetime="2025-08-09T10:27:37+08:00">2025-08-09</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2025-08-11 08:02:02" itemprop="dateModified" datetime="2025-08-11T08:02:02+08:00">2025-08-11</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/ai/" itemprop="url" rel="index"><span itemprop="name">ai</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2025/08/09/Anthropic官方演讲VibeCoding如何用到线上正式项目中/" class="leancloud_visitors" data-flag-title="Anthropic 官方演讲：Vibe Coding 如何用到线上正式项目中">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一个非常 nice 的演讲，这里分享下，原地址：<a href="https://www.youtube.com/watch?v=fHWFF_pnqDk&amp;ab_channel=Anthropic" target="_blank" rel="noopener">https://www.youtube.com/watch?v=fHWFF_pnqDk&amp;ab_channel=Anthropic</a>。</p>
+<h1 id="演讲简介"><a href="#演讲简介" class="headerlink" title="演讲简介"></a>演讲简介</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806073444300.png" alt=""></p>
+<p>演讲者是 Erik Schulntz，Anthropic 的员工，主要研究 coding agent。</p>
+<p>去年骑车上班摔断了胳膊，打了两个月的石膏，用 Claude 写了大部分代码，也沉淀出了很多经验，所以有了这次分享，如何在生产环境进行 Vibe Coding。</p>
+<h1 id="什么是-Vibe-Coding"><a href="#什么是-Vibe-Coding" class="headerlink" title="什么是 Vibe Coding"></a>什么是 Vibe Coding</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806074243675.png" alt=""></p>
+<p>有些人混淆了 Vide Coding 的概念，认为只要用 AI 生成大量的代码就算。但 Erik 认为如果仅仅是用 Copilot、Cursor 去生成代码，写一点后人工看看代码再去问 AI，改一点后再去问 AI 这种并不能算作 Vibe Coding。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806074828725.png" alt=""></p>
+<p>真正的 Vibe Coding 应该回到最初提出这个概念的 Andrej Karpathy。核心观点是忘记代码的存在，通过 Vibe Coding 很多非技术人员也可以开发一个完整的 APP，这是一件非常令人兴奋的事，也为很多人打开了新的可能性。</p>
+<p>但 Vibe Coding 目前也有一些问题：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806081102322.png" alt=""></p>
+<p>一些非技术人员对于 AI 做的事情无法理解，因此遇到问题之后会无所适从。</p>
+<p>目前来看 Vibe Coding 只在一些低风险的项目上表现的很好：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806081300808.png" alt=""></p>
+<p>大家通过 Vibe Coding 做一些小游戏、「玩具」项目，如果 Vibe Coding 的代码质量不高，有一些 bug 也无伤大雅。</p>
+<h1 id="关注-Vibe-Coding-的原因"><a href="#关注-Vibe-Coding-的原因" class="headerlink" title="关注 Vibe Coding 的原因"></a>关注 Vibe Coding 的原因</h1><p>目前 Vibe Coding 成功的例子都是一些「玩具」项目（比如我之前分享的 <a href="https://mp.weixin.qq.com/s/IjOe7asSVSmyg42iY-tbkw" target="_blank" rel="noopener">一行代码没写用 ai 开发了一个链接转二维码的网站</a>、<a href="https://mp.weixin.qq.com/s/_irX3wVl8z3fFz-EYAArCQ" target="_blank" rel="noopener">Cursor 写一个网页标题重命名的浏览器插件 </a> ），如果将 Vibe Coding 用在真正的线上复杂项目上风险可能会很高（我前几天分享的 <a href="https://mp.weixin.qq.com/s/HlWiMoKs0sdNEP90JXiHCA" target="_blank" rel="noopener">Cursor 开发复杂项目过程记录和利弊分析</a>，可以清晰的感受到 Vibe Coding 的缺陷），但为什么我们还要关注 Vibe Coding？</p>
+<p><strong>指数级增长</strong>：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250806082233309.png" alt=""></p>
+<p>AI 能胜任的任务越来越复杂，大概每 7 个月就能翻倍。</p>
+<p>现在来说 AI 可能完成的是我们以往 1h、2h 写的代码，生成后我们可以去 review 每一行代码，指导他该怎么优化。</p>
+<p>但如果明年呢，再过几年呢，如果 AI 可以直接生成以往我们一天写的代码或者一周写的代码，如果再去一行行 review 就显得不现实了。因此我们应该去顺应这种指数级的趋势，去关注 Vide Coding，提前找到方法应对未来的这种变化。</p>
+<p>Erik 最喜欢的一个比喻就是编译器。</p>
+<p>编译器刚出来的时候，编译器还不成熟、存在 bug、优化能力有限等问题，许多开发者为了确保程序运行正确、高效，会选择查看编译后的汇编代码，甚至手写。但随着项目复杂度和规模的提升，这就变得非常不现实了。</p>
+<p>此时只能完全信任编译器，忘记汇编语言的存在，从代码层面去想办法保证产品的质量。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250807072327050.png" alt=""></p>
+<p>对于比 Vide Coding，我们应该忘记代码的存在，从产品层面去想办法保证线上的质量。</p>
+<h1 id="Vibe-Coding-VS-其他行业"><a href="#Vibe-Coding-VS-其他行业" class="headerlink" title="Vibe Coding VS 其他行业"></a>Vibe Coding VS 其他行业</h1><p>不会代码，可以保证产品的质量吗？其他行业其实也有类似的问题：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250807072908123.png" alt=""></p>
+<ul>
+<li>CTO 不可能深入掌握各个领域的知识，如何管理各个领域对应的专家？</li>
+<li>产品经理不懂代码，怎么验收他期望的功能？</li>
+<li>CEO 不是金融领域的专家，怎么去检查会计工作？</li>
+</ul>
+<p>这些问题已经存在成百上千年了，我们已经有了答案：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250807073846741.png" alt=""></p>
+<ul>
+<li>CTO 可以编写验收测试，用来交给相关专家执行，哪怕他并不理解底层是怎么实现的。可以通过这些测试是否通过来判断工作质量是否达标。</li>
+<li>产品经理只需要去体验产品看有没有达到预期，完全不需要关心代码</li>
+<li>CEO 也可以抽查一些他们理解的关键事实或数据片段，从而建立对整体财务模型的信心，即使他们本身并不精通整个模型的运作方式。</li>
+</ul>
+<p>这是一个自文明诞生以来就存在的问题，如何管理那些你不了解的事情？</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250807074951401.png" alt=""></p>
+<p>——<strong>找到那个你可以验证的抽象层</strong>。</p>
+<p>对于我们开发者，我们只能知道汇编语言的存在，但现在已经完全不关心它了，在代码层面我们有了各种各样的保证产品质量的方法。</p>
+<p>那 Vibe Coding，如果不再关心代码，有什么方法来保证产品质量呢？</p>
+<h1 id="Vibe-Coding-经验"><a href="#Vibe-Coding-经验" class="headerlink" title="Vibe Coding 经验"></a>Vibe Coding 经验</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250807082012269.png" alt=""></p>
+<p>其他行业 CEO、PM，都可以找到一个验证质量的方法，但遗憾的是对于代码质量（可维护性、可扩展性）目前确实很难找到一个有效的衡量方法。</p>
+<p>那 Vibe Coding 只能放弃吗，我们还是需要去 review AI 生成的所有代码吗？</p>
+<p>代码各个功能可以理解成一个树状结构，基于 A 实现 B，基于 B 实现 C，到了 C 可能就是一个叶子节点，没有功能再依赖于它了。</p>
+<p>我们可以将 Vibe Coding 作用于叶子节点，即使出问题，影响也可控。而对于底层的分支节点、主干节点，我们继续保持 AI 生成，人工 review ，保证代码质量。</p>
+<p>当然这是不得已之举，随着模型越来越强，未来底层的节点也许也可以放心的交给 AI 了。</p>
+<p>那么如何更好的 Vibe Coding 呢？</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250807225018102.png" alt=""></p>
+<ul>
+<li><p>将自己当成老板。不要问 Claude 会什么，而是问自己能给 Claude 什么。我们习惯于直接和 AI 进行非常简短的往返交流，让 AI 写这个功能、修那个 bug，但如果把 AI 当成我们的新员工呢？</p>
+<p>我们会给他先提供项目架构是什么，要改什么，有什么限制等等，Vibe Coding 也是一样，我们也需要给 AI 提供足够的上下文，它才能表现得令我们满意。</p>
+</li>
+<li><p>先不要着急去实现功能，花时间收集足够的信息组成 prompt 再交给 Claude。</p>
+<p>开几个新对话窗口，和 AI 一起聊项目需要改什么，有什么好的方案，涉及哪些文件，修改计划是什么，项目的限制有什么，整个方案确认后再写 prompt。</p>
+<p>最后新开对话窗口让 Claude  完成。如果提供的信息足够，AI 完成的成功率也会越高。</p>
+</li>
+<li><p>需要有技术背景的人来提出正确的问题，给 AI 指引。因此不是所有人都可以 Vibe Coding，如果是非技术人员去 Vibe Coding 一个用户体量大的商业项目目前还是做不到的。</p>
+</li>
+</ul>
+<h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><p>合并 AI 深度参与的 2万 + 行代码到线上项目，关键点有什么？</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250808073050261.png" alt=""></p>
+<ul>
+<li>开发前和 AI 讨论需求的实现方案、细节等，制定出完善的 prompt。</li>
+<li>「叶子节点」直接让 AI 去完成，它的代码质量即使低一点也不影响整个系统。底层核心代码 AI 完成后进行详细 review，确保代码质量。</li>
+<li>精心设计压力测试保证系统的稳定性</li>
+<li>系统关键点设计易读的输入输出，做到不看代码就能知道系统是否正常。</li>
+</ul>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250808073931972.png" alt=""></p>
+<p>因为将整个系统涉及得容易验证，即使不去深入理解代码也能保证功能正常。虽然这次改动有大部分是 AI 来完成，几周的事情在 AI 的帮助下可能几天就完成，但对于这次改动的质量足够有信心。</p>
+<h1 id="Vibe-Coding-总结"><a href="#Vibe-Coding-总结" class="headerlink" title="Vibe Coding 总结"></a>Vibe Coding 总结</h1><p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20250808074510797.png" alt=""></p>
+<ul>
+<li>成为 Claude 的老板，不要问它会什么，而是自己能为它提供什么。</li>
+<li>Vibe Coding 作用于叶子节点，底层代码保持人工 review， 保证代码的质量。</li>
+<li>将系统设计成可验证的，即使不去读代码也能验证系统的正确性</li>
+</ul>
+<p>记住 AI 的指数型发展，虽然现在不去拥抱 Vibe Coding 是没有问题的，我们可以一行行的 review 代码保证项目的质量。</p>
+<p>但未来呢？如果 AI 可以一次性生成以往一周的代码工作量，此时一行行 review 将变得不现实，而我们成为项目快读迭代的瓶颈，无法享受模型升级带来的效率提升。</p>
+<h1 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q &amp;  A"></a>Q &amp;  A</h1><p>这是我看过质量最高的 Q&amp;A 了， 问答时间直接和演讲时间一半一半：</p>
+<blockquote>
+<p>1</p>
+</blockquote>
+<p>Q：过去，我们花了大量时间处理语法问题、库的使用，或者代码组件之间的连接问题，这就是我们通过这种方式学习编程的过程。但现在，我们该如何学习呢？我们该如何成为更优秀的 Vibe Coders？我们又该如何积累更多知识，从而成为更优秀的 product managers ？</p>
+<p>A：我认为这是一个非常有趣的问题，它既有让人担忧的理由，也有让人乐观的理由。让我担忧的原因，就像你提到的，我们将不再经历那种艰苦的打磨过程。</p>
+<p>不过我认为，这其实也没什么大问题。我在大学时遇到过一些教授，他们会说：「现在的程序员不如以前了，因为他们从没手写过汇编代码，也体会不到为了让程序运行得更快而付出的痛苦。」</p>
+<p>而积极的一面在于，我发现借助这些 AI 工具，我能够更快地学习新知识。</p>
+<p>很多时候，当我与 Claude 一起编程时，我会在审查代码时说：「Claude，这个库我以前没见过，能告诉我它是什么吗？为什么选择它而不是别的库？」就好像随时都有一个结对编程伙伴在身边一样。</p>
+<p>不过我认为，变化在于，那些懒惰的人不会去学习，他们只会得过且过。</p>
+<p>但如果你愿意花时间学习，就会发现有大量出色的学习资源，而 Claude 也会帮助你理解 Vibe Coding 生成的代码。</p>
+<p>另外，我想说的是，在学习更高层次的知识时，例如是什么让一个项目顺利推进、什么样的功能能让产品契合市场而不是失败，我们将能获得更多试错机会。</p>
+<p>我觉得，尤其对于系统工程师或架构师来说，通常需要两年的时间才能在代码库中完成一次重大变更，并最终弄清当初的架构决策是否合理。</p>
+<p>如果我们能把这个周期缩短到 6 个月，那么愿意投入时间学习的工程师，就能在相同的时间里，获得相当于四倍的经验，只要他们肯努力尝试。</p>
+<blockquote>
+<p>2</p>
+</blockquote>
+<p>Q：回到你之前提到的前期规划流程，应该如何在提供信息过多与过少之间取得平衡？你会给 Claude 提供一份完整的产品需求文档吗？在开始 Vibe Coding  之前，你是否有一个标准化的模板？</p>
+<p>A：我认为这很大程度上取决于你关注的重点。如果我并不在意实现的具体方式，我就完全不会谈到实现细节，只会告诉它我的需求，也就是我最终想要的结果。</p>
+<p>而在我非常熟悉代码库的情况下，我会更深入地说明，例如：「你应该使用这些类来实现这个逻辑，可以参考这个类似功能的示例。」</p>
+<p>总之，这完全取决于你最终关注的重点。</p>
+<p>不过我认为，我们的模型在不被过度限制的情况下表现最佳。因此，我不会投入太多精力去制定一种非常严格的格式或其他约束。我只会把它当作一名初级工程师，考虑为了让他成功完成任务，需要提供哪些信息。</p>
+<blockquote>
+<p>3</p>
+</blockquote>
+<p>Q：你是如何在效率和网络安全之间取得平衡的？因为几个月前有报道称，排名前十的 Vibe Coding 应用存在严重漏洞，并且有大量重要信息被泄露。</p>
+<p>虽然不是实际被泄露，但已经被证明有可能被泄露，而且造成这一情况的人甚至不是专业黑客之类的，所以这是个值得注意的问题。</p>
+<p>你是如何在保持安全（即便是在叶子节点级别）与保持高效之间取得平衡的？毕竟有些东西虽然高效，但并不安全。</p>
+<p>A：是的，这是个很好的问题。我认为核心还是回到第一点——作为 Claude 的 PM ，你必须对上下文了解得足够深入，才能基本判断哪些是危险的，哪些是安全的，以及在哪些地方需要格外小心。</p>
+<p>我认为，目前 Vibe Coding 上新闻的大多是那些完全没有编程经验的人去做了这些事。用于游戏、创意以及让人们能够自由创造，这当然没问题。</p>
+<p>但在 production systems 中，你需要足够了解情况，知道该问哪些问题，才能引导 Claude 朝正确的方向前进。</p>
+<p>以我们内部的这个案例为例，它完全是离线运行的，因此我们非常有信心不会出现任何安全问题。</p>
+<blockquote>
+<p>4</p>
+</blockquote>
+<p>Q：所以这更像是你刚才提到的那些情况，他们完全不该在生产环境中对重要系统进行 Vibe Coding。</p>
+<p>A：maybe I shouldn’t have said it like that but no business vibe coding in production for an important system. I will say I will say that.(语气是笑笑笑)</p>
+<p>也许我不该用这种说法，但我的确是这个意思。</p>
+<blockquote>
+<p>5</p>
+</blockquote>
+<p>Q：但如果我们看看数据，全球人口中不足 0.5% 是软件开发者，而软件是一种极佳的方式，可以让创意实现规模化传播。</p>
+<p>那么，你认为产品应该如何改变，才能让更多人更容易进行  Vibe Coding 和软件构建，同时避免诸如 API 密钥泄露等问题？</p>
+<p>A：这是个非常好的问题，我会非常期待看到更多具有「可证明正确性」的产品与框架出现。我的意思是，完全可以构建一些后端系统，其中重要的身份验证部分、支付部分都已为你搭建好，而你只需填充 UI 层即可。</p>
+<p>你可以在这样的环境下进行 Vibe Coding，它相当于给你提供了一个优雅的“填空式”沙盒来放置代码。</p>
+<p>我觉得这种模式有很多潜在的实现方式。</p>
+<p>最简单的例子是 Claude 的 artifacts 功能，Claude 可以帮你编写代码，并直接在 Claude AI 内进行托管与展示。</p>
+<p>这种方式当然是安全的，因为它非常有限：没有身份验证、没有支付功能，完全是前端代码。</p>
+<p>不过，这里其实是个很好的产品创意——有人应该去构建一种「可证明正确性」的托管系统，后端在任何情况下都是安全的，无论前端发生了什么「恶作剧」都不受影响。</p>
+<p>我希望未来会有更多优秀的工具，能够与 Vibe Coding 互补。</p>
+<blockquote>
+<p>6</p>
+</blockquote>
+<p>Q：你好，我想问一下关于测试驱动开发（TDD），你有什么建议吗？因为我经常发现 Claude 会先输出整个实现，然后才编写测试用例。</p>
+<p>有时这些测试用例无法通过。我想让 Claude 先写测试用例，但我又不想亲自去验证，因为我还没看到实现代码。你是否有一种可迭代的方法？你有没有尝试过 Vibe Coding 中的测试驱动开发？</p>
+<p>A：是的，我确实认为测试驱动开发在 Vibe Coding 中非常有用。只要你能理解测试用例的含义，即便不去查看实现代码，它也能帮助 Claude 在一定程度上保持自洽。</p>
+<p>不过我认为，Claude 很容易陷入一个误区，就是编写过于依赖具体实现的测试。</p>
+<p>当我尝试这种方式时，我常会给 Claude 设定示例，比如：「只写三个端到端测试：一个正常流程（happy path）、一个错误场景，以及另一个不同的错误场景。」我会在这方面提出明确要求，希望测试尽可能通用，并且是端到端的。</p>
+<p>我认为这样可以确保这些测试是我能够理解的，同时 Claude 也能在不陷入细节泥潭的情况下完成。</p>
+<p>此外，我还想说，在 Vibe Coding 时，我经常只阅读代码中的测试部分（或至少先阅读测试部分），以确保我认可这些测试，并在它们通过时对代码整体感到放心。</p>
+<p>这种方法在你能促使 Claude 编写非常简洁的端到端测试时效果最佳。</p>
+<blockquote>
+<p>7</p>
+</blockquote>
+<p>Q：感谢你这场非常精彩的演讲。我也很欣赏你做了许多人没有做到的事情——尝试解读 Karpathy 原帖中一句颇为特别的话：「拥抱指数增长（embrace exponentials）」。</p>
+<p>所以我想进一步追问，我如何才能知道自己已经“拥抱了指数增长”？具体来说，遵循这条建议到底意味着什么？</p>
+<p>或者更明确地说，我的理解是，这句话似乎暗示着「模型会变得更好」。但你是否认同这样的观点：模型变得更好，并不意味着它会在我们设想的所有维度上都变得更好？</p>
+<p>我该如何拥抱指数增长呢？</p>
+<p>A：我认为你的理解已经接近了——持续假设模型会不断进步，但它的含义还要更进一步。「指数增长」的理念不仅是模型会持续改进，还意味着它们改进的速度将远超我们的想象。</p>
+<p>就像你能从趋势点中看到的那样，它不仅是在稳定提升，而是会突然加速，进入爆发式的进步。</p>
+<p>我还听到过一句很有趣的话，来自 Daario 和 Mike Kger 的演讲——「充满仁慈的机器并不是科幻小说，而是一份指导我们的产品路线图（machines of loving grace is not science fiction. It’s a product roadmap.）」。</p>
+<p>尽管这听起来像是遥不可及的事，但当你处在指数增长曲线上时，事情会变得异常疯狂，而且速度比你预想的还要快。</p>
+<p>举个例子，如果你和一位 90 年代从事计算机工作的人交谈，他可能会说：「好，我们现在有几 KB 的内存，又多了几 KB。」</p>
+<p>但如果快进到今天，我们已经拥有 TB 级的内存。这不仅仅是提升了两倍，而是提升了数百万倍。</p>
+<p>这正是指数增长在 20 年间所带来的变化。</p>
+<p>因此，我们不应设想 20 年后的模型只是比现在好两倍，而应设想它们会比现在聪明和快速一百万倍——这是极其疯狂的变化。</p>
+<p>这意味着什么，我们甚至很难想象。就像 90 年代的计算机从业者，根本无法想象如果电脑速度提升一百万倍，会对社会带来怎样的影响。</p>
+<p>但这的确发生了，所以这就是我们所说的指数增长——它会变得极其疯狂。</p>
+<blockquote>
+<p>8</p>
+</blockquote>
+<p>Q：我有几个问题，准确来说是一个问题，但分成两部分。</p>
+<p>第一部分：在 Vibe Coding 时，我有两种不同的工作流。一种是在终端中进行，另一种是在 VS Code 或 Cursor 中进行。你使用哪种工作流？</p>
+<p>如果你是在终端里使用 Claude Code，你多久会进行一次代码整理（compact）？因为我发现，在 Vibe Coding 过程中时间越长，我的函数就会被改成新的名字，或者说，随着时间推移，事情会有些偏离轨道。而即便我进行整理，这种情况依然会发生；即使我提前创建一个文档来引导它，我仍然需要将其重新拉回正确轨道。</p>
+<p>A：是的，这是个很好的问题。我两种方式都用。我经常是在 VS Code 的终端中打开 Claude Code 编码，可以说，Claude Code 完成了大部分的编辑工作，而我是在 VS Code 中一边查看一边进行代码审查——这严格来说并不算真正的 Vibe Coding。</p>
+<p>有时我也只会审查它生成的测试。我倾向于在 Claude 达到一个合适的停顿点时进行整理（compact）或重新开始一个会话，这个节点就像人类程序员会停下来休息、去吃午饭再回来一样。</p>
+<p>如果我感觉达到了这个阶段，就是一个适合整理的好时机。通常，我会先让 Claude 找到所有相关文件并制定一个计划，然后我会说：「好，把这些内容都写进一个文档里。」接着我会进行整理，这样就能清理掉为了制定这个计划、查找文件所占用的十万级别的 tokens，并将它精简到几千 tokens。</p>
+<blockquote>
+<p>9</p>
+</blockquote>
+<p>Q：还有一个问题，是刚才的问题基础上的延伸：你是否会将 Claude Code 与其他工具结合使用，以进一步提高速度——例如同时运行多个 Claude Code、使用 Git worktree，然后合并一些内容或堆叠多个 PR 等等？这是你个人会采用或建议的方法吗？</p>
+<p>第二个问题是：当你需要处理代码库中一个自己不太熟悉的部分，但希望能够非常快速地提交一个高质量的 PR，同时又不想用 Vibe Coding 去完成它时，你会以怎样一种结构化且工程化的方式来应对？那么，你会如何使用 Claude Code 来同时完成这两类任务？</p>
+<p>A：是的，我的确会同时使用 Claude Code 和 Cursor。通常，我会先用 Claude Code 开始工作，然后再用 Cursor 来进行修正。或者，如果我知道要对某个文件做哪些非常具体的更改，我会直接用 Cursor 自行修改，并精确定位到需要更改的代码行。</p>
+<p>至于你问题的第二部分，如何快速熟悉代码库的新部分。在我开始编写功能之前，我会用 Claude Code 来帮助我探索代码库。比如我可能会说：「告诉我这个代码库里身份验证（auth）是在哪个位置实现的」，或者「告诉我这个代码库中某个功能是在哪里发生的，再找一些与此类似的功能」，然后让它告诉我相关的文件名和需要关注的类。</p>
+<p>接着，我会利用这些信息在脑中构建整体印象，确保我能够在不依赖 Vide Coding 的情况下完成任务——也就是仍然清楚地了解代码在做什么。然后，我再和 Claude 一起实现这个功能。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>非常赞的演讲，再贴一下地址：<a href="https://www.youtube.com/watch?v=fHWFF_pnqDk&amp;ab_channel=Anthropic" target="_blank" rel="noopener">https://www.youtube.com/watch?v=fHWFF_pnqDk&amp;ab_channel=Anthropic</a>。</p>
+<p>我们正处在 AI 变革的浪潮中，一切尚无标准答案。如何顺应并利用 AI 带来的效率飞跃，成为了每个人都需要思考和探索的课题。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/windliang.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ai/" rel="tag"># ai</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2025/08/02/Cursor开发复杂项目过程记录和利弊分析/" rel="next" title="Cursor 开发复杂项目过程记录和利弊分析">
+                <i class="fa fa-chevron-left"></i> Cursor 开发复杂项目过程记录和利弊分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">122</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">110</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#演讲简介"><span class="nav-number">1.</span> <span class="nav-text">演讲简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是-Vibe-Coding"><span class="nav-number">2.</span> <span class="nav-text">什么是 Vibe Coding</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关注-Vibe-Coding-的原因"><span class="nav-number">3.</span> <span class="nav-text">关注 Vibe Coding 的原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vibe-Coding-VS-其他行业"><span class="nav-number">4.</span> <span class="nav-text">Vibe Coding VS 其他行业</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vibe-Coding-经验"><span class="nav-number">5.</span> <span class="nav-text">Vibe Coding 经验</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例"><span class="nav-number">6.</span> <span class="nav-text">实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Vibe-Coding-总结"><span class="nav-number">7.</span> <span class="nav-text">Vibe Coding 总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Q-amp-A"><span class="nav-number">8.</span> <span class="nav-text">Q &amp;  A</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">9.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
