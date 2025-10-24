@@ -472,6 +472,34 @@
 
       <h2 class="post-title">
         
+            <a class="post-title-link" href="/2025/10/24/AI自动化测试brower-use调研/" itemprop="url">
+              
+                <span itemprop="name">AI 自动化测试：brower-use 调研</span>
+              
+            </a>
+        
+      </h2>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2025-10-24T08:21:20+08:00"
+              content="2025-10-24" >
+          10-24
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+      
+        
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
+        
             <a class="post-title-link" href="/2025/02/04/AI杂想/" itemprop="url">
               
                 <span itemprop="name">AI杂想</span>
@@ -545,7 +573,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">123</span>
+                    <span class="site-state-item-count">124</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1530,26 +1558,7 @@
 
 </body>
 </html>
- + "' class='search-result-title'>" + title + "</a>";
-                  }
-
-                  slicesOfContent.forEach(function (slice) {
-                    resultItem += "<a href='" + articleUrl + "'>" +
-                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
-                      "...</p>" + "</a>";
-                  });
-
-                  resultItem += "</li>";
-                  resultItems.push({
-                    item: resultItem,
-                    searchTextCount: searchTextCount,
-                    hitCount: hitCount,
-                    id: resultItems.length
-                  });
-                }
-              })
-            };
-            if (keywords.length === 1 && keywords[0] === "") {
+      if (keywords.length === 1 && keywords[0] === "") {
               resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
             } else if (resultItems.length === 0) {
               resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
