@@ -1,0 +1,2003 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="众所周知，过去小长假经常出去玩，五一格鲁吉亚自驾游超详细记录、国庆土耳其自驾游超详细记录、曼谷、甲米、吉隆坡：一次没做攻略的旅行，恰逢最近前端失业转 Agent 中，索性做一个旅行助手的 Agent 作为找工作的准备。 产品介绍产品主要用对话承载，可以聊天录入机酒、行程、小红书资料。  日程可以查看每日的安排，可以录入酒店、机票、地点、门票。机票、酒店也可以单独点击查看。  之前一些有用的小红书链">
+<meta name="keywords" content="ai,agent">
+<meta property="og:type" content="article">
+<meta property="og:title" content="旅行助手 Agent 实战之意图识别">
+<meta property="og:url" content="https://windliang.wang/2026/08/26/旅行助手-Agent-实战之意图识别/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="众所周知，过去小长假经常出去玩，五一格鲁吉亚自驾游超详细记录、国庆土耳其自驾游超详细记录、曼谷、甲米、吉隆坡：一次没做攻略的旅行，恰逢最近前端失业转 Agent 中，索性做一个旅行助手的 Agent 作为找工作的准备。 产品介绍产品主要用对话承载，可以聊天录入机酒、行程、小红书资料。  日程可以查看每日的安排，可以录入酒店、机票、地点、门票。机票、酒店也可以单独点击查看。  之前一些有用的小红书链">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20260826174826603.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20260826174927298.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20260826184738470.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20260826185210616.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/780d7d09a70a0dadb75227594ae41149.jpg">
+<meta property="og:updated_time" content="2026-08-27T03:10:52.599Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="旅行助手 Agent 实战之意图识别">
+<meta name="twitter:description" content="众所周知，过去小长假经常出去玩，五一格鲁吉亚自驾游超详细记录、国庆土耳其自驾游超详细记录、曼谷、甲米、吉隆坡：一次没做攻略的旅行，恰逢最近前端失业转 Agent 中，索性做一个旅行助手的 Agent 作为找工作的准备。 产品介绍产品主要用对话承载，可以聊天录入机酒、行程、小红书资料。  日程可以查看每日的安排，可以录入酒店、机票、地点、门票。机票、酒店也可以单独点击查看。  之前一些有用的小红书链">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20260826174826603.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2026/08/26/旅行助手-Agent-实战之意图识别/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>旅行助手 Agent 实战之意图识别 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-claude-code-源码分析">
+    <a href="https:/cc.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />claude code 源码分析</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-入门前端必备课程">
+    <a href="https://mp.weixin.qq.com/s/eBsYMO4GoLY_UVZ1DioXAA" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />入门前端必备课程</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-链接转图片(写公众号用)">
+    <a href="https://qr.windliang.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />链接转图片(写公众号用)</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-浏览器标题修改插件">
+    <a href="https://github.com/wind-liang/RenameTab" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />浏览器标题修改插件</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2026/08/26/旅行助手-Agent-实战之意图识别/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">旅行助手 Agent 实战之意图识别
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2026-08-26 12:08:08" itemprop="dateCreated datePublished" datetime="2026-08-26T12:08:08+08:00">2026-08-26</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2026-08-27 11:10:52" itemprop="dateModified" datetime="2026-08-27T11:10:52+08:00">2026-08-27</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2026/08/26/旅行助手-Agent-实战之意图识别/" class="leancloud_visitors" data-flag-title="旅行助手 Agent 实战之意图识别">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>众所周知，过去小长假经常出去玩，<a href="https://mp.weixin.qq.com/s?__biz=MzUzNzE1Njc3Mw==&amp;mid=2247487149&amp;idx=1&amp;sn=fb462bf06e6ee5b35a119a96eacfd06a&amp;chksm=faea0367cd9d8a71e64ba2fe1a40c543a792e225b0006296856fe0f5d2fc4cb776b1d0ff14aa&amp;scene=178&amp;cur_album_id=3981806925339131907&amp;search_click_id=#rd" target="_blank" rel="noopener">五一格鲁吉亚自驾游超详细记录</a>、<a href="https://mp.weixin.qq.com/s?__biz=MzUzNzE1Njc3Mw==&amp;mid=2247487608&amp;idx=1&amp;sn=61977154ccc5fb2692255f556c904045&amp;chksm=faea1db2cd9d94a4f7a44427fb87703a469c3ba6401f1accde2612c22590060adf8269b87ce1&amp;scene=178&amp;cur_album_id=3981806925339131907&amp;search_click_id=#rd" target="_blank" rel="noopener">国庆土耳其自驾游超详细记录</a>、<a href="https://mp.weixin.qq.com/s?__biz=MzUzNzE1Njc3Mw==&amp;mid=2247487773&amp;idx=1&amp;sn=f155b3de8ed7c722d37f74aefd8973d1&amp;chksm=faea1cd7cd9d95c1f0ddab4e3d5116a08343bf55059dbcce23a598427267cc109750da46db48&amp;scene=178&amp;cur_album_id=3981806925339131907&amp;search_click_id=#rd" target="_blank" rel="noopener">曼谷、甲米、吉隆坡：一次没做攻略的旅行</a>，恰逢最近前端失业转 Agent 中，索性做一个旅行助手的 Agent 作为找工作的准备。</p>
+<h1 id="产品介绍"><a href="#产品介绍" class="headerlink" title="产品介绍"></a>产品介绍</h1><p>产品主要用对话承载，可以聊天录入机酒、行程、小红书资料。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20260826174826603.png" alt=""></p>
+<p>日程可以查看每日的安排，可以录入酒店、机票、地点、门票。机票、酒店也可以单独点击查看。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20260826174927298.png" alt=""></p>
+<p>之前一些有用的小红书链接会发到微信群里，后边找的时候很麻烦，可以把小红书链接发给 Agent，会自动归档到资料里。</p>
+<h1 id="意图定义"><a href="#意图定义" class="headerlink" title="意图定义"></a>意图定义</h1><p>最开始做的时候，并不知道「意图识别」是什么。最初的想法就是：用户说一句话，直接交给大模型，让它自己判断要不要调用工具、调用哪个工具，最后再生成回答。</p>
+<p>这个想法很自然，因为大模型看起来什么都懂。用户说「第 3 天干嘛」，它知道是在问日程；用户发一个酒店订单截图，它也能看懂是酒店；用户说「这个地方安全吗」，它也能推断出和旅行有关。</p>
+<p>所以最开始，想象中的系统大概是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">用户输入</span><br><span class="line">-&gt; 大模型理解</span><br><span class="line">-&gt; 大模型决定工具</span><br><span class="line">-&gt; 大模型回答</span><br></pre></td></tr></table></figure>
+<p>但真正往产品里做的时候，发现这条路并没有那么稳。后来又看了一些关于意图识别和 Agent 工程的资料，才意识到这里应该拆出一个更明确的路由层。</p>
+<p>比如用户输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">股票买哪个</span><br></pre></td></tr></table></figure>
+<p>如果全交给大模型，它可能真的开始分析股票。但我做的是旅行助手，它不应该回答投资建议，否则既越过了产品边界，也浪费 token。</p>
+<p>再比如用户输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://windliang.wang/ 加入到资料</span><br></pre></td></tr></table></figure>
+<p>这里有链接，也有「加入资料」的动作。如果不先判断范围，系统很容易直接抓取、总结、入库。但这个链接本身没有旅行语境，并不应该直接进入旅行资料库。</p>
+<p>还有这种问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这个地方安全吗？</span><br></pre></td></tr></table></figure>
+<p>它确实和旅行有关，但也不能简单地当成普通问答。因为安全信息最好结合当前目的地、必要时搜索最新资料，并且给出来源。</p>
+<p>Agent 不能只靠大模型自由发挥。它需要一个路由层，先判断这句话属于什么范围、对应哪个产品能力、是否需要追问、能不能继续执行。</p>
+<p>也就是意图识别，不是给一句话贴标签，而是决定系统下一步该走哪条业务链路：查数据库、读附件、保存资料、搜索网页、写入行程、追问用户，还是直接拒绝。</p>
+<h1 id="意图梳理"><a href="#意图梳理" class="headerlink" title="意图梳理"></a>意图梳理</h1><p>项目是一个旅行助手，核心场景是帮用户管理一次旅行。</p>
+<p>用户可以创建一个行程，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2026 年国庆 · 西班牙</span><br></pre></td></tr></table></figure>
+<p>然后围绕这个行程做几类事。</p>
+<h2 id="1-查询每日安排"><a href="#1-查询每日安排" class="headerlink" title="1. 查询每日安排"></a>1. 查询每日安排</h2><p>用户可能会问：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">第 3 天干嘛？</span><br><span class="line">今天有什么安排？</span><br></pre></td></tr></table></figure>
+<p>这类问题对应到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">day_query</span><br></pre></td></tr></table></figure>
+<p>系统会读取当前行程里对应 Day 的安排，按时间整理出来。</p>
+<h2 id="2-整理机票、酒店、门票订单"><a href="#2-整理机票、酒店、门票订单" class="headerlink" title="2. 整理机票、酒店、门票订单"></a>2. 整理机票、酒店、门票订单</h2><p>用户可以上传截图、PDF 或订单信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">帮我整理这张机票</span><br><span class="line">这个酒店订单记一下</span><br><span class="line">门票二维码加到行程里</span><br></pre></td></tr></table></figure>
+<p>这几类分别对应：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">flight</span><br><span class="line">hotel</span><br><span class="line">ticket</span><br></pre></td></tr></table></figure>
+<p>系统会提取航班时间、入住退房、门票日期、地址、订单号等结构化信息，并写入当前行程。</p>
+<h2 id="3-导入行程表"><a href="#3-导入行程表" class="headerlink" title="3. 导入行程表"></a>3. 导入行程表</h2><p>比如用户上传 Excel、CSV，或者说：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">把这个计划表导入</span><br><span class="line">按这个表写进行程</span><br></pre></td></tr></table></figure>
+<p>对应的是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">itinerary</span><br></pre></td></tr></table></figure>
+<p>系统会解析日期、时间、地点、事项，然后写入每日安排。</p>
+<h2 id="4-保存旅行资料"><a href="#4-保存旅行资料" class="headerlink" title="4. 保存旅行资料"></a>4. 保存旅行资料</h2><p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这篇西班牙攻略加入资料</span><br><span class="line">小红书这个链接先存一下</span><br><span class="line">这个景点官网留作参考</span><br></pre></td></tr></table></figure>
+<p>对应的是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memory</span><br></pre></td></tr></table></figure>
+<p>系统会抓取链接内容，总结后放进当前行程的资料库。后续用户追问时，这些资料会成为上下文。</p>
+<h2 id="5-分析攻略或截图"><a href="#5-分析攻略或截图" class="headerlink" title="5. 分析攻略或截图"></a>5. 分析攻略或截图</h2><p>用户可能发一张小红书截图、攻略图片，然后问：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这张图里有什么推荐？</span><br><span class="line">这个攻略适合我们吗？</span><br></pre></td></tr></table></figure>
+<p>对应的是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">note</span><br></pre></td></tr></table></figure>
+<p>它更像“资料阅读”和“攻略分析”，不一定马上写入行程。</p>
+<h2 id="6-旅行通用问答"><a href="#6-旅行通用问答" class="headerlink" title="6. 旅行通用问答"></a>6. 旅行通用问答</h2><p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这个地方安全吗？</span><br><span class="line">巴塞罗那有什么好吃的？</span><br><span class="line">住的地方离机场远吗？</span><br></pre></td></tr></table></figure>
+<p>对应的是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">general</span><br></pre></td></tr></table></figure>
+<p>系统会结合当前行程、资料库、历史对话，必要时调用搜索或回答模型。</p>
+<h2 id="7-需要追问"><a href="#7-需要追问" class="headerlink" title="7. 需要追问"></a>7. 需要追问</h2><p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://example.com 加入资料</span><br></pre></td></tr></table></figure>
+<p>这句话有「加入资料」的动作，但链接本身没有旅行语境。系统不知道它是不是旅行资料，所以我把它归到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clarify</span><br></pre></td></tr></table></figure>
+<p>这时不应该直接入库，而应该先问：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这个链接和当前旅行有什么关系？</span><br></pre></td></tr></table></figure>
+<h2 id="8-超出范围"><a href="#8-超出范围" class="headerlink" title="8. 超出范围"></a>8. 超出范围</h2><p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">股票买哪个？</span><br><span class="line">帮我写个劳动合同</span><br></pre></td></tr></table></figure>
+<p>对应的是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">out_of_scope</span><br></pre></td></tr></table></figure>
+<p>旅行助手不应该接这些任务。</p>
+<p>所以，产品能力和意图的关系大致是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">day_query     -&gt; 查询每日安排</span><br><span class="line">flight        -&gt; 识别机票订单</span><br><span class="line">hotel         -&gt; 识别酒店订单</span><br><span class="line">ticket        -&gt; 识别门票/票券</span><br><span class="line">itinerary     -&gt; 导入或写入行程</span><br><span class="line">memory        -&gt; 保存旅行资料</span><br><span class="line">note          -&gt; 分析攻略/截图</span><br><span class="line">general       -&gt; 旅行问答</span><br><span class="line">clarify       -&gt; 追问补充信息</span><br><span class="line">out_of_scope  -&gt; 拒绝非旅行问题</span><br></pre></td></tr></table></figure>
+<p>意图识别不是为了给用户一句「分类结果」，而是为了决定系统下一步应该进入哪个产品能力。</p>
+<h1 id="为什么不直接让大模型判断所有事"><a href="#为什么不直接让大模型判断所有事" class="headerlink" title="为什么不直接让大模型判断所有事"></a>为什么不直接让大模型判断所有事</h1><p>如果系统足够简单，当然可以直接让大模型判断。</p>
+<p>但旅行助手不是一个纯聊天机器人。它背后有数据库、有用户资料、有附件解析、有搜索、有写入动作。</p>
+<p>这时，大模型判断错一次，后果不只是「回答差一点」。</p>
+<p>它可能会：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">把非旅行问题当成旅行问题回答</span><br><span class="line">把普通链接错误保存进资料库</span><br><span class="line">把「只是问问」理解成「写进行程」</span><br><span class="line">把需要追问的问题直接执行</span><br><span class="line">把多个意图压成一个意图</span><br></pre></td></tr></table></figure>
+<p>尤其是带写入动作的场景，我不敢让模型凭感觉决定。</p>
+<p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这个加进去</span><br></pre></td></tr></table></figure>
+<p>这里的「这个」是什么？是上一条攻略？是一个景点？是一张门票？还是用户只是想保存资料？</p>
+<p>如果系统直接让大模型调用写入工具，就很危险。</p>
+<p>更接受的做法是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">高确定性的，用规则快速判断</span><br><span class="line">模糊的，用便宜模型辅助分类</span><br><span class="line">需要执行的，始终由业务代码控制</span><br><span class="line">不确定的，追问用户</span><br></pre></td></tr></table></figure>
+<p>也就是说，大模型可以参与意图识别，但不应该独占意图识别。</p>
+<p>那回到意图识别，可以把它看成一个从粗到细的路由过程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">先把用户的话整理清楚</span><br><span class="line">再判断这是不是旅行助手该处理的范围</span><br><span class="line">然后识别它对应哪个产品能力</span><br><span class="line">最后才决定要不要调用模型、搜索、读附件或写数据库</span><br></pre></td></tr></table></figure>
+<p>对应到项目里，就是三层：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">第一层：输入归一化</span><br><span class="line">第二层：旅行范围判断</span><br><span class="line">第三层：业务意图识别</span><br></pre></td></tr></table></figure>
+<p>这三层解决的问题不一样。</p>
+<p>输入归一化解决的是：用户说得太口语、太省略，系统要先把话补完整。</p>
+<p>旅行范围判断解决的是：这件事是不是旅行助手该接的，不能什么都往后丢。</p>
+<p>业务意图识别解决的是：如果它属于旅行场景，那到底应该走日程查询、订单识别、资料保存、攻略分析，还是旅行问答。</p>
+<p>这样拆完之后，大模型就不是整个系统的入口，而是其中一个兜底判断器。规则能确定的，直接走规则；规则不确定的，再让便宜模型帮忙复判；真正执行时，仍然由业务代码控制。</p>
+<h2 id="第一层：先把用户的话整理一下"><a href="#第一层：先把用户的话整理一下" class="headerlink" title="第一层：先把用户的话整理一下"></a>第一层：先把用户的话整理一下</h2><p>真实用户不会按照系统字段说话。</p>
+<p>他们会说：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">机酒帮我整理一下</span><br><span class="line">住哪来着</span><br><span class="line">这个地方安全吗？</span><br><span class="line">把刚才那个加进去</span><br></pre></td></tr></table></figure>
+<p>这里有缩写、口语、代词、省略和上下文引用。</p>
+<p>所以现在先做输入归一化。</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">机酒 -&gt; 机票 酒店 机酒</span><br><span class="line">住哪 -&gt; 酒店 住宿</span><br><span class="line">怎么过去 -&gt; 怎么去 交通</span><br><span class="line">最划算 -&gt; 推荐 价格 预算</span><br><span class="line">这里 / 这个 / 当地 -&gt; 补上当前行程名称和目的地</span><br></pre></td></tr></table></figure>
+<p>代码大概是这样：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">normalizeInputForIntent</span>(<span class="params">input: string, trip?: Trip</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> normalized = input</span><br><span class="line">    .normalize(<span class="string">"NFKC"</span>)</span><br><span class="line">    .replace(<span class="regexp">/\s+/g</span>, <span class="string">" "</span>)</span><br><span class="line">    .replace(<span class="regexp">/[？?]+$/g</span>, <span class="string">""</span>)</span><br><span class="line">    .trim();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> replacements: <span class="built_in">Array</span>&lt;[<span class="built_in">RegExp</span>, string]&gt; = [</span><br><span class="line">    [<span class="regexp">/机酒/g</span>, <span class="string">"机票 酒店 机酒"</span>],</span><br><span class="line">    [<span class="regexp">/住哪|住哪里|住宿地/g</span>, <span class="string">"酒店 住宿"</span>],</span><br><span class="line">    [<span class="regexp">/怎么过去|如何过去/g</span>, <span class="string">"怎么去 交通"</span>],</span><br><span class="line">    [<span class="regexp">/最划算|省钱|性价比/g</span>, <span class="string">"推荐 价格 预算"</span>],</span><br><span class="line">  ];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> [pattern, replacement] <span class="keyword">of</span> replacements) &#123;</span><br><span class="line">    normalized = normalized.replace(pattern, replacement);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> tripTokens = trip ? getTripReferenceTokens(trip).join(<span class="string">" "</span>) : <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (tripTokens &amp;&amp; <span class="regexp">/(这里|那里|当地|这个|它|那边)/</span>.test(normalized)) &#123;</span><br><span class="line">    normalized = <span class="string">`<span class="subst">$&#123;normalized&#125;</span> <span class="subst">$&#123;tripTokens&#125;</span>`</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> normalized.trim();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原始输入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这个地方安全吗？</span><br></pre></td></tr></table></figure>
+<p>如果当前行程是“2026 年国庆 · 西班牙”，归一化后，系统就能把“这个地方”放回当前行程语境里判断。</p>
+<p>这一步的目的不是润色文本，而是把用户的自然表达变成系统更容易判断的表达。</p>
+<h2 id="第二层：判断是不是旅行范围"><a href="#第二层：判断是不是旅行范围" class="headerlink" title="第二层：判断是不是旅行范围"></a>第二层：判断是不是旅行范围</h2><p>旅行范围有三种：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type TravelScope = <span class="string">"travel"</span> | <span class="string">"non_travel"</span> | <span class="string">"uncertain"</span>;</span><br></pre></td></tr></table></figure>
+<p>例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">股票买哪个</span><br><span class="line">=&gt; non_travel / out_of_scope</span><br><span class="line"></span><br><span class="line">https:<span class="comment">//windliang.wang/</span></span><br><span class="line">=&gt; non_travel / out_of_scope</span><br><span class="line"></span><br><span class="line">https:<span class="comment">//windliang.wang/ 加入资料</span></span><br><span class="line">=&gt; uncertain / clarify</span><br></pre></td></tr></table></figure>
+<p>代码里会先做范围判断：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> rawQuestion = getActualQuestion(message);</span><br><span class="line"><span class="keyword">const</span> actualQuestion = normalizeInputForIntent(rawQuestion, trip);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> travelScope = resolveTravelScope(&#123;</span><br><span class="line">  file,</span><br><span class="line">  input: actualQuestion,</span><br><span class="line">  rawInput: rawQuestion,</span><br><span class="line">  trip,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>如果是明确非旅行问题，就直接变成 <code>out_of_scope</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (travelScope.scope === <span class="string">"non_travel"</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> intent: AssistantIntent = <span class="string">"out_of_scope"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> finishTurn(&#123;</span><br><span class="line">    ok: <span class="literal">true</span>,</span><br><span class="line">    title: <span class="string">"这个问题和旅行行程无关哦"</span>,</span><br><span class="line">    detail: <span class="string">""</span>,</span><br><span class="line">    intent,</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这一步其实是在回答一个更基础的问题：</p>
+<blockquote>
+<p>这个请求是不是旅行助手应该处理的？</p>
+</blockquote>
+<p>只有这个问题过了，才继续判断它是 <code>memory</code>、<code>hotel</code>、<code>ticket</code> 还是 <code>general</code>。</p>
+<h2 id="第三层：判断具体业务意图"><a href="#第三层：判断具体业务意图" class="headerlink" title="第三层：判断具体业务意图"></a>第三层：判断具体业务意图</h2><p>当系统确认请求属于旅行范围，或者至少不确定但可能相关时，才进入业务意图识别。</p>
+<p>当前项目的意图有十种：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">day_query</span><br><span class="line">flight</span><br><span class="line">hotel</span><br><span class="line">ticket</span><br><span class="line">itinerary</span><br><span class="line">memory</span><br><span class="line">note</span><br><span class="line">general</span><br><span class="line">clarify</span><br><span class="line">out_of_scope</span><br></pre></td></tr></table></figure>
+<p>这些意图不是标签，而是后续链路。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">day_query</span><br><span class="line">=&gt; 读取 Day 日程</span><br><span class="line">memory</span><br><span class="line">=&gt; 抓取链接，总结并保存资料</span><br><span class="line">clarify</span><br><span class="line">=&gt; 不执行，先追问</span><br><span class="line">out_of_scope</span><br><span class="line">=&gt; 不处理，提示超出旅行范围</span><br><span class="line">general</span><br><span class="line">=&gt; 进入旅行问答，必要时搜索或调用回答模型</span><br></pre></td></tr></table></figure>
+<p>规则识别会输出候选意图、分数和原因：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> IntentCandidate = &#123;</span><br><span class="line">  intent: AssistantIntent;</span><br><span class="line">  reason: <span class="built_in">string</span>;</span><br><span class="line">  score: <span class="built_in">number</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>比如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (isDayScheduleQuestion(normalizedInput)) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    candidates: [</span><br><span class="line">      &#123;</span><br><span class="line">        intent: <span class="string">"day_query"</span>,</span><br><span class="line">        reason: <span class="string">"命中 Day/当天日程查询"</span>,</span><br><span class="line">        score: <span class="number">100</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">    intent: <span class="string">"day_query"</span>,</span><br><span class="line">    normalizedInput,</span><br><span class="line">    originalInput: input,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再比如机票、酒店、门票：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="regexp">/机票|航班|起飞|落地|登机|flight/</span>.test(combined)) &#123;</span><br><span class="line">  addCandidate(<span class="string">"flight"</span>, <span class="number">88</span>, <span class="string">"命中机票/航班信号"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="regexp">/酒店|入住|退房|住宿|hotel/</span>.test(combined)) &#123;</span><br><span class="line">  addCandidate(<span class="string">"hotel"</span>, <span class="number">88</span>, <span class="string">"命中酒店/住宿信号"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (hasTicketSignal &amp;&amp; (file || hasSaveSignal)) &#123;</span><br><span class="line">  addCandidate(<span class="string">"ticket"</span>, <span class="number">96</span>, <span class="string">"命中票券信号，且有附件或保存动作"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后按分数选出当前主意图：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [winner] = [...candidates].sort(<span class="function">(<span class="params">left, right</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (right.score !== left.score) &#123;</span><br><span class="line">    <span class="keyword">return</span> right.score - left.score;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> candidates.indexOf(left) - candidates.indexOf(right);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h1 id="链接的例子"><a href="#链接的例子" class="headerlink" title="链接的例子"></a>链接的例子</h1><p>旅行助手里有一个典型场景：用户发链接。</p>
+<p>最开始的规则很简单：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">只要输入包含 URL，就识别为 memory</span><br></pre></td></tr></table></figure>
+<p>也就是保存到资料库，但这样用户随便发一个个人网站，也会被当成旅行资料。</p>
+<p>所以把规则更加细化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">旅行平台链接 -&gt; 可以倾向 memory</span><br><span class="line">普通链接 + 旅行语境 + 保存动作 -&gt; memory</span><br><span class="line">普通链接 + 保存动作 + 无旅行语境 -&gt; clarify</span><br><span class="line">普通裸链接 + 无旅行语境 -&gt; out_of_scope</span><br></pre></td></tr></table></figure>
+<p>代码里会先提取安全 URL，并排除 localhost、内网地址这类不适合抓取的链接：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSafeMemoryUrl</span>(<span class="params">input: string</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> rawUrl = extractFirstUrl(input);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!rawUrl) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">undefined</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> url = <span class="keyword">new</span> URL(rawUrl);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (![<span class="string">"http:"</span>, <span class="string">"https:"</span>].includes(url.protocol)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">undefined</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (isPrivateMemoryHost(url.hostname)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">undefined</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> url;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后判断它是不是旅行平台、有没有旅行文本、有没有保存动作：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">resolveUrlTravelSignal</span>(<span class="params">input: string</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> url = getSafeMemoryUrl(input);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!url) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">undefined</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> travelHost = hasTravelUrlHost(url);</span><br><span class="line">  <span class="keyword">const</span> travelText = hasTravelUrlTextSignal(input, url);</span><br><span class="line">  <span class="keyword">const</span> saveSignal = hasMemorySaveSignal(input);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    shouldSaveMemory: travelHost || (travelText &amp;&amp; saveSignal),</span><br><span class="line">    travelHost,</span><br><span class="line">    travelText,</span><br><span class="line">    saveSignal,</span><br><span class="line">    url: url.toString(),</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后落到不同意图：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (urlSignal?.shouldSaveMemory) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    intent: <span class="string">"memory"</span>,</span><br><span class="line">    candidates: [</span><br><span class="line">      &#123;</span><br><span class="line">        intent: <span class="string">"memory"</span>,</span><br><span class="line">        reason: <span class="string">"旅行链接或旅行资料保存信号"</span>,</span><br><span class="line">        score: <span class="number">92</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (urlSignal?.saveSignal &amp;&amp; !urlSignal.travelHost &amp;&amp; !urlSignal.travelText) &#123;</span><br><span class="line">  addCandidate(<span class="string">"clarify"</span>, <span class="number">74</span>, <span class="string">"只有保存动作，但缺少旅行语境"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">小红书攻略链接 加入资料</span><br><span class="line">=&gt; memory</span><br><span class="line"></span><br><span class="line">这篇西班牙攻略加入资料 https://example.com</span><br><span class="line">=&gt; memory</span><br><span class="line"></span><br><span class="line">https://example.com 加入资料</span><br><span class="line">=&gt; clarify</span><br><span class="line"></span><br><span class="line">https://example.com</span><br><span class="line">=&gt; out_of_scope</span><br></pre></td></tr></table></figure>
+<p>这里的关键是：动作不等于意图成立。</p>
+<p>「加入资料」只是动作信号。系统还要判断这个资料是不是属于当前旅行场景。</p>
+<p>如果不确定，就追问，而不是硬执行。</p>
+<h1 id="规则和模型怎么分工"><a href="#规则和模型怎么分工" class="headerlink" title="规则和模型怎么分工"></a>规则和模型怎么分工</h1><p>不能完全靠规则，也不能完全靠模型。</p>
+<p>规则适合高确定性的场景：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">第 3 天干嘛 -&gt; day_query</span><br><span class="line">机票订单 -&gt; flight</span><br><span class="line">酒店订单 -&gt; hotel</span><br><span class="line">门票二维码 -&gt; ticket</span><br><span class="line">股票买哪个 -&gt; out_of_scope</span><br></pre></td></tr></table></figure>
+<p>规则快、便宜、稳定。能确定的事情，不需要花一次模型调用。</p>
+<p>但规则也有边界。</p>
+<p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">这个能不能带老人去？</span><br><span class="line">这个链接有用，先放着</span><br><span class="line">把刚才那个加进去</span><br><span class="line">住的地方离机场远吗？</span><br></pre></td></tr></table></figure>
+<p>这些句子依赖上下文、代词和隐含动作。继续堆正则，会越来越脆。</p>
+<p>所以引入了一个便宜模型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">glm-4.7-flash</span><br></pre></td></tr></table></figure>
+<p>它只在规则不确定时调用。</p>
+<p>触发条件在代码里大概是这样：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">shouldUseIntentClassifier</span>(<span class="params">&#123;</span></span></span><br><span class="line"><span class="function"><span class="params">  actualQuestion,</span></span></span><br><span class="line"><span class="function"><span class="params">  intentResolution,</span></span></span><br><span class="line"><span class="function"><span class="params">  rawQuestion,</span></span></span><br><span class="line"><span class="function"><span class="params">  travelScope,</span></span></span><br><span class="line"><span class="function"><span class="params">&#125;: Args</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (travelScope.scope === <span class="string">"uncertain"</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> [topCandidate, secondCandidate] = sortedCandidates;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (topCandidate.intent === <span class="string">"general"</span> &amp;&amp; topCandidate.score &lt;= <span class="number">70</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (topCandidate.intent === <span class="string">"clarify"</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (topCandidate.score &lt; <span class="number">80</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (secondCandidate &amp;&amp; topCandidate.score - secondCandidate.score &lt;= <span class="number">8</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="regexp">/(这个|那个|它|刚才|当地|这里|那里)/</span>.test(rawQuestion)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Boolean</span>(resolveUrlTravelSignal(rawQuestion));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>模型只做结构化分类：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"scope"</span>: <span class="string">"travel"</span>,</span><br><span class="line">  <span class="string">"intent"</span>: <span class="string">"general"</span>,</span><br><span class="line">  <span class="string">"confidence"</span>: <span class="number">0.82</span>,</span><br><span class="line">  <span class="string">"reason"</span>: <span class="string">"用户在询问当前目的地安全情况"</span>,</span><br><span class="line">  <span class="string">"slots"</span>: &#123;</span><br><span class="line">    <span class="string">"needs_search"</span>: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用时会限制它的行为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> callOptions = &#123;</span><br><span class="line">  model: <span class="string">"glm-4.7-flash"</span>,</span><br><span class="line">  responseFormat: <span class="string">"json"</span>,</span><br><span class="line">  temperature: <span class="number">0</span>,</span><br><span class="line">  maxTokens: <span class="number">300</span>,</span><br><span class="line">  thinking: <span class="string">"disabled"</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>它不负责回答，不负责搜索，不负责写库。</p>
+<p>也就是说，现在的分工是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">规则负责确定性</span><br><span class="line">小模型负责模糊判断</span><br><span class="line">业务代码负责执行</span><br></pre></td></tr></table></figure>
+<h1 id="为什么模型不能直接执行"><a href="#为什么模型不能直接执行" class="headerlink" title="为什么模型不能直接执行"></a>为什么模型不能直接执行</h1><p>因为「理解」和「执行」是两件事。</p>
+<p>模型可以判断：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用户可能想把这个攻略加到行程里</span><br></pre></td></tr></table></figure>
+<p>但真正要不要写入数据库，应该由代码判断：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">有没有明确写入动作？</span><br><span class="line">有没有目标 Day？</span><br><span class="line">有没有结构化地点和时间？</span><br><span class="line">用户是否确认？</span><br><span class="line">工具是否返回 success？</span><br></pre></td></tr></table></figure>
+<p>当前项目里有一个原则：</p>
+<blockquote>
+<p>只有工具返回成功，系统才能说“已写入”。</p>
+</blockquote>
+<p>代码里会检查写入工具是否真的成功：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (isSaveItineraryToolCall(toolCall) &amp;&amp; isSuccessfulToolWrite(result)) &#123;</span><br><span class="line">  hasSuccessfulItineraryWrite = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果模型没有成功调用写入工具，却在回答里声称已经写入，系统会拦截：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (</span><br><span class="line">  answer &amp;&amp;</span><br><span class="line">  !hasSuccessfulItineraryWrite &amp;&amp;</span><br><span class="line">  isExplicitItineraryWriteRequest(question) &amp;&amp;</span><br><span class="line">  claimsItineraryWrite(answer)</span><br><span class="line">) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    ok: <span class="literal">false</span>,</span><br><span class="line">    title: <span class="string">"还没有写入行程"</span>,</span><br><span class="line">    detail: <span class="string">"刚才模型没有完成写入工具调用，所以我没有把它当成已写入。"</span>,</span><br><span class="line">    intent: <span class="string">"general"</span>,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这就是为什么不想让模型直接接管执行。</p>
+<p>Agent 的可靠性，不来自模型一句「我认为」，而来自流程里的硬约束。</p>
+<p>代码不是不相信模型的文字，而是先确认模型调用了 <code>save_itinerary_items</code>，再确认工具返回 <code>success: true</code>。只有这两个条件同时满足，系统才允许说“已写入”。</p>
+<h1 id="调试意图"><a href="#调试意图" class="headerlink" title="调试意图"></a>调试意图</h1><p>为了调试给项目做了两件事。</p>
+<p>第一，页面上有 Debug 面板，会展示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入归一化</span><br><span class="line">旅行范围判断</span><br><span class="line">规则意图识别</span><br><span class="line">发送给 GLM · 意图分类</span><br><span class="line">GLM 返回 · 意图分类</span><br><span class="line">意图分类模型已采纳</span><br><span class="line">最终意图</span><br></pre></td></tr></table></figure>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20260826184738470.png" style="zoom:50%;"></p>
+<p>代码里每个关键节点都会写 Debug：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">pushDebugEntry(debugEntries, <span class="string">"输入归一化"</span>, &#123;</span><br><span class="line">  actualQuestion,</span><br><span class="line">  rawQuestion,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">pushDebugEntry(debugEntries, <span class="string">"旅行范围判断"</span>, travelScope);</span><br><span class="line"></span><br><span class="line">pushDebugEntry(debugEntries, <span class="string">"规则意图识别"</span>, &#123;</span><br><span class="line">  candidates: intentResolution.candidates,</span><br><span class="line">  intent: intentResolution.intent,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>第二，每一轮 Debug 都会落到本地文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.agent-debug/</span><br></pre></td></tr></table></figure>
+<p>简化后的代码是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">writeAgentDebugLog</span>(<span class="params">&#123; entries, response, tripId &#125;: Args</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> debugRoot = path.join(process.cwd(), <span class="string">".agent-debug"</span>);</span><br><span class="line">  <span class="keyword">const</span> filePath = path.join(debugRoot, <span class="string">`<span class="subst">$&#123;<span class="built_in">Date</span>.now()&#125;</span>.json`</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">await</span> mkdir(debugRoot, &#123; <span class="attr">recursive</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">  <span class="keyword">await</span> writeFile(</span><br><span class="line">    filePath,</span><br><span class="line">    <span class="built_in">JSON</span>.stringify(&#123; entries, response, tripId &#125;, <span class="literal">null</span>, <span class="number">2</span>),</span><br><span class="line">    <span class="string">"utf8"</span>,</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样可以回看每一次判断为什么出错。</p>
+<p>比如看到一条：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://windliang.wang/ 加入到资料</span><br></pre></td></tr></table></figure>
+<p>如果结果是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memory</span><br></pre></td></tr></table></figure>
+<p>说明规则过宽。</p>
+<p>如果结果是下边的就更合理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scope: uncertain</span><br><span class="line">intent: clarify</span><br><span class="line">reason: 只有保存动作，但缺少旅行语境</span><br></pre></td></tr></table></figure>
+<p>没有 Debug，意图识别只能靠猜。有了 Debug，就能像调业务系统一样调 Agent。</p>
+<h1 id="当前架构和优化"><a href="#当前架构和优化" class="headerlink" title="当前架构和优化"></a>当前架构和优化</h1><p>当前项目的整体流程是：</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/image-20260826185210616.png" alt="image-20260826185210616"></p>
+<p>当前这套已经比「一句 Prompt 识别意图」稳很多，但产品毕竟还没经历大量真实用户输入，用户多了肯定会有各种意料之外的问题，后续还有很多方向可以优化。</p>
+<p>尤其是现在规则层里还有不少正则。正则不是不能用，它适合处理高确定性的信号，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">第 3 天干嘛 -&gt; day_query</span><br><span class="line">机票 / 航班 / 起飞 / 落地 -&gt; flight</span><br><span class="line">酒店 / 入住 / 退房 -&gt; hotel</span><br><span class="line">股票 / 基金 / 炒股 -&gt; out_of_scope</span><br></pre></td></tr></table></figure>
+<p>这些规则快、便宜、可控。</p>
+<p>但问题也很明显：正则很容易越写越厚，最后变成一张很难维护的网。</p>
+<p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">住哪来着</span><br><span class="line">住宿在哪</span><br><span class="line">我们那天睡哪</span><br><span class="line">酒店离机场远吗</span><br><span class="line">这个地方适合老人吗</span><br><span class="line">这篇先放着</span><br><span class="line">这个加进去</span><br></pre></td></tr></table></figure>
+<p>它们表达的是相近意思，但关键词不一定稳定。继续补正则，短期能解决一个 case，长期会出现几个问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">覆盖不全：用户换个说法就识别不到</span><br><span class="line">误伤：关键词出现在无关语境里也会命中</span><br><span class="line">边界重叠：同一句话同时像 memory、general、itinerary</span><br><span class="line">难以解释：规则越多，最后很难知道为什么命中</span><br><span class="line">难以回归：修一个 case，可能弄坏另一个 case</span><br></pre></td></tr></table></figure>
+<p>后续可以有下边的优化点：</p>
+<h2 id="1-把单意图升级成多意图"><a href="#1-把单意图升级成多意图" class="headerlink" title="1. 把单意图升级成多意图"></a>1. 把单意图升级成多意图</h2><p>现在系统本质上还是单意图。</p>
+<p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">机酒帮我整理一下</span><br></pre></td></tr></table></figure>
+<p>它其实同时包含：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">flight</span><br><span class="line">hotel</span><br></pre></td></tr></table></figure>
+<p>再比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这篇攻略不错，帮我加到第 3 天</span><br></pre></td></tr></table></figure>
+<p>它可能同时包含：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">memory</span><br><span class="line">itinerary</span><br></pre></td></tr></table></figure>
+<p>现在只能选一个主意图，后面更合理的是输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;intents&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;intent&quot;: &quot;memory&quot;,</span><br><span class="line">      &quot;priority&quot;: 1</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;intent&quot;: &quot;itinerary&quot;,</span><br><span class="line">      &quot;priority&quot;: 2</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后由流程决定是串行处理、追问确认，还是只执行其中一个。</p>
+<h2 id="2-引入-Slot-Filling，而不是只判断-intent"><a href="#2-引入-Slot-Filling，而不是只判断-intent" class="headerlink" title="2. 引入 Slot Filling，而不是只判断 intent"></a>2. 引入 Slot Filling，而不是只判断 intent</h2><p>现在已经让模型分类结果里可以带 <code>slots</code>，但业务上还没有充分利用。</p>
+<p>这一步其实就是意图识别里很关键的 <strong>Slot Filling</strong>。</p>
+<p>Intent 解决的是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用户想做什么？</span><br></pre></td></tr></table></figure>
+<p>Slot Filling 解决的是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这件事需要哪些关键信息？</span><br><span class="line">这些信息现在齐了吗？</span><br></pre></td></tr></table></figure>
+<p>比如用户说：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">把这个加到第 3 天</span><br></pre></td></tr></table></figure>
+<p>只识别出 <code>itinerary</code> 还不够，还要抽出：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"intent"</span>: <span class="string">"itinerary"</span>,</span><br><span class="line">  <span class="string">"slots"</span>: &#123;</span><br><span class="line">    <span class="string">"day"</span>: <span class="number">3</span>,</span><br><span class="line">    <span class="string">"target"</span>: <span class="string">"这个"</span>,</span><br><span class="line">    <span class="string">"write_action"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="string">"missing"</span>: [<span class="string">"具体要加入的内容"</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这篇西班牙攻略加入资料 https://example.com</span><br></pre></td></tr></table></figure>
+<p>应该得到：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"intent"</span>: <span class="string">"memory"</span>,</span><br><span class="line">  <span class="string">"slots"</span>: &#123;</span><br><span class="line">    <span class="string">"url"</span>: <span class="string">"https://example.com"</span>,</span><br><span class="line">    <span class="string">"destination"</span>: <span class="string">"西班牙"</span>,</span><br><span class="line">    <span class="string">"save_action"</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="string">"material_type"</span>: <span class="string">"攻略"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样系统不只是知道用户“想保存资料”，还能知道保存什么、是否和当前行程有关、缺不缺关键字段。</p>
+<p>如果关键槽位缺失，就应该进入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clarify</span><br></pre></td></tr></table></figure>
+<p>而不是继续执行。</p>
+<h2 id="3-把正则从「业务判断」降级成「候选召回」"><a href="#3-把正则从「业务判断」降级成「候选召回」" class="headerlink" title="3. 把正则从「业务判断」降级成「候选召回」"></a>3. 把正则从「业务判断」降级成「候选召回」</h2><p>现在有些正则还承担最终判断职责。后面应该把它们改成候选召回。</p>
+<p>也就是说，正则不再直接决定最终意图，而是先召回可能的候选：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">命中“酒店/住宿/住哪”</span><br><span class="line">=&gt; 候选：hotel、general</span><br><span class="line"></span><br><span class="line">命中“加入资料/保存”</span><br><span class="line">=&gt; 候选：memory、clarify</span><br><span class="line"></span><br><span class="line">命中“第 3 天/今天”</span><br><span class="line">=&gt; 候选：day_query、itinerary</span><br></pre></td></tr></table></figure>
+<p>然后再结合上下文、槽位完整度、模型复判，决定最终走哪条链路。</p>
+<p>这样正则的角色会更轻，也更可维护。</p>
+<h2 id="4-把规则拆成可配置的意图词表"><a href="#4-把规则拆成可配置的意图词表" class="headerlink" title="4. 把规则拆成可配置的意图词表"></a>4. 把规则拆成可配置的意图词表</h2><p>现在规则主要写在代码里，改起来快，但长期会膨胀。</p>
+<p>后面可以把它拆成配置：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"hotel"</span>: &#123;</span><br><span class="line">    <span class="string">"keywords"</span>: [<span class="string">"酒店"</span>, <span class="string">"入住"</span>, <span class="string">"退房"</span>, <span class="string">"住哪"</span>, <span class="string">"住宿"</span>],</span><br><span class="line">    <span class="string">"negativeKeywords"</span>: [<span class="string">"酒店股票"</span>, <span class="string">"酒店集团财报"</span>],</span><br><span class="line">    <span class="string">"requiredSignals"</span>: [<span class="string">"travel_scope"</span>]</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"memory"</span>: &#123;</span><br><span class="line">    <span class="string">"keywords"</span>: [<span class="string">"攻略"</span>, <span class="string">"游记"</span>, <span class="string">"加入资料"</span>, <span class="string">"保存"</span>],</span><br><span class="line">    <span class="string">"requiredSignals"</span>: [<span class="string">"url"</span>, <span class="string">"travel_context"</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样新增表达不用一直改代码，也更容易做评测和版本管理。</p>
+<h2 id="5-用-Embedding-或检索替代一部分正则"><a href="#5-用-Embedding-或检索替代一部分正则" class="headerlink" title="5. 用 Embedding 或检索替代一部分正则"></a>5. 用 Embedding 或检索替代一部分正则</h2><p>有些表达靠关键词很难覆盖，比如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">这个适合带老人去吗</span><br><span class="line">这条路线会不会太累</span><br><span class="line">我们住那边方便吗</span><br><span class="line">这篇先放着回头看</span><br></pre></td></tr></table></figure>
+<p>这类更适合用相似样本召回。</p>
+<p>比如系统里沉淀一些已标注样本：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">这个适合带老人去吗 -&gt; general, <span class="attr">slots</span>: &#123; <span class="attr">topic</span>: <span class="string">"suitability"</span> &#125;</span><br><span class="line">这条路线会不会太累 -&gt; general, <span class="attr">slots</span>: &#123; <span class="attr">topic</span>: <span class="string">"route_intensity"</span> &#125;</span><br><span class="line">这篇先放着回头看 -&gt; clarify 或 memory</span><br></pre></td></tr></table></figure>
+<p>新输入来了以后，先用 Embedding 找相似样本，再把这些样本作为 few-shot 给便宜模型。</p>
+<p>这比无限补正则更自然。</p>
+<h2 id="6-做更细的澄清策略"><a href="#6-做更细的澄清策略" class="headerlink" title="6. 做更细的澄清策略"></a>6. 做更细的澄清策略</h2><p>现在 <code>clarify</code> 只是一个意图。</p>
+<p>但追问本身也可以分类型：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">缺少旅行语境</span><br><span class="line">缺少目标日期</span><br><span class="line">缺少写入确认</span><br><span class="line">缺少附件类型</span><br><span class="line">多个意图冲突</span><br><span class="line">槽位不完整</span><br></pre></td></tr></table></figure>
+<p>不同原因应该问不同的问题。</p>
+<p>比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://example.com 加入资料</span><br></pre></td></tr></table></figure>
+<p>应该问：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这个链接和当前旅行有什么关系？是攻略、酒店、门票，还是其他参考资料？</span><br></pre></td></tr></table></figure>
+<p>而不是泛泛地说「请补充信息」。</p>
+<h2 id="7-建一套意图识别评测集"><a href="#7-建一套意图识别评测集" class="headerlink" title="7. 建一套意图识别评测集"></a>7. 建一套意图识别评测集</h2><p>现在主要靠手动测试。</p>
+<p>后面应该把典型输入沉淀成测试集，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">股票买哪个 -&gt; out_of_scope</span><br><span class="line">第 3 天干嘛 -&gt; day_query</span><br><span class="line">这个地方安全吗 -&gt; general</span><br><span class="line">https://example.com 加入资料 -&gt; clarify</span><br><span class="line">这篇西班牙攻略加入资料 https://example.com -&gt; memory</span><br><span class="line">机酒帮我整理一下 -&gt; flight + hotel</span><br></pre></td></tr></table></figure>
+<p>每次改规则或 Prompt，都跑一遍评测。</p>
+<p>否则意图识别很容易出现「修好一个，弄坏另一个」的情况。</p>
+<h2 id="8-记录准确率、延迟和成本"><a href="#8-记录准确率、延迟和成本" class="headerlink" title="8. 记录准确率、延迟和成本"></a>8. 记录准确率、延迟和成本</h2><p>意图识别不是只看准不准，还要看：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">规则命中率</span><br><span class="line">模型调用率</span><br><span class="line">平均延迟</span><br><span class="line">单次成本</span><br><span class="line">clarify 比例</span><br><span class="line">out_of_scope 比例</span><br><span class="line">模型采纳率</span><br><span class="line">槽位缺失率</span><br></pre></td></tr></table></figure>
+<p>如果模型调用率太高，说明规则层不够好。</p>
+<p>如果 <code>clarify</code> 太多，说明系统太保守。</p>
+<p>如果 <code>memory</code> 误判高，说明 URL 和保存动作的边界还要继续收紧。</p>
+<p>如果槽位缺失率高，说明很多意图不该直接执行，而应该先追问。</p>
+<p>这些指标会比单次 Debug 更有价值。</p>
+<h1 id="总"><a href="#总" class="headerlink" title="总"></a>总</h1><p>如果把大模型看成发动机，意图识别就是方向盘。</p>
+<p>没有方向盘，发动机越强，跑偏得越快。</p>
+<p>一个好的意图识别系统，不是追求一次判断永远正确，而是要做到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">明确的，快速处理</span><br><span class="line">模糊的，谨慎追问</span><br><span class="line">越界的，及时拒绝</span><br><span class="line">复杂的，交给模型辅助</span><br><span class="line">执行的，始终由代码兜底</span><br></pre></td></tr></table></figure>
+<p>Agent 开发中，一部分还是传统的工程，一部分是让渡给大模型，这个度的把握也挺有意思。测试也变得困难起来，因为面对的输入变成了无穷多，不再像之前一样把固定链路测了即可。</p>
+<p>文章中大部分知识都是看极客时间的<a href="http://gk.link/a/12KBh" target="_blank" rel="noopener">「AI Agent 系统设计面试现场」</a>，这里也推荐下，感兴趣的同学也可以看下，比我这里提到的会更系统。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/780d7d09a70a0dadb75227594ae41149.jpg" style="zoom:50%;"></p>
+<p>从 <a href="https://coursesub.top/?key=travel-partner-1" target="_blank" rel="noopener">https://coursesub.top/</a> 这里去买的话可以省 18 元。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/windliang.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ai/" rel="tag"># ai</a>
+          
+            <a href="/tags/agent/" rel="tag"># agent</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2026/08/20/Agent开发做什么：Agent、Harness基础概念/" rel="next" title="Agent 开发到底做什么：Agent、Harness 基础概念">
+                <i class="fa fa-chevron-left"></i> Agent 开发到底做什么：Agent、Harness 基础概念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">130</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">114</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#产品介绍"><span class="nav-number">1.</span> <span class="nav-text">产品介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#意图定义"><span class="nav-number">2.</span> <span class="nav-text">意图定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#意图梳理"><span class="nav-number">3.</span> <span class="nav-text">意图梳理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-查询每日安排"><span class="nav-number">3.1.</span> <span class="nav-text">1. 查询每日安排</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-整理机票、酒店、门票订单"><span class="nav-number">3.2.</span> <span class="nav-text">2. 整理机票、酒店、门票订单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-导入行程表"><span class="nav-number">3.3.</span> <span class="nav-text">3. 导入行程表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-保存旅行资料"><span class="nav-number">3.4.</span> <span class="nav-text">4. 保存旅行资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-分析攻略或截图"><span class="nav-number">3.5.</span> <span class="nav-text">5. 分析攻略或截图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-旅行通用问答"><span class="nav-number">3.6.</span> <span class="nav-text">6. 旅行通用问答</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-需要追问"><span class="nav-number">3.7.</span> <span class="nav-text">7. 需要追问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-超出范围"><span class="nav-number">3.8.</span> <span class="nav-text">8. 超出范围</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么不直接让大模型判断所有事"><span class="nav-number">4.</span> <span class="nav-text">为什么不直接让大模型判断所有事</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一层：先把用户的话整理一下"><span class="nav-number">4.1.</span> <span class="nav-text">第一层：先把用户的话整理一下</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二层：判断是不是旅行范围"><span class="nav-number">4.2.</span> <span class="nav-text">第二层：判断是不是旅行范围</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三层：判断具体业务意图"><span class="nav-number">4.3.</span> <span class="nav-text">第三层：判断具体业务意图</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#链接的例子"><span class="nav-number">5.</span> <span class="nav-text">链接的例子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#规则和模型怎么分工"><span class="nav-number">6.</span> <span class="nav-text">规则和模型怎么分工</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么模型不能直接执行"><span class="nav-number">7.</span> <span class="nav-text">为什么模型不能直接执行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调试意图"><span class="nav-number">8.</span> <span class="nav-text">调试意图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#当前架构和优化"><span class="nav-number">9.</span> <span class="nav-text">当前架构和优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-把单意图升级成多意图"><span class="nav-number">9.1.</span> <span class="nav-text">1. 把单意图升级成多意图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-引入-Slot-Filling，而不是只判断-intent"><span class="nav-number">9.2.</span> <span class="nav-text">2. 引入 Slot Filling，而不是只判断 intent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-把正则从「业务判断」降级成「候选召回」"><span class="nav-number">9.3.</span> <span class="nav-text">3. 把正则从「业务判断」降级成「候选召回」</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-把规则拆成可配置的意图词表"><span class="nav-number">9.4.</span> <span class="nav-text">4. 把规则拆成可配置的意图词表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-用-Embedding-或检索替代一部分正则"><span class="nav-number">9.5.</span> <span class="nav-text">5. 用 Embedding 或检索替代一部分正则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-做更细的澄清策略"><span class="nav-number">9.6.</span> <span class="nav-text">6. 做更细的澄清策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-建一套意图识别评测集"><span class="nav-number">9.7.</span> <span class="nav-text">7. 建一套意图识别评测集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-记录准确率、延迟和成本"><span class="nav-number">9.8.</span> <span class="nav-text">8. 记录准确率、延迟和成本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总"><span class="nav-number">10.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
