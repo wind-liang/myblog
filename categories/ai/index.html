@@ -560,7 +560,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">130</span>
+                    <span class="site-state-item-count">131</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1555,7 +1555,38 @@
 
 </body>
 </html>
-AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
   <script>
     function showTime(Counter) {
       var query = new AV.Query(Counter);
