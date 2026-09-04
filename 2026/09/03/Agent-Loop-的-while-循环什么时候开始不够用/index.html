@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索站内文章","hits_empty":"未找到相关文章: ${query}","hits_stats":"${hits} 个结果在 ${time} ms 内找到"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前段时间刷了  Claude Code 源码，感觉 Agent Loop 也就这样了，玩不出什么花了。 用户输入一句话，模型决定要不要调用 Tool；如果调用 Tool，就把结果放回 messages，再请求一次模型；模型不再调用 Tool 时，整个任务结束。 1234567891011121314151617while (true) &amp;#123;  const assistantMessages">
+<meta name="keywords" content="Agent,Claude Code,Goose">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent Loop 的 while 循环什么时候开始不够用">
+<meta property="og:url" content="https://windliang.wang/2026/09/03/Agent-Loop-的-while-循环什么时候开始不够用/index.html">
+<meta property="og:site_name" content="windliang">
+<meta property="og:description" content="前段时间刷了  Claude Code 源码，感觉 Agent Loop 也就这样了，玩不出什么花了。 用户输入一句话，模型决定要不要调用 Tool；如果调用 Tool，就把结果放回 messages，再请求一次模型；模型不再调用 Tool 时，整个任务结束。 1234567891011121314151617while (true) &amp;#123;  const assistantMessages">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/agent-loop-while-not-enough-20260903-cc-loop.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/agent-loop-while-not-enough-20260903-goose-operations.png">
+<meta property="og:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/agent-loop-while-not-enough-20260903-goose-resume.png">
+<meta property="og:updated_time" content="2026-09-04T03:26:36.938Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Agent Loop 的 while 循环什么时候开始不够用">
+<meta name="twitter:description" content="前段时间刷了  Claude Code 源码，感觉 Agent Loop 也就这样了，玩不出什么花了。 用户输入一句话，模型决定要不要调用 Tool；如果调用 Tool，就把结果放回 messages，再请求一次模型；模型不再调用 Tool 时，整个任务结束。 1234567891011121314151617while (true) &amp;#123;  const assistantMessages">
+<meta name="twitter:image" content="https://windliangblog.oss-cn-beijing.aliyuncs.com/agent-loop-while-not-enough-20260903-cc-loop.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="windliang" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="https://windliang.wang/2026/09/03/Agent-Loop-的-while-循环什么时候开始不够用/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Agent Loop 的 while 循环什么时候开始不够用 | windliang</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?a34979c74580352a7178e5be5275fba6";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">windliang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-leetcode详细题解">
+    <a href="https://leetcode.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />leetcode详细题解</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-claude-code-源码分析">
+    <a href="https:/cc.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />claude code 源码分析</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-前端的设计模式系列">
+    <a href="https://pattern.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />前端的设计模式系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-极客时间/掘金优惠">
+    <a href="/2020/05/31/极客时间优惠红包返现/" rel="section"
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />极客时间/掘金优惠</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-vue2源码系列">
+    <a href="https://vue.windliang.wang/" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />Vue2源码系列</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-入门前端必备课程">
+    <a href="https://mp.weixin.qq.com/s/eBsYMO4GoLY_UVZ1DioXAA" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />入门前端必备课程</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-链接转图片(写公众号用)">
+    <a href="https://qr.windliang.wang" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />链接转图片(写公众号用)</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-浏览器标题修改插件">
+    <a href="https://github.com/wind-liang/RenameTab" rel="section"
+        target = "_blank"
+    
+    >
+      <i class="menu-item-icon fa fa-fw fa-book"></i> <br />浏览器标题修改插件</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://windliang.wang/2026/09/03/Agent-Loop-的-while-循环什么时候开始不够用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="windliang">
+      <meta itemprop="description" content="越努力，越幸运！">
+      <meta itemprop="image" content="/images/head.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="windliang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Agent Loop 的 while 循环什么时候开始不够用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2026-09-03 16:25:17" itemprop="dateCreated datePublished" datetime="2026-09-03T16:25:17+08:00">2026-09-03</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2026-09-04 11:26:36" itemprop="dateModified" datetime="2026-09-04T11:26:36+08:00">2026-09-04</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2026/09/03/Agent-Loop-的-while-循环什么时候开始不够用/" class="leancloud_visitors" data-flag-title="Agent Loop 的 while 循环什么时候开始不够用">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前段时间刷了  <a href="https://cc.windliang.wang/" target="_blank" rel="noopener">Claude Code 源码</a>，感觉 Agent Loop 也就这样了，玩不出什么花了。</p>
+<p>用户输入一句话，模型决定要不要调用 Tool；如果调用 Tool，就把结果放回 <code>messages</code>，再请求一次模型；模型不再调用 Tool 时，整个任务结束。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> assistantMessages = <span class="keyword">await</span> callModel(messages)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> toolUses = findToolUses(assistantMessages)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (toolUses.length === <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> toolResults = <span class="keyword">await</span> runTools(toolUses)</span><br><span class="line"></span><br><span class="line">  messages = [</span><br><span class="line">    ...messages,</span><br><span class="line">    ...assistantMessages,</span><br><span class="line">    ...toolResults,</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这套循环很朴素，但 Claude Code 已经在它上面补了非常多生产环境能力：权限确认、上下文压缩、输出截断恢复、模型 fallback、Hook、取消、远程会话、JSONL 持久化等等。</p>
+<p>最近帮朋友做点 Agent 的活儿，引入了 <a href="https://goose-docs.ai/" target="_blank" rel="noopener">Goose</a> 作为基座，发现  Goose 的 Agent Loop 竟然是一个状态机。</p>
+<p>Claude Code 已经证明，一个 while (true) 可以承载复杂的 Agent 行为。Goose 为什么还要换成状态机？</p>
+<p>从一个场景看起：</p>
+<h2 id="用户没有立刻批准"><a href="#用户没有立刻批准" class="headerlink" title="用户没有立刻批准"></a>用户没有立刻批准</h2><p>假设用户让 Agent 做一件事：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">删除测试环境中过期的用户数据。</span><br></pre></td></tr></table></figure>
+<p>模型理解任务后，返回：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ToolRequest(delete_records)</span><br></pre></td></tr></table></figure>
+<p>这个操作显然不能直接执行。系统需要向用户确认：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">该操作将删除 1,284 条测试环境记录，是否继续？</span><br></pre></td></tr></table></figure>
+<p>如果用户一分钟内点击「允许」，事情很简单。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">模型请求工具</span><br><span class="line">→ 等待用户确认</span><br><span class="line">→ 执行工具</span><br><span class="line">→ 返回 Tool Result</span><br><span class="line">→ 模型继续</span><br></pre></td></tr></table></figure>
+<p>Claude Code 当前的设计很适合这种活跃交互。</p>
+<p>Claude Code 中主流程由 <code>queryLoop()</code> 持续运行。模型返回 Tool Use 后，执行层会进入权限判断；最终，<code>checkPermissionsAndCallTool()</code> 会等待 <code>canUseTool()</code> 的结果。</p>
+<p><code>canUseTool()</code> 在交互模式下会创建一个 Promise：一边将待确认的 Tool 放进终端界面的确认队列，一边保留 Promise 的 <code>resolve</code>。此时执行链停在 <code>await canUseTool(...)</code>；用户点击「允许」或「拒绝」后，界面调用对应的 <code>resolve</code>，Promise 才变为 <code>allow</code> 或 <code>deny</code>。</p>
+<p>若结果是 <code>allow</code>，原来的调用链继续执行 <code>tool.call()</code>；若结果是 <code>deny</code>，则生成一条拒绝的 Tool Result 并交回模型。整个过程中，<code>queryLoop()</code> 不会进入下一轮模型调用，它在等待本轮 Tool 调度完成。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/agent-loop-while-not-enough-20260903-cc-loop.png" alt="Claude Code 的运行链依赖仍然活着的调用栈"></p>
+<p>也就是说，Claude Code 的控制流大致是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">queryLoop 正在运行</span><br><span class="line">→ 模型返回 ToolUse</span><br><span class="line">→ Tool 执行层调用 canUseTool</span><br><span class="line">→ UI 等待用户确认</span><br><span class="line">→ 用户同意</span><br><span class="line">→ 原来的 Tool 调用继续执行</span><br><span class="line">→ Tool Result 回到 messages</span><br><span class="line">→ queryLoop 继续下一轮</span><br></pre></td></tr></table></figure>
+<p>这套机制在本地终端中很自然。只要 Claude Code 进程仍在运行、等待权限结果的调用链没有被取消，用户两小时后点击「允许」，原来的 Tool 调用依然可以继续。</p>
+<p>这里有个细节：等待两个小时本身并不是问题。只要原进程、连接和调用链都还在，<code>await canUseTool(...)</code> 就可以一直等待；用户回来后调用 Promise 的 <code>resolve</code>，原来的 Tool 调用自然会继续。</p>
+<p>真正的分界点在于，等待是否跨越当前执行现场。</p>
+<p>最直观的情况是：用户关掉了终端，Claude Code 进程崩溃，或机器休眠导致当前连接和进程不再可靠。更复杂的产品中，审批可能由企业系统完成；任务也可能交给后台执行服务处理。</p>
+<p>这里的「后台执行服务」是指从队列中取出任务、在后台运行的进程，它为了重启、迁移或扩缩容，未必会一直是最初处理任务的那个进程。Tool 也可能是异步任务，要等外部系统晚些时候回调。</p>
+<p>问题在于，Promise 只是当前进程内存中的一个续执行点。进程结束后，Promise 与它的 <code>resolve</code> 都会消失；外部系统回传「审批单 123 已通过」时，也无法直接找到原来内存中的 Promise。让一个后台执行服务长时间挂着等待异步 Tool 的回调，通常也不经济。</p>
+<p>这时，问题不再是「如何等待用户点击」，而是：</p>
+<blockquote>
+<p>原来的 Agent 调用栈已经不存在时，系统如何知道这项 Tool 调用仍在等待审批？审批通过后，又该从哪里继续？</p>
+</blockquote>
+<p>一旦不能依赖内存里的 Promise、局部变量和原来的调用栈，系统就需要把「正在等什么、等到后做什么」保存成可恢复的状态。</p>
+<p>Goose 状态机真正想解决的，正是这种跨越执行生命周期的等待。</p>
+<h2 id="Claude-Code-的-while-循环已经很成熟"><a href="#Claude-Code-的-while-循环已经很成熟" class="headerlink" title="Claude Code 的 while 循环已经很成熟"></a>Claude Code 的 while 循环已经很成熟</h2><p>在讨论 Goose 前，还是先把 Claude Code 说清楚。</p>
+<p>Claude Code 并不是一个只有「模型 → Tool → 模型」的简单循环。</p>
+<p><code>queryLoop()</code> 内部维护了一个很完整的 <code>state</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  messages,                   <span class="comment">// 当前对话</span></span><br><span class="line">  toolUseContext,             <span class="comment">// 正在处理的 Tool 上下文</span></span><br><span class="line">  turnCount,                  <span class="comment">// 已经跑了多少轮</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 压缩、输出截断等恢复过程的临时记录</span></span><br><span class="line">  autoCompactTracking,</span><br><span class="line">  maxOutputTokensOverride,</span><br><span class="line">  maxOutputTokensRecoveryCount,</span><br><span class="line">  hasAttemptedReactiveCompact,</span><br><span class="line"></span><br><span class="line">  transition,                 <span class="comment">// 上一轮为何重试或继续</span></span><br><span class="line">  <span class="comment">// 还有 Tool 摘要、Stop Hook 等控制状态</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不需要逐个背字段。它们大致在做三件事：保留当前对话与 Tool 上下文；记录本轮已经走到哪里；以及在压缩、截断、重试时防止反复兜圈子。</p>
+<p>这也正是它和最初那种几行 <code>while</code> 循环的差别：主循环除了「下一步调模型还是调工具」，还得同时带着这些临时状态往前走。</p>
+<p>比如模型因为上下文过长而失败时，Claude Code 不会马上把错误展示给用户。它会尝试压缩消息，然后构造新的 <code>state</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">state = &#123;</span><br><span class="line">  messages: postCompactMessages,</span><br><span class="line">  toolUseContext,</span><br><span class="line">  hasAttemptedReactiveCompact: <span class="literal">true</span>,</span><br><span class="line">  turnCount,</span><br><span class="line">  transition: &#123;</span><br><span class="line">    reason: <span class="string">'reactive_compact_retry'</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">continue</span></span><br></pre></td></tr></table></figure>
+<p>下一轮 <code>while (true)</code> 再带着压缩后的上下文请求模型。</p>
+<p>输出截断时也是类似的处理：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">模型输出被截断</span><br><span class="line">→ 临时提高 token 上限重新生成</span><br><span class="line">或</span><br><span class="line">→ 保留半截输出，追加一条「从断点继续」的消息</span><br><span class="line">→ 继续下一轮</span><br></pre></td></tr></table></figure>
+<p>所以 Claude Code 的 <code>while</code> 循环不是简单实现，而是一个围绕「本次活跃查询」不断推进的调度中心。</p>
+<p>它很适合解决：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当前终端中的任务如何持续高质量地跑完？</span><br></pre></td></tr></table></figure>
+<p>Goose 想解决的，则是另一个问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">当前任务即使暂停、离开进程、等待外部事件，</span><br><span class="line">系统是否仍然能可靠地知道下一步是什么</span><br></pre></td></tr></table></figure>
+<h2 id="Goose-官方怎么解释这次改造"><a href="#Goose-官方怎么解释这次改造" class="headerlink" title="Goose 官方怎么解释这次改造"></a>Goose 官方怎么解释这次改造</h2><p>Goose 官方在 <a href="https://github.com/aaif-goose/goose/discussions/9944" target="_blank" rel="noopener">Unrolling the agent loop</a> 中，对旧式 Agent Loop 的描述很直接：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">一个持有大量本地状态的、单体的流式协程。</span><br></pre></td></tr></table></figure>
+<p>它提出将 Agent Loop 「展开」为一个可重复进入的状态机：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">一次只推进一个 turn；</span><br><span class="line">每个 turn 到达明确停止点后返回；</span><br><span class="line">Conversation 本身就是状态。</span><br></pre></td></tr></table></figure>
+<p>官方给出的动机主要有三个：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 每个 turn 是普通函数调用，容易测试和推理；</span><br><span class="line">2. 交互之间不保存挂起状态，适合事件驱动架构；</span><br><span class="line">3. 每种行为都是可组合的 Operation，可以替换或扩展。</span><br></pre></td></tr></table></figure>
+<p>Goose 后续在 <a href="https://github.com/aaif-goose/goose/discussions/10579" target="_blank" rel="noopener">2026 Q3 Roadmap</a> 中，也把它放进了「Goose 作为可嵌入 Agent 开发套件」的方向中：希望开发者能替换运行时组件、加入应用策略，并接入长任务或横向扩展的编排系统。</p>
+<p>这里的重点不是「状态机比 while 高级」。</p>
+<p>而是：当任务不再是一次短暂的终端交互时，不能把正确性建立在「那条异步调用链还活着」上。</p>
+<h2 id="最小-Demo：不记住状态，只读取历史"><a href="#最小-Demo：不记住状态，只读取历史" class="headerlink" title="最小 Demo：不记住状态，只读取历史"></a>最小 Demo：不记住状态，只读取历史</h2><p>先写一个最小 Demo。</p>
+<p>假设模型总是想查询销售数据，查询前必须得到用户确认：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">nextStep</span>(<span class="params">history</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 从已发生的事件推导当前状态，不依赖函数外的临时变量。</span></span><br><span class="line">  <span class="keyword">const</span> kinds = <span class="keyword">new</span> <span class="built_in">Set</span>(history.map(<span class="function"><span class="params">item</span> =&gt;</span> item.kind))</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 新任务刚开始：模型决定请求查询工具。</span></span><br><span class="line">  <span class="keyword">if</span> (history.length === <span class="number">1</span> &amp;&amp; history[<span class="number">0</span>].kind === <span class="string">'user'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      kind: <span class="string">'tool_request'</span>,</span><br><span class="line">      tool: <span class="string">'query_sales'</span>,</span><br><span class="line">      args: &#123; <span class="attr">month</span>: <span class="string">'2026-08'</span> &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 已有工具请求、尚未审批：要求用户确认。</span></span><br><span class="line">  <span class="keyword">if</span> (</span><br><span class="line">    kinds.has(<span class="string">'tool_request'</span>) &amp;&amp;</span><br><span class="line">    !kinds.has(<span class="string">'approval'</span>) &amp;&amp;</span><br><span class="line">    !kinds.has(<span class="string">'action_required'</span>)</span><br><span class="line">  ) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      kind: <span class="string">'action_required'</span>,</span><br><span class="line">      message: <span class="string">'查询经营数据需要用户确认'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 用户已批准、工具尚未执行：返回一个待执行的 Tool Effect。</span></span><br><span class="line">  <span class="keyword">if</span> (kinds.has(<span class="string">'approval'</span>) &amp;&amp; !kinds.has(<span class="string">'tool_response'</span>)) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      kind: <span class="string">'execute_tool'</span>,</span><br><span class="line">      tool: <span class="string">'query_sales'</span>,</span><br><span class="line">      args: &#123; <span class="attr">month</span>: <span class="string">'2026-08'</span> &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 工具已有结果：模型基于结果生成最终回答。</span></span><br><span class="line">  <span class="keyword">if</span> (kinds.has(<span class="string">'tool_response'</span>) &amp;&amp; !kinds.has(<span class="string">'assistant'</span>)) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      kind: <span class="string">'assistant'</span>,</span><br><span class="line">      text: <span class="string">'8 月营收为 128 万元，环比增长 12%。'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 没有可推进的状态，任务暂时结束。</span></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的 <code>return</code> 不是直接执行工具，也不是直接结束整个任务。它只是返回「下一步要做什么」：普通消息要写入历史，<code>execute_tool</code> 则应交给工具执行器。实际运行器负责执行这些动作，并在下一次根据更新后的历史调用 <code>nextStep()</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">executeTool</span>(<span class="params">effect</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (effect.tool !== <span class="string">'query_sales'</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">`未知工具：<span class="subst">$&#123;effect.tool&#125;</span>`</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 真实系统会在这里调用 MCP、数据库或 HTTP API。</span></span><br><span class="line">  <span class="comment">// Demo 用固定结果模拟一次异步工具调用。</span></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    kind: <span class="string">'tool_response'</span>,</span><br><span class="line">    tool: effect.tool,</span><br><span class="line">    result: &#123; <span class="attr">revenue</span>: <span class="number">1280000</span> &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">advance</span>(<span class="params">history</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> event = nextStep(history)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// null 表示当前没有可推进的步骤，例如正在等审批。</span></span><br><span class="line">  <span class="keyword">if</span> (event === <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (event.kind === <span class="string">'execute_tool'</span>) &#123;</span><br><span class="line">    <span class="comment">// Effect 本身不进入模型上下文；执行后的结果才写回历史。</span></span><br><span class="line">    <span class="keyword">const</span> toolResponse = <span class="keyword">await</span> executeTool(event)</span><br><span class="line">    history.push(toolResponse)</span><br><span class="line">    <span class="keyword">return</span> toolResponse</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 普通事件写入 Session 或数据库；Demo 先追加到数组。</span></span><br><span class="line">  history.push(event)</span><br><span class="line">  <span class="keyword">return</span> event</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将上面的 <code>nextStep()</code>、<code>executeTool()</code> 和 <code>advance()</code> 放进同一个文件后，下面的 <code>runDemo()</code> 就可以直接运行完整流程：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">runDemo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> history = [</span><br><span class="line">    &#123; <span class="attr">kind</span>: <span class="string">'user'</span>, <span class="attr">text</span>: <span class="string">'生成 8 月销售摘要'</span> &#125;,</span><br><span class="line">  ]</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">await</span> advance(history))</span><br><span class="line">  <span class="comment">// =&gt; &#123; kind: 'tool_request', tool: 'query_sales', ... &#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">await</span> advance(history))</span><br><span class="line">  <span class="comment">// =&gt; &#123; kind: 'action_required', message: '查询经营数据需要用户确认' &#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">await</span> advance(history))</span><br><span class="line">  <span class="comment">// =&gt; null：已有待确认请求，状态机在此停止并等待外部事件。</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 两小时后，审批系统或用户界面将确认结果写入持久化历史。</span></span><br><span class="line">  history.push(&#123; <span class="attr">kind</span>: <span class="string">'approval'</span>, <span class="attr">allowed</span>: <span class="literal">true</span> &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">await</span> advance(history))</span><br><span class="line">  <span class="comment">// =&gt; &#123; kind: 'tool_response', tool: 'query_sales', ... &#125;</span></span><br><span class="line">  <span class="comment">//    这里的 advance() 已实际调用 executeTool()。</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">await</span> advance(history))</span><br><span class="line">  <span class="comment">// =&gt; &#123; kind: 'assistant', text: '8 月营收为 128 万元，环比增长 12%。' &#125;</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">await</span> advance(history))</span><br><span class="line">  <span class="comment">// =&gt; null：已经得到最终回答，本轮任务结束。</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> history</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">runDemo().catch(<span class="built_in">console</span>.error)</span><br></pre></td></tr></table></figure>
+<p>最终 <code>history</code> 的状态变化是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">user</span><br><span class="line">→ tool_request(query_sales)</span><br><span class="line">→ action_required(等待用户确认)</span><br><span class="line">→ approval</span><br><span class="line">→ tool_response(query_sales)</span><br><span class="line">→ assistant(生成最终摘要)</span><br></pre></td></tr></table></figure>
+<p>这个 Demo 当然也有 <code>history</code> 变量；为了便于运行，它暂时只是一个数组。关键不在于「完全不用变量」，而在于状态不依赖这些只能存在于当前调用栈中的临时标志位：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> pendingTool = <span class="literal">null</span></span><br><span class="line"><span class="keyword">let</span> waitingForApproval = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>真实系统会将 <code>history</code> 写入 Session、数据库或日志；进程重启后，可以重新加载它。这样就没有一个必须常驻内存的标志位变量，也没有一个必须从原位置恢复的调用栈。</p>
+<p>换句话说，运行时的 <code>history</code> 变量只是持久化历史在内存中的当前表示。任务状态可以从这份历史重新推导：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">是否已经请求工具？</span><br><span class="line">是否已经要求审批？</span><br><span class="line">用户是否已经同意？</span><br><span class="line">工具是否已经产生结果？</span><br></pre></td></tr></table></figure>
+<p>然后根据这些事实，推导下一步。</p>
+<p>这就是 Goose 设计里最重要的一句话：</p>
+<blockquote>
+<p>Conversation 不只是模型的上下文，也是 Agent 的运行状态。</p>
+</blockquote>
+<h2 id="Goose-的源码如何实现"><a href="#Goose-的源码如何实现" class="headerlink" title="Goose 的源码如何实现"></a>Goose 的源码如何实现</h2><p>Goose 当前状态机的入口在：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crates/goose/src/agents/agent.rs</span><br></pre></td></tr></table></figure>
+<p><code>create_state_machine()</code> 会组装一组有序的 Operation：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">开始</span><br><span class="line">↓</span><br><span class="line">用户中途纠偏（Steer）</span><br><span class="line">↓</span><br><span class="line">最大轮数限制</span><br><span class="line">↓</span><br><span class="line">上下文压缩</span><br><span class="line">↓</span><br><span class="line">工具调用压缩</span><br><span class="line">↓</span><br><span class="line">工具审批</span><br><span class="line">↓</span><br><span class="line">Skill / Recipe</span><br><span class="line">↓</span><br><span class="line">工具执行</span><br><span class="line">↓</span><br><span class="line">未知工具处理</span><br><span class="line">↓</span><br><span class="line">重试</span><br><span class="line">↓</span><br><span class="line">Stop Hook</span><br><span class="line">↓</span><br><span class="line">错误退出</span><br><span class="line">↓</span><br><span class="line">模型推理</span><br></pre></td></tr></table></figure>
+<p><code>create_state_machine()</code> 的源码核心并不复杂：它把这些 Operation 按顺序装进 <code>steps</code>，再把模型推理放到最后。重点不在记住每一个类名，而在这条顺序是程序固定下来的：审批在工具执行前，模型推理在最后。</p>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/agent-loop-while-not-enough-20260903-goose-operations.png" alt="Goose 状态机的输入、Operation 和 Effect"></p>
+<p>这里的每一个步骤都不直接说「继续跑主循环」。</p>
+<p>它们只做两件事：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. 根据当前 Session 与 Conversation，判断自己是否适用；</span><br><span class="line">2. 如果适用，产生一组 Effects。</span><br></pre></td></tr></table></figure>
+<p>这些 Effects 由 <code>SessionManager</code> 统一应用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AppendMessage          → 追加并持久化消息</span><br><span class="line">ReplaceConversation    → 替换压缩后的对话</span><br><span class="line">SetRecipe              → 保存当前 Recipe</span><br><span class="line">SetExtensionData       → 保存扩展状态</span><br><span class="line">RecordUsage            → 保存模型用量</span><br></pre></td></tr></table></figure>
+<p>状态机运行器自己仍然有一个很小的循环：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">loop</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> session = load_session(session_id).await?;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> <span class="literal">Some</span>(result) = machine.step(&amp;session).await? <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    apply_effects(&amp;session, result.effects).await?;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> result.yield_to_client &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以 Goose 并没有消灭 <code>while</code>。</p>
+<p>它只是让 <code>while</code> 不再承载业务状态。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Claude Code 的 while：</span><br><span class="line">负责推进模型、Tool、恢复、压缩、权限等大量任务逻辑。</span><br><span class="line"></span><br><span class="line">Goose 的 while：</span><br><span class="line">负责加载状态、执行一个步骤、应用 Effects、再读取状态。</span><br></pre></td></tr></table></figure>
+<p>复杂逻辑被拆到了各自的 Operation 里。</p>
+<h2 id="再回到审批场景"><a href="#再回到审批场景" class="headerlink" title="再回到审批场景"></a>再回到审批场景</h2><p>现在把前面的删除操作放回两种架构里看。</p>
+<h3 id="Claude-Code"><a href="#Claude-Code" class="headerlink" title="Claude Code"></a>Claude Code</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">queryLoop 正在运行</span><br><span class="line">→ ToolUse(delete_records)</span><br><span class="line">→ 权限系统返回 ask</span><br><span class="line">→ UI 展示确认队列</span><br><span class="line">→ 当前执行链等待用户</span><br><span class="line">→ 用户批准</span><br><span class="line">→ tool.call()</span><br><span class="line">→ Tool Result 回写 messages</span><br><span class="line">→ queryLoop 继续</span><br></pre></td></tr></table></figure>
+<p>它的优势是直接、顺滑，尤其适合本地终端中的即时交互。</p>
+<h3 id="Goose"><a href="#Goose" class="headerlink" title="Goose"></a>Goose</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">Conversation 出现 ToolRequest(delete_records)</span><br><span class="line"></span><br><span class="line">↓</span><br><span class="line"></span><br><span class="line">ToolApprovalOperation 发现未审批请求</span><br><span class="line"></span><br><span class="line">↓</span><br><span class="line"></span><br><span class="line">写入 ActionRequired(delete_records)</span><br><span class="line"></span><br><span class="line">↓</span><br><span class="line"></span><br><span class="line">本次状态机运行结束，不会在这里挂着等待</span><br><span class="line"></span><br><span class="line">用户稍后批准</span><br><span class="line"></span><br><span class="line">↓</span><br><span class="line"></span><br><span class="line">Conversation 出现 ToolConfirmationResponse</span><br><span class="line"></span><br><span class="line">↓</span><br><span class="line"></span><br><span class="line">以同一个 Session 发起一次新的状态机运行</span><br><span class="line"></span><br><span class="line">↓</span><br><span class="line"></span><br><span class="line">ToolApprovalOperation 将请求标记为可执行</span><br><span class="line"></span><br><span class="line">↓</span><br><span class="line"></span><br><span class="line">ToolExecutionOperation 执行</span><br><span class="line"></span><br><span class="line">↓</span><br><span class="line"></span><br><span class="line">写入 ToolResponse</span><br><span class="line"></span><br><span class="line">↓</span><br><span class="line"></span><br><span class="line">InferenceRunner 再次调用模型</span><br></pre></td></tr></table></figure>
+<p><img src="https://windliangblog.oss-cn-beijing.aliyuncs.com/agent-loop-while-not-enough-20260903-goose-resume.png" alt="Goose 将审批等待拆成两次可恢复的运行"></p>
+<p>它的优势是，任务可以不依赖原来的进程。</p>
+<p>这里的「新的状态机运行」不是指原来的 <code>while</code> 循环挂着一小时后再继续。写入 <code>ActionRequired</code> 后，当前运行会在没有可继续处理的步骤时结束，或将控制权交回客户端；没有新事件时，不存在一个空转的循环。</p>
+<p>一小时后，审批来自网页、Slack 或内部系统时，系统先将 <code>ToolConfirmationResponse</code> 写入持久化 Conversation，再用同一个 Session 发起新的运行。新的运行加载这份更新后的历史，看到「该 ToolRequest 已批准但尚未执行」，才继续审批标记、工具执行与模型推理。</p>
+<p>因此，状态机的基本模型不是「一直 while 等待外部事件」，而是「外部事件到达后，基于新的 Conversation 再推进若干步」。</p>
+<h2 id="为什么这对复杂-Agent-有价值"><a href="#为什么这对复杂-Agent-有价值" class="headerlink" title="为什么这对复杂 Agent 有价值"></a>为什么这对复杂 Agent 有价值</h2><p>如果只是在本地写代码，很多时候 Claude Code 的方式已经足够好。</p>
+<p>但 Agent 一旦开始承担更长、更异步、更受约束的任务，就会遇到一些新需求：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- 审批来自外部系统</span><br><span class="line">- 工具调用可能等待数小时</span><br><span class="line">- 子 Agent 在后台完成后再汇报</span><br><span class="line">- 任务可能被交给另一个 Worker</span><br><span class="line">- 某个项目临时要求更严格的工具策略</span><br><span class="line">- 需要记录每一步为什么发生</span><br></pre></td></tr></table></figure>
+<p>状态机的好处会慢慢显现出来。</p>
+<h3 id="1-企业策略有了明确插入点"><a href="#1-企业策略有了明确插入点" class="headerlink" title="1. 企业策略有了明确插入点"></a>1. 企业策略有了明确插入点</h3><p>例如某个组织规定：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">生产环境操作必须关联变更单。</span><br></pre></td></tr></table></figure>
+<p>在单体循环里，通常会变成 Tool 执行前的一段额外判断。</p>
+<p>在 Goose 的模型里，可以更明确地表达为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ToolRequest</span><br><span class="line">→ ChangeTicketOperation</span><br><span class="line">→ ToolApprovalOperation</span><br><span class="line">→ ToolExecutionOperation</span><br></pre></td></tr></table></figure>
+<p>策略的位置、输入与输出都清楚。</p>
+<h3 id="2-某个状态转换可以单独测试"><a href="#2-某个状态转换可以单独测试" class="headerlink" title="2. 某个状态转换可以单独测试"></a>2. 某个状态转换可以单独测试</h3><p>例如要测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用户拒绝 delete_records 后，工具绝不能执行。</span><br></pre></td></tr></table></figure>
+<p>在完整 <code>queryLoop</code> 中，通常需要模拟模型输出、权限界面、Tool 调度和消息流。</p>
+<p>在 Goose 的模型中，可以直接准备：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ToolRequest(delete_records)</span><br><span class="line">+ ToolConfirmationResponse(Deny)</span><br></pre></td></tr></table></figure>
+<p>然后只验证审批 Operation 是否将请求标记为不可执行。</p>
+<h3 id="3-可以接入外部编排系统"><a href="#3-可以接入外部编排系统" class="headerlink" title="3. 可以接入外部编排系统"></a>3. 可以接入外部编排系统</h3><p>当一个 turn 是短暂、可持久化的状态转换时，任务可以更自然地接到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">消息队列</span><br><span class="line">后台 Worker</span><br><span class="line">人工审批服务</span><br><span class="line">任务调度器</span><br><span class="line">Temporal / Restate 一类工作流平台</span><br></pre></td></tr></table></figure>
+<p>Goose 官方也明确将事件驱动、长任务和横向扩展视为这种设计的目标之一。</p>
+<h2 id="总"><a href="#总" class="headerlink" title="总"></a>总</h2><p>Claude Code 的 <code>queryLoop()</code> 很值得学习。</p>
+<p>它展示了一条成熟 Agent 主循环如何处理流式模型调用、工具执行、权限、压缩、错误恢复和会话续写。</p>
+<p>Goose 的状态机也很值得学习。</p>
+<p>它关注的是另一层问题：当 Agent 不再是一条持续运行的调用链，而是一个会暂停、恢复、等待外部事件、迁移和扩展的任务时，系统应该如何继续运行。</p>
+<p>所以两者的差异不是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Claude Code 用 while；</span><br><span class="line">Goose 用状态机。</span><br></pre></td></tr></table></figure>
+<p>更准确的说法是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Claude Code：</span><br><span class="line">把复杂的 Agent 行为集中编排在一次 Query Loop 中。</span><br><span class="line"></span><br><span class="line">Goose：</span><br><span class="line">把复杂的 Agent 行为拆成基于持久化状态的独立转换。</span><br></pre></td></tr></table></figure>
+<p>回到最开始那项迟到的审批。</p>
+<p>如果用户马上点击「允许」，两种设计的体验差别不大。</p>
+<p>只有当等待跨越当前的进程、连接或执行现场时，状态机的价值才真正出现。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/windliang.jpg" alt="windliang wechat" style="width: 800px; max-width: 100%;"/>
+    <div></div>
+</div>
+
+      </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Agent/" rel="tag"># Agent</a>
+          
+            <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+          
+            <a href="/tags/Goose/" rel="tag"># Goose</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2026/08/31/从大模型执行过程理解-KV-Cache-和-Prompt-Cache/" rel="next" title="从大模型执行过程理解 KV Cache 和 Prompt Cache">
+                <i class="fa fa-chevron-left"></i> 从大模型执行过程理解 KV Cache 和 Prompt Cache
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/head.jpg"
+                alt="windliang" />
+            
+              <p class="site-author-name" itemprop="name">windliang</p>
+              <p class="site-description motion-element" itemprop="description">越努力，越幸运！</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">132</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">117</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/wind-liang" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.zhihu.com/people/wang-liang-61-22" target="_blank" title="知乎"><i class="fa fa-fw fa-globe"></i>知乎</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.cugxuan.cn/" title="泫" target="_blank">泫</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://leetcode.wang/" title="leetcode刷题" target="_blank">leetcode刷题</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lqwang.net/" title="旺阳" target="_blank">旺阳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://lucifer.ren/blog/" title="lucifer 的网络博客" target="_blank">lucifer 的网络博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://windliang.wang/2020/05/31/极客时间优惠红包返现/" title="极客时间优惠" target="_blank">极客时间优惠</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#用户没有立刻批准"><span class="nav-number">1.</span> <span class="nav-text">用户没有立刻批准</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Claude-Code-的-while-循环已经很成熟"><span class="nav-number">2.</span> <span class="nav-text">Claude Code 的 while 循环已经很成熟</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Goose-官方怎么解释这次改造"><span class="nav-number">3.</span> <span class="nav-text">Goose 官方怎么解释这次改造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最小-Demo：不记住状态，只读取历史"><span class="nav-number">4.</span> <span class="nav-text">最小 Demo：不记住状态，只读取历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Goose-的源码如何实现"><span class="nav-number">5.</span> <span class="nav-text">Goose 的源码如何实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#再回到审批场景"><span class="nav-number">6.</span> <span class="nav-text">再回到审批场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Claude-Code"><span class="nav-number">6.1.</span> <span class="nav-text">Claude Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Goose"><span class="nav-number">6.2.</span> <span class="nav-text">Goose</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么这对复杂-Agent-有价值"><span class="nav-number">7.</span> <span class="nav-text">为什么这对复杂 Agent 有价值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-企业策略有了明确插入点"><span class="nav-number">7.1.</span> <span class="nav-text">1. 企业策略有了明确插入点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-某个状态转换可以单独测试"><span class="nav-number">7.2.</span> <span class="nav-text">2. 某个状态转换可以单独测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-可以接入外部编排系统"><span class="nav-number">7.3.</span> <span class="nav-text">3. 可以接入外部编排系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总"><span class="nav-number">8.</span> <span class="nav-text">总</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">windliang</span>
+
+  
+  <a href="https://beian.miit.gov.cn/" target = "_blank">沪ICP备2021019937号-1</a>
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.3.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("z9PojSscIw59QUUL7Y3uy8UV-gzGzoHsz", "SkHx95AzXORcFvGGyoo8yf2B");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
